@@ -1,2 +1,1 @@
 # covid-system
-# covid-system
