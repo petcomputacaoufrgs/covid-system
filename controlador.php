@@ -222,5 +222,35 @@ switch ($_GET['action']):
         require_once 'acoes/Paciente/remover_paciente.php';
         break;
     
+    
+    /* AMOSTRA */
+    case 'cadastrar_amostra':
+    case 'editar_amostra':
+        require_once 'acoes/Amostra/cadastro_amostra.php';
+        break;
+    
+    case 'listar_amostra':
+        require_once 'acoes/Amostra/listar_amostra.php';
+        break;
+    
+    case 'remover_amostra':
+        require_once 'acoes/Amostra/remover_amostra.php';
+        break;
+    
+    
+    /* AMOSTRA + TIPO + LOCAL */
+    case 'cadastrar_amostra_localArmazenamento':
+    case 'editar_amostra_localArmazenamento':
+        require_once 'acoes/AmostraTipoLocal/cadastro_amostra_localArmazenamento.php';
+        break;
+    
+    case 'listar_amostra_localArmazenamento':
+        require_once 'acoes/AmostraTipoLocal/listar_amostra_localArmazenamento.php';
+        break;
+    
+    case 'remover_amostra_localArmazenamento':
+        require_once 'acoes/AmostraTipoLocal/remover_amostra_localArmazenamento.php';
+        break;
+    
     default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador geral.');
 endswitch;

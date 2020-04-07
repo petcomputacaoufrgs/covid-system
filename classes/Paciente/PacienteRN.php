@@ -56,7 +56,7 @@ class PacienteRN{
         $strNomeMaeObs = trim($paciente->getObsNomeMae());
         
         if (strlen($strNomeMaeObs) > 150) {
-            $objExcecao->adicionar_validacao('Observaçoes do nome da mãe do paciente possui mais que 150 caracteres.','idObsMae');
+            $objExcecao->adicionar_validacao('Observações do nome da mãe do paciente possui mais que 150 caracteres.','idObsMae');
         }
         
         if($strNomeMaeObs == '' && $paciente->getNomeMae() == ''){
@@ -197,13 +197,14 @@ class PacienteRN{
             $this->validarObsRG($paciente,$objExcecao); 
             $this->validarObsSexo($paciente,$objExcecao); 
             $this->validarRG($paciente,$objExcecao); 
-            if($this->validarCadastro($paciente,$objExcecao)){
+            
+            
                 $objExcecao->lancar_validacoes();
                 $objPacienteBD = new PacienteBD();
                 //print_r($paciente);        
                 $objPacienteBD->cadastrar($paciente,$objBanco);
             
-            }
+            
             
             $objBanco->fecharConexao();
         } catch (Exception $e) {

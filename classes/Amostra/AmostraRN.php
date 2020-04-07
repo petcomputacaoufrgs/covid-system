@@ -4,52 +4,75 @@
  */
 
 require_once 'classes/Excecao/Excecao.php';
+require_once 'classes/Amostra/AmostraBD.php';
 
-class Amostra{
-
-
-    private function validarQuantidade(Amostra $objAmostra, Excecao $objExcecao) {
-        $strEmail = trim($objAmostra->getEmail());
+class AmostraRN{
+   
+    
+    private function validarQuantidadeTubos(Amostra $objAmostra, Excecao $objExcecao) {
+        $strQntTubos = trim($objAmostra->getQuantidadeTubos());
        
         
-        if ($strEmail == '') {
-            $objExcecao->adicionar_validacao('Email não informado.');
-            //throw new Exception('Email não informado.');
-        }else{
-
-            if (strlen($strEmail) > 60) {
-                $objExcecao->adicionar_validacao('O email possui mais de 50 caracteres.');
-            }
-
-            if (!filter_var($strEmail, FILTER_VALIDATE_EMAIL)) {
-                $objExcecao->adicionar_validacao('Email é inválido.');
-            }
+        if ($strQntTubos == '') {
+            $objExcecao->adicionar_validacao('Quantidade de tubos não foi informada','idQntTubos');
         }
         
-        $objAmostra->setEmail($strEmail);
+        
+        $objAmostra->setQuantidadeTubos($strQntTubos);
+
+    }
+    
+    private function validarObservacoes(Amostra $objAmostra, Excecao $objExcecao) {
+        $strObservacoes = trim($objAmostra->getObservacoes());
+       
+        
+        if (strlen($strObservacoes) > 150) {
+            $objExcecao->adicionar_validacao('A observação possui mais de 150 caracteres.','idObsAmostra');
+        }
+       
+        $objAmostra->setObservacoes($strObservacoes);
+
+    }
+    
+    private function validarDataHoraColeta(Amostra $objAmostra, Excecao $objExcecao) {
+        $strDataHoraColeta = trim($objAmostra->getDataHoraColeta());
+       
+        if ($strDataHoraColeta == '') {
+            $objExcecao->adicionar_validacao('Informar a data e hora da coleta.','idDtHrColeta');
+        }
+        $objAmostra->setDataHoraColeta($strDataHoraColeta);
+    }
+    
+    private function validarAceitaRecusa(Amostra $objAmostra, Excecao $objExcecao) {
+        $strAceitaRecusa = trim($objAmostra->getAceita_recusa());
+       
+        
+        if ($strAceitaRecusa == '') {
+            $objExcecao->adicionar_validacao('Informar se a amostra é aceita ou recusada.','idAceitaRecusada');
+        }
+       
+        $objAmostra->setAceita_recusa($strAceitaRecusa);
 
     }
      
 
     public function cadastrar(Amostra $amostra) {
         try {
-            
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             
-            $this->validarQuantidade($amostra,$objExcecao);
+            $this->validarQuantidadeTubos($amostra,$objExcecao);
             $this->validarObservacoes($amostra,$objExcecao);
-            $this->dataHoraInicio($amostra,$objExcecao);
-            $this->dataHoraFim($amostra,$objExcecao);
-            
+            $this->validarAceitaRecusa($amostra,$objExcecao);
+            $this->validarDataHoraColeta($amostra,$objExcecao);
             
             $objExcecao->lancar_validacoes();
-            
             $objAmostraBD = new AmostraBD();
-            $objAmostraBD->cadastrar($amostra);
+            $objAmostraBD->cadastrar($amostra,$objBanco);
             
             $objBanco->fecharConexao();
+            
         } catch (Exception $e) {
             throw new Excecao('Erro cadastrando amostra.', $e);
         }
@@ -57,13 +80,20 @@ class Amostra{
 
     public function alterar(Amostra $amostra) {
          try {
-             $objExcecao = new Excecao();
-            $this->validarEmail($amostra,$objExcecao);
-            $this->validarMatricula($amostra,$objExcecao);
+             
+            $objExcecao = new Excecao();
+            $objBanco = new Banco();
+            $objBanco->abrirConexao(); 
 
+            $this->validarQuantidadeTubos($amostra,$objExcecao);
+            $this->validarObservacoes($amostra,$objExcecao);
+            $this->validarAceitaRecusa($amostra,$objExcecao);
+            $this->validarDataHoraColeta($amostra,$objExcecao);
             $objExcecao->lancar_validacoes();
+            
             $objAmostraBD = new AmostraBD();
-            $objAmostraBD->alterar($amostra);
+            $objAmostraBD->alterar($amostra,$objBanco);
+            $objBanco->fecharConexao();
 
         } catch (Exception $e) {
             throw new Exception('Erro alterando amostra.', NULL, $e);
@@ -72,8 +102,14 @@ class Amostra{
 
     public function consultar(Amostra $amostra) {
         try {
+            $objExcecao = new Excecao();
+            $objBanco = new Banco();
+            $objBanco->abrirConexao(); 
+            $objExcecao->lancar_validacoes();
             $objAmostraBD = new AmostraBD();
-            return $objAmostraBD->consultar($amostra);
+            $arr = $objAmostraBD->consultar($amostra,$objBanco);
+            $objBanco->fecharConexao();
+            return $arr;
 
         } catch (Exception $e) {
             throw new Exception('Erro consultando amostra.', NULL, $e);
@@ -82,9 +118,14 @@ class Amostra{
 
     public function remover(Amostra $amostra) {
          try {
+            $objExcecao = new Excecao();
+            $objBanco = new Banco();
+            $objBanco->abrirConexao(); 
+            $objExcecao->lancar_validacoes();
             $objAmostraBD = new AmostraBD();
-            return $objAmostraBD->remover($amostra);
-
+            $arr =  $objAmostraBD->remover($amostra,$objBanco);
+            $objBanco->fecharConexao();
+            return $arr;
         } catch (Exception $e) {
             throw new Exception('Erro removendo amostra.', NULL, $e);
         }
@@ -92,31 +133,19 @@ class Amostra{
 
     public function listar(Amostra $amostra) {
         try {
+            $objExcecao = new Excecao();
+            $objBanco = new Banco();
+            $objBanco->abrirConexao(); 
+            $objExcecao->lancar_validacoes();
             $objAmostraBD = new AmostraBD();
-            return $objAmostraBD->listar($amostra);
+            $arr =  $objAmostraBD->listar($amostra,$objBanco);
+            $objBanco->fecharConexao();
+            return $arr;
         } catch (Exception $e) {
             throw new Exception('Erro listando amostra.', NULL, $e);
         }
     }
 
-
-    public function logar(Amostra $amostra) {
-        try {
-            $objAmostraBD = new AmostraBD();
-            return $objAmostraBD->logar($amostra);
-        } catch (Exception $e) {
-            throw new Exception('Erro logando amostra.', NULL, $e);
-        }
-    }
-
-    public function pesquisar($campoBD, $valor_usuario) {
-        try {
-            $objAmostraBD = new AmostraBD();
-            return $objAmostraBD->pesquisar($campoBD,$valor_usuario);
-        } catch (Exception $e) {
-            throw new Exception('Erro pesquisando amostra.', NULL, $e);
-        }
-    }
 
 }
 
