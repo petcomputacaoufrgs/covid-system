@@ -1,36 +1,37 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\Usuario\Detentor;
 
-class Detentor{
+class Detentor
+{
     private $idDetentor;
     private $detentor;
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
     
-    function getIdDetentor() {
+    public function getIdDetentor()
+    {
         return $this->idDetentor;
     }
 
-    function getDetentor() {
+    public function getDetentor()
+    {
         return $this->detentor;
     }
 
-    function setIdDetentor($idDetentor) {
+    public function setIdDetentor($idDetentor)
+    {
         $this->idDetentor = $idDetentor;
     }
 
-    function setDetentor($detentor) {
+    public function setDetentor($detentor)
+    {
         $this->detentor = $detentor;
     }
-
-
-
-
 }

@@ -1,35 +1,37 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\TempoPermanencia;
 
-class TempoPermanencia{
+class TempoPermanencia
+{
     private $idTempoPermanencia;
     private $tempoPermanencia;
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
     
-    function getIdTempoPermanencia() {
+    public function getIdTempoPermanencia()
+    {
         return $this->idTempoPermanencia;
     }
 
-    function getTempoPermanencia() {
+    public function getTempoPermanencia()
+    {
         return $this->tempoPermanencia;
     }
 
-    function setIdTempoPermanencia($idTempoPermanencia) {
+    public function setIdTempoPermanencia($idTempoPermanencia)
+    {
         $this->idTempoPermanencia = $idTempoPermanencia;
     }
 
-    function setTempoPermanencia($tempoPermanencia) {
+    public function setTempoPermanencia($tempoPermanencia)
+    {
         $this->tempoPermanencia = $tempoPermanencia;
     }
-
-
-
 }

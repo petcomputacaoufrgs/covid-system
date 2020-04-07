@@ -1,35 +1,37 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\Modelo;
 
-class Modelo{
+class Modelo
+{
     private $idModelo;
     private $modelo;
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
     
-    function getIdModelo() {
+    public function getIdModelo()
+    {
         return $this->idModelo;
     }
 
-    function getModelo() {
+    public function getModelo()
+    {
         return $this->modelo;
     }
 
-    function setIdModelo($idModelo) {
+    public function setIdModelo($idModelo)
+    {
         $this->idModelo = $idModelo;
     }
 
-    function setModelo($modelo) {
+    public function setModelo($modelo)
+    {
         $this->modelo = $modelo;
     }
-
-
-
 }

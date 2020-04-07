@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  *  Classe das regras de negócio do perfil do usuário
  */
@@ -10,44 +10,43 @@ namespace InfUfrgs\Usuario\PerfilUsuario;
 use InfUfrgs\Excecao\Excecao;
 use InfUfrgs\PerfilUsuario\PerfilUsuarioBD;
 
-class PerfilUsuarioRN{
-    
-
-    private function validarPerfil(PerfilUsuario $perfilUsuario,Excecao $objExcecao){
+class PerfilUsuarioRN
+{
+    private function validarPerfil(PerfilUsuario $perfilUsuario, Excecao $objExcecao)
+    {
         $strPerfilUsuario = trim($perfilUsuario->getPerfil());
         
         if ($strPerfilUsuario == '') {
-            $objExcecao->adicionar_validacao('O perfil do usuário não foi informado','idPerfilUsuario');
-        }else{
+            $objExcecao->adicionar_validacao('O perfil do usuário não foi informado', 'idPerfilUsuario');
+        } else {
             if (strlen($strPerfilUsuario) > 100) {
-                $objExcecao->adicionar_validacao('O perfil do usuário possui mais que 100 caracteres.','idPerfilUsuario');
+                $objExcecao->adicionar_validacao('O perfil do usuário possui mais que 100 caracteres.', 'idPerfilUsuario');
             }
             
             $perfilUsuario_aux_RN = new PerfilUsuarioRN();
             $array_perfis = $perfilUsuario_aux_RN->listar($perfilUsuario);
-            foreach ($array_perfis as $p){
-                if($p->getPerfil() == $perfilUsuario->getPerfil()){
-                    $objExcecao->adicionar_validacao('O perfil do usuário já existe.','idPerfilUsuario');
+            foreach ($array_perfis as $p) {
+                if ($p->getPerfil() == $perfilUsuario->getPerfil()) {
+                    $objExcecao->adicionar_validacao('O perfil do usuário já existe.', 'idPerfilUsuario');
                 }
             }
         }
         
         return $perfilUsuario->setPerfil($strPerfilUsuario);
-
     }
      
 
-    public function cadastrar(PerfilUsuario $perfilUsuario) {
+    public function cadastrar(PerfilUsuario $perfilUsuario)
+    {
         try {
-            
             $objExcecao = new Excecao();
             $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
             
-            $this->validarPerfil($perfilUsuario,$objExcecao); 
+            $this->validarPerfil($perfilUsuario, $objExcecao);
             $objExcecao->lancar_validacoes();
             $objPerfilUsuarioBD = new PerfilUsuarioBD();
-            $objPerfilUsuarioBD->cadastrar($perfilUsuario,$objBanco);
+            $objPerfilUsuarioBD->cadastrar($perfilUsuario, $objBanco);
             
             $objBanco->fecharConexao();
         } catch (Exception $e) {
@@ -55,18 +54,18 @@ class PerfilUsuarioRN{
         }
     }
 
-    public function alterar(PerfilUsuario $perfilUsuario) {
-         try {
-             
+    public function alterar(PerfilUsuario $perfilUsuario)
+    {
+        try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
             
-            $this->validarPerfil($perfilUsuario,$objExcecao);   
+            $this->validarPerfil($perfilUsuario, $objExcecao);
                         
             $objExcecao->lancar_validacoes();
             $objPerfilUsuarioBD = new PerfilUsuarioBD();
-            $objPerfilUsuarioBD->alterar($perfilUsuario,$objBanco);
+            $objPerfilUsuarioBD->alterar($perfilUsuario, $objBanco);
             
             $objBanco->fecharConexao();
         } catch (Exception $e) {
@@ -74,72 +73,71 @@ class PerfilUsuarioRN{
         }
     }
 
-    public function consultar(PerfilUsuario $perfilUsuario) {
+    public function consultar(PerfilUsuario $perfilUsuario)
+    {
         try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
             $objExcecao->lancar_validacoes();
             $objPerfilUsuarioBD = new PerfilUsuarioBD();
-            $arr =  $objPerfilUsuarioBD->consultar($perfilUsuario,$objBanco);
+            $arr =  $objPerfilUsuarioBD->consultar($perfilUsuario, $objBanco);
             
             $objBanco->fecharConexao();
             return $arr;
         } catch (Exception $e) {
- 
-            throw new Excecao('Erro consultando o perfil do usuário.',$e);
+            throw new Excecao('Erro consultando o perfil do usuário.', $e);
         }
     }
 
-    public function remover(PerfilUsuario $perfilUsuario) {
-         try {
+    public function remover(PerfilUsuario $perfilUsuario)
+    {
+        try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
             $objExcecao->lancar_validacoes();
             $objPerfilUsuarioBD = new PerfilUsuarioBD();
-            $arr =  $objPerfilUsuarioBD->remover($perfilUsuario,$objBanco);
+            $arr =  $objPerfilUsuarioBD->remover($perfilUsuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-
         } catch (Exception $e) {
             throw new Excecao('Erro removendo o perfil do usuário.', $e);
         }
     }
 
-    public function listar(PerfilUsuario $perfilUsuario) {
+    public function listar(PerfilUsuario $perfilUsuario)
+    {
         try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
             $objExcecao->lancar_validacoes();
             $objPerfilUsuarioBD = new PerfilUsuarioBD();
             
-            $arr = $objPerfilUsuarioBD->listar($perfilUsuario,$objBanco);
+            $arr = $objPerfilUsuarioBD->listar($perfilUsuario, $objBanco);
             
             $objBanco->fecharConexao();
             return $arr;
         } catch (Exception $e) {
-            throw new Excecao('Erro listando o perfil do usuário.',$e);
+            throw new Excecao('Erro listando o perfil do usuário.', $e);
         }
     }
 
 
-    public function pesquisar($campoBD, $valor_usuario) {
+    public function pesquisar($campoBD, $valor_usuario)
+    {
         try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
             $objExcecao->lancar_validacoes();
             $objPerfilUsuarioBD = new PerfilUsuarioBD();
-            $arr = $objPerfilUsuarioBD->pesquisar($campoBD,$valor_usuario,$objBanco);
+            $arr = $objPerfilUsuarioBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
         } catch (Exception $e) {
             throw new Excecao('Erro pesquisando o perfil do usuário.', $e);
         }
     }
-
 }
-
-?>

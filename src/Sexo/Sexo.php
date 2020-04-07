@@ -1,35 +1,37 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\Sexo;
 
-class Sexo{
+class Sexo
+{
     private $idSexo;
     private $sexo;
     
-    function __construct() {
+    public function __construct()
+    {
     }
     
-    function getIdSexo() {
+    public function getIdSexo()
+    {
         return $this->idSexo;
     }
 
-    function getSexo() {
+    public function getSexo()
+    {
         return $this->sexo;
     }
 
-    function setIdSexo($idSexo) {
+    public function setIdSexo($idSexo)
+    {
         $this->idSexo = $idSexo;
     }
 
-    function setSexo($sexo) {
+    public function setSexo($sexo)
+    {
         $this->sexo = $sexo;
     }
-
-
-
 }
-

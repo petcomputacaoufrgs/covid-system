@@ -1,15 +1,18 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\Paciente;
-use InfUfrgs\Banco\Banco;
-class PacienteBD{
 
-    public function cadastrar(Paciente $objPaciente, Banco $objBanco) {
-        try{
+use InfUfrgs\Banco\Banco;
+
+class PacienteBD
+{
+    public function cadastrar(Paciente $objPaciente, Banco $objBanco)
+    {
+        try {
             //echo $objPaciente->getPaciente();
             $INSERT = 'INSERT INTO tb_paciente (idSexo_fk,idPerfilPaciente_fk,nome,nomeMae,CPF,RG,obsCPF,'
                     . 'obsRG,obsSexo,codGAL,dataNascimento,obsNomeMae) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)';
@@ -30,18 +33,16 @@ class PacienteBD{
             
             
 
-            $objBanco->executarSQL($INSERT,$arrayBind);
+            $objBanco->executarSQL($INSERT, $arrayBind);
             $objPaciente->setIdPaciente($objBanco->obterUltimoID());
-           
         } catch (Exception $ex) {
-            throw new Excecao("Erro cadastrando marca  no BD.",$ex);
+            throw new Excecao("Erro cadastrando marca  no BD.", $ex);
         }
-        
     }
     
-    public function alterar(Paciente $objPaciente, Banco $objBanco) {
-        try{
-                      
+    public function alterar(Paciente $objPaciente, Banco $objBanco)
+    {
+        try {
             $UPDATE = 'UPDATE tb_paciente SET '
                     . ' idSexo_fk = ?,'
                     . ' idPerfilPaciente_fk = ?,'
@@ -74,24 +75,22 @@ class PacienteBD{
             
             $arrayBind[] = array('i',$objPaciente->getIdPaciente());
 
-            $objBanco->executarSQL($UPDATE,$arrayBind);
-
+            $objBanco->executarSQL($UPDATE, $arrayBind);
         } catch (Exception $ex) {
-            throw new Excecao("Erro alterando marca no BD.",$ex);
+            throw new Excecao("Erro alterando marca no BD.", $ex);
         }
-       
     }
     
-     public function listar(Paciente $objPaciente, Banco $objBanco) {
-         try{
-      
+    public function listar(Paciente $objPaciente, Banco $objBanco)
+    {
+        try {
             $SELECT = "SELECT * FROM tb_paciente";
 
 
             $arr = $objBanco->consultarSQL($SELECT);
 
             $array_marca = array();
-            foreach ($arr as $reg){
+            foreach ($arr as $reg) {
                 $objPaciente = new Paciente();
                 $objPaciente->setIdPaciente($reg['idPaciente']);
                 $objPaciente->setNome($reg['nome']);
@@ -109,32 +108,29 @@ class PacienteBD{
                 
 
                 $array_marca[] = $objPaciente;
-                
             }
             return $array_marca;
         } catch (Exception $ex) {
-            throw new Excecao("Erro listando marca no BD.",$ex);
+            throw new Excecao("Erro listando marca no BD.", $ex);
         }
-       
     }
     
-    public function consultar(Paciente $objPaciente, Banco $objBanco) {
-
-        try{
-
+    public function consultar(Paciente $objPaciente, Banco $objBanco)
+    {
+        try {
             $SELECT = 'SELECT idPaciente,idSexo_fk,idPerfilPaciente_fk,nome,nomeMae,CPF,RG,obsCPF,'
                     . 'obsRG,obsSexo,codGAL,dataNascimento,obsNomeMae FROM tb_paciente WHERE idPaciente = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objPaciente->getIdPaciente());
 
-            $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
 
             $paciente = new Paciente();
             $paciente->setIdPaciente($arr[0]['idPaciente']);
             $paciente->setNome($arr[0]['nome']);
             $paciente->setIdSexo_fk($arr[0]['idSexo_fk']);
-            $paciente->setIdPerfilPaciente_fk($arr[0]['idPerfilPaciente_fk']); 
+            $paciente->setIdPerfilPaciente_fk($arr[0]['idPerfilPaciente_fk']);
             $paciente->setNomeMae($arr[0]['nomeMae']);
             $paciente->setCPF($arr[0]['CPF']);
             $paciente->setRG($arr[0]['RG']);
@@ -147,27 +143,19 @@ class PacienteBD{
 
             return $paciente;
         } catch (Exception $ex) {
-       
-            throw new Excecao("Erro consultando marca no BD.",$ex);
+            throw new Excecao("Erro consultando marca no BD.", $ex);
         }
-
     }
     
-    public function remover(Paciente $objPaciente, Banco $objBanco) {
-
-        try{
-            
-            $DELETE = 'DELETE FROM tb_paciente WHERE idPaciente = ? ';  
+    public function remover(Paciente $objPaciente, Banco $objBanco)
+    {
+        try {
+            $DELETE = 'DELETE FROM tb_paciente WHERE idPaciente = ? ';
             $arrayBind = array();
             $arrayBind[] = array('i',$objPaciente->getIdPaciente());
             $objBanco->executarSQL($DELETE, $arrayBind);
-            
         } catch (Exception $ex) {
-            throw new Excecao("Erro removendo marca no BD.",$ex);
+            throw new Excecao("Erro removendo marca no BD.", $ex);
         }
     }
-    
-    
-
-    
 }

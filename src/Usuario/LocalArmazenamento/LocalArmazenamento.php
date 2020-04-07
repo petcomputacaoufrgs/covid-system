@@ -1,62 +1,70 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\Usuario\LocalArmazenamento;
 
-class LocalArmazenamento{
+class LocalArmazenamento
+{
     private $idLocalArmazenamento;
     private $idTipoLocal_fk;
     private $idTempoPermanencia_fk;
     private $dataHoraInicio;
     private $dataHoraFim;
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
     
-    function getIdLocalArmazenamento() {
+    public function getIdLocalArmazenamento()
+    {
         return $this->idLocalArmazenamento;
     }
 
-    function getIdTipoLocal_fk() {
+    public function getIdTipoLocal_fk()
+    {
         return $this->idTipoLocal_fk;
     }
 
-    function getIdTempoPermanencia_fk() {
+    public function getIdTempoPermanencia_fk()
+    {
         return $this->idTempoPermanencia_fk;
     }
 
-    function getDataHoraInicio() {
+    public function getDataHoraInicio()
+    {
         return $this->dataHoraInicio;
     }
 
-    function getDataHoraFim() {
+    public function getDataHoraFim()
+    {
         return $this->dataHoraFim;
     }
 
-    function setIdLocalArmazenamento($idLocalArmazenamento) {
+    public function setIdLocalArmazenamento($idLocalArmazenamento)
+    {
         $this->idLocalArmazenamento = $idLocalArmazenamento;
     }
 
-    function setIdTipoLocal_fk($idTipoLocal_fk) {
+    public function setIdTipoLocal_fk($idTipoLocal_fk)
+    {
         $this->idTipoLocal_fk = $idTipoLocal_fk;
     }
 
-    function setIdTempoPermanencia_fk($idTempoPermanencia_fk) {
+    public function setIdTempoPermanencia_fk($idTempoPermanencia_fk)
+    {
         $this->idTempoPermanencia_fk = $idTempoPermanencia_fk;
     }
 
-    function setDataHoraInicio($dataHoraInicio) {
+    public function setDataHoraInicio($dataHoraInicio)
+    {
         $this->dataHoraInicio = $dataHoraInicio;
     }
 
-    function setDataHoraFim($dataHoraFim) {
+    public function setDataHoraFim($dataHoraFim)
+    {
         $this->dataHoraFim = $dataHoraFim;
     }
-
-
-
 }

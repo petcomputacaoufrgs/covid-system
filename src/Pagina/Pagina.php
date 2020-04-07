@@ -1,33 +1,35 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\Pagina;
 
-class Pagina{
-    
+class Pagina
+{
     private $array_validacoes;
     
-    function __construct() {
+    public function __construct()
+    {
         $this->array_validacoes = array();
     }
-    public function processar_excecao(Exception $e){
-        if($e instanceof Excecao && $e->possui_validacoes()){
+    public function processar_excecao(Exception $e)
+    {
+        if ($e instanceof Excecao && $e->possui_validacoes()) {
             $this->array_validacoes = $e->get_validacoes();
-            
-        }else{
-
+        } else {
             die('pagina->processarexcecao '.$e);
         }
     }
     
-    public function montar_menu_topo(){
+    public function montar_menu_topo()
+    {
         echo '<a href="controlador.php?action=tela_inicial">TELA INICIAL</a>';
     }
     
-    public static function abrir_head($titulo) {
+    public static function abrir_head($titulo)
+    {
         echo '<html>
                     <head>
                         <meta charset="utf-8">
@@ -75,30 +77,29 @@ class Pagina{
                         <link href="https://fonts.googleapis.com/css?family=Baloo+Chettan+2&display=swap" rel="stylesheet">'
                         
                     ;
-        
     }
     
-    public static function fechar_head(){
+    public static function fechar_head()
+    {
         echo    '</head>
                     <body>';
     }
-     public function mostrar_excecoes(){
-         //print_r($this->array_validacoes);
+    public function mostrar_excecoes()
+    {
+        //print_r($this->array_validacoes);
         // $script = '';
-        if(count($this->array_validacoes)){
-           
+        if (count($this->array_validacoes)) {
             echo '<script>';
             $msg = '';
             $campo = '';
             
-            foreach ($this->array_validacoes as $validacao){
+            foreach ($this->array_validacoes as $validacao) {
                 /*if($msg != ''){
                     $msg .= "\n";
                 }*/
                 $msg .= $validacao[0];
                 
-                if($validacao[1] !=  null){
-                    
+                if ($validacao[1] !=  null) {
                     echo 'var campo = document.getElementById("'.$validacao[1].'");
                           
                           if(!campo.classList.contains("is-invalid")){
@@ -114,17 +115,13 @@ class Pagina{
             }
             //echo 'alert(\''.$msg.'\');';
             echo '</script>';
-            
         }
         //return $script;
-     }
-    
-     public function fechar_corpo(){
-          echo '     </body>
-                </html>';
     }
     
-    
-    
-    
+    public function fechar_corpo()
+    {
+        echo '     </body>
+                </html>';
+    }
 }

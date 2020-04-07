@@ -1,38 +1,37 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\Usuario\PerfilUsuario;
 
-
-class PerfilUsuario{
+class PerfilUsuario
+{
     private $idPerfilUsuario;
     private $perfil;
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
     
-    function getIdPerfilUsuario() {
+    public function getIdPerfilUsuario()
+    {
         return $this->idPerfilUsuario;
     }
 
-    function getPerfil() {
+    public function getPerfil()
+    {
         return $this->perfil;
     }
 
-    function setIdPerfilUsuario($idPerfilUsuario) {
+    public function setIdPerfilUsuario($idPerfilUsuario)
+    {
         $this->idPerfilUsuario = $idPerfilUsuario;
     }
 
-    function setPerfil($perfil) {
+    public function setPerfil($perfil)
+    {
         $this->perfil = $perfil;
     }
-
-
-
-
-
 }

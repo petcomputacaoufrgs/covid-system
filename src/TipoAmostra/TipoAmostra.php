@@ -1,34 +1,37 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\TipoAmostra;
 
-class TipoAmostra{
+class TipoAmostra
+{
     private $idTipoAmostra;
     private $tipo; //amostra congelada, amostra normal...
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
     
-    function getIdTipoAmostra() {
+    public function getIdTipoAmostra()
+    {
         return $this->idTipoAmostra;
     }
 
-    function getTipo() {
+    public function getTipo()
+    {
         return $this->tipo;
     }
 
-    function setIdTipoAmostra($idTipoAmostra) {
+    public function setIdTipoAmostra($idTipoAmostra)
+    {
         $this->idTipoAmostra = $idTipoAmostra;
     }
 
-    function setTipo($tipo) {
+    public function setTipo($tipo)
+    {
         $this->tipo = $tipo;
     }
-
-
 }

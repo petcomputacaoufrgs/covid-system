@@ -1,35 +1,37 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\Usuario;
 
-class Usuario{
+class Usuario
+{
     private $idUsuario;
     private $matricula;
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
     
-    function getIdUsuario() {
+    public function getIdUsuario()
+    {
         return $this->idUsuario;
     }
 
-    function getMatricula() {
+    public function getMatricula()
+    {
         return $this->matricula;
     }
 
-    function setIdUsuario($idUsuario) {
+    public function setIdUsuario($idUsuario)
+    {
         $this->idUsuario = $idUsuario;
     }
 
-    function setMatricula($matricula) {
+    public function setMatricula($matricula)
+    {
         $this->matricula = $matricula;
     }
-
-
-
 }

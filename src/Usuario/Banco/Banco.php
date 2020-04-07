@@ -1,21 +1,21 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\Usuario\Banco;
 
-
-class Banco {
-
+class Banco
+{
     private $host = "localhost";
     private $dbUsername = "root";
     private $dbPassword = "";
     private $dbName = "amostras_covid19";
     private $conn;
 
-    public function abrirConexao() {
+    public function abrirConexao()
+    {
         $this->conn = mysqli_connect($this->host, $this->dbUsername, $this->dbPassword, $this->dbName);
         /* change character set to utf8 */
         if (!mysqli_set_charset($this->conn, "utf8")) {
@@ -28,17 +28,21 @@ class Banco {
         }
     }
 
-    public function fecharConexao() {
+    public function fecharConexao()
+    {
         mysqli_close($this->conn);
     }
-    public function abrirTransacao() {
+    public function abrirTransacao()
+    {
         mysqli_autocommit($this->conn, false);
     }
-    public function confirmarTransacao() {
+    public function confirmarTransacao()
+    {
         mysqli_commit($this->conn);
         mysqli_autocommit($this->conn, true);
     }
-    public function cancelarTransacao() {
+    public function cancelarTransacao()
+    {
         mysqli_rollback($this->conn);
         mysqli_autocommit($this->conn, true);
     }
@@ -46,15 +50,16 @@ class Banco {
         return mysqli_query($this->conn, $strSQL);
     }*/
     
-    public function executarSql($sql, $arrCamposBind = null) {
+    public function executarSql($sql, $arrCamposBind = null)
+    {
         $arrResultado = array();
 
 
-        if (($stmt = mysqli_prepare($this->conn,$sql)) === FALSE) {
+        if (($stmt = mysqli_prepare($this->conn, $sql)) === false) {
             throw new Exception(mysqli_error($this->conn));
         }
         
-        if($arrCamposBind != null && count($arrCamposBind)){
+        if ($arrCamposBind != null && count($arrCamposBind)) {
             $arrParams = array();
             $arrParams[] = & $stmt;
 
@@ -70,80 +75,77 @@ class Banco {
                 $arrParams[] = & $arrCamposBind[$i][1];
             }
 
-            if (call_user_func_array('mysqli_stmt_bind_param', $arrParams) === FALSE) {
+            if (call_user_func_array('mysqli_stmt_bind_param', $arrParams) === false) {
                 throw new Exception(mysqli_error($this->conn));
             }
         }
         
         //print_r($arrParams);
-        if (mysqli_stmt_execute($stmt) === FALSE) {
+        if (mysqli_stmt_execute($stmt) === false) {
             throw new Exception(mysqli_error($this->conn));
-           
         }
         
         
         $affectedRows = mysqli_affected_rows($this->conn);
        
         mysqli_stmt_close($stmt);
-		
-		return $affectedRows;
-}
+        
+        return $affectedRows;
+    }
     
 
     //CONSULTAR SQL
-    public function consultarSql($sql, $arrCamposBind = null) {
+    public function consultarSql($sql, $arrCamposBind = null)
+    {
         $arrResultado = array();
 
 
-        if (($stmt = mysqli_prepare($this->conn,$sql)) === FALSE) {
+        if (($stmt = mysqli_prepare($this->conn, $sql)) === false) {
             throw new Exception(mysqli_error($this->conn));
         }
         
-        if($arrCamposBind != null && count($arrCamposBind)){
-        $arrParams = array();
-        $arrParams[] = & $stmt;
+        if ($arrCamposBind != null && count($arrCamposBind)) {
+            $arrParams = array();
+            $arrParams[] = & $stmt;
 
-        $strTiposBind = '';
-        foreach ($arrCamposBind as $arrBind) {
-            $strTiposBind .= $arrBind[0];
+            $strTiposBind = '';
+            foreach ($arrCamposBind as $arrBind) {
+                $strTiposBind .= $arrBind[0];
+            }
+
+            $arrParams[] = & $strTiposBind;
+
+            $numBind = count($arrCamposBind);
+            for ($i = 0; $i < $numBind; $i++) {
+                $arrParams[] = & $arrCamposBind[$i][1];
+            }
+
+            if (call_user_func_array('mysqli_stmt_bind_param', $arrParams) === false) {
+                throw new Exception(mysqli_error($this->conn));
+            }
         }
-
-        $arrParams[] = & $strTiposBind;
-
-        $numBind = count($arrCamposBind);
-        for ($i = 0; $i < $numBind; $i++) {
-            $arrParams[] = & $arrCamposBind[$i][1];
-        }
-
-        if (call_user_func_array('mysqli_stmt_bind_param', $arrParams) === FALSE) {
+        if (mysqli_stmt_execute($stmt) === false) {
             throw new Exception(mysqli_error($this->conn));
-        }
-        }
-        if (mysqli_stmt_execute($stmt) === FALSE) {
-            throw new Exception(mysqli_error($this->conn));
-           
         }
 
 
         $resultado = mysqli_stmt_get_result($stmt);
 
-        if ($resultado === FALSE) {
+        if ($resultado === false) {
             throw new Exception(mysqli_error($this->conn));
         }
 
-        while ($registro = mysqli_fetch_array($resultado,MYSQLI_ASSOC)) {
+        while ($registro = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {
             $arrResultado[] = $registro;
         }
 
         mysqli_stmt_close($stmt);
-        RETURN $arrResultado;
+        return $arrResultado;
     }
 
   
-    public function obterUltimoID() {
+    public function obterUltimoID()
+    {
         return mysqli_insert_id($this->conn);
     }
-
 }
-
-?>

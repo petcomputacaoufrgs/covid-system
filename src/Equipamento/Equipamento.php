@@ -1,12 +1,13 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\Equipamento;
 
-class Equipamento{
+class Equipamento
+{
     private $idEquipamento;
     private $idDetentor_fk;
     private $idMarca_fk;
@@ -15,58 +16,67 @@ class Equipamento{
     private $dataChegada;
     
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
     
-    function getIdEquipamento() {
+    public function getIdEquipamento()
+    {
         return $this->idEquipamento;
     }
 
-    function getIdDetentor_fk() {
+    public function getIdDetentor_fk()
+    {
         return $this->idDetentor_fk;
     }
 
-    function getIdMarca_fk() {
+    public function getIdMarca_fk()
+    {
         return $this->idMarca_fk;
     }
 
-    function getIdModelo_fk() {
+    public function getIdModelo_fk()
+    {
         return $this->idModelo_fk;
     }
 
-    function getDataUltimaCalibragem() {
+    public function getDataUltimaCalibragem()
+    {
         return $this->dataUltimaCalibragem;
     }
 
-    function getDataChegada() {
+    public function getDataChegada()
+    {
         return $this->dataChegada;
     }
 
-    function setIdEquipamento($idEquipamento) {
+    public function setIdEquipamento($idEquipamento)
+    {
         $this->idEquipamento = $idEquipamento;
     }
 
-    function setIdDetentor_fk($idDetentor_fk) {
+    public function setIdDetentor_fk($idDetentor_fk)
+    {
         $this->idDetentor_fk = $idDetentor_fk;
     }
 
-    function setIdMarca_fk($idMarca_fk) {
+    public function setIdMarca_fk($idMarca_fk)
+    {
         $this->idMarca_fk = $idMarca_fk;
     }
 
-    function setIdModelo_fk($idModelo_fk) {
+    public function setIdModelo_fk($idModelo_fk)
+    {
         $this->idModelo_fk = $idModelo_fk;
     }
 
-    function setDataUltimaCalibragem($dataUltimaCalibragem) {
+    public function setDataUltimaCalibragem($dataUltimaCalibragem)
+    {
         $this->dataUltimaCalibragem = $dataUltimaCalibragem;
     }
 
-    function setDataChegada($dataChegada) {
+    public function setDataChegada($dataChegada)
+    {
         $this->dataChegada = $dataChegada;
     }
-
-
-
 }

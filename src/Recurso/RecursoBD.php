@@ -1,15 +1,18 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\Recurso;
-use InfUfrgs\Banco\Banco;
-class RecursoBD{
 
-    public function cadastrar(Recurso $objRecurso, Banco $objBanco) {
-        try{
+use InfUfrgs\Banco\Banco;
+
+class RecursoBD
+{
+    public function cadastrar(Recurso $objRecurso, Banco $objBanco)
+    {
+        try {
             //echo $objRecurso->getRecurso();
             //die("die");
             $INSERT = 'INSERT INTO tb_recurso (nome,s_n_menu) VALUES (?,?)';
@@ -19,16 +22,16 @@ class RecursoBD{
             $arrayBind[] = array('s',$objRecurso->get_s_n_menu());
 
 
-            $objBanco->executarSQL($INSERT,$arrayBind);
+            $objBanco->executarSQL($INSERT, $arrayBind);
             $objRecurso->setIdRecurso($objBanco->obterUltimoID());
         } catch (Exception $ex) {
-            throw new Excecao("Erro cadastrando recurso paciente no BD.",$ex);
+            throw new Excecao("Erro cadastrando recurso paciente no BD.", $ex);
         }
-        
     }
     
-    public function alterar(Recurso $objRecurso, Banco $objBanco) {
-        try{
+    public function alterar(Recurso $objRecurso, Banco $objBanco)
+    {
+        try {
             $UPDATE = 'UPDATE tb_recurso SET '
                 . ' nome = ?'
                 . ' s_n_menu = ?'
@@ -40,24 +43,22 @@ class RecursoBD{
             $arrayBind[] = array('s',$objRecurso->get_s_n_menu());
             $arrayBind[] = array('i',$objRecurso->getIdRecurso());
 
-            $objBanco->executarSQL($UPDATE,$arrayBind);
-
+            $objBanco->executarSQL($UPDATE, $arrayBind);
         } catch (Exception $ex) {
-            throw new Excecao("Erro alterando recurso no BD.",$ex);
+            throw new Excecao("Erro alterando recurso no BD.", $ex);
         }
-       
     }
     
-     public function listar(Recurso $objRecurso, Banco $objBanco) {
-         try{
-      
+    public function listar(Recurso $objRecurso, Banco $objBanco)
+    {
+        try {
             $SELECT = "SELECT * FROM tb_recurso";
 
 
             $arr = $objBanco->consultarSQL($SELECT);
 
             $array_recurso = array();
-            foreach ($arr as $reg){
+            foreach ($arr as $reg) {
                 $objRecurso = new Recurso();
                 $objRecurso->setIdRecurso($reg['idRecurso']);
                 $objRecurso->setNome($reg['nome']);
@@ -67,21 +68,19 @@ class RecursoBD{
             }
             return $array_recurso;
         } catch (Exception $ex) {
-            throw new Excecao("Erro listando recurso no BD.",$ex);
+            throw new Excecao("Erro listando recurso no BD.", $ex);
         }
-       
     }
     
-    public function consultar(Recurso $objRecurso, Banco $objBanco) {
-
-        try{
-
+    public function consultar(Recurso $objRecurso, Banco $objBanco)
+    {
+        try {
             $SELECT = 'SELECT idRecurso,nome,s_n_menu FROM tb_recurso WHERE idRecurso = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objRecurso->getIdRecurso());
 
-            $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
 
             $recurso = new Recurso();
             $recurso->setIdRecurso($arr[0]['idRecurso']);
@@ -90,27 +89,19 @@ class RecursoBD{
 
             return $recurso;
         } catch (Exception $ex) {
-       
-            throw new Excecao("Erro consultando recurso no BD.",$ex);
+            throw new Excecao("Erro consultando recurso no BD.", $ex);
         }
-
     }
     
-    public function remover(Recurso $objRecurso, Banco $objBanco) {
-
-        try{
-            
-            $DELETE = 'DELETE FROM tb_recurso WHERE idRecurso = ? ';  
+    public function remover(Recurso $objRecurso, Banco $objBanco)
+    {
+        try {
+            $DELETE = 'DELETE FROM tb_recurso WHERE idRecurso = ? ';
             $arrayBind = array();
             $arrayBind[] = array('i',$objRecurso->getIdRecurso());
             $objBanco->executarSQL($DELETE, $arrayBind);
-            
         } catch (Exception $ex) {
-            throw new Excecao("Erro removendo recurso no BD.",$ex);
+            throw new Excecao("Erro removendo recurso no BD.", $ex);
         }
     }
-    
-    
-
-    
 }

@@ -1,37 +1,37 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\Marca;
 
-class Marca{
+class Marca
+{
     private $idMarca;
     private $marca;
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
     
-    function getIdMarca() {
+    public function getIdMarca()
+    {
         return $this->idMarca;
     }
 
-    function getMarca() {
+    public function getMarca()
+    {
         return $this->marca;
     }
 
-    function setIdMarca($idMarca) {
+    public function setIdMarca($idMarca)
+    {
         $this->idMarca = $idMarca;
     }
 
-    function setMarca($marca) {
+    public function setMarca($marca)
+    {
         $this->marca = $marca;
     }
-
-
-
-
-
 }

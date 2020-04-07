@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
@@ -8,10 +8,11 @@ namespace InfUfrgs\Usuario;
 
 use InfUfrgs\Banco\Banco;
 
-class UsuarioBD{
-
-    public function cadastrar(Usuario $objUsuario, Banco $objBanco) {
-        try{
+class UsuarioBD
+{
+    public function cadastrar(Usuario $objUsuario, Banco $objBanco)
+    {
+        try {
             //echo $objUsuario->getMatricula();
             //die("die");
             $INSERT = 'INSERT INTO tb_usuario (matricula) VALUES (?)';
@@ -20,16 +21,16 @@ class UsuarioBD{
             $arrayBind[] = array('s',$objUsuario->getMatricula());
 
 
-            $objBanco->executarSQL($INSERT,$arrayBind);
+            $objBanco->executarSQL($INSERT, $arrayBind);
             $objUsuario->setIdUsuario($objBanco->obterUltimoID());
         } catch (Exception $ex) {
-            throw new Excecao("Erro cadastrando usuário no BD.",$ex);
+            throw new Excecao("Erro cadastrando usuário no BD.", $ex);
         }
-        
     }
     
-    public function alterar(Usuario $objUsuario, Banco $objBanco) {
-        try{
+    public function alterar(Usuario $objUsuario, Banco $objBanco)
+    {
+        try {
             $UPDATE = 'UPDATE tb_usuario SET '
                 . ' matricula = ?'
                 . '  where idUsuario = ?';
@@ -39,24 +40,22 @@ class UsuarioBD{
             $arrayBind[] = array('s',$objUsuario->getMatricula());
             $arrayBind[] = array('i',$objUsuario->getIdUsuario());
 
-            $objBanco->executarSQL($UPDATE,$arrayBind);
-
+            $objBanco->executarSQL($UPDATE, $arrayBind);
         } catch (Exception $ex) {
-            throw new Excecao("Erro alterando usuário no BD.",$ex);
+            throw new Excecao("Erro alterando usuário no BD.", $ex);
         }
-       
     }
     
-     public function listar(Usuario $objUsuario, Banco $objBanco) {
-         try{
-      
+    public function listar(Usuario $objUsuario, Banco $objBanco)
+    {
+        try {
             $SELECT = "SELECT * FROM tb_usuario";
 
 
             $arr = $objBanco->consultarSQL($SELECT);
 
             $array_usuario = array();
-            foreach ($arr as $reg){
+            foreach ($arr as $reg) {
                 $objUsuario = new Usuario();
                 $objUsuario->setIdUsuario($reg['idUsuario']);
                 $objUsuario->setMatricula($reg['matricula']);
@@ -65,21 +64,19 @@ class UsuarioBD{
             }
             return $array_usuario;
         } catch (Exception $ex) {
-            throw new Excecao("Erro listando usuário no BD.",$ex);
+            throw new Excecao("Erro listando usuário no BD.", $ex);
         }
-       
     }
     
-    public function consultar(Usuario $objUsuario, Banco $objBanco) {
-
-        try{
-
+    public function consultar(Usuario $objUsuario, Banco $objBanco)
+    {
+        try {
             $SELECT = 'SELECT idUsuario,matricula FROM tb_usuario WHERE idUsuario = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objUsuario->getIdUsuario());
 
-            $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
 
             $usuário = new Usuario();
             $usuário->setIdUsuario($arr[0]['idUsuario']);
@@ -87,27 +84,19 @@ class UsuarioBD{
 
             return $usuário;
         } catch (Exception $ex) {
-       
-            throw new Excecao("Erro consultando usuário no BD.",$ex);
+            throw new Excecao("Erro consultando usuário no BD.", $ex);
         }
-
     }
     
-    public function remover(Usuario $objUsuario, Banco $objBanco) {
-
-        try{
-            
-            $DELETE = 'DELETE FROM tb_usuario WHERE idUsuario = ? ';  
+    public function remover(Usuario $objUsuario, Banco $objBanco)
+    {
+        try {
+            $DELETE = 'DELETE FROM tb_usuario WHERE idUsuario = ? ';
             $arrayBind = array();
             $arrayBind[] = array('i',$objUsuario->getIdUsuario());
             $objBanco->executarSQL($DELETE, $arrayBind);
-            
         } catch (Exception $ex) {
-            throw new Excecao("Erro removendo usuário no BD.",$ex);
+            throw new Excecao("Erro removendo usuário no BD.", $ex);
         }
     }
-    
-    
-
-    
 }

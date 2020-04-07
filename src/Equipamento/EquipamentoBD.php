@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
@@ -8,11 +8,11 @@ namespace InfUfrgs\Equipamento;
 
 use InfUfrgs\Banco\Banco;
 
-class EquipamentoBD{
-
-    public function cadastrar(Equipamento $objEquipamento, Banco $objBanco) {
-        try{
-            
+class EquipamentoBD
+{
+    public function cadastrar(Equipamento $objEquipamento, Banco $objBanco)
+    {
+        try {
             $INSERT = 'INSERT INTO tb_equipamento (idDetentor_fk,idMarca_fk,idModelo_fk,dataUltimaCalibragem,dataChegada) VALUES (?,?,?,?,?)';
 
             $arrayBind = array();
@@ -23,16 +23,16 @@ class EquipamentoBD{
             $arrayBind[] = array('s',$objEquipamento->getDataChegada());
 
 
-            $objBanco->executarSQL($INSERT,$arrayBind);
+            $objBanco->executarSQL($INSERT, $arrayBind);
             $objEquipamento->setIdEquipamento($objBanco->obterUltimoID());
         } catch (Exception $ex) {
-            throw new Excecao("Erro cadastrando equipamento no BD.",$ex);
+            throw new Excecao("Erro cadastrando equipamento no BD.", $ex);
         }
-        
     }
     
-    public function alterar(Equipamento $objEquipamento, Banco $objBanco) {
-        try{
+    public function alterar(Equipamento $objEquipamento, Banco $objBanco)
+    {
+        try {
             //print_r($objEquipamento);
             //die();
             $UPDATE = 'UPDATE tb_equipamento SET '
@@ -52,24 +52,22 @@ class EquipamentoBD{
             $arrayBind[] = array('s',$objEquipamento->getDataChegada());
             $arrayBind[] = array('i',$objEquipamento->getIdEquipamento());
 
-            $objBanco->executarSQL($UPDATE,$arrayBind);
-
+            $objBanco->executarSQL($UPDATE, $arrayBind);
         } catch (Exception $ex) {
-            throw new Excecao("Erro alterando equipamento no BD.",$ex);
+            throw new Excecao("Erro alterando equipamento no BD.", $ex);
         }
-       
     }
     
-     public function listar(Equipamento $objEquipamento, Banco $objBanco) {
-         try{
-      
+    public function listar(Equipamento $objEquipamento, Banco $objBanco)
+    {
+        try {
             $SELECT = "SELECT * FROM tb_equipamento";
 
 
             $arr = $objBanco->consultarSQL($SELECT);
 
             $array_equipamento = array();
-            foreach ($arr as $reg){
+            foreach ($arr as $reg) {
                 $objEquipamento = new Equipamento();
                 $objEquipamento->setIdEquipamento($reg['idEquipamento']);
                 $objEquipamento->setIdDetentor_fk($reg['idDetentor_fk']);
@@ -82,22 +80,20 @@ class EquipamentoBD{
             }
             return $array_equipamento;
         } catch (Exception $ex) {
-            throw new Excecao("Erro listando equipamento no BD.",$ex);
+            throw new Excecao("Erro listando equipamento no BD.", $ex);
         }
-       
     }
     
-    public function consultar(Equipamento $objEquipamento, Banco $objBanco) {
-
-        try{
-
+    public function consultar(Equipamento $objEquipamento, Banco $objBanco)
+    {
+        try {
             $SELECT = 'SELECT idEquipamento,idDetentor_fk,idMarca_fk,idModelo_fk,dataUltimaCalibragem,dataChegada '
                     . 'FROM tb_equipamento WHERE idEquipamento = ?';
                        
             $arrayBind = array();
             $arrayBind[] = array('i',$objEquipamento->getIdEquipamento());
 
-            $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
 
             $equipamento = new Equipamento();
             $equipamento->setIdEquipamento($arr[0]['idEquipamento']);
@@ -109,27 +105,19 @@ class EquipamentoBD{
 
             return $equipamento;
         } catch (Exception $ex) {
-       
-            throw new Excecao("Erro consultando equipamento no BD.",$ex);
+            throw new Excecao("Erro consultando equipamento no BD.", $ex);
         }
-
     }
     
-    public function remover(Equipamento $objEquipamento, Banco $objBanco) {
-
-        try{
-            
-            $DELETE = 'DELETE FROM tb_equipamento WHERE idEquipamento = ? ';  
+    public function remover(Equipamento $objEquipamento, Banco $objBanco)
+    {
+        try {
+            $DELETE = 'DELETE FROM tb_equipamento WHERE idEquipamento = ? ';
             $arrayBind = array();
             $arrayBind[] = array('i',$objEquipamento->getIdEquipamento());
             $objBanco->executarSQL($DELETE, $arrayBind);
-            
         } catch (Exception $ex) {
-            throw new Excecao("Erro removendo equipamento no BD.",$ex);
+            throw new Excecao("Erro removendo equipamento no BD.", $ex);
         }
     }
-    
-    
-
-    
 }

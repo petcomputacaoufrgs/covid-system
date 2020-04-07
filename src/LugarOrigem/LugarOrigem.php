@@ -1,37 +1,37 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\LugarOrigem;
 
-class LugarOrigem{
+class LugarOrigem
+{
     private $idLugarOrigem;
     private $nome;
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
     
-    function getIdLugarOrigem() {
+    public function getIdLugarOrigem()
+    {
         return $this->idLugarOrigem;
     }
 
-    function getNome() {
+    public function getNome()
+    {
         return $this->nome;
     }
 
-    function setIdLugarOrigem($idLugarOrigem) {
+    public function setIdLugarOrigem($idLugarOrigem)
+    {
         $this->idLugarOrigem = $idLugarOrigem;
     }
 
-    function setNome($nome) {
+    public function setNome($nome)
+    {
         $this->nome = $nome;
     }
-
-
-
-
-
 }

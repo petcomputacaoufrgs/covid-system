@@ -1,37 +1,37 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\PerfilPaciente;
 
-
-class PerfilPaciente{
+class PerfilPaciente
+{
     private $idPerfilPaciente;
     private $perfil;
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
     
-    function getIdPerfilPaciente() {
+    public function getIdPerfilPaciente()
+    {
         return $this->idPerfilPaciente;
     }
 
-    function getPerfil() {
+    public function getPerfil()
+    {
         return $this->perfil;
     }
 
-    function setIdPerfilPaciente($idPerfilPaciente) {
+    public function setIdPerfilPaciente($idPerfilPaciente)
+    {
         $this->idPerfilPaciente = $idPerfilPaciente;
     }
 
-    function setPerfil($perfil) {
+    public function setPerfil($perfil)
+    {
         $this->perfil = $perfil;
     }
-
-
-
-    
 }

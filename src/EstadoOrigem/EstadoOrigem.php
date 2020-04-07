@@ -1,45 +1,48 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\EstadoOrigem;
 
-class EstadoOrigem{
+class EstadoOrigem
+{
     private $cod_estado;
     private $sigla;
     private $nome;
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
     
-    function getCod_estado() {
+    public function getCod_estado()
+    {
         return $this->cod_estado;
     }
 
-    function getSigla() {
+    public function getSigla()
+    {
         return $this->sigla;
     }
 
-    function getNome() {
+    public function getNome()
+    {
         return $this->nome;
     }
 
-    function setCod_estado($cod_estado) {
+    public function setCod_estado($cod_estado)
+    {
         $this->cod_estado = $cod_estado;
     }
 
-    function setSigla($sigla) {
+    public function setSigla($sigla)
+    {
         $this->sigla = $sigla;
     }
 
-    function setNome($nome) {
+    public function setNome($nome)
+    {
         $this->nome = $nome;
     }
-
-
-
-
 }

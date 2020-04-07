@@ -1,46 +1,48 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\Usuario\Recurso;
 
-class Recurso{
+class Recurso
+{
     private $idRecurso;
     private $nome;
     private $s_n_menu;
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
     
-    function getIdRecurso() {
+    public function getIdRecurso()
+    {
         return $this->idRecurso;
     }
 
-    function getNome() {
+    public function getNome()
+    {
         return $this->nome;
     }
 
-    function get_s_n_menu() {
+    public function get_s_n_menu()
+    {
         return $this->s_n_menu;
     }
 
-    function setIdRecurso($idRecurso) {
+    public function setIdRecurso($idRecurso)
+    {
         $this->idRecurso = $idRecurso;
     }
 
-    function setNome($nome) {
+    public function setNome($nome)
+    {
         $this->nome = $nome;
     }
 
-    function set_s_n_menu($s_n_menu) {
+    public function set_s_n_menu($s_n_menu)
+    {
         $this->s_n_menu = $s_n_menu;
     }
-
-
-
-
-
 }

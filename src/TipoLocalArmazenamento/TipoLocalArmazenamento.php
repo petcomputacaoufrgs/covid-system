@@ -1,52 +1,59 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\TipoLocalArmazenamento;
 
-
-class TipoLocalArmazenamento{
+class TipoLocalArmazenamento
+{
     private $idTipoLocalArmazenamento;
     private $nomeLocal;
     private $qntEspacosTotal;
     private $qntEspacosAmostra;
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
     
-    function getIdTipoLocalArmazenamento() {
+    public function getIdTipoLocalArmazenamento()
+    {
         return $this->idTipoLocalArmazenamento;
     }
 
-    function getNomeLocal() {
+    public function getNomeLocal()
+    {
         return $this->nomeLocal;
     }
 
-    function getQntEspacosTotal() {
+    public function getQntEspacosTotal()
+    {
         return $this->qntEspacosTotal;
     }
 
-    function getQntEspacosAmostra() {
+    public function getQntEspacosAmostra()
+    {
         return $this->qntEspacosAmostra;
     }
 
-    function setIdTipoLocalArmazenamento($idTipoLocalArmazenamento) {
+    public function setIdTipoLocalArmazenamento($idTipoLocalArmazenamento)
+    {
         $this->idTipoLocalArmazenamento = $idTipoLocalArmazenamento;
     }
 
-    function setNomeLocal($nomeLocal) {
+    public function setNomeLocal($nomeLocal)
+    {
         $this->nomeLocal = $nomeLocal;
     }
 
-    function setQntEspacosTotal($qntEspacosTotal) {
+    public function setQntEspacosTotal($qntEspacosTotal)
+    {
         $this->qntEspacosTotal = $qntEspacosTotal;
     }
 
-    function setQntEspacosAmostra($qntEspacosAmostra) {
+    public function setQntEspacosAmostra($qntEspacosAmostra)
+    {
         $this->qntEspacosAmostra = $qntEspacosAmostra;
     }
-    
 }

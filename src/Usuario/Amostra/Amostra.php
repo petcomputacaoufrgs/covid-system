@@ -1,12 +1,13 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\Usuario\Amostra;
 
-class Amostra{
+class Amostra
+{
     private $idAmostra;
     private $idTipoAmostra_fk;
     private $idUsuario_fk;
@@ -18,89 +19,106 @@ class Amostra{
     private $dataHoraColeta;
     private $aceita_recusa;
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
-    function getIdAmostra() {
+    public function getIdAmostra()
+    {
         return $this->idAmostra;
     }
 
-    function getIdTipoAmostra_fk() {
+    public function getIdTipoAmostra_fk()
+    {
         return $this->idTipoAmostra_fk;
     }
 
-    function getIdUsuario_fk() {
+    public function getIdUsuario_fk()
+    {
         return $this->idUsuario_fk;
     }
 
-    function getIdPaciente_fk() {
+    public function getIdPaciente_fk()
+    {
         return $this->idPaciente_fk;
     }
 
-    function getQuantidade() {
+    public function getQuantidade()
+    {
         return $this->quantidade;
     }
 
-    function getObservacoes() {
+    public function getObservacoes()
+    {
         return $this->observacoes;
     }
 
-    function getDataHoraInicio() {
+    public function getDataHoraInicio()
+    {
         return $this->dataHoraInicio;
     }
 
-    function getDataHoraFim() {
+    public function getDataHoraFim()
+    {
         return $this->dataHoraFim;
     }
 
-    function getDataHoraColeta() {
+    public function getDataHoraColeta()
+    {
         return $this->dataHoraColeta;
     }
 
-    function getAceita_recusa() {
+    public function getAceita_recusa()
+    {
         return $this->aceita_recusa;
     }
 
-    function setIdAmostra($idAmostra) {
+    public function setIdAmostra($idAmostra)
+    {
         $this->idAmostra = $idAmostra;
     }
 
-    function setIdTipoAmostra_fk($idTipoAmostra_fk) {
+    public function setIdTipoAmostra_fk($idTipoAmostra_fk)
+    {
         $this->idTipoAmostra_fk = $idTipoAmostra_fk;
     }
 
-    function setIdUsuario_fk($idUsuario_fk) {
+    public function setIdUsuario_fk($idUsuario_fk)
+    {
         $this->idUsuario_fk = $idUsuario_fk;
     }
 
-    function setIdPaciente_fk($idPaciente_fk) {
+    public function setIdPaciente_fk($idPaciente_fk)
+    {
         $this->idPaciente_fk = $idPaciente_fk;
     }
 
-    function setQuantidade($quantidade) {
+    public function setQuantidade($quantidade)
+    {
         $this->quantidade = $quantidade;
     }
 
-    function setObservacoes($observacoes) {
+    public function setObservacoes($observacoes)
+    {
         $this->observacoes = $observacoes;
     }
 
-    function setDataHoraInicio($dataHoraInicio) {
+    public function setDataHoraInicio($dataHoraInicio)
+    {
         $this->dataHoraInicio = $dataHoraInicio;
     }
 
-    function setDataHoraFim($dataHoraFim) {
+    public function setDataHoraFim($dataHoraFim)
+    {
         $this->dataHoraFim = $dataHoraFim;
     }
 
-    function setDataHoraColeta($dataHoraColeta) {
+    public function setDataHoraColeta($dataHoraColeta)
+    {
         $this->dataHoraColeta = $dataHoraColeta;
     }
 
-    function setAceita_recusa($aceita_recusa) {
+    public function setAceita_recusa($aceita_recusa)
+    {
         $this->aceita_recusa = $aceita_recusa;
     }
-
-
-
 }

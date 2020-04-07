@@ -1,35 +1,37 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\Usuario\Doenca;
 
-class Doenca{
+class Doenca
+{
     private $idDoenca;
     private $doenca;
     
-    function __construct() {
-        
+    public function __construct()
+    {
     }
     
-    function getIdDoenca() {
+    public function getIdDoenca()
+    {
         return $this->idDoenca;
     }
 
-    function getDoenca() {
+    public function getDoenca()
+    {
         return $this->doenca;
     }
 
-    function setIdDoenca($idDoenca) {
+    public function setIdDoenca($idDoenca)
+    {
         $this->idDoenca = $idDoenca;
     }
 
-    function setDoenca($doenca) {
+    public function setDoenca($doenca)
+    {
         $this->doenca = $doenca;
     }
-
-
-
 }

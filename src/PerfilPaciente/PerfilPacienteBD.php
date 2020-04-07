@@ -1,15 +1,18 @@
 <?php
 
-/* 
+/*
  *  Author: Carine Bertagnolli Bathaglini
  */
 
 namespace InfUfrgs\PerfilPaciente;
-use InfUfrgs\Banco\Banco;
-class PerfilPacienteBD{
 
-    public function cadastrar(PerfilPaciente $objPerfilPaciente, Banco $objBanco) {
-        try{
+use InfUfrgs\Banco\Banco;
+
+class PerfilPacienteBD
+{
+    public function cadastrar(PerfilPaciente $objPerfilPaciente, Banco $objBanco)
+    {
+        try {
             //echo $objPerfilPaciente->getPerfil();
             //die("die");
             $INSERT = 'INSERT INTO tb_perfilpaciente (perfil) VALUES (?)';
@@ -18,16 +21,16 @@ class PerfilPacienteBD{
             $arrayBind[] = array('s',$objPerfilPaciente->getPerfil());
 
 
-            $objBanco->executarSQL($INSERT,$arrayBind);
+            $objBanco->executarSQL($INSERT, $arrayBind);
             $objPerfilPaciente->setIdPerfilPaciente($objBanco->obterUltimoID());
         } catch (Exception $ex) {
-            throw new Excecao("Erro cadastrando perfil do paciente no BD.",$ex);
+            throw new Excecao("Erro cadastrando perfil do paciente no BD.", $ex);
         }
-        
     }
     
-    public function alterar(PerfilPaciente $objPerfilPaciente, Banco $objBanco) {
-        try{
+    public function alterar(PerfilPaciente $objPerfilPaciente, Banco $objBanco)
+    {
+        try {
             $UPDATE = 'UPDATE tb_perfilpaciente SET '
                 . ' perfil = ?'
                 . '  where idPerfilPaciente = ?';
@@ -37,24 +40,22 @@ class PerfilPacienteBD{
             $arrayBind[] = array('s',$objPerfilPaciente->getPerfil());
             $arrayBind[] = array('i',$objPerfilPaciente->getIdPerfilPaciente());
 
-            $objBanco->executarSQL($UPDATE,$arrayBind);
-
+            $objBanco->executarSQL($UPDATE, $arrayBind);
         } catch (Exception $ex) {
-            throw new Excecao("Erro alterando perfil do paciente no BD.",$ex);
+            throw new Excecao("Erro alterando perfil do paciente no BD.", $ex);
         }
-       
     }
     
-     public function listar(PerfilPaciente $objPerfilPaciente, Banco $objBanco) {
-         try{
-      
+    public function listar(PerfilPaciente $objPerfilPaciente, Banco $objBanco)
+    {
+        try {
             $SELECT = "SELECT * FROM tb_perfilpaciente";
 
 
             $arr = $objBanco->consultarSQL($SELECT);
 
             $array_perfil = array();
-            foreach ($arr as $reg){
+            foreach ($arr as $reg) {
                 $objPerfilPaciente = new PerfilPaciente();
                 $objPerfilPaciente->setIdPerfilPaciente($reg['idPerfilPaciente']);
                 $objPerfilPaciente->setPerfil($reg['perfil']);
@@ -63,21 +64,19 @@ class PerfilPacienteBD{
             }
             return $array_perfil;
         } catch (Exception $ex) {
-            throw new Excecao("Erro listando perfil do paciente no BD.",$ex);
+            throw new Excecao("Erro listando perfil do paciente no BD.", $ex);
         }
-       
     }
     
-    public function consultar(PerfilPaciente $objPerfilPaciente, Banco $objBanco) {
-
-        try{
-
+    public function consultar(PerfilPaciente $objPerfilPaciente, Banco $objBanco)
+    {
+        try {
             $SELECT = 'SELECT idPerfilPaciente,perfil FROM tb_perfilpaciente WHERE idPerfilPaciente = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objPerfilPaciente->getIdPerfilPaciente());
 
-            $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
 
             $perfilAmostra = new PerfilPaciente();
             $perfilAmostra->setIdPerfilPaciente($arr[0]['idPerfilPaciente']);
@@ -85,27 +84,19 @@ class PerfilPacienteBD{
 
             return $perfilAmostra;
         } catch (Exception $ex) {
-       
-            throw new Excecao("Erro consultando perfil do paciente no BD.",$ex);
+            throw new Excecao("Erro consultando perfil do paciente no BD.", $ex);
         }
-
     }
     
-    public function remover(PerfilPaciente $objPerfilPaciente, Banco $objBanco) {
-
-        try{
-            
-            $DELETE = 'DELETE FROM tb_perfilpaciente WHERE idPerfilPaciente = ? ';  
+    public function remover(PerfilPaciente $objPerfilPaciente, Banco $objBanco)
+    {
+        try {
+            $DELETE = 'DELETE FROM tb_perfilpaciente WHERE idPerfilPaciente = ? ';
             $arrayBind = array();
             $arrayBind[] = array('i',$objPerfilPaciente->getIdPerfilPaciente());
             $objBanco->executarSQL($DELETE, $arrayBind);
-            
         } catch (Exception $ex) {
-            throw new Excecao("Erro removendo perfil do paciente no BD.",$ex);
+            throw new Excecao("Erro removendo perfil do paciente no BD.", $ex);
         }
     }
-    
-    
-
-    
 }
