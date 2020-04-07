@@ -5,7 +5,9 @@
  */
 
 namespace InfUfrgs\Equipamento;
+
 use InfUfrgs\Banco\Banco;
+
 class EquipamentoBD{
 
     public function cadastrar(Equipamento $objEquipamento, Banco $objBanco) {

@@ -19,7 +19,7 @@ and open the template in the editor.
             <li><a href="controlador.php?action=#">Cadastrar</a></li>
             <li><a href="controlador.php?action=#">Listar</a></li>
             <li>---------------- ARMAZENAR AMOSTRA</li>
-            <li><a href="controlador.php?action=#">Cadastrar</a></li>
+            <li><a href="controlador.php?action=cadastrar_amostra_localArmazenamento">Cadastrar</a></li>
             <li><a href="controlador.php?action=#">Listar</a></li>
             <li>---------------- EXTRAÇÃO DA AMOSTRA</li>
             <li><a href="controlador.php?action=#">Cadastrar</a></li>

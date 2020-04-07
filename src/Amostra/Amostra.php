@@ -8,49 +8,50 @@ namespace InfUfrgs\Amostra;
 
 class Amostra{
     private $idAmostra;
-    private $idTipoAmostra_fk;
-    private $idUsuario_fk;
     private $idPaciente_fk;
-    private $quantidade;
+    private $idEstado_fk;
+    private $idLugarOrigem_fk;
+    private $quantidadeTubos;
     private $observacoes;
-    private $dataHoraInicio;
-    private $dataHoraFim;
     private $dataHoraColeta;
     private $aceita_recusa;
     
     function __construct() {
         
     }
+    
+    function getIdEstado_fk() {
+        return $this->idEstado_fk;
+    }
+
+    function getIdLugarOrigem_fk() {
+        return $this->idLugarOrigem_fk;
+    }
+
+    function setIdEstado_fk($idEstado_fk) {
+        $this->idEstado_fk = $idEstado_fk;
+    }
+
+    function setIdLugarOrigem_fk($idLugarOrigem_fk) {
+        $this->idLugarOrigem_fk = $idLugarOrigem_fk;
+    }
+
+        
     function getIdAmostra() {
         return $this->idAmostra;
     }
 
-    function getIdTipoAmostra_fk() {
-        return $this->idTipoAmostra_fk;
-    }
-
-    function getIdUsuario_fk() {
-        return $this->idUsuario_fk;
-    }
-
+    
     function getIdPaciente_fk() {
         return $this->idPaciente_fk;
     }
 
-    function getQuantidade() {
-        return $this->quantidade;
+    function getQuantidadeTubos() {
+        return $this->quantidadeTubos;
     }
 
     function getObservacoes() {
         return $this->observacoes;
-    }
-
-    function getDataHoraInicio() {
-        return $this->dataHoraInicio;
-    }
-
-    function getDataHoraFim() {
-        return $this->dataHoraFim;
     }
 
     function getDataHoraColeta() {
@@ -65,32 +66,17 @@ class Amostra{
         $this->idAmostra = $idAmostra;
     }
 
-    function setIdTipoAmostra_fk($idTipoAmostra_fk) {
-        $this->idTipoAmostra_fk = $idTipoAmostra_fk;
-    }
-
-    function setIdUsuario_fk($idUsuario_fk) {
-        $this->idUsuario_fk = $idUsuario_fk;
-    }
-
+   
     function setIdPaciente_fk($idPaciente_fk) {
         $this->idPaciente_fk = $idPaciente_fk;
     }
 
-    function setQuantidade($quantidade) {
-        $this->quantidade = $quantidade;
+    function setQuantidadeTubos($quantidadeTubos) {
+        $this->quantidadeTubos = $quantidadeTubos;
     }
 
     function setObservacoes($observacoes) {
         $this->observacoes = $observacoes;
-    }
-
-    function setDataHoraInicio($dataHoraInicio) {
-        $this->dataHoraInicio = $dataHoraInicio;
-    }
-
-    function setDataHoraFim($dataHoraFim) {
-        $this->dataHoraFim = $dataHoraFim;
     }
 
     function setDataHoraColeta($dataHoraColeta) {

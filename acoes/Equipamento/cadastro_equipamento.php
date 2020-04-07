@@ -182,15 +182,16 @@ function montar_select_modelos(&$select_modelos, $objModelo, $objModeloRN, &$obj
 
 <?php Pagina::abrir_head("Cadastrar Equipamento"); ?>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" rel="stylesheet" />
-
 
 
 <style>
+    body,html{
+        font-size: 20px !important;
+    }
+    .dropdown-toggle{
+        
+        height: 45px;
+    }
     .placeholder_colored::-webkit-input-placeholder  {
         color: red;
         text-align: left;
@@ -214,9 +215,7 @@ function montar_select_modelos(&$select_modelos, $objModelo, $objModeloRN, &$obj
         background-color: pink;
     }
 
-    .box{
-        border: 1px solid red;
-    }
+    
 </style>
 <?php Pagina::fechar_head(); ?>
 <?php $objPagina->montar_menu_topo(); ?>
@@ -231,7 +230,7 @@ function montar_select_modelos(&$select_modelos, $objModelo, $objModeloRN, &$obj
             
             <div class="col-md-4 mb-4">
                 <label for="detentorEquipamento" >*Detentor:</label>
-                <select class="form-control selectpicker is-invalid" id="select-country" data-live-search="true" name="sel_detentores">
+                <select class="form-control selectpicker " id="select-country" data-live-search="true" name="sel_detentores">
                     <?= $select_detentores ?>
                 </select>
             </div>
