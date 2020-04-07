@@ -10,7 +10,7 @@ and open the template in the editor.
         <title></title>
     </head>
     <body>
-        
+        <li><a href="controlador.php?action=cadastrar_amostra_localArmazenamento">Preparação e Armazenamento</a></li>
         <ul>
             <li>---------------- CADASTRAR AMOSTRA</li>
             <li><a href="controlador.php?action=#">Cadastrar</a></li>

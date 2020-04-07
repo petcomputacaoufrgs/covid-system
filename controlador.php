@@ -9,6 +9,12 @@ switch ($_GET['action']):
         require_once 'index.php';
         break;
     
+    
+    case 'cadastrar_amostra_localArmazenamento':
+        require_once 'telas_prototipos/cadastro_amostra_localArmazenamento.php';
+        break;
+    
+    
     case 'cadastrar_tipoAmostra':
     case 'editar_tipoAmostra':
         require_once 'acoes/TipoAmostra/cadastro_tipoAmostra.php';
