@@ -1,5 +1,11 @@
 <?php 
 require __DIR__ . '/vendor/autoload.php';
+
+if (isset($_SESSION['DATA_LOGIN'])) {
+    header('Location: login/index.php');
+    exit;
+}
+
 ?>
 <!DOCTYPE html>
 <!--
