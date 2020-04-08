@@ -176,10 +176,7 @@ $objPagina = new Pagina();
                     <label class="custom-control-label" for="customControlAutosizing" >Vai direto para extração</label>
                   </div>
             </div>
-            <!-- quando selecionar o checkbox deve-se procurar no banco se há algum recurso disponível para a extração ou ao enviar o form-->
-                  
-            
-            
+            <!-- quando selecionar o checkbox deve-se procurar no banco se há algum recurso disponível para a extração ou ao enviar o form-->   
         </div>
         
         
@@ -217,11 +214,7 @@ $objPagina = new Pagina();
                 <div id ="feedback_obsAmostra"></div>
             </div>
         </div>
-                  
             
-                      
-    
-        
         <div class="form-row" style="margin-top:40px;">  
             
             <div class="col-md-1"><h3 style="color:gray;margin-top:30px;text-align: center;"> Tubo 3 </h3></div>
@@ -257,13 +250,7 @@ $objPagina = new Pagina();
            
             
         </div>
-        
-        
-               
-
-
          
-
             <button style="margin-top:20px;" class="btn btn-primary" type="submit" name="salvar_paciente">Salvar</button>
             <?php }
             } 

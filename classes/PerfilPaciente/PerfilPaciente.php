@@ -7,6 +7,7 @@
 class PerfilPaciente{
     private $idPerfilPaciente;
     private $perfil;
+    private $index_perfil;
     
     function __construct() {
         
@@ -20,6 +21,10 @@ class PerfilPaciente{
         return $this->perfil;
     }
 
+    function getIndex_perfil() {
+        return $this->index_perfil;
+    }
+
     function setIdPerfilPaciente($idPerfilPaciente) {
         $this->idPerfilPaciente = $idPerfilPaciente;
     }
@@ -28,7 +33,9 @@ class PerfilPaciente{
         $this->perfil = $perfil;
     }
 
-
+    function setIndex_perfil($index_perfil) {
+        $this->index_perfil = $index_perfil;
+    }
 
     
 }

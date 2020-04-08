@@ -6,17 +6,22 @@ require_once 'classes/Pagina/Pagina.php';
 require_once 'classes/Excecao/Excecao.php';
 require_once 'classes/PerfilPaciente/PerfilPaciente.php';
 require_once 'classes/PerfilPaciente/PerfilPacienteRN.php';
-
+require_once 'utils/Utils.php';
+$utils = new Utils();
 $objPagina = new Pagina();
 $objPerfilPaciente = new PerfilPaciente();
 $objPerfilPacienteRN = new PerfilPacienteRN();
+
 $cadastrado_sucesso = '';
 $sucesso ='';
 try{
     switch($_GET['action']){
         case 'cadastrar_perfilPaciente':
             if(isset($_POST['salvar_perfilPaciente'])){
-                $objPerfilPaciente->setPerfil( mb_strtolower($_POST['txtPerfilPaciente'],'utf-8'));
+                $objPerfilPaciente->setPerfil($_POST['txtPerfilPaciente']);
+                $objPerfilPaciente->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilPaciente'])));
+                echo $objPerfilPaciente->getIndex_perfil();
+                
                 $objPerfilPacienteRN->cadastrar($objPerfilPaciente);
                 $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
             }else{
@@ -33,7 +38,8 @@ try{
             
              if(isset($_POST['salvar_perfilPaciente'])){ //se enviou o formulário com as alterações
                 $objPerfilPaciente->setIdPerfilPaciente($_GET['idPerfilPaciente']);
-                $objPerfilPaciente->setPerfil(mb_strtolower($_POST['txtPerfilPaciente'],'utf-8'));
+                $objPerfilPaciente->setPerfil($_POST['txtPerfilPaciente']);
+                $objPerfilPaciente->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilPaciente'])));
                 $objPerfilPacienteRN->alterar($objPerfilPaciente);
                 $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
             }

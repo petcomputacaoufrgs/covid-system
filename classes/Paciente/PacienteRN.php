@@ -24,13 +24,13 @@ class PacienteRN{
         return $paciente->setNome($strNome);
     }
     
-    //NÃO CADASTRA PACIENTE COM MESMO NOME E MESMO NOME DE MÃE
+    
     private function validarCadastro(Paciente $paciente,Excecao $objExcecao){
         
         $pacienteRN  = new PacienteRN();
         $arr_pacientes = $pacienteRN->listar($paciente);
         foreach ($arr_pacientes as $p){
-            if($paciente->getNome() == $p->getNome() && $paciente->getNomeMae() == $p->getNomeMae()){
+            if($paciente->getNome() == $p->getNome() && $paciente->getCPF() == $p->getCPF()){
                 return false;
             }
         }
@@ -118,34 +118,7 @@ class PacienteRN{
                            
         return $paciente->setRG($strRG);
     }
-    
-    private function validarCodigoGAL(Paciente $paciente,Excecao $objExcecao){
-        $strCodGal = trim($paciente->getCodGAL());
-        
-       
-        if (strlen($strCodGal) > 15) {
-            $objExcecao->adicionar_validacao('O código GAL do paciente possui mais que 15 caracteres.','idCodGal');
-        }
-                           
-        return $paciente->setCodGAL($strCodGal);
-    }
-    
-    private function validarObsCPF(Paciente $paciente,Excecao $objExcecao){
-        $strObsCPF = trim($paciente->getObsCPF());
-       
-        
-        if($paciente->getIdPerfilPaciente_fk() != 3){
-            if($strObsCPF == '' && $paciente->getCPF() == '' ){
-                $objExcecao->adicionar_validacao('Insira o CPF do paciente.','idObsCPF');
-            }
-        }
-        if (strlen($strObsCPF) > 150) {
-            $objExcecao->adicionar_validacao('As observações do CPF do paciente possui mais que 150 caracteres.','idObsCPF');
-        }
-                           
-        return $paciente->setObsCPF($strObsCPF);
-    }
-    
+            
     private function validarObsRG(Paciente $paciente,Excecao $objExcecao){
         $strObsRG = trim($paciente->getObsRG());
        
@@ -178,8 +151,7 @@ class PacienteRN{
         return $paciente->setDataNascimento($strDataNascimento);
     }
     
-    
-    
+        
     public function cadastrar(Paciente $paciente) {
         try {
             
@@ -187,25 +159,26 @@ class PacienteRN{
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             
-            $this->validarCPF($paciente,$objExcecao); 
-            $this->validarCodigoGAL($paciente,$objExcecao); 
+            $this->validarCPF($paciente,$objExcecao);  
             $this->validarDataNascimento($paciente,$objExcecao); 
             $this->validarNome($paciente,$objExcecao); 
             $this->validarNomeMae($paciente,$objExcecao); 
-            $this->validarObsCPF($paciente,$objExcecao); 
             $this->validarObsNomeMae($paciente,$objExcecao); 
             $this->validarObsRG($paciente,$objExcecao); 
             $this->validarObsSexo($paciente,$objExcecao); 
             $this->validarRG($paciente,$objExcecao); 
             
-            
+            if($this->validarCadastro($paciente,$objExcecao)){
                 $objExcecao->lancar_validacoes();
                 $objPacienteBD = new PacienteBD();
                 //print_r($paciente);        
                 $objPacienteBD->cadastrar($paciente,$objBanco);
-            
-            
-            
+            }else{
+                //retornar o ID do paciente que já existe no sistema
+                $objPacienteRN = new PacienteRN();
+                $paciente = $objPacienteRN->consultar($paciente);
+            }          
+           
             $objBanco->fecharConexao();
         } catch (Exception $e) {
             throw new Excecao('Erro cadastrando a marca.', $e);

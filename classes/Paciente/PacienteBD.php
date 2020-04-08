@@ -8,21 +8,21 @@ class PacienteBD{
     public function cadastrar(Paciente $objPaciente, Banco $objBanco) {
         try{
             //echo $objPaciente->getPaciente();
-            $INSERT = 'INSERT INTO tb_paciente (idSexo_fk,idPerfilPaciente_fk,nome,nomeMae,CPF,RG,obsCPF,'
-                    . 'obsRG,obsSexo,codGAL,dataNascimento,obsNomeMae) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)';
+            $INSERT = 'INSERT INTO tb_paciente (idSexo_fk,idPerfilPaciente_fk,nome,nomeMae,dataNascimento,CPF,RG,'
+                    . 'obsRG,obsSexo,obsNomeMae) VALUES (?,?,?,?,?,?,?,?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objPaciente->getIdSexo_fk());
             $arrayBind[] = array('i',$objPaciente->getIdPerfilPaciente_fk());
             $arrayBind[] = array('s',$objPaciente->getNome());
             $arrayBind[] = array('s',$objPaciente->getNomeMae());
+            $arrayBind[] = array('s',$objPaciente->getDataNascimento());
             $arrayBind[] = array('s',$objPaciente->getCPF());
             $arrayBind[] = array('s',$objPaciente->getRG());
             $arrayBind[] = array('s',$objPaciente->getObsCPF());
             $arrayBind[] = array('s',$objPaciente->getObsRG());
             $arrayBind[] = array('s',$objPaciente->getObsSexo());
             $arrayBind[] = array('s',$objPaciente->getCodGAL());
-            $arrayBind[] = array('s',$objPaciente->getDataNascimento());
             $arrayBind[] = array('s',$objPaciente->getObsNomeMae());
             
             
@@ -44,13 +44,11 @@ class PacienteBD{
                     . ' idPerfilPaciente_fk = ?,'
                     . ' nome = ?,'
                     . ' nomeMae = ?,'
+                    . ' dataNascimento = ?,'
                     . ' CPF = ?,'
                     . ' RG = ?,'
-                    . ' obsCPF = ?,'
                     . ' obsRG = ?,'
                     . ' obsSexo = ?,'
-                    . ' codGAL = ?,'
-                    . ' dataNascimento = ?,'
                     . ' obsNomeMae = ?'
                 . '  where idPaciente = ?';
         
@@ -60,13 +58,11 @@ class PacienteBD{
             $arrayBind[] = array('i',$objPaciente->getIdPerfilPaciente_fk());
             $arrayBind[] = array('s',$objPaciente->getNome());
             $arrayBind[] = array('s',$objPaciente->getNomeMae());
+            $arrayBind[] = array('s',$objPaciente->getDataNascimento());
             $arrayBind[] = array('s',$objPaciente->getCPF());
             $arrayBind[] = array('s',$objPaciente->getRG());
-            $arrayBind[] = array('s',$objPaciente->getObsCPF());
             $arrayBind[] = array('s',$objPaciente->getObsRG());
             $arrayBind[] = array('s',$objPaciente->getObsSexo());
-            $arrayBind[] = array('s',$objPaciente->getCodGAL());
-            $arrayBind[] = array('s',$objPaciente->getDataNascimento());
             $arrayBind[] = array('s',$objPaciente->getObsNomeMae());
             
             $arrayBind[] = array('i',$objPaciente->getIdPaciente());
@@ -97,10 +93,8 @@ class PacienteBD{
                 $objPaciente->setNomeMae($reg['nomeMae']);
                 $objPaciente->setCPF($reg['CPF']);
                 $objPaciente->setRG($reg['RG']);
-                $objPaciente->setObsCPF($reg['obsCPF']);
                 $objPaciente->setObsRG($reg['obsRG']);
                 $objPaciente->setObsSexo($reg['obsSexo']);
-                $objPaciente->setCodGAL($reg['codGAL']);
                 $objPaciente->setDataNascimento($reg['dataNascimento']);
                 $objPaciente->setObsNomeMae($reg['obsNomeMae']);
                 
@@ -119,8 +113,8 @@ class PacienteBD{
 
         try{
 
-            $SELECT = 'SELECT idPaciente,idSexo_fk,idPerfilPaciente_fk,nome,nomeMae,CPF,RG,obsCPF,'
-                    . 'obsRG,obsSexo,codGAL,dataNascimento,obsNomeMae FROM tb_paciente WHERE idPaciente = ?';
+            $SELECT = 'SELECT idPaciente,idSexo_fk,idPerfilPaciente_fk,nome,nomeMae,dataNascimento,CPF,RG,'
+                    . 'obsRG,obsSexo,obsNomeMae FROM tb_paciente WHERE idPaciente = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objPaciente->getIdPaciente());
@@ -135,10 +129,8 @@ class PacienteBD{
             $paciente->setNomeMae($arr[0]['nomeMae']);
             $paciente->setCPF($arr[0]['CPF']);
             $paciente->setRG($arr[0]['RG']);
-            $paciente->setObsCPF($arr[0]['obsCPF']);
             $paciente->setObsRG($arr[0]['obsRG']);
             $paciente->setObsSexo($arr[0]['obsSexo']);
-            $paciente->setCodGAL($arr[0]['codGAL']);
             $paciente->setDataNascimento($arr[0]['dataNascimento']);
             $paciente->setObsNomeMae($arr[0]['obsNomeMae']);
 

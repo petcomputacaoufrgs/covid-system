@@ -9,10 +9,11 @@ class PerfilPacienteBD{
         try{
             //echo $objPerfilPaciente->getPerfil();
             //die("die");
-            $INSERT = 'INSERT INTO tb_perfilpaciente (perfil) VALUES (?)';
+            $INSERT = 'INSERT INTO tb_perfilpaciente (perfil,index_perfil) VALUES (?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('s',$objPerfilPaciente->getPerfil());
+            $arrayBind[] = array('s',$objPerfilPaciente->getIndex_perfil());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -26,12 +27,14 @@ class PerfilPacienteBD{
     public function alterar(PerfilPaciente $objPerfilPaciente, Banco $objBanco) {
         try{
             $UPDATE = 'UPDATE tb_perfilpaciente SET '
-                . ' perfil = ?'
+                     . ' perfil = ?,'
+                     . ' index_perfil = ?'
                 . '  where idPerfilPaciente = ?';
         
                 
             $arrayBind = array();
             $arrayBind[] = array('s',$objPerfilPaciente->getPerfil());
+            $arrayBind[] = array('s',$objPerfilPaciente->getIndex_perfil());
             $arrayBind[] = array('i',$objPerfilPaciente->getIdPerfilPaciente());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
@@ -55,6 +58,8 @@ class PerfilPacienteBD{
                 $objPerfilPaciente = new PerfilPaciente();
                 $objPerfilPaciente->setIdPerfilPaciente($reg['idPerfilPaciente']);
                 $objPerfilPaciente->setPerfil($reg['perfil']);
+                $objPerfilPaciente->setIndex_perfil($reg['index_perfil']);
+                
 
                 $array_perfil[] = $objPerfilPaciente;
             }
@@ -69,18 +74,21 @@ class PerfilPacienteBD{
 
         try{
 
-            $SELECT = 'SELECT idPerfilPaciente,perfil FROM tb_perfilpaciente WHERE idPerfilPaciente = ?';
+            $SELECT = 'SELECT idPerfilPaciente,perfil,index_perfil '
+                    . 'FROM tb_perfilpaciente '
+                    . 'WHERE idPerfilPaciente = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objPerfilPaciente->getIdPerfilPaciente());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
 
-            $perfilAmostra = new PerfilPaciente();
-            $perfilAmostra->setIdPerfilPaciente($arr[0]['idPerfilPaciente']);
-            $perfilAmostra->setPerfil($arr[0]['perfil']);
+            $perfilPaciente = new PerfilPaciente();
+            $perfilPaciente->setIdPerfilPaciente($arr[0]['idPerfilPaciente']);
+            $perfilPaciente->setPerfil($arr[0]['perfil']);
+            $perfilPaciente->setIndex_perfil($arr[0]['index_perfil']);
 
-            return $perfilAmostra;
+            return $perfilPaciente;
         } catch (Exception $ex) {
        
             throw new Excecao("Erro consultando perfil do paciente no BD.",$ex);

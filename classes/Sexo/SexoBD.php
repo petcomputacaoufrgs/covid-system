@@ -7,10 +7,11 @@ class SexoBD{
 
     public function cadastrar(Sexo $objSexo, Banco $objBanco) {
         try{
-            $INSERT = 'INSERT INTO tb_sexo (sexo) VALUES (?)';
+            $INSERT = 'INSERT INTO tb_sexo (sexo,index_sexo) VALUES (?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('s',$objSexo->getSexo());
+            $arrayBind[] = array('s',$objSexo->getIndex_sexo());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -24,12 +25,14 @@ class SexoBD{
     public function alterar(Sexo $objSexo, Banco $objBanco) {
         try{
             $UPDATE = 'UPDATE tb_sexo SET '
-                . ' sexo = ?'
+                    . ' sexo = ?,'
+                    . ' index_sexo = ?'
                 . '  where idSexo = ?';
         
                 
             $arrayBind = array();
             $arrayBind[] = array('s',$objSexo->getSexo());
+            $arrayBind[] = array('s',$objSexo->getIndex_sexo());
             $arrayBind[] = array('i',$objSexo->getIdSexo());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
@@ -53,6 +56,7 @@ class SexoBD{
                 $objSexo = new Sexo();
                 $objSexo->setIdSexo($reg['idSexo']);
                 $objSexo->setSexo($reg['sexo']);
+                $objSexo->setIndex_sexo($reg['index_sexo']);
 
                 $array_sexo[] = $objSexo;
             }
@@ -67,7 +71,7 @@ class SexoBD{
 
         try{
 
-            $SELECT = 'SELECT idSexo,sexo FROM tb_sexo WHERE idSexo = ?';
+            $SELECT = 'SELECT idSexo,sexo,index_sexo FROM tb_sexo WHERE idSexo = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objSexo->getIdSexo());
@@ -77,6 +81,7 @@ class SexoBD{
             $sexoAmostra = new Sexo();
             $sexoAmostra->setIdSexo($arr[0]['idSexo']);
             $sexoAmostra->setSexo($arr[0]['sexo']);
+            $sexoAmostra->setIndex_sexo($arr[0]['index_sexo']);
 
             return $sexoAmostra;
         } catch (Exception $ex) {

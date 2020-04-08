@@ -6,7 +6,8 @@ require_once 'classes/Pagina/Pagina.php';
 require_once 'classes/Excecao/Excecao.php';
 require_once 'classes/Sexo/Sexo.php';
 require_once 'classes/Sexo/SexoRN.php';
-
+require_once 'utils/Utils.php';
+$utils = new Utils();
 $objPagina = new Pagina();
 $objSexo = new Sexo();
 $objSexoRN = new SexoRN();
@@ -15,7 +16,9 @@ try{
     switch($_GET['action']){
         case 'cadastrar_sexoPaciente':
             if(isset($_POST['salvar_sexoPaciente'])){
-                $objSexo->setSexo(mb_strtolower($_POST['txtSexo'],'utf-8'));
+                $objSexo->setSexo($_POST['txtSexo']);
+                $objSexo->setIndex_sexo(strtoupper($utils->tirarAcentos($_POST['txtSexo'])));
+                echo $objSexo->getIndex_sexo();
                 $objSexoRN->cadastrar($objSexo);
                  $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
             }else{
@@ -32,7 +35,8 @@ try{
             
              if(isset($_POST['salvar_sexoPaciente'])){ //se enviou o formulário com as alterações
                 $objSexo->setIdSexo($_GET['idSexoPaciente']);
-                $objSexo->setSexo(mb_strtolower($_POST['txtSexo'],'utf-8'));
+                $objSexo->setSexo($_POST['txtSexo']);
+                $objSexo->setIndex_sexo(strtoupper($utils->tirarAcentos($_POST['txtSexo'])));
                 $objSexoRN->alterar($objSexo);
                 $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
             }

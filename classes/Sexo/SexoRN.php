@@ -19,18 +19,27 @@ class SexoRN{
             if (strlen($strSexo) > 50) {
                 $objExcecao->adicionar_validacao('O sexo possui mais que 50 caracteres.','idSexoPaciente');
             }
-            
-            $sexo_aux_RN = new SexoRN();
-            $array_sexos = $sexo_aux_RN->listar($sexo);
-            //print_r($array_sexos);
+        }
+        
+        return $sexo->setSexo($strSexo);
+
+    }
+    
+    private function validarIndexSexo(Sexo $sexo,Excecao $objExcecao){
+        $strIndexSexo = trim($sexo->getIndex_sexo());
+        
+        $sexo_aux_RN = new SexoRN();
+        $array_sexos = $sexo_aux_RN->listar($sexo);
+        
+        if(!empty($array_sexos)){
             foreach ($array_sexos as $s){
-                if($s->getSexo() == $sexo->getSexo()){
+                if($s->getIndex_sexo() == $strIndexSexo){
                     $objExcecao->adicionar_validacao('O sexo digitado já existe.','idSexoPaciente');
                 }
             }
         }
-        
-        return $sexo->setSexo($strSexo);
+               
+        return $sexo->setIndex_sexo($strIndexSexo);
 
     }
      
@@ -43,6 +52,9 @@ class SexoRN{
             $objBanco->abrirConexao(); 
             
             $this->validarSexo($sexo,$objExcecao); 
+            $this->validarIndexSexo($sexo,$objExcecao); 
+            
+            
             $objExcecao->lancar_validacoes();
             $objSexoBD = new SexoBD();
             $objSexoBD->cadastrar($sexo,$objBanco);
@@ -61,6 +73,7 @@ class SexoRN{
             $objBanco->abrirConexao(); 
             
             $this->validarSexo($sexo,$objExcecao);   
+            $this->validarIndexSexo($sexo,$objExcecao); 
             
             $objExcecao->lancar_validacoes();
             $objSexoBD = new SexoBD();

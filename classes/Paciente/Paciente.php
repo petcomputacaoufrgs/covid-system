@@ -7,13 +7,11 @@ class Paciente{
     private $idPaciente;
     private $idSexo_fk;
     private $idPerfilPaciente_fk;
-    private $codGAL;
     private $CPF;
     private $RG;
     private $nome;
     private $nomeMae;
     private $dataNascimento;
-    private $obsCPF;
     private $obsRG;
     private $obsSexo;
     private $obsNomeMae;
@@ -34,10 +32,6 @@ class Paciente{
         return $this->idPerfilPaciente_fk;
     }
 
-    function getCodGAL() {
-        return $this->codGAL;
-    }
-
     function getCPF() {
         return $this->CPF;
     }
@@ -56,10 +50,6 @@ class Paciente{
 
     function getDataNascimento() {
         return $this->dataNascimento;
-    }
-
-    function getObsCPF() {
-        return $this->obsCPF;
     }
 
     function getObsRG() {
@@ -86,10 +76,6 @@ class Paciente{
         $this->idPerfilPaciente_fk = $idPerfilPaciente_fk;
     }
 
-    function setCodGAL($codGAL) {
-        $this->codGAL = $codGAL;
-    }
-
     function setCPF($CPF) {
         $this->CPF = $CPF;
     }
@@ -110,10 +96,6 @@ class Paciente{
         $this->dataNascimento = $dataNascimento;
     }
 
-    function setObsCPF($obsCPF) {
-        $this->obsCPF = $obsCPF;
-    }
-
     function setObsRG($obsRG) {
         $this->obsRG = $obsRG;
     }
@@ -125,8 +107,5 @@ class Paciente{
     function setObsNomeMae($obsNomeMae) {
         $this->obsNomeMae = $obsNomeMae;
     }
-
-    
-    
     
 }

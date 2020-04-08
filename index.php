@@ -10,7 +10,11 @@ and open the template in the editor.
         <title></title>
     </head>
     <body>
+        <li><a href="controlador.php?action=recepcionar_amostra">Etapa Recepção Amostra</a></li>
         <li><a href="controlador.php?action=cadastrar_amostra_localArmazenamento">Preparação e Armazenamento</a></li>
+        <li><a href="controlador.php?action=extrair_amostra">Etapa Extração</a></li>
+        <li><a href="controlador.php?action=exibir_laudo">Etapa Laudo</a></li>
+
         <ul>
             <li>---------------- CADASTRAR AMOSTRA</li>
             <li><a href="controlador.php?action=#">Cadastrar</a></li>

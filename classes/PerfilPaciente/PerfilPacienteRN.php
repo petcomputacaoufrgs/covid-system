@@ -19,18 +19,27 @@ class PerfilPacienteRN{
             if (strlen($strPerfilPaciente) > 50) {
                 $objExcecao->adicionar_validacao('O perfil do paciente possui mais que 50 caracteres.','idPerfilPaciente');
             }
-            
-            $perfilPaciente_aux_RN = new PerfilPacienteRN();
-            $array_perfis = $perfilPaciente_aux_RN->listar($perfilPaciente);
-            //print_r($array_sexos);
-            foreach ($array_perfis as $p){
-                if($p->getPerfil() == $perfilPaciente->getPerfil()){
-                    $objExcecao->adicionar_validacao('O perfil do paciente já existe.','idPerfilPaciente');
-                }
-            }
         }
         
         return $perfilPaciente->setPerfil($strPerfilPaciente);
+
+    }
+    
+    private function validarIndexPerfil(PerfilPaciente $perfilPaciente,Excecao $objExcecao){
+        $strPerfilPacienteUPPER = trim($perfilPaciente->getIndex_perfil());
+        
+      
+        $perfilPaciente_aux_RN = new PerfilPacienteRN();
+        $array_perfis = $perfilPaciente_aux_RN->listar($perfilPaciente);
+        //print_r($array_sexos);
+        foreach ($array_perfis as $p){
+            if($p->getIndex_perfil() == $perfilPaciente->getIndex_perfil()){
+                $objExcecao->adicionar_validacao('O perfil do paciente já existe.','idPerfilPaciente');
+            }
+        }
+        
+        
+        return $perfilPaciente->setIndex_perfil($strPerfilPacienteUPPER);
 
     }
      
@@ -43,6 +52,8 @@ class PerfilPacienteRN{
             $objBanco->abrirConexao(); 
             
             $this->validarPerfil($perfilPaciente,$objExcecao); 
+            $this->validarIndexPerfil($perfilPaciente,$objExcecao);
+            
             $objExcecao->lancar_validacoes();
             $objPerfilPacienteBD = new PerfilPacienteBD();
             $objPerfilPacienteBD->cadastrar($perfilPaciente,$objBanco);
@@ -60,7 +71,8 @@ class PerfilPacienteRN{
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             
-            $this->validarPerfil($perfilPaciente,$objExcecao);   
+            $this->validarPerfil($perfilPaciente,$objExcecao);  
+            $this->validarIndexPerfil($perfilPaciente,$objExcecao);
                         
             $objExcecao->lancar_validacoes();
             $objPerfilPacienteBD = new PerfilPacienteBD();
