@@ -6,6 +6,7 @@
 class Detentor{
     private $idDetentor;
     private $detentor;
+    private $index_detentor;
     
     function __construct() {
         
@@ -19,6 +20,10 @@ class Detentor{
         return $this->detentor;
     }
 
+    function getIndex_detentor() {
+        return $this->index_detentor;
+    }
+
     function setIdDetentor($idDetentor) {
         $this->idDetentor = $idDetentor;
     }
@@ -27,6 +32,9 @@ class Detentor{
         $this->detentor = $detentor;
     }
 
+    function setIndex_detentor($index_detentor) {
+        $this->index_detentor = $index_detentor;
+    }
 
 
 

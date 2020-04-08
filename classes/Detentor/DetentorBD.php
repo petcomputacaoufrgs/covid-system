@@ -9,10 +9,11 @@ class DetentorBD{
         try{
             //echo $objDetentor->getDetentor();
             //die("die");
-            $INSERT = 'INSERT INTO tb_detentor (detentor) VALUES (?)';
+            $INSERT = 'INSERT INTO tb_detentor (detentor,index_detentor) VALUES (?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('s',$objDetentor->getDetentor());
+            $arrayBind[] = array('s',$objDetentor->getIndex_detentor());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -26,12 +27,14 @@ class DetentorBD{
     public function alterar(Detentor $objDetentor, Banco $objBanco) {
         try{
             $UPDATE = 'UPDATE tb_detentor SET '
-                . ' detentor = ?'
+                    . ' detentor = ?,'
+                    . ' index_detentor = ?'
                 . '  where idDetentor = ?';
         
                 
             $arrayBind = array();
             $arrayBind[] = array('s',$objDetentor->getDetentor());
+            $arrayBind[] = array('s',$objDetentor->getIndex_detentor());
             $arrayBind[] = array('i',$objDetentor->getIdDetentor());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
@@ -55,6 +58,7 @@ class DetentorBD{
                 $objDetentor = new Detentor();
                 $objDetentor->setIdDetentor($reg['idDetentor']);
                 $objDetentor->setDetentor($reg['detentor']);
+                $objDetentor->setIndex_detentor($reg['index_detentor']);
 
                 $array_detentor[] = $objDetentor;
             }
@@ -69,7 +73,7 @@ class DetentorBD{
 
         try{
 
-            $SELECT = 'SELECT idDetentor,detentor FROM tb_detentor WHERE idDetentor = ?';
+            $SELECT = 'SELECT idDetentor,detentor,index_detentor FROM tb_detentor WHERE idDetentor = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objDetentor->getIdDetentor());
@@ -79,6 +83,7 @@ class DetentorBD{
             $detentor = new Detentor();
             $detentor->setIdDetentor($arr[0]['idDetentor']);
             $detentor->setDetentor($arr[0]['detentor']);
+            $detentor->setIndex_detentor($arr[0]['index_detentor']);
 
             return $detentor;
         } catch (Exception $ex) {

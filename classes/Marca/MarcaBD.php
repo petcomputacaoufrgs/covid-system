@@ -9,10 +9,11 @@ class MarcaBD{
         try{
             //echo $objMarca->getMarca();
             //die("die");
-            $INSERT = 'INSERT INTO tb_marca (marca) VALUES (?)';
+            $INSERT = 'INSERT INTO tb_marca (marca,index_marca) VALUES (?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('s',$objMarca->getMarca());
+            $arrayBind[] = array('s',$objMarca->getIndex_marca());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -26,12 +27,14 @@ class MarcaBD{
     public function alterar(Marca $objMarca, Banco $objBanco) {
         try{
             $UPDATE = 'UPDATE tb_marca SET '
-                . ' marca = ?'
+                    . ' marca = ?,'
+                    . ' index_marca = ?'
                 . '  where idMarca = ?';
         
                 
             $arrayBind = array();
             $arrayBind[] = array('s',$objMarca->getMarca());
+            $arrayBind[] = array('s',$objMarca->getIndex_marca());
             $arrayBind[] = array('i',$objMarca->getIdMarca());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
@@ -55,6 +58,7 @@ class MarcaBD{
                 $objMarca = new Marca();
                 $objMarca->setIdMarca($reg['idMarca']);
                 $objMarca->setMarca($reg['marca']);
+                $objMarca->setIndex_marca($reg['index_marca']);
 
                 $array_marca[] = $objMarca;
             }
@@ -69,7 +73,7 @@ class MarcaBD{
 
         try{
 
-            $SELECT = 'SELECT idMarca,marca FROM tb_marca WHERE idMarca = ?';
+            $SELECT = 'SELECT idMarca,marca,index_marca FROM tb_marca WHERE idMarca = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objMarca->getIdMarca());
@@ -79,6 +83,7 @@ class MarcaBD{
             $marca = new Marca();
             $marca->setIdMarca($arr[0]['idMarca']);
             $marca->setMarca($arr[0]['marca']);
+            $marca->setMarca($arr[0]['index_marca']);
 
             return $marca;
         } catch (Exception $ex) {

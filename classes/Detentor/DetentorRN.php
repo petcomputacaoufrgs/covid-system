@@ -20,17 +20,26 @@ class DetentorRN{
                 $objExcecao->adicionar_validacao('O detentor possui mais que 100 caracteres.','idDetentor');
             }
             
+        }
+        
+        return $detentor->setDetentor($strDetentor);
+
+    }
+    
+     private function validarIndexDetentor(Detentor $detentor,Excecao $objExcecao){
+        $strIndexDetentor = trim($detentor->getIndex_detentor());
+        
+       
             $detentor_aux_RN = new DetentorRN();
             $array_detentores = $detentor_aux_RN->listar($detentor);
             //print_r($array_sexos);
             foreach ($array_detentores as $d){
-                if($d->getDetentor() == $detentor->getDetentor()){
+                if($d->getIndex_detentor() == $strIndexDetentor){
                     $objExcecao->adicionar_validacao('O detentor já existe.','idDetentor');
                 }
             }
-        }
         
-        return $detentor->setDetentor($strDetentor);
+        return $detentor->setIndex_detentor($strIndexDetentor);
 
     }
      
@@ -43,6 +52,8 @@ class DetentorRN{
             $objBanco->abrirConexao(); 
             
             $this->validarDetentor($detentor,$objExcecao); 
+            $this->validarIndexDetentor($detentor,$objExcecao); 
+            
             $objExcecao->lancar_validacoes();
             $objDetentorBD = new DetentorBD();
             $objDetentorBD->cadastrar($detentor,$objBanco);
@@ -60,7 +71,8 @@ class DetentorRN{
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             
-            $this->validarDetentor($detentor,$objExcecao);   
+            $this->validarDetentor($detentor,$objExcecao);  
+            $this->validarIndexDetentor($detentor,$objExcecao); 
                         
             $objExcecao->lancar_validacoes();
             $objDetentorBD = new DetentorBD();

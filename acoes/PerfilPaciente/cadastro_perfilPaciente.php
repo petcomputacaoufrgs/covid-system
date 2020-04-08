@@ -19,9 +19,7 @@ try{
         case 'cadastrar_perfilPaciente':
             if(isset($_POST['salvar_perfilPaciente'])){
                 $objPerfilPaciente->setPerfil($_POST['txtPerfilPaciente']);
-                $objPerfilPaciente->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilPaciente'])));
-                echo $objPerfilPaciente->getIndex_perfil();
-                
+                $objPerfilPaciente->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilPaciente'])));                
                 $objPerfilPacienteRN->cadastrar($objPerfilPaciente);
                 $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
             }else{

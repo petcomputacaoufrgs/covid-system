@@ -6,6 +6,7 @@
 class Modelo{
     private $idModelo;
     private $modelo;
+    private $index_modelo;
     
     function __construct() {
         
@@ -19,6 +20,10 @@ class Modelo{
         return $this->modelo;
     }
 
+    function getIndex_modelo() {
+        return $this->index_modelo;
+    }
+
     function setIdModelo($idModelo) {
         $this->idModelo = $idModelo;
     }
@@ -27,6 +32,9 @@ class Modelo{
         $this->modelo = $modelo;
     }
 
+    function setIndex_modelo($index_modelo) {
+        $this->index_modelo = $index_modelo;
+    }
 
 
 }

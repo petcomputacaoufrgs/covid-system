@@ -9,10 +9,11 @@ class ModeloBD{
         try{
             //echo $objModelo->getModelo();
             //die("die");
-            $INSERT = 'INSERT INTO tb_modelo (modelo) VALUES (?)';
+            $INSERT = 'INSERT INTO tb_modelo (modelo,index_modelo) VALUES (?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('s',$objModelo->getModelo());
+            $arrayBind[] = array('s',$objModelo->getIndex_modelo());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -26,12 +27,15 @@ class ModeloBD{
     public function alterar(Modelo $objModelo, Banco $objBanco) {
         try{
             $UPDATE = 'UPDATE tb_modelo SET '
-                . ' modelo = ?'
+                    . ' modelo = ?,'
+                    . ' index_modelo = ?'
+                    
                 . '  where idModelo = ?';
         
                 
             $arrayBind = array();
             $arrayBind[] = array('s',$objModelo->getModelo());
+            $arrayBind[] = array('s',$objModelo->getIndex_modelo());
             $arrayBind[] = array('i',$objModelo->getIdModelo());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
@@ -55,6 +59,7 @@ class ModeloBD{
                 $objModelo = new Modelo();
                 $objModelo->setIdModelo($reg['idModelo']);
                 $objModelo->setModelo($reg['modelo']);
+                $objModelo->setIndex_modelo($reg['index_modelo']);
 
                 $array_modelo[] = $objModelo;
             }
@@ -69,7 +74,7 @@ class ModeloBD{
 
         try{
 
-            $SELECT = 'SELECT idModelo,modelo FROM tb_modelo WHERE idModelo = ?';
+            $SELECT = 'SELECT idModelo,modelo,index_modelo FROM tb_modelo WHERE idModelo = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objModelo->getIdModelo());
@@ -79,6 +84,7 @@ class ModeloBD{
             $modelo = new Modelo();
             $modelo->setIdModelo($arr[0]['idModelo']);
             $modelo->setModelo($arr[0]['modelo']);
+            $modelo->setIndex_modelo($arr[0]['index_modelo']);
 
             return $modelo;
         } catch (Exception $ex) {

@@ -31,6 +31,22 @@ class MarcaRN{
         }
         
         return $detentor->setMarca($strMarca);
+    }
+    
+     private function validarIndexMarca(Marca $detentor,Excecao $objExcecao){
+        $strIndexMarca = trim($detentor->getIndex_marca());
+        
+                  
+        $detentor_aux_RN = new MarcaRN();
+        $array_marcas = $detentor_aux_RN->listar($detentor);
+        foreach ($array_marcas as $m){
+            if($m->getIndex_marca() == $strIndexMarca){
+                $objExcecao->adicionar_validacao('A marca já existe.','idMarca');
+            }
+        }
+        
+        
+        return $detentor->setIndex_marca($strIndexMarca);
 
     }
      
@@ -43,6 +59,8 @@ class MarcaRN{
             $objBanco->abrirConexao(); 
             
             $this->validarMarca($detentor,$objExcecao); 
+            $this->validarIndexMarca($detentor,$objExcecao); 
+            
             $objExcecao->lancar_validacoes();
             $objMarcaBD = new MarcaBD();
             $objMarcaBD->cadastrar($detentor,$objBanco);
@@ -61,6 +79,7 @@ class MarcaRN{
             $objBanco->abrirConexao(); 
             
             $this->validarMarca($detentor,$objExcecao);   
+            $this->validarIndexMarca($detentor,$objExcecao); 
                         
             $objExcecao->lancar_validacoes();
             $objMarcaBD = new MarcaBD();

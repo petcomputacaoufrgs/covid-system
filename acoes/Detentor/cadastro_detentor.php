@@ -6,7 +6,8 @@ require_once 'classes/Pagina/Pagina.php';
 require_once 'classes/Excecao/Excecao.php';
 require_once 'classes/Detentor/Detentor.php';
 require_once 'classes/Detentor/DetentorRN.php';
-
+require_once 'utils/Utils.php';
+$utils = new Utils();
 $objPagina = new Pagina();
 $objDetentor = new Detentor();
 $objDetentorRN = new DetentorRN();
@@ -16,7 +17,8 @@ try{
     switch($_GET['action']){
         case 'cadastrar_detentor':
             if(isset($_POST['salvar_detentor'])){
-                $objDetentor->setDetentor(mb_strtolower($_POST['txtDetentor'],'utf-8'));
+                $objDetentor->setDetentor($_POST['txtDetentor']);
+                $objDetentor->setIndex_detentor(strtoupper($utils->tirarAcentos($_POST['txtDetentor'])));
                 $objDetentorRN->cadastrar($objDetentor);
                 $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
             }else{
@@ -33,7 +35,8 @@ try{
             
              if(isset($_POST['salvar_detentor'])){ //se enviou o formulário com as alterações
                 $objDetentor->setIdDetentor($_GET['idDetentor']);
-                $objDetentor->setDetentor( mb_strtolower($_POST['txtDetentor'],'utf-8'));
+                $objDetentor->setDetentor($_POST['txtDetentor']);
+                $objDetentor->setIndex_detentor(strtoupper($utils->tirarAcentos($_POST['txtDetentor'])));
                 $objDetentorRN->alterar($objDetentor);
                 $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
             }

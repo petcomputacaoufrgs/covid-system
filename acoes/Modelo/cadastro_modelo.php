@@ -6,7 +6,9 @@ require_once 'classes/Pagina/Pagina.php';
 require_once 'classes/Excecao/Excecao.php';
 require_once 'classes/Modelo/Modelo.php';
 require_once 'classes/Modelo/ModeloRN.php';
+require_once 'utils/Utils.php';
 
+$utils = new Utils();
 $objPagina = new Pagina();
 $objModelo = new Modelo();
 $objModeloRN = new ModeloRN();
@@ -16,7 +18,9 @@ try{
     switch($_GET['action']){
         case 'cadastrar_modelo':
             if(isset($_POST['salvar_modelo'])){
-                $objModelo->setModelo(mb_strtolower($_POST['txtModelo'],'utf-8'));
+                $objModelo->setModelo($_POST['txtModelo']);
+                $objModelo->setIndex_modelo(strtoupper($utils->tirarAcentos($_POST['txtModelo'])));
+                
                 $objModeloRN->cadastrar($objModelo);
                 $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
             }else{
@@ -34,7 +38,8 @@ try{
             
              if(isset($_POST['salvar_modelo'])){ //se enviou o formulário com as alterações
                 $objModelo->setIdModelo($_GET['idModelo']);
-                $objModelo->setModelo( mb_strtolower($_POST['txtModelo'],'utf-8'));
+                $objModelo->setModelo($_POST['txtModelo']);
+                $objModelo->setIndex_modelo(strtoupper($utils->tirarAcentos($_POST['txtModelo'])));
                 $objModeloRN->alterar($objModelo);
                 $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
             }

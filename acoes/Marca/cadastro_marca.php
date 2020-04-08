@@ -6,7 +6,8 @@ require_once 'classes/Pagina/Pagina.php';
 require_once 'classes/Excecao/Excecao.php';
 require_once 'classes/Marca/Marca.php';
 require_once 'classes/Marca/MarcaRN.php';
-
+require_once 'utils/Utils.php';
+$utils = new Utils();
 $objPagina = new Pagina();
 $objMarca = new Marca();
 $objMarcaRN = new MarcaRN();
@@ -16,7 +17,8 @@ try{
     switch($_GET['action']){
         case 'cadastrar_marca':
             if(isset($_POST['salvar_marca'])){
-                $objMarca->setMarca(mb_strtolower($_POST['txtMarca'],'utf-8'));
+                $objMarca->setMarca($_POST['txtMarca']);
+                $objMarca->setIndex_marca(strtoupper($utils->tirarAcentos($_POST['txtMarca'])));
                 $objMarcaRN->cadastrar($objMarca);
                 $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
             }else{
@@ -32,8 +34,8 @@ try{
             }
             
              if(isset($_POST['salvar_marca'])){ //se enviou o formulário com as alterações
-                $objMarca->setIdMarca($_GET['idMarca']);
-                $objMarca->setMarca( mb_strtolower($_POST['txtMarca'],'utf-8'));
+                $objMarca->setMarca($_POST['txtMarca']);
+                $objMarca->setIndex_marca(strtoupper($utils->tirarAcentos($_POST['txtMarca'])));
                 $objMarcaRN->alterar($objMarca);
                 $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
             }
