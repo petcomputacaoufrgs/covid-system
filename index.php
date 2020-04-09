@@ -1,19 +1,16 @@
-<?php 
+<!-- <?php
 require __DIR__ . '/vendor/autoload.php';
-?>
-<!DOCTYPE html>
+?> -->
+
 <!--
 To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title></title>
-    </head>
-    <body>
-        
+      <?php
+        require "/style/header.php"
+      ?>
+      <main>
         <ul>
             <li>---------------- CADASTRAR AMOSTRA</li>
             <li><a href="controlador.php?action=#">Cadastrar</a></li>
@@ -30,9 +27,9 @@ and open the template in the editor.
             <li>---------------- LAUDO DA AMOSTRA</li>
             <li><a href="controlador.php?action=#">Cadastrar</a></li>
             <li><a href="controlador.php?action=#">Listar</a></li>
-            
+
         </ul>
-        
+
         <ul>
             <li>---------------- Tipo de amostras</li>
             <li><a href="controlador.php?action=cadastrar_tipoAmostra">Cadastrar </a></li>
@@ -82,10 +79,9 @@ and open the template in the editor.
             <li>---------------- Amostra</li>
             <li><a href="controlador.php?action=cadastrar_amostra">Cadastrar</a></li>
             <li><a href="controlador.php?action=listar_amostra">Listar</a></li>
-           
-            
-            
-            
         </ul>
-    </body>
-</html>
+      </main>
+
+        <?php
+          require "style/footer.php"
+         ?>
