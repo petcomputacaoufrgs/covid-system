@@ -360,7 +360,7 @@ function montar_select_sexo(&$select_sexos, $objSexoPaciente, $objSexoPacienteRN
 <?php Pagina::abrir_head("Cadastrar Paciente"); ?>
 <style>
     body,html{
-        font-size: 20px !important;
+        font-size: 14px !important;
     }
     .dropdown-toggle{
 

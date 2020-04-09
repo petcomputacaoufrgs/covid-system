@@ -19,10 +19,8 @@ class PacienteBD{
             $arrayBind[] = array('s',$objPaciente->getDataNascimento());
             $arrayBind[] = array('s',$objPaciente->getCPF());
             $arrayBind[] = array('s',$objPaciente->getRG());
-            $arrayBind[] = array('s',$objPaciente->getObsCPF());
             $arrayBind[] = array('s',$objPaciente->getObsRG());
             $arrayBind[] = array('s',$objPaciente->getObsSexo());
-            $arrayBind[] = array('s',$objPaciente->getCodGAL());
             $arrayBind[] = array('s',$objPaciente->getObsNomeMae());
             
             
@@ -31,7 +29,7 @@ class PacienteBD{
             $objPaciente->setIdPaciente($objBanco->obterUltimoID());
            
         } catch (Exception $ex) {
-            throw new Excecao("Erro cadastrando marca  no BD.",$ex);
+            throw new Excecao("Erro cadastrando o paciente  no BD.",$ex);
         }
         
     }
@@ -70,7 +68,7 @@ class PacienteBD{
             $objBanco->executarSQL($UPDATE,$arrayBind);
 
         } catch (Exception $ex) {
-            throw new Excecao("Erro alterando marca no BD.",$ex);
+            throw new Excecao("Erro alterando o paciente no BD.",$ex);
         }
        
     }
@@ -83,7 +81,7 @@ class PacienteBD{
 
             $arr = $objBanco->consultarSQL($SELECT);
 
-            $array_marca = array();
+            $array_paciente = array();
             foreach ($arr as $reg){
                 $objPaciente = new Paciente();
                 $objPaciente->setIdPaciente($reg['idPaciente']);
@@ -99,12 +97,12 @@ class PacienteBD{
                 $objPaciente->setObsNomeMae($reg['obsNomeMae']);
                 
 
-                $array_marca[] = $objPaciente;
+                $array_paciente[] = $objPaciente;
                 
             }
-            return $array_marca;
+            return $array_paciente;
         } catch (Exception $ex) {
-            throw new Excecao("Erro listando marca no BD.",$ex);
+            throw new Excecao("Erro listando o paciente no BD.",$ex);
         }
        
     }
@@ -137,7 +135,7 @@ class PacienteBD{
             return $paciente;
         } catch (Exception $ex) {
        
-            throw new Excecao("Erro consultando marca no BD.",$ex);
+            throw new Excecao("Erro consultando o paciente no BD.",$ex);
         }
 
     }
@@ -152,11 +150,52 @@ class PacienteBD{
             $objBanco->executarSQL($DELETE, $arrayBind);
             
         } catch (Exception $ex) {
-            throw new Excecao("Erro removendo marca no BD.",$ex);
+            throw new Excecao("Erro removendo o paciente no BD.",$ex);
         }
     }
     
     
+    public function validarCadastro(Paciente $objPaciente, Banco $objBanco){
+        
+         try{
+            
+            $SELECT = 'SELECT * from tb_paciente WHERE nome = (?) AND CPF = (?) ';
+            
+            $arrayBind = array();
+            $arrayBind[] = array('s',$objPaciente->getNome());
+            $arrayBind[] = array('s',$objPaciente->getCPF());
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
+            
+            if(empty($arr)){
+                return $arr;
+            }
+            $arr_pacientes = array();
+             
+            foreach ($arr as $reg){
+                $paciente = new Paciente();
+                $paciente->setIdPaciente($reg['idPaciente']);
+                $paciente->setNome($reg['nome']);
+                $paciente->setIdSexo_fk($reg['idSexo_fk']);
+                $paciente->setIdPerfilPaciente_fk($reg['idPerfilPaciente_fk']);
+                $paciente->setNomeMae($reg['nomeMae']);
+                $paciente->setCPF($reg['CPF']);
+                $paciente->setRG($reg['RG']);
+                $paciente->setObsRG($reg['obsRG']);
+                $paciente->setObsSexo($reg['obsSexo']);
+                $paciente->setDataNascimento($reg['dataNascimento']);
+                $paciente->setObsNomeMae($reg['obsNomeMae']);
+                
 
+                $arr_pacientes[] = $paciente;
+                
+            }
+             return $arr_pacientes;
+            
+        } catch (Exception $ex) {
+            throw new Excecao("Erro pesquisando o detentor no BD.",$ex);
+        }
+        
+        
+    }
     
 }

@@ -19,8 +19,12 @@ try{
             if(isset($_POST['salvar_marca'])){
                 $objMarca->setMarca($_POST['txtMarca']);
                 $objMarca->setIndex_marca(strtoupper($utils->tirarAcentos($_POST['txtMarca'])));
-                $objMarcaRN->cadastrar($objMarca);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                if(empty($objMarcaRN->pesquisar_index($objMarca))){
+                    $objMarcaRN->cadastrar($objMarca);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                }
+                $sucesso= '<div id="sucesso_bd" class="sucesso">Já existe uma marca com esse nome</div>';
+                
             }else{
                 $objMarca->setIdMarca('');
                 $objMarca->setMarca('');
@@ -36,8 +40,12 @@ try{
              if(isset($_POST['salvar_marca'])){ //se enviou o formulário com as alterações
                 $objMarca->setMarca($_POST['txtMarca']);
                 $objMarca->setIndex_marca(strtoupper($utils->tirarAcentos($_POST['txtMarca'])));
-                $objMarcaRN->alterar($objMarca);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                if(empty($objMarcaRN->pesquisar_index($objMarca))){
+                    $objMarcaRN->alterar($objMarca);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                }
+                
+                $sucesso= '<div id="sucesso_bd" class="sucesso">Já exsite uma marca com esse nome</div>';
             }
             
             
@@ -83,9 +91,9 @@ try{
     <button class="btn btn-primary" type="submit" name="salvar_marca">Salvar</button>
 </form>
 </div>
-
-<script src="js/marca.js"></script>
 <script src="js/fadeOut.js"></script>
+<script src="js/marca.js"></script>
+
 
 <?php 
 $objPagina->mostrar_excecoes(); 

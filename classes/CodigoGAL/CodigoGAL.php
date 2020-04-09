@@ -6,6 +6,7 @@
 class CodigoGAL
 {
     private $idCodigoGAL;
+    private $idPaciente_fk;
     private $codigo;
    
     
@@ -28,6 +29,15 @@ class CodigoGAL
     function setCodigo($codigo) {
         $this->codigo = $codigo;
     }
+    
+    function getIdPaciente_fk() {
+        return $this->idPaciente_fk;
+    }
+
+    function setIdPaciente_fk($idPaciente_fk) {
+        $this->idPaciente_fk = $idPaciente_fk;
+    }
+
 
 
     

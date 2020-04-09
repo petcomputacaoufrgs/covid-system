@@ -7,10 +7,11 @@ class CodigoGAL_BD{
 
     public function cadastrar(CodigoGAL $objCodigoGAL, Banco $objBanco) {
         try{
-            $INSERT = 'INSERT INTO tb_codGAL (codigo) VALUES (?)';
+            $INSERT = 'INSERT INTO tb_codGAL (codigo,idPaciente_fk) VALUES (?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objCodigoGAL->getCodigo());
+            $arrayBind[] = array('i',$objCodigoGAL->getIdPaciente_fk());
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objCodigoGAL->setIdCodigoGAL($objBanco->obterUltimoID());
@@ -25,12 +26,14 @@ class CodigoGAL_BD{
         try{
                       
             $UPDATE = 'UPDATE tb_codGAL SET '
-                    . ' codigo = ?'
+                    . ' codigo = ? ,'
+                    . ' idPaciente_fk = ?'
                 . '  where idCodigoGAL = ?';
         
                 
             $arrayBind = array();
             $arrayBind[] = array('i',$objCodigoGAL->getCodigo());
+            $arrayBind[] = array('i',$objCodigoGAL->getIdPaciente_fk());
             $arrayBind[] = array('i',$objCodigoGAL->getIdCodigoGAL());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
@@ -54,6 +57,7 @@ class CodigoGAL_BD{
                 $objCodigoGAL = new CodigoGAL();
                 $objCodigoGAL->setIdCodigoGAL($reg['idCodigoGAL']);
                 $objCodigoGAL->setCodigo($reg['codigo']);
+                $objCodigoGAL->setIdPaciente_fk($reg['idPaciente_fk']);
                 
 
                 $array_marca[] = $objCodigoGAL;
@@ -70,7 +74,7 @@ class CodigoGAL_BD{
 
         try{
 
-            $SELECT = 'SELECT idCodigoGAL,codigo FROM tb_codGAL WHERE idCodigoGAL = ?';
+            $SELECT = 'SELECT idCodigoGAL,codigo,idPaciente_fk FROM tb_codGAL WHERE idCodigoGAL = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objCodigoGAL->getIdCodigoGAL());
@@ -80,6 +84,7 @@ class CodigoGAL_BD{
             $paciente = new CodigoGAL();
             $paciente->setIdCodigoGAL($arr[0]['idCodigoGAL']);
             $paciente->setCodigo($arr[0]['codigo']);
+            $paciente->setIdPaciente_fk($arr[0]['idPaciente_fk']);
 
             return $paciente;
         } catch (Exception $ex) {

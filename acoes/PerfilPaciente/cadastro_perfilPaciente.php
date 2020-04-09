@@ -19,9 +19,12 @@ try{
         case 'cadastrar_perfilPaciente':
             if(isset($_POST['salvar_perfilPaciente'])){
                 $objPerfilPaciente->setPerfil($_POST['txtPerfilPaciente']);
-                $objPerfilPaciente->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilPaciente'])));                
-                $objPerfilPacienteRN->cadastrar($objPerfilPaciente);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                $objPerfilPaciente->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilPaciente'])));  
+                if(empty($objPerfilPacienteRN->pesquisar_index($objPerfilPaciente))){
+                   $objPerfilPacienteRN->cadastrar($objPerfilPaciente);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                }
+                
             }else{
                 $objPerfilPaciente->setIdPerfilPaciente('');
                 $objPerfilPaciente->setPerfil('');
@@ -38,8 +41,11 @@ try{
                 $objPerfilPaciente->setIdPerfilPaciente($_GET['idPerfilPaciente']);
                 $objPerfilPaciente->setPerfil($_POST['txtPerfilPaciente']);
                 $objPerfilPaciente->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilPaciente'])));
-                $objPerfilPacienteRN->alterar($objPerfilPaciente);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                if(empty($objPerfilPacienteRN->pesquisar_index($objPerfilPaciente))){
+                    $objPerfilPacienteRN->alterar($objPerfilPaciente);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                }
+                
             }
             
             

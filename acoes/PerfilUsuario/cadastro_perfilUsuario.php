@@ -6,7 +6,9 @@ require_once 'classes/Pagina/Pagina.php';
 require_once 'classes/Excecao/Excecao.php';
 require_once 'classes/PerfilUsuario/PerfilUsuario.php';
 require_once 'classes/PerfilUsuario/PerfilUsuarioRN.php';
+require_once 'utils/Utils.php';
 
+$utils = new Utils();
 $objPagina = new Pagina();
 $objPerfilUsuario = new PerfilUsuario();
 $objPerfilUsuarioRN = new PerfilUsuarioRN();
@@ -17,9 +19,14 @@ try{
     switch($_GET['action']){
         case 'cadastrar_perfilUsuario':
             if(isset($_POST['salvar_perfilUsuario'])){
-                $objPerfilUsuario->setPerfil( mb_strtolower($_POST['txtPerfilUsuario'],'utf-8'));
-                $objPerfilUsuarioRN->cadastrar($objPerfilUsuario);
-                $sucesso = '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                
+                $objPerfilUsuario->setPerfil($_POST['txtPerfilUsuario']);
+                $objPerfilUsuario->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilUsuario'])));
+                if(empty($objPerfilUsuarioRN->pesquisar_index($objPerfilUsuario))){
+                    $objPerfilUsuarioRN->cadastrar($objPerfilUsuario);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                }
+                
             }else{
                 $objPerfilUsuario->setIdPerfilUsuario('');
                 $objPerfilUsuario->setPerfil('');
@@ -34,9 +41,12 @@ try{
             
              if(isset($_POST['salvar_perfilUsuario'])){ //se enviou o formulário com as alterações
                 $objPerfilUsuario->setIdPerfilUsuario($_GET['idPerfilUsuario']);
-                $objPerfilUsuario->setPerfil(mb_strtolower($_POST['txtPerfilUsuario'],'utf-8'));
-                $objPerfilUsuarioRN->alterar($objPerfilUsuario);
-                $sucesso = '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                $objPerfilUsuario->setPerfil($_POST['txtPerfilUsuario']);
+                $objPerfilUsuario->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilUsuario'])));
+                if(empty($objPerfilUsuarioRN->pesquisar_index($objPerfilUsuario))){
+                    $objPerfilUsuarioRN->alterar($objPerfilUsuario);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                }
             }
             
             

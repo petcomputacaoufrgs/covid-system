@@ -8,7 +8,7 @@ class LugarOrigemBD{
      public function listar(LugarOrigem $objLugarOrigem, Banco $objBanco) {
          try{
       
-            $SELECT = "SELECT * FROM tab_municipio where cod_estado = 43";
+            $SELECT = "SELECT * FROM tab_municipio";
 
 
             $arr = $objBanco->consultarSQL($SELECT);
@@ -18,6 +18,7 @@ class LugarOrigemBD{
                 $objLugarOrigem = new LugarOrigem();
                 $objLugarOrigem->setIdLugarOrigem($reg['cod_municipio']);
                 $objLugarOrigem->setNome($reg['nome']);
+                $objLugarOrigem->setCod_estado($reg['cod_estado']);
 
                 $array_marca[] = $objLugarOrigem;
             }
@@ -32,7 +33,7 @@ class LugarOrigemBD{
 
         try{
 
-            $SELECT = 'SELECT cod_municipio,nome FROM tab_municipio WHERE idLugarOrigem = ?';
+            $SELECT = 'SELECT cod_municipio,nome,cod_estado FROM tab_municipio WHERE cod_municipio = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objLugarOrigem->getIdLugarOrigem());
@@ -42,6 +43,7 @@ class LugarOrigemBD{
             $marca = new LugarOrigem();
             $marca->setIdLugarOrigem($arr[0]['cod_municipio']);
             $marca->setNome($arr[0]['nome']);
+            $marca->setCod_estado($arr[0]['cod_estado']);
 
             return $marca;
         } catch (Exception $ex) {

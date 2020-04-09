@@ -6,7 +6,7 @@
 class LugarOrigem{
     private $idLugarOrigem;
     private $nome;
-    
+    private $cod_estado;
     function __construct() {
         
     }
@@ -26,6 +26,15 @@ class LugarOrigem{
     function setNome($nome) {
         $this->nome = $nome;
     }
+    
+    function getCod_estado() {
+        return $this->cod_estado;
+    }
+
+    function setCod_estado($cod_estado) {
+        $this->cod_estado = $cod_estado;
+    }
+
 
 
 

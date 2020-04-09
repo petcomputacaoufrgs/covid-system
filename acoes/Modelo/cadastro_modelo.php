@@ -20,9 +20,12 @@ try{
             if(isset($_POST['salvar_modelo'])){
                 $objModelo->setModelo($_POST['txtModelo']);
                 $objModelo->setIndex_modelo(strtoupper($utils->tirarAcentos($_POST['txtModelo'])));
-                
-                $objModeloRN->cadastrar($objModelo);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                if(empty($objModeloRN->pesquisar_index($objModelo))){
+                    $objModeloRN->cadastrar($objModelo);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                }
+                //$sucesso= '<div id="sucesso_bd" class="sucesso"> Já tinha existe um modelo com este nome cadastrado anterirormente com sucesso</div>';
+                                
             }else{
                 $objModelo->setIdModelo('');
                 $objModelo->setModelo('');
@@ -40,8 +43,11 @@ try{
                 $objModelo->setIdModelo($_GET['idModelo']);
                 $objModelo->setModelo($_POST['txtModelo']);
                 $objModelo->setIndex_modelo(strtoupper($utils->tirarAcentos($_POST['txtModelo'])));
-                $objModeloRN->alterar($objModelo);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                if(empty($objModeloRN->pesquisar_index($objModelo))){
+                    $objModeloRN->alterar($objModelo);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                }
+                $sucesso= '<div id="sucesso_bd" class="sucesso">Já exsite um modelo com esse nome</div>';
             }
             
             

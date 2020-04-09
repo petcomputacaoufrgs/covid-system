@@ -25,24 +25,7 @@ class SexoRN{
 
     }
     
-    private function validarIndexSexo(Sexo $sexo,Excecao $objExcecao){
-        $strIndexSexo = trim($sexo->getIndex_sexo());
-        
-        $sexo_aux_RN = new SexoRN();
-        $array_sexos = $sexo_aux_RN->listar($sexo);
-        
-        if(!empty($array_sexos)){
-            foreach ($array_sexos as $s){
-                if($s->getIndex_sexo() == $strIndexSexo){
-                    $objExcecao->adicionar_validacao('O sexo digitado já existe.','idSexoPaciente');
-                }
-            }
-        }
-               
-        return $sexo->setIndex_sexo($strIndexSexo);
-
-    }
-     
+       
 
     public function cadastrar(Sexo $sexo) {
         try {
@@ -51,9 +34,7 @@ class SexoRN{
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             
-            $this->validarSexo($sexo,$objExcecao); 
-            $this->validarIndexSexo($sexo,$objExcecao); 
-            
+            $this->validarSexo($sexo,$objExcecao);           
             
             $objExcecao->lancar_validacoes();
             $objSexoBD = new SexoBD();
@@ -73,7 +54,6 @@ class SexoRN{
             $objBanco->abrirConexao(); 
             
             $this->validarSexo($sexo,$objExcecao);   
-            $this->validarIndexSexo($sexo,$objExcecao); 
             
             $objExcecao->lancar_validacoes();
             $objSexoBD = new SexoBD();
@@ -136,18 +116,19 @@ class SexoRN{
     }
 
 
-    public function pesquisar($campoBD, $valor_usuario) {
+   public function pesquisar_index(Sexo $sexo) {
         try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             $objExcecao->lancar_validacoes();
             $objSexoBD = new SexoBD();
-            $arr = $objSexoBD->pesquisar($campoBD,$valor_usuario,$objBanco);
+            $arr = $objSexoBD->pesquisar_index($sexo,$objBanco);
+            
             $objBanco->fecharConexao();
             return $arr;
         } catch (Exception $e) {
-            throw new Excecao('Erro pesquisando o sexo do paciente.', $e);
+            throw new Excecao('Erro pesquisando o sexo.', $e);
         }
     }
 

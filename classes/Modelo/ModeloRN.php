@@ -10,8 +10,8 @@ require_once 'classes/Modelo/ModeloBD.php';
 class ModeloRN{
     
 
-    private function validarModelo(Modelo $detentor,Excecao $objExcecao){
-        $strModelo = trim($detentor->getModelo());
+    private function validarModelo(Modelo $modelo,Excecao $objExcecao){
+        $strModelo = trim($modelo->getModelo());
         
         if ($strModelo == '') {
             $objExcecao->adicionar_validacao('O modelo não foi informado','idModelo');
@@ -20,32 +20,26 @@ class ModeloRN{
                 $objExcecao->adicionar_validacao('O modelo possui mais que 100 caracteres.','idModelo');
             }
             
-            $detentor_aux_RN = new ModeloRN();
-            $array_modelos = $detentor_aux_RN->listar($detentor);
-            //print_r($array_sexos);
-            foreach ($array_modelos as $m){
-                if($m->getModelo() == $detentor->getModelo()){
-                    $objExcecao->adicionar_validacao('O modelo já existe.','idModelo');
-                }
-            }
         }
         
-        return $detentor->setModelo($strModelo);
+        return $modelo->setModelo($strModelo);
 
     }
-     
-
-    public function cadastrar(Modelo $detentor) {
+    
+    
+    public function cadastrar(Modelo $modelo) {
         try {
             
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
-            
-            $this->validarModelo($detentor,$objExcecao); 
-            $objExcecao->lancar_validacoes();
             $objModeloBD = new ModeloBD();
-            $objModeloBD->cadastrar($detentor,$objBanco);
+            
+            $this->validarModelo($modelo,$objExcecao); 
+            
+            $objExcecao->lancar_validacoes();
+            $objModeloBD->cadastrar($modelo,$objBanco);
+            
             
             $objBanco->fecharConexao();
         } catch (Exception $e) {
@@ -53,18 +47,18 @@ class ModeloRN{
         }
     }
 
-    public function alterar(Modelo $detentor) {
+    public function alterar(Modelo $modelo) {
          try {
              
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             
-            $this->validarModelo($detentor,$objExcecao);   
+            $this->validarModelo($modelo,$objExcecao);   
                         
             $objExcecao->lancar_validacoes();
             $objModeloBD = new ModeloBD();
-            $objModeloBD->alterar($detentor,$objBanco);
+            $objModeloBD->alterar($modelo,$objBanco);
             
             $objBanco->fecharConexao();
         } catch (Exception $e) {
@@ -72,14 +66,15 @@ class ModeloRN{
         }
     }
 
-    public function consultar(Modelo $detentor) {
+    public function consultar(Modelo $modelo) {
         try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             $objExcecao->lancar_validacoes();
             $objModeloBD = new ModeloBD();
-            $arr =  $objModeloBD->consultar($detentor,$objBanco);
+           
+            $arr =  $objModeloBD->consultar($modelo,$objBanco);
             
             $objBanco->fecharConexao();
             return $arr;
@@ -89,14 +84,14 @@ class ModeloRN{
         }
     }
 
-    public function remover(Modelo $detentor) {
+    public function remover(Modelo $modelo) {
          try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             $objExcecao->lancar_validacoes();
             $objModeloBD = new ModeloBD();
-            $arr =  $objModeloBD->remover($detentor,$objBanco);
+            $arr =  $objModeloBD->remover($modelo,$objBanco);
             $objBanco->fecharConexao();
             return $arr;
 
@@ -105,7 +100,7 @@ class ModeloRN{
         }
     }
 
-    public function listar(Modelo $detentor) {
+    public function listar(Modelo $modelo) {
         try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
@@ -113,7 +108,7 @@ class ModeloRN{
             $objExcecao->lancar_validacoes();
             $objModeloBD = new ModeloBD();
             
-            $arr = $objModeloBD->listar($detentor,$objBanco);
+            $arr = $objModeloBD->listar($modelo,$objBanco);
             
             $objBanco->fecharConexao();
             return $arr;
@@ -123,14 +118,15 @@ class ModeloRN{
     }
 
 
-    public function pesquisar($campoBD, $valor_usuario) {
+    public function pesquisar_index(Modelo $modelo) {
         try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             $objExcecao->lancar_validacoes();
             $objModeloBD = new ModeloBD();
-            $arr = $objModeloBD->pesquisar($campoBD,$valor_usuario,$objBanco);
+            $arr = $objModeloBD->pesquisar_index($modelo,$objBanco);
+            
             $objBanco->fecharConexao();
             return $arr;
         } catch (Exception $e) {

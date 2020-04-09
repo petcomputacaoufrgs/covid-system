@@ -12,6 +12,13 @@ require_once 'classes/Marca/Marca.php';
 require_once 'classes/Marca/MarcaRN.php';
 require_once 'classes/Modelo/Modelo.php';
 require_once 'classes/Modelo/ModeloRN.php';
+require_once 'utils/Utils.php';
+
+$utils = new Utils();
+session_start();
+
+date_default_timezone_set('America/Sao_Paulo');
+$_SESSION['DATA_LOGIN']  = date('d/m/Y  H:i:s');
 
 $objPagina = new Pagina();
 $objEquipamento = new Equipamento();
@@ -35,7 +42,6 @@ try {
     $objMarcaRN = new MarcaRN();
 
 
-
     /* MODELOS */
     $objModelo = new Modelo();
     $objModeloRN = new ModeloRN();
@@ -45,29 +51,67 @@ try {
         case 'cadastrar_equipamento':
 
             if (isset($_POST['salvar_equipamento'])) {
-                salvar_detentor($objDetentor, $objDetentorRN, $objEquipamento);
+                /*salvar_detentor($objDetentor, $objDetentorRN, $objEquipamento);
                 salvar_marca($objMarca, $objMarcaRN, $objEquipamento);
-                salvar_modelo($objModelo, $objModeloRN, $objEquipamento);
+                salvar_modelo($objModelo, $objModeloRN, $objEquipamento);*/
+                
+                $objDetentor->setDetentor($_POST['txtDetentor']);
+                $objDetentor->setIndex_detentor(strtoupper($utils->tirarAcentos($_POST['txtDetentor'])));
+                $arr_detentores = $objDetentorRN->pesquisar_index($objDetentor);
+                if(empty($arr_detentores)){
+                    $objDetentorRN->cadastrar($objDetentor);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                }else $objDetentor->setIdDetentor($arr_detentores[0]->getIdDetentor());
+                
+                
+                $objMarca->setMarca($_POST['txtMarca']);
+                $objMarca->setIndex_marca(strtoupper($utils->tirarAcentos($_POST['txtMarca'])));
+                $arr_marcas = $objMarcaRN->pesquisar_index($objMarca);
+                if(empty($arr_marcas)){
+                     $objMarcaRN->cadastrar($objMarca);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                }else $objMarca->setIdMarca($arr_marcas[0]->getIdMarca());
+                        
+                                
+                $objModelo->setModelo($_POST['txtModelo']);
+                $objModelo->setIndex_modelo(strtoupper($utils->tirarAcentos($_POST['txtModelo'])));
+                $arr_modelos = $objModeloRN->pesquisar_index($objModelo);
+                if(empty($arr_modelos)){
+                    $objModeloRN->cadastrar($objModelo);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                }else $objModelo->setIdModelo($arr_modelos[0]->getIdModelo());
+                
+                $objEquipamento->setIdDetentor_fk($objDetentor->getIdDetentor());
+                $objEquipamento->setIdMarca_fk($objMarca->getIdMarca());
+                $objEquipamento->setIdModelo_fk($objModelo->getIdModelo());
                 $objEquipamento->setDataUltimaCalibragem($_POST['dtUltimaCalibragem']);
                 $objEquipamento->setDataChegada($_POST['dtChegada']);
 
-                //print_r($objEquipamento);
+                print_r($objEquipamento);
                 $objEquipamentoRN->cadastrar($objEquipamento);
 
-
-
                 $sucesso = '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+            }else{
+                $objEquipamento->setIdEquipamento('');
+                $objEquipamento->setIdDetentor_fk('');
+                $objEquipamento->setIdMarca_fk('');
+                $objEquipamento->setIdModelo_fk('');
+                $objEquipamento->setDataChegada('');
+                $objEquipamento->setDataUltimaCalibragem('');
+                
+                $objModelo->setIdModelo('');
+                $objModelo->setIndex_modelo('');
+                $objModelo->setModelo('');
+                
+                $objDetentor->setDetentor('');
+                $objDetentor->setIdDetentor('');
+                $objDetentor->setIndex_detentor('');
+                
+                $objMarca->setIdMarca('');
+                $objMarca->setIndex_marca('');
+                $objMarca->setMarca('');
             }
-            $objEquipamento->setIdEquipamento('');
-            $objEquipamento->setIdDetentor_fk('');
-            $objEquipamento->setIdMarca_fk('');
-            $objEquipamento->setIdModelo_fk('');
-            $objEquipamento->setDataChegada('');
-            $objEquipamento->setDataUltimaCalibragem('');
-            montar_select_detentores($select_detentores, $objDetentor, $objDetentorRN, $objEquipamento);
-            montar_select_marcas($select_marcas, $objMarca, $objMarcaRN, $objEquipamento);
-            montar_select_modelos($select_modelos, $objModelo, $objModeloRN, $objEquipamento);
-
+         
             break;
 
         case 'editar_equipamento':
@@ -77,24 +121,42 @@ try {
             }
 
             if (isset($_POST['salvar_equipamento'])) { //se enviou o formulário com as alterações
-                $objEquipamento->setIdEquipamento($_GET['idEquipamento']);
-
-                salvar_detentor($objDetentor, $objDetentorRN, $objEquipamento);
-                salvar_marca($objMarca, $objMarcaRN, $objEquipamento);
-                salvar_modelo($objModelo, $objModeloRN, $objEquipamento);
-
+                               
+                $objDetentor->setDetentor($_POST['txtDetentor']);
+                $objDetentor->setIndex_detentor(strtoupper($utils->tirarAcentos($_POST['txtDetentor'])));
+                $arr_detentores = $objDetentorRN->pesquisar_index($objDetentor);
+                if(empty($arr_detentores)){
+                    $objDetentorRN->alterar($objDetentor);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                }else $objDetentor->setIdDetentor($arr_detentores[0]->getIdDetentor());
+                
+                
+                $objMarca->setMarca($_POST['txtMarca']);
+                $objMarca->setIndex_marca(strtoupper($utils->tirarAcentos($_POST['txtMarca'])));
+                $arr_marcas = $objMarcaRN->pesquisar_index($objMarca);
+                if(empty($arr_marcas)){
+                     $objMarcaRN->alterar($objMarca);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                }else $objMarca->setIdMarca($arr_marcas[0]->getIdMarca());
+                        
+                                
+                $objModelo->setModelo($_POST['txtModelo']);
+                $objModelo->setIndex_modelo(strtoupper($utils->tirarAcentos($_POST['txtModelo'])));
+                $arr_modelos = $objModeloRN->pesquisar_index($objModelo);
+                if(empty($arr_modelos)){
+                    $objModeloRN->alterar($objModelo);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                }else $objModelo->setIdModelo($arr_modelos[0]->getIdModelo());
+                echo $objModelo->getModelo();
+                
+                
                 $objEquipamento->setDataUltimaCalibragem($_POST['dtUltimaCalibragem']);
                 $objEquipamento->setDataChegada($_POST['dtChegada']);
-
 
                 $objEquipamentoRN->alterar($objEquipamento);
 
                 $sucesso = '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
             }
-
-            montar_select_detentores($select_detentores, $objDetentor, $objDetentorRN, $objEquipamento);
-            montar_select_marcas($select_marcas, $objMarca, $objMarcaRN, $objEquipamento);
-            montar_select_modelos($select_modelos, $objModelo, $objModeloRN, $objEquipamento);
 
             break;
         default : die('Ação [' . $_GET['action'] . '] não reconhecida pelo controlador em cadastro_equipamento.php');
@@ -103,6 +165,8 @@ try {
     $objPagina->processar_excecao($ex);
 }
 
+
+/*
 function salvar_detentor($objDetentor, $objDetentorRN, &$objEquipamento) {
     $d = array();
     if (isset($_POST['sel_detentores']) && $_POST['sel_detentores']) {
@@ -131,7 +195,7 @@ function salvar_modelo($objModelo, $objModeloRN, &$objEquipamento) {
 }
 
 function montar_select_detentores(&$select_detentores, $objDetentor, $objDetentorRN, &$objEquipamento) {
-    /* DETENTORES */
+    // DETENTORES 
     $selected = '';
     $arr_detentores = $objDetentorRN->listar($objDetentor);
     $select_detentores =  '<option data-tokens=""></option>';
@@ -147,7 +211,7 @@ function montar_select_detentores(&$select_detentores, $objDetentor, $objDetento
 }
 
 function montar_select_marcas(&$select_marcas, $objMarca, $objMarcaRN, &$objEquipamento) {
-    /* MARCAS */
+    // MARCAS 
     $selected = '';
 
     $arr_marcas = $objMarcaRN->listar($objMarca);
@@ -164,7 +228,7 @@ function montar_select_marcas(&$select_marcas, $objMarca, $objMarcaRN, &$objEqui
 }
 
 function montar_select_modelos(&$select_modelos, $objModelo, $objModeloRN, &$objEquipamento) {
-    /* MODELOS */
+    // MODELOS 
     $selected = '';
     $arr_modelos = $objModeloRN->listar($objModelo);
     $select_modelos = '<select class="form-control selectpicker" id="select-country modelo" data-live-search="true" name="sel_modelos">'
@@ -178,6 +242,7 @@ function montar_select_modelos(&$select_modelos, $objModelo, $objModeloRN, &$obj
     }
     $select_modelos .= '</select>';
 }
+*/
 ?>
 
 <?php Pagina::abrir_head("Cadastrar Equipamento"); ?>
@@ -186,7 +251,7 @@ function montar_select_modelos(&$select_modelos, $objModelo, $objModeloRN, &$obj
 
 <style>
     body,html{
-        font-size: 20px !important;
+        font-size: 14px !important;
     }
     .dropdown-toggle{
         
@@ -222,10 +287,10 @@ function montar_select_modelos(&$select_modelos, $objModelo, $objModeloRN, &$obj
 <?= $sucesso ?>
 
 
-<h1>Cadastro de Equipamentos</h1>
-
 <div class="formulario">
     <form method="POST">
+        
+        <!--
         <div class="form-row">  
             
             <div class="col-md-4 mb-4">
@@ -246,6 +311,45 @@ function montar_select_modelos(&$select_modelos, $objModelo, $objModeloRN, &$obj
             </div>
 
         </div>
+        -->
+        <div class="form-row" style="margin-bottom: 30px;">  
+            <div class="col-md-6">
+                <h2> Cadastro de Equipamentos </h2>
+            </div>   
+            
+            <div class="col-md-4">
+                <input type="text" class="form-control" id="idUsuarioLogado" readonly style="text-align: center;margin-bottom: 10px;"
+                   name="txtUsuarioLogado" required value="Identificador do usuário logado: xxxxxxxx" >
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" id="idDtHrInicio" readonly  style="text-align: center;"
+                   name="dtHrInicio" required value="<?=$_SESSION['DATA_LOGIN'] ?>" >
+            </div>
+                    
+        </div>
+        
+        <div class="form-row">  
+            
+            <div class="col-md-4 mb-4">
+                <label for="detentorEquipamento" >Detentor:</label>
+                <input type="text" class="form-control" id="idDetentor" placeholder="Digite o nome do detentor " 
+                       name="txtDetentor" required value="<?=$objDetentor->getDetentor()?>" >
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <label for="marcaEquipamento" >Marca:</label>
+                <input type="text" class="form-control" id="idMarca" placeholder="Digite o nome da marca " 
+                       name="txtMarca" required value="<?=$objMarca->getMarca()?>" >
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <label for="modeloEquipamento">Modelo:</label>
+                <input type="text" class="form-control" id="idModelo" placeholder="Digite o nome do modelo " 
+                       name="txtModelo" required value="<?=$objModelo->getModelo()?>" >
+            </div>
+
+        </div>
+        
 
         <div class="form-row">  
             <div class="col-md-4 mb-3">

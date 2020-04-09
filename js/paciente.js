@@ -128,21 +128,22 @@ function validaRG(){
     var div_feedback = document.getElementById("feedback_rg");
     var x = document.getElementById("id_desaparecer_aparecerObsRG");
     
-    if(strTipo.value.length == 0 || strTipo.value.length > 10 ){ // não digitou nada
+    if(strTipo.value.length == 0 || strTipo.value.length != 10 ){ // não digitou nada
         strTipo.classList.add("is-invalid");
         if(strTipo.classList.contains("is-valid")) strTipo.classList.remove("is-valid");
         if(div_feedback.classList.contains("valid-feedback"))
             div_feedback.classList.remove("valid-feedback");
         div_feedback.classList.add("invalid-feedback");
+        
         if(strTipo.value.length == 0 ){
             div_feedback.innerHTML = " Informe um motivo. ";
             if (x.style.display === "none") {
                 x.style.display = "block";
             } 
         }
-        if(strTipo.value.length > 10 ) div_feedback.innerHTML = " Digite o RG com 10 caracteres. ";
+        if(strTipo.value.length != 10 ) div_feedback.innerHTML = " Digite o RG com 10 caracteres. ";
     }
-    else if(strTipo.value.length > 0){
+    else if(strTipo.value.length > 0 && strTipo.value.length == 10 ){
         x.style.display = "none";
          strTipo.classList.add("is-valid");
         if(strTipo.classList.contains("is-invalid")) strTipo.classList.remove("is-invalid");

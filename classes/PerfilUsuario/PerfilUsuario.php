@@ -7,6 +7,7 @@
 class PerfilUsuario{
     private $idPerfilUsuario;
     private $perfil;
+    private $index_perfil;
     
     function __construct() {
         
@@ -20,6 +21,10 @@ class PerfilUsuario{
         return $this->perfil;
     }
 
+    function getIndex_perfil() {
+        return $this->index_perfil;
+    }
+
     function setIdPerfilUsuario($idPerfilUsuario) {
         $this->idPerfilUsuario = $idPerfilUsuario;
     }
@@ -27,6 +32,11 @@ class PerfilUsuario{
     function setPerfil($perfil) {
         $this->perfil = $perfil;
     }
+
+    function setIndex_perfil($index_perfil) {
+        $this->index_perfil = $index_perfil;
+    }
+
 
 
 

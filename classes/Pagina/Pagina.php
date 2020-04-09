@@ -66,8 +66,8 @@ class Pagina{
                         
 
                         <!-- Estilo customizado -->
-                        <link rel="stylesheet" type="text/css" href="##">
-                        
+                        <link rel="stylesheet" type="text/css" href="css/style.css">
+                                                
                         <!-- google fonts -->
                         <link href="https://fonts.googleapis.com/css?family=Baloo+Chettan+2&display=swap" rel="stylesheet">'
                         
@@ -76,8 +76,14 @@ class Pagina{
     }
     
     public static function fechar_head(){
-        echo    '</head>
-                    <body>';
+        echo    "</head>
+                    
+                        <nav>
+                          <a><img src=\"img/header.png\" class='HeaderImg' style=\" height:20%; width: 100%;\"></a>
+                          <!--<a><img src=\"img/header.png\" class='HeaderImg' style=\" height:fixed; width: 100%;\"></a>-->
+                        </nav>
+                      
+                    <body>";
     }
      public function mostrar_excecoes(){
          //print_r($this->array_validacoes);

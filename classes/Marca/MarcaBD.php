@@ -108,6 +108,35 @@ class MarcaBD{
     }
     
     
+    public function pesquisar_index(Marca $objMarca, Banco $objBanco) {
+
+        try{
+            
+            $SELECT = 'SELECT * from tb_marca WHERE index_marca = ?';
+            
+            $arrayBind = array();
+            $arrayBind[] = array('s',$objMarca->getIndex_marca());
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
+            
+            if(empty($arr)){
+                return $arr;
+            }
+            $arr_marcas = array();
+             
+            foreach ($arr as $reg){
+                $objMarca = new Marca();
+                $objMarca->setIdMarca($reg['idMarca']);
+                $objMarca->setMarca($reg['marca']);
+                $objMarca->setIndex_marca($reg['index_marca']);
+                $arr_marcas[] = $objMarca;
+            }
+             return $arr_marcas;
+            
+        } catch (Exception $ex) {
+            throw new Excecao("Erro pesquisando marca no BD.",$ex);
+        }
+    }
+    
 
     
 }

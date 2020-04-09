@@ -126,7 +126,8 @@ class CodigoGAL_RN{
             throw new Excecao('Erro pesquisando o código GAL.', $e);
         }
     }
-
+    
+   
 }
 
 ?>

@@ -110,6 +110,35 @@ class PerfilPacienteBD{
         }
     }
     
+    public function pesquisar_index(PerfilPaciente $objPerfilPaciente, Banco $objBanco) {
+
+        try{
+            
+            $SELECT = 'SELECT * from tb_perfilPaciente WHERE index_perfil = ?';
+            
+            $arrayBind = array();
+            $arrayBind[] = array('s',$objPerfilPaciente->getIndex_perfil());
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
+            
+            if(empty($arr)){
+                return $arr;
+            }
+            $arr_perfis_paciente = array();
+             
+            foreach ($arr as $reg){
+                $objPerfilPaciente = new PerfilPaciente();
+                $objPerfilPaciente->setIdPerfilPaciente($reg['idPerfilPaciente']);
+                $objPerfilPaciente->setPerfil($reg['perfil']);
+                $objPerfilPaciente->setIndex_perfil($reg['index_perfil']);
+                $arr_perfis_paciente[] = $objPerfilPaciente;
+            }
+             return $arr_perfis_paciente;
+            
+        } catch (Exception $ex) {
+            throw new Excecao("Erro pesquisando perfil do paciente no BD.",$ex);
+        }
+    }
+    
     
 
     

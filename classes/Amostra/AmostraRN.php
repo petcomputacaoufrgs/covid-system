@@ -9,19 +9,7 @@ require_once 'classes/Amostra/AmostraBD.php';
 class AmostraRN{
    
     
-    private function validarQuantidadeTubos(Amostra $objAmostra, Excecao $objExcecao) {
-        $strQntTubos = trim($objAmostra->getQuantidadeTubos());
-       
-        
-        if ($strQntTubos == '') {
-            $objExcecao->adicionar_validacao('Quantidade de tubos não foi informada','idQntTubos');
-        }
-        
-        
-        $objAmostra->setQuantidadeTubos($strQntTubos);
-
-    }
-    
+      
     private function validarObservacoes(Amostra $objAmostra, Excecao $objExcecao) {
         $strObservacoes = trim($objAmostra->getObservacoes());
        
@@ -62,7 +50,6 @@ class AmostraRN{
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             
-            $this->validarQuantidadeTubos($amostra,$objExcecao);
             $this->validarObservacoes($amostra,$objExcecao);
             $this->validarAceitaRecusa($amostra,$objExcecao);
             $this->validarDataHoraColeta($amostra,$objExcecao);
@@ -85,10 +72,10 @@ class AmostraRN{
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
 
-            $this->validarQuantidadeTubos($amostra,$objExcecao);
             $this->validarObservacoes($amostra,$objExcecao);
             $this->validarAceitaRecusa($amostra,$objExcecao);
             $this->validarDataHoraColeta($amostra,$objExcecao);
+            
             $objExcecao->lancar_validacoes();
             
             $objAmostraBD = new AmostraBD();
@@ -145,7 +132,50 @@ class AmostraRN{
             throw new Exception('Erro listando amostra.', NULL, $e);
         }
     }
-
+    
+    public function validarCadastro(Amostra $amostra) {
+        try {
+            $objExcecao = new Excecao();
+            $objBanco = new Banco();
+            $objBanco->abrirConexao(); 
+            $objExcecao->lancar_validacoes();
+            $arr_resultado = array();
+            $cadastrar = true;
+            $objAmostraRN = new AmostraRN();
+            $arr_amostras = $objAmostraRN->listar($amostra);
+                        
+            foreach ($arr_amostras as $a){
+                if($a->getAceita_recusa() == $amostra->getAceita_recusa() &&
+                   $a->getObservacoes() == $amostra->getObservacoes() &&
+                   strtotime ($a->getDataHoraColeta()) == strtotime($amostra->getDataHoraColeta()) &&
+                   $a->getIdEstado_fk() == $amostra->getIdEstado_fk() && 
+                   $a->getIdLugarOrigem_fk() == $amostra->getIdLugarOrigem_fk() &&
+                   $a->getIdPaciente_fk() == $amostra->getIdPaciente_fk() && 
+                   $a->getIdNivelPrioridade_fk() == $amostra->getIdNivelPrioridade_fk() && 
+                   $a->getStatusAmostra() == $amostra->getStatusAmostra()){
+                     $amostra->setIdAmostra($a->getIdAmostra());
+                     $cadastrar = false;
+                     //return $arr_resultado;
+                }
+            }
+            
+            if($cadastrar){
+                return $arr_resultado;
+            }else{
+                $objAmostraBD = new AmostraBD();
+                $arr_resultado =  $objAmostraBD->consultar($amostra,$objBanco);
+                $objBanco->fecharConexao();
+            
+            }
+            return $arr_resultado;
+        } catch (Exception $e) {
+            throw new Exception('Erro listando amostra.', NULL, $e);
+        }
+    }
+    
+    
+  
+  
 
 }
 

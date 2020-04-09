@@ -7,12 +7,12 @@ class PerfilUsuarioBD{
 
     public function cadastrar(PerfilUsuario $objPerfilUsuario, Banco $objBanco) {
         try{
-            //echo $objPerfilUsuario->getPerfil();
-            //die("die");
-            $INSERT = 'INSERT INTO tb_perfilusuario (perfil) VALUES (?)';
+            
+            $INSERT = 'INSERT INTO tb_perfilusuario (perfil,index_perfil) VALUES (?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('s',$objPerfilUsuario->getPerfil());
+            $arrayBind[] = array('s',$objPerfilUsuario->getIndex_perfil());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -26,12 +26,14 @@ class PerfilUsuarioBD{
     public function alterar(PerfilUsuario $objPerfilUsuario, Banco $objBanco) {
         try{
             $UPDATE = 'UPDATE tb_perfilusuario SET '
-                . ' perfil = ?'
+                    . ' perfil = ?,'
+                    . ' index_perfil = ?'
                 . '  where idPerfilUsuario = ?';
         
                 
             $arrayBind = array();
             $arrayBind[] = array('s',$objPerfilUsuario->getPerfil());
+            $arrayBind[] = array('s',$objPerfilUsuario->getIndex_perfil());
             $arrayBind[] = array('i',$objPerfilUsuario->getIdPerfilUsuario());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
@@ -45,7 +47,7 @@ class PerfilUsuarioBD{
      public function listar(PerfilUsuario $objPerfilUsuario, Banco $objBanco) {
          try{
       
-            $SELECT = "SELECT * FROM tb_perfilusuario";
+            $SELECT = "SELECT * FROM tb_perfilUsuario";
 
 
             $arr = $objBanco->consultarSQL($SELECT);
@@ -55,6 +57,7 @@ class PerfilUsuarioBD{
                 $objPerfilUsuario = new PerfilUsuario();
                 $objPerfilUsuario->setIdPerfilUsuario($reg['idPerfilUsuario']);
                 $objPerfilUsuario->setPerfil($reg['perfil']);
+                $objPerfilUsuario->setIndex_perfil($reg['index_perfil']);
 
                 $array_perfilUsu[] = $objPerfilUsuario;
             }
@@ -69,7 +72,7 @@ class PerfilUsuarioBD{
 
         try{
 
-            $SELECT = 'SELECT idPerfilUsuario,perfil FROM tb_perfilusuario WHERE idPerfilUsuario = ?';
+            $SELECT = 'SELECT idPerfilUsuario,perfil,index_perfil FROM tb_perfilusuario WHERE idPerfilUsuario = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objPerfilUsuario->getIdPerfilUsuario());
@@ -79,6 +82,7 @@ class PerfilUsuarioBD{
             $perfilUsu = new PerfilUsuario();
             $perfilUsu->setIdPerfilUsuario($arr[0]['idPerfilUsuario']);
             $perfilUsu->setPerfil($arr[0]['perfil']);
+            $perfilUsu->setIndex_perfil($arr[0]['index_perfil']);
 
             return $perfilUsu;
         } catch (Exception $ex) {
@@ -99,6 +103,36 @@ class PerfilUsuarioBD{
             
         } catch (Exception $ex) {
             throw new Excecao("Erro removendo perfil do usuário no BD.",$ex);
+        }
+    }
+    
+    
+     public function pesquisar_index(PerfilUsuario $objPerfilUsuario, Banco $objBanco) {
+
+        try{
+            
+            $SELECT = 'SELECT * from tb_perfilUsuario WHERE index_perfil = ?';
+            
+            $arrayBind = array();
+            $arrayBind[] = array('s',$objPerfilUsuario->getIndex_perfil());
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
+            
+            if(empty($arr)){
+                return $arr;
+            }
+            $arr_perfis_usuario = array();
+             
+            foreach ($arr as $reg){
+                $objPerfilUsuario = new PerfilUsuario();
+                $objPerfilUsuario->setIdPerfilUsuario($reg['idPerfilUsuario']);
+                $objPerfilUsuario->setPerfil($reg['perfil']);
+                $objPerfilUsuario->setIndex_perfil($reg['index_perfil']);
+                $arr_perfis_usuario[] = $objPerfilUsuario;
+            }
+             return $arr_perfis_usuario;
+            
+        } catch (Exception $ex) {
+            throw new Excecao("Erro pesquisando o perfil do usuário no BD.",$ex);
         }
     }
     

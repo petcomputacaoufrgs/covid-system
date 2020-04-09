@@ -20,49 +20,23 @@ class MarcaRN{
                 $objExcecao->adicionar_validacao('A marca possui mais que 100 caracteres.','idMarca');
             }
             
-            $detentor_aux_RN = new MarcaRN();
-            $array_marcas = $detentor_aux_RN->listar($detentor);
-            //print_r($array_sexos);
-            foreach ($array_marcas as $m){
-                if($m->getMarca() == $detentor->getMarca()){
-                    $objExcecao->adicionar_validacao('A marca já existe.','idMarca');
-                }
-            }
         }
         
         return $detentor->setMarca($strMarca);
     }
     
-     private function validarIndexMarca(Marca $detentor,Excecao $objExcecao){
-        $strIndexMarca = trim($detentor->getIndex_marca());
-        
-                  
-        $detentor_aux_RN = new MarcaRN();
-        $array_marcas = $detentor_aux_RN->listar($detentor);
-        foreach ($array_marcas as $m){
-            if($m->getIndex_marca() == $strIndexMarca){
-                $objExcecao->adicionar_validacao('A marca já existe.','idMarca');
-            }
-        }
-        
-        
-        return $detentor->setIndex_marca($strIndexMarca);
-
-    }
-     
-
+  
     public function cadastrar(Marca $detentor) {
         try {
             
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
+            $objMarcaBD = new MarcaBD();
             
             $this->validarMarca($detentor,$objExcecao); 
-            $this->validarIndexMarca($detentor,$objExcecao); 
             
-            $objExcecao->lancar_validacoes();
-            $objMarcaBD = new MarcaBD();
+            $objExcecao->lancar_validacoes();            
             $objMarcaBD->cadastrar($detentor,$objBanco);
             
             $objBanco->fecharConexao();
@@ -142,18 +116,19 @@ class MarcaRN{
     }
 
 
-    public function pesquisar($campoBD, $valor_usuario) {
+     public function pesquisar_index(Marca $marca) {
         try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             $objExcecao->lancar_validacoes();
             $objMarcaBD = new MarcaBD();
-            $arr = $objMarcaBD->pesquisar($campoBD,$valor_usuario,$objBanco);
+            $arr = $objMarcaBD->pesquisar_index($marca,$objBanco);
+            
             $objBanco->fecharConexao();
             return $arr;
         } catch (Exception $e) {
-            throw new Excecao('Erro pesquisando a marca.', $e);
+            throw new Excecao('Erro pesquisando o modelo.', $e);
         }
     }
 

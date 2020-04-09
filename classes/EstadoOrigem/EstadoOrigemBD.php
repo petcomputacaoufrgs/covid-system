@@ -33,10 +33,10 @@ class EstadoOrigemBD{
 
         try{
 
-            $SELECT = 'SELECT cod_estado,sigla,nome FROM tab_municipio WHERE cod_estado = ?';
+            $SELECT = 'SELECT cod_estado,sigla,nome FROM tab_estado WHERE cod_estado = ?';
 
             $arrayBind = array();
-            $arrayBind[] = array('i',$objEstadoOrigem->getIdEstadoOrigem());
+            $arrayBind[] = array('i',$objEstadoOrigem->getCod_estado());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
 

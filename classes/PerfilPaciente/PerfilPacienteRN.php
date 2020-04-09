@@ -34,12 +34,14 @@ class PerfilPacienteRN{
         //print_r($array_sexos);
         foreach ($array_perfis as $p){
             if($p->getIndex_perfil() == $perfilPaciente->getIndex_perfil()){
-                $objExcecao->adicionar_validacao('O perfil do paciente já existe.','idPerfilPaciente');
+                //$objExcecao->adicionar_validacao('O perfil do paciente já existe.','idPerfilPaciente');
+                return false;
             }
         }
+        return true;
         
         
-        return $perfilPaciente->setIndex_perfil($strPerfilPacienteUPPER);
+        //return $perfilPaciente->setIndex_perfil($strPerfilPacienteUPPER);
 
     }
      
@@ -70,14 +72,17 @@ class PerfilPacienteRN{
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
+            $objPerfilPacienteBD = new PerfilPacienteBD();
             
             $this->validarPerfil($perfilPaciente,$objExcecao);  
-            $this->validarIndexPerfil($perfilPaciente,$objExcecao);
+            if($this->validarIndexPerfil($perfilPaciente,$objExcecao)){
+                $objExcecao->lancar_validacoes();
+                $objPerfilPacienteBD->alterar($perfilPaciente,$objBanco);
+            }else{
+                $objExcecao->lancar_validacoes();
+                $objPerfilPacienteBD->consultar($perfilPaciente,$objBanco);
+            }
                         
-            $objExcecao->lancar_validacoes();
-            $objPerfilPacienteBD = new PerfilPacienteBD();
-            $objPerfilPacienteBD->alterar($perfilPaciente,$objBanco);
-            
             $objBanco->fecharConexao();
         } catch (Exception $e) {
             throw new Excecao('Erro alterando o perfil do paciente.', $e);
@@ -135,14 +140,15 @@ class PerfilPacienteRN{
     }
 
 
-    public function pesquisar($campoBD, $valor_usuario) {
+     public function pesquisar_index(PerfilPaciente $perfilPaciente) {
         try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             $objExcecao->lancar_validacoes();
             $objPerfilPacienteBD = new PerfilPacienteBD();
-            $arr = $objPerfilPacienteBD->pesquisar($campoBD,$valor_usuario,$objBanco);
+            $arr = $objPerfilPacienteBD->pesquisar_index($perfilPaciente,$objBanco);
+            
             $objBanco->fecharConexao();
             return $arr;
         } catch (Exception $e) {

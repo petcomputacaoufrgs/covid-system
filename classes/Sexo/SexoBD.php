@@ -78,12 +78,12 @@ class SexoBD{
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
 
-            $sexoAmostra = new Sexo();
-            $sexoAmostra->setIdSexo($arr[0]['idSexo']);
-            $sexoAmostra->setSexo($arr[0]['sexo']);
-            $sexoAmostra->setIndex_sexo($arr[0]['index_sexo']);
+            $sexo = new Sexo();
+            $sexo->setIdSexo($arr[0]['idSexo']);
+            $sexo->setSexo($arr[0]['sexo']);
+            $sexo->setIndex_sexo($arr[0]['index_sexo']);
 
-            return $sexoAmostra;
+            return $sexo;
         } catch (Exception $ex) {
        
             throw new Excecao("Erro consultando sexo do paciente no BD.",$ex);
@@ -105,6 +105,35 @@ class SexoBD{
         }
     }
     
+    
+    public function pesquisar_index(Sexo $objSexo, Banco $objBanco) {
+
+        try{
+            
+            $SELECT = 'SELECT * from tb_sexo WHERE index_sexo = ?';
+            
+            $arrayBind = array();
+            $arrayBind[] = array('s',$objSexo->getIndex_sexo());
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
+            
+            if(empty($arr)){
+                return $arr;
+            }
+            $arr_sexos = array();
+             
+            foreach ($arr as $reg){
+                $objSexo = new Sexo();
+                $objSexo->setIdSexo($reg['idSexo']);
+                $objSexo->setSexo($reg['sexo']);
+                $objSexo->setIndex_sexo($reg['index_sexo']);
+                $arr_sexos[] = $objSexo;
+            }
+             return $arr_sexos;
+            
+        } catch (Exception $ex) {
+            throw new Excecao("Erro pesquisando sexo no BD.",$ex);
+        }
+    }
     
 
     

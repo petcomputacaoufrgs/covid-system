@@ -111,7 +111,7 @@ class Banco {
         for ($i = 0; $i < $numBind; $i++) {
             $arrParams[] = & $arrCamposBind[$i][1];
         }
-
+        
         if (call_user_func_array('mysqli_stmt_bind_param', $arrParams) === FALSE) {
             throw new Exception(mysqli_error($this->conn));
         }
@@ -131,7 +131,7 @@ class Banco {
         while ($registro = mysqli_fetch_array($resultado,MYSQLI_ASSOC)) {
             $arrResultado[] = $registro;
         }
-
+        
         mysqli_stmt_close($stmt);
         RETURN $arrResultado;
     }

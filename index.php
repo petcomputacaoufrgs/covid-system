@@ -1,92 +1,312 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title></title>
-    </head>
+<?php 
+require_once 'classes/Pagina/Pagina.php';
+
+$objPagina = new Pagina();
+Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico de COVID-19"); ?>
+
+      	<style>
+	.fas{
+		color:green;
+	}
+        .conteudo{
+        background-color: white;
+        padding: 5px;
+        margin-top: 100px;
+        text-align: center;
+      }
+        
+        .conteudo h4 {
+            color: #808080;
+            background: #e9e9e9;
+            font-weight: normal;
+            padding: 10px;
+            border-top-left-radius: 5px;
+            border-top-right-radius:  5px;
+            border-bottom: 1px solid #949494;
+              /*box-shadow: 2px;*/
+          }
+          
+          .conteudo .navbar-nav{
+  background: purple;
+  margin-top: -8px;
+}
+
+.conteudo .navbar-nav li{
+  background-color: #bdbebd;
+  padding: 10px;
+  font-size: 20px;
+}
+
+.conteudo .navbar-nav li a{
+  text-decoration: none;
+  color: white;
+}
+
+.conteudo .navbar-nav li:hover{
+  text-decoration: none;
+  color: white;
+  background-color: #949494;
+}
+
+        
+	</style>
+<?php Pagina::fechar_head(); ?>
+        
+    
     <body>
-        <li><a href="controlador.php?action=recepcionar_amostra">Etapa Recepção Amostra</a></li>
+        
+
+        
+        
+        <!-- PRINCIPAIS -->
+        <div class="conteudo">
+          <div class="row">
+             <div class="col-md-2"><h1>TELAS PRINCIPAIS</h1></div>
+             <div class="col-md-2">
+                <h4>CADASTRAR AMOSTRA</h4>
+                <ul class="navbar-nav">
+                  <li><a href="controlador.php?action=#">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=#">Listar</a></li>
+                </ul>               
+             </div>
+              
+              <div class="col-md-2">
+                <h4>ARMAZENAR AMOSTRA</h4>
+                <ul class="navbar-nav">
+                  <li><a href="controlador.php?action=#">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=#">Listar</a></li>
+                </ul>               
+             </div>
+              
+              <div class="col-md-2">
+                <h4>EXTRAIR AMOSTRA</h4>
+                <ul class="navbar-nav">
+                  <li><a href="controlador.php?action=#">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=#">Listar</a></li>
+                </ul>               
+             </div>
+              
+              <div class="col-md-2">
+                <h4>RTPCR AMOSTRA</h4>
+                <ul class="navbar-nav">
+                  <li><a href="controlador.php?action=#">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=#">Listar</a></li>
+                </ul>               
+             </div>
+              
+              <div class="col-md-2">
+                <h4>LAUDO AMOSTRA</h4>
+                <ul class="navbar-nav">
+                  <li><a href="controlador.php?action=#">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=#">Listar</a></li>
+                </ul>               
+             </div>
+             
+            </div>
+        </div>
+        
+        <div class="conteudo">
+          <div class="row">
+              <div class="col-md-2"><h1>AMOSTRA</h1></div>
+              <div class="col-md-2">
+                <h4>AMOSTRA</h4>
+                <ul class="navbar-nav">
+                   <li><a href="controlador.php?action=cadastrar_amostra">Cadastrar</a></li>
+                   <li><a href="controlador.php?action=listar_amostra">Listar</a></li>
+                </ul>               
+             </div>
+
+             <div class="col-md-2">
+                <h4>TIPO DE AMOSTRA</h4>
+                <ul class="navbar-nav">
+                    <li><a href="controlador.php?action=cadastrar_tipoAmostra">Cadastrar </a></li>
+                    <li><a href="controlador.php?action=listar_tipoAmostra">Listar</a></li>
+                </ul>               
+             </div>
+              
+                           
+              
+            <div class="col-md-2">
+                <h4>DOENÇA</h4>
+                <ul class="navbar-nav">
+                  <li><a href="controlador.php?action=cadastrar_doenca">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=listar_doenca">Listar</a></li>
+                </ul>               
+             </div>
+              
+              
+              <!--
+              <div class="col-md-2">
+                <h4>...</h4>
+                <ul class="navbar-nav">
+                  <li><a href="controlador.php?action=#">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=#">Listar</a></li>
+                </ul>               
+             </div>
+              
+              <div class="col-md-2">
+                <h4>...</h4>
+                <ul class="navbar-nav">
+                  <li><a href="controlador.php?action=#">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=#">Listar</a></li>
+                </ul>               
+             </div> -->
+             
+            </div>
+        </div>
+        
+         <div class="conteudo">
+          <div class="row">
+              <div class="col-md-2"><h1>PACIENTE</h1></div>
+              <div class="col-md-2">
+                <h4>PACIENTES</h4>
+                <ul class="navbar-nav">
+                  <li><a href="controlador.php?action=cadastrar_paciente">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=listar_paciente">Listar</a></li>
+                </ul>               
+             </div>
+             
+                           
+              
+              <div class="col-md-2">
+                <h4>SEXO PACIENTES</h4>
+                <ul class="navbar-nav">
+                  <li><a href="controlador.php?action=cadastrar_sexoPaciente">Cadastrar</a></li>
+                <li><a href="controlador.php?action=listar_sexoPaciente">Listar</a></li>
+                </ul>               
+             </div>
+              
+              
+              
+              <div class="col-md-2">
+                <h4>PERFIL PACIENTE</h4>
+                <ul class="navbar-nav">
+                  <li><a href="controlador.php?action=cadastrar_perfilPaciente">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=listar_perfilPaciente">Listar</a></li>
+                </ul>               
+             </div>
+              
+              
+             
+            </div>
+        </div>
+          
+          
+        
+        <div class="conteudo">
+          <div class="row">
+              <div class="col-md-2"><h1>EQUIPAMENTO</h1></div>
+              <div class="col-md-2">
+                <h4>EQUIPAMENTO</h4>
+                <ul class="navbar-nav">
+                 <li><a href="controlador.php?action=cadastrar_equipamento">Cadastrar</a></li>
+                <li><a href="controlador.php?action=listar_equipamento">Listar</a></li>
+                </ul>               
+             </div>
+             
+                           
+              
+              <div class="col-md-2">
+                <h4>MARCA</h4>
+                <ul class="navbar-nav">
+                 <li><a href="controlador.php?action=cadastrar_marca">Cadastrar</a></li>
+                <li><a href="controlador.php?action=listar_marca">Listar</a></li>
+                </ul>               
+             </div>
+              
+              
+              
+              <div class="col-md-2">
+                <h4>MODELO</h4>
+                <ul class="navbar-nav">
+                   <li><a href="controlador.php?action=cadastrar_modelo">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=listar_modelo">Listar</a></li>
+                </ul>               
+             </div>
+              
+               <div class="col-md-2">
+                <h4>DETENTOR</h4>
+                <ul class="navbar-nav">
+                 <li><a href="controlador.php?action=cadastrar_detentor">Cadastrar</a></li>
+                <li><a href="controlador.php?action=listar_detentor">Listar</a></li>
+                </ul>               
+             </div>
+             
+            </div>
+        </div>
+        
+        
+         <div class="conteudo">
+          <div class="row">
+              <div class="col-md-2"><h1>USUÁRIO</h1></div>
+              <div class="col-md-2">
+                <h4>USUÁRIO</h4>
+                <ul class="navbar-nav">
+                    <li><a href="controlador.php?action=cadastrar_usuario">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=listar_usuario">Listar</a></li>
+                </ul>               
+             </div>
+             
+                           
+              
+              <div class="col-md-2">
+                <h4>RECURSO</h4>
+                <ul class="navbar-nav">
+                    <li><a href="controlador.php?action=cadastrar_recurso">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=listar_recurso">Listar</a></li>
+                </ul>               
+             </div>
+              
+              
+              
+              <div class="col-md-2">
+                <h4>PERFIS USUÁRIO</h4>
+                <ul class="navbar-nav">
+                   <li><a href="controlador.php?action=cadastrar_perfilUsuario">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=listar_perfilUsuario">Listar</a></li>
+                </ul>               
+             </div>
+              
+                            
+            </div>
+        </div>
+        
+        <div class="conteudo">
+          <div class="row">
+              <div class="col-md-3"><h1>ARMAZENAMENTO</h1></div>
+                <div class="col-md-2">
+                <h4>LOCAL ARMAZENAMENTO</h4>
+                <ul class="navbar-nav">
+                    <li><a href="controlador.php?action=cadastrar_localArmazenamento">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=listar_localArmazenamento">Listar</a></li>
+                </ul>               
+             </div>
+              <div class="col-md-2">
+                <h4>TIPO LOCAL ARMAZENAMENTO</h4>
+                <ul class="navbar-nav">
+                    <li><a href="controlador.php?action=cadastrar_tipoLocalArmazenamento">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=listar_tipoLocalArmazenamento">Listar</a></li>
+                </ul>               
+             </div>
+             
+                           
+              
+             
+              
+              
+            </div>
+        </div>
+        
+           <li><a href="controlador.php?action=recepcionar_amostra">Etapa Recepção Amostra</a></li>
         <li><a href="controlador.php?action=cadastrar_amostra_localArmazenamento">Preparação e Armazenamento</a></li>
         <li><a href="controlador.php?action=extrair_amostra">Etapa Extração</a></li>
-        <li><a href="controlador.php?action=exibir_laudo">Etapa Laudo</a></li>
-
-        <ul>
-            <li>---------------- CADASTRAR AMOSTRA</li>
-            <li><a href="controlador.php?action=#">Cadastrar</a></li>
-            <li><a href="controlador.php?action=#">Listar</a></li>
-            <li>---------------- ARMAZENAR AMOSTRA</li>
-            <li><a href="controlador.php?action=cadastrar_amostra_localArmazenamento">Cadastrar</a></li>
-            <li><a href="controlador.php?action=#">Listar</a></li>
-            <li>---------------- EXTRAÇÃO DA AMOSTRA</li>
-            <li><a href="controlador.php?action=#">Cadastrar</a></li>
-            <li><a href="controlador.php?action=#">Listar</a></li>
-            <li>---------------- RTPCR DA AMOSTRA</li>
-            <li><a href="controlador.php?action=#">Cadastrar</a></li>
-            <li><a href="controlador.php?action=#">Listar</a></li>
-            <li>---------------- LAUDO DA AMOSTRA</li>
-            <li><a href="controlador.php?action=#">Cadastrar</a></li>
-            <li><a href="controlador.php?action=#">Listar</a></li>
-            
-        </ul>
+        <li><a href="controlador.php?action=exibir_laudo">Etapa Laudo</a></li>    
         
-        <ul>
-            <li>---------------- Tipo de amostras</li>
-            <li><a href="controlador.php?action=cadastrar_tipoAmostra">Cadastrar </a></li>
-            <li><a href="controlador.php?action=listar_tipoAmostra">Listar</a></li>
-            <li>---------------- Sexo pacientes</li>
-            <li><a href="controlador.php?action=cadastrar_sexoPaciente">Cadastrar</a></li>
-            <li><a href="controlador.php?action=listar_sexoPaciente">Listar</a></li>
-            <li>---------------- Perfil do paciente</li>
-            <li><a href="controlador.php?action=cadastrar_perfilPaciente">Cadastrar</a></li>
-            <li><a href="controlador.php?action=listar_perfilPaciente">Listar</a></li>
-            <li>---------------- Tipo Local Armazenamento</li>
-            <li><a href="controlador.php?action=cadastrar_tipoLocalArmazenamento">Cadastrar</a></li>
-            <li><a href="controlador.php?action=listar_tipoLocalArmazenamento">Listar</a></li>
-            <li>---------------- Perfil do usuário</li>
-            <li><a href="controlador.php?action=cadastrar_perfilUsuario">Cadastrar</a></li>
-            <li><a href="controlador.php?action=listar_perfilUsuario">Listar</a></li>
-            <li>---------------- Doença</li>
-            <li><a href="controlador.php?action=cadastrar_doenca">Cadastrar</a></li>
-            <li><a href="controlador.php?action=listar_doenca">Listar</a></li>
-            <li>---------------- Usuário</li>
-            <li><a href="controlador.php?action=cadastrar_usuario">Cadastrar</a></li>
-            <li><a href="controlador.php?action=listar_usuario">Listar</a></li>
-            <li>---------------- Recurso</li>
-            <li><a href="controlador.php?action=cadastrar_recurso">Cadastrar</a></li>
-            <li><a href="controlador.php?action=listar_recurso">Listar</a></li>
-            <li>---------------- Equipamento</li>
-            <li><a href="controlador.php?action=cadastrar_equipamento">Cadastrar</a></li>
-            <li><a href="controlador.php?action=listar_equipamento">Listar</a></li>
-            <li>---------------- Detentor</li>
-            <li><a href="controlador.php?action=cadastrar_detentor">Cadastrar</a></li>
-            <li><a href="controlador.php?action=listar_detentor">Listar</a></li>
-            <li>---------------- Marca</li>
-            <li><a href="controlador.php?action=cadastrar_marca">Cadastrar</a></li>
-            <li><a href="controlador.php?action=listar_marca">Listar</a></li>
-            <li>---------------- Modelo</li>
-            <li><a href="controlador.php?action=cadastrar_modelo">Cadastrar</a></li>
-            <li><a href="controlador.php?action=listar_modelo">Listar</a></li>
-            <li>---------------- Permanência</li>
-            <li><a href="controlador.php?action=cadastrar_tempoPermanencia">Cadastrar</a></li>
-            <li><a href="controlador.php?action=listar_tempoPermanencia">Listar</a></li>
-            <li>---------------- Local Armazenamento</li>
-            <li><a href="controlador.php?action=cadastrar_localArmazenamento">Cadastrar</a></li>
-            <li><a href="controlador.php?action=listar_localArmazenamento">Listar</a></li>
-            <li>---------------- Paciente</li>
-            <li><a href="controlador.php?action=cadastrar_paciente">Cadastrar</a></li>
-            <li><a href="controlador.php?action=listar_paciente">Listar</a></li>
-            <li>---------------- Amostra</li>
-            <li><a href="controlador.php?action=cadastrar_amostra">Cadastrar</a></li>
-            <li><a href="controlador.php?action=listar_amostra">Listar</a></li>
-           
-            
-            
-            
-        </ul>
-    </body>
-</html>
+        
+        
+        
+
+    <?php
+    $objPagina->fechar_corpo();
+    
+    ?>

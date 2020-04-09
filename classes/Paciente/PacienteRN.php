@@ -25,18 +25,7 @@ class PacienteRN{
     }
     
     
-    private function validarCadastro(Paciente $paciente,Excecao $objExcecao){
-        
-        $pacienteRN  = new PacienteRN();
-        $arr_pacientes = $pacienteRN->listar($paciente);
-        foreach ($arr_pacientes as $p){
-            if($paciente->getNome() == $p->getNome() && $paciente->getCPF() == $p->getCPF()){
-                return false;
-            }
-        }
-        return true;
-        
-    }
+    
     
     private function validarNomeMae(Paciente $paciente,Excecao $objExcecao){
         $strNomeMae = trim($paciente->getNomeMae());
@@ -158,6 +147,7 @@ class PacienteRN{
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
+            $objPacienteBD = new PacienteBD();
             
             $this->validarCPF($paciente,$objExcecao);  
             $this->validarDataNascimento($paciente,$objExcecao); 
@@ -168,15 +158,14 @@ class PacienteRN{
             $this->validarObsSexo($paciente,$objExcecao); 
             $this->validarRG($paciente,$objExcecao); 
             
-            if($this->validarCadastro($paciente,$objExcecao)){
+            if($this->validarCadastro($paciente,$objExcecao) == null){
                 $objExcecao->lancar_validacoes();
-                $objPacienteBD = new PacienteBD();
+
                 //print_r($paciente);        
                 $objPacienteBD->cadastrar($paciente,$objBanco);
             }else{
                 //retornar o ID do paciente que já existe no sistema
-                $objPacienteRN = new PacienteRN();
-                $paciente = $objPacienteRN->consultar($paciente);
+                $paciente = $objPacienteBD->consultar($this->validarCadastro($paciente,$objExcecao));
             }          
            
             $objBanco->fecharConexao();
@@ -193,11 +182,9 @@ class PacienteRN{
             $objBanco->abrirConexao(); 
             
             $this->validarCPF($paciente,$objExcecao); 
-            $this->validarCodigoGAL($paciente,$objExcecao); 
             $this->validarDataNascimento($paciente,$objExcecao); 
             $this->validarNome($paciente,$objExcecao); 
-            $this->validarNomeMae($paciente,$objExcecao); 
-            $this->validarObsCPF($paciente,$objExcecao); 
+            $this->validarNomeMae($paciente,$objExcecao);  
             $this->validarObsNomeMae($paciente,$objExcecao); 
             $this->validarObsRG($paciente,$objExcecao); 
             $this->validarObsSexo($paciente,$objExcecao); 
@@ -264,20 +251,22 @@ class PacienteRN{
     }
 
 
-    public function pesquisar($campoBD, $valor_usuario) {
+    public function validarCadastro(Paciente $paciente) {
         try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
-            $arr = $objPacienteBD->pesquisar($campoBD,$valor_usuario,$objBanco);
+            $arr = $objPacienteBD->validarCadastro($paciente,$objBanco);
             $objBanco->fecharConexao();
             return $arr;
         } catch (Exception $e) {
             throw new Excecao('Erro pesquisando a marca.', $e);
         }
     }
+    
+   
 
 }
 

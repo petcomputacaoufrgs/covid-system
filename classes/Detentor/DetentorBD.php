@@ -106,6 +106,34 @@ class DetentorBD{
             throw new Excecao("Erro removendo detentor no BD.",$ex);
         }
     }
+    public function pesquisar_index(Detentor $objDetentor, Banco $objBanco) {
+
+        try{
+            
+            $SELECT = 'SELECT * from tb_detentor WHERE index_detentor = ?';
+            
+            $arrayBind = array();
+            $arrayBind[] = array('s',$objDetentor->getIndex_detentor());
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
+            
+            if(empty($arr)){
+                return $arr;
+            }
+            $arr_detentores = array();
+             
+            foreach ($arr as $reg){
+                $detentor = new Detentor();
+                $detentor->setIdDetentor($reg['idDetentor']);
+                $detentor->setDetentor($reg['detentor']);
+                $detentor->setIndex_detentor($reg['index_detentor']);
+                $arr_detentores[] = $detentor;
+            }
+             return $arr_detentores;
+            
+        } catch (Exception $ex) {
+            throw new Excecao("Erro pesquisando o detentor no BD.",$ex);
+        }
+    }
     
       
     

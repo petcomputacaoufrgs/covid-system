@@ -109,6 +109,36 @@ class ModeloBD{
     }
     
     
+    public function pesquisar_index(Modelo $objModelo, Banco $objBanco) {
+
+        try{
+            
+            $SELECT = 'SELECT * from tb_modelo WHERE index_modelo = ?';
+            
+            $arrayBind = array();
+            $arrayBind[] = array('s',$objModelo->getIndex_modelo());
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
+            
+            if(empty($arr)){
+                return $arr;
+            }
+            $arr_modelos = array();
+             
+            foreach ($arr as $reg){
+                $objModelo = new Modelo();
+                $objModelo->setIdModelo($reg['idModelo']);
+                $objModelo->setModelo($reg['modelo']);
+                $objModelo->setIndex_modelo($reg['index_modelo']);
+                $arr_modelos[] = $objModelo;
+            }
+             return $arr_modelos;
+            
+        } catch (Exception $ex) {
+            throw new Excecao("Erro pesquisando modelo no BD.",$ex);
+        }
+    }
+    
+    
 
     
 }

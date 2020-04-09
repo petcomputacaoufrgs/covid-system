@@ -19,8 +19,12 @@ try{
             if(isset($_POST['salvar_detentor'])){
                 $objDetentor->setDetentor($_POST['txtDetentor']);
                 $objDetentor->setIndex_detentor(strtoupper($utils->tirarAcentos($_POST['txtDetentor'])));
-                $objDetentorRN->cadastrar($objDetentor);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                if(empty($objDetentorRN->pesquisar_index($objDetentor))){
+                    $objDetentorRN->cadastrar($objDetentor);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                }
+                //$sucesso= '<div id="sucesso_bd" class="sucesso">Já existe um detentor com esse nome</div>';
+                
             }else{
                 $objDetentor->setIdDetentor('');
                 $objDetentor->setDetentor('');
@@ -37,8 +41,11 @@ try{
                 $objDetentor->setIdDetentor($_GET['idDetentor']);
                 $objDetentor->setDetentor($_POST['txtDetentor']);
                 $objDetentor->setIndex_detentor(strtoupper($utils->tirarAcentos($_POST['txtDetentor'])));
-                $objDetentorRN->alterar($objDetentor);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                if(empty($objDetentorRN->pesquisar_index($objDetentor))){
+                    $objDetentorRN->alterar($objDetentor);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                }
+               //$sucesso= '<div id="sucesso_bd" class="sucesso">Já existe um detentor com esse nome</div>';
             }
             
             
@@ -84,7 +91,13 @@ try{
     <button class="btn btn-primary" type="submit" name="salvar_detentor">Salvar</button>
 </form>
 </div>
-
+<script>
+     $(document).ready(function () {
+        setTimeout(function () {
+            $('#sucesso_bd').fadeOut(500);
+        }, 500);
+    });
+    </script>
 <script src="js/detentor.js"></script>
 <script src="js/fadeOut.js"></script>
 

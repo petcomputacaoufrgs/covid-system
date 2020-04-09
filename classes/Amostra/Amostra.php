@@ -8,10 +8,12 @@ class Amostra{
     private $idPaciente_fk;
     private $idEstado_fk;
     private $idLugarOrigem_fk;
-    private $quantidadeTubos;
+    private $idCodGAL_fk;
+    private $idNivelPrioridade_fk;
     private $observacoes;
     private $dataHoraColeta;
     private $aceita_recusa;
+    private $statusAmostra;
     
     function __construct() {
         
@@ -43,9 +45,6 @@ class Amostra{
         return $this->idPaciente_fk;
     }
 
-    function getQuantidadeTubos() {
-        return $this->quantidadeTubos;
-    }
 
     function getObservacoes() {
         return $this->observacoes;
@@ -68,9 +67,6 @@ class Amostra{
         $this->idPaciente_fk = $idPaciente_fk;
     }
 
-    function setQuantidadeTubos($quantidadeTubos) {
-        $this->quantidadeTubos = $quantidadeTubos;
-    }
 
     function setObservacoes($observacoes) {
         $this->observacoes = $observacoes;
@@ -83,6 +79,31 @@ class Amostra{
     function setAceita_recusa($aceita_recusa) {
         $this->aceita_recusa = $aceita_recusa;
     }
+    
+    function getStatusAmostra() {
+        return $this->statusAmostra;
+    }
+
+    function setStatusAmostra($statusAmostra) {
+        $this->statusAmostra = $statusAmostra;
+    }
+
+    function getIdCodGAL_fk() {
+        return $this->idCodGAL_fk;
+    }
+
+    function getIdNivelPrioridade_fk() {
+        return $this->idNivelPrioridade_fk;
+    }
+
+    function setIdCodGAL_fk($idCodGAL_fk) {
+        $this->idCodGAL_fk = $idCodGAL_fk;
+    }
+
+    function setIdNivelPrioridade_fk($idNivelPrioridade_fk) {
+        $this->idNivelPrioridade_fk = $idNivelPrioridade_fk;
+    }
+
 
 
 

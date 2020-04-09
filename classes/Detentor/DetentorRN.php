@@ -35,11 +35,13 @@ class DetentorRN{
             //print_r($array_sexos);
             foreach ($array_detentores as $d){
                 if($d->getIndex_detentor() == $strIndexDetentor){
-                    $objExcecao->adicionar_validacao('O detentor já existe.','idDetentor');
+                    //$objExcecao->adicionar_validacao('O detentor já existe.','idDetentor');
+                    return false;
                 }
             }
         
-        return $detentor->setIndex_detentor($strIndexDetentor);
+        return true;
+        //return $detentor->setIndex_detentor($strIndexDetentor);
 
     }
      
@@ -50,12 +52,12 @@ class DetentorRN{
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
-            
+            $objDetentorBD = new DetentorBD();
             $this->validarDetentor($detentor,$objExcecao); 
-            $this->validarIndexDetentor($detentor,$objExcecao); 
+             
+            
             
             $objExcecao->lancar_validacoes();
-            $objDetentorBD = new DetentorBD();
             $objDetentorBD->cadastrar($detentor,$objBanco);
             
             $objBanco->fecharConexao();
@@ -72,8 +74,7 @@ class DetentorRN{
             $objBanco->abrirConexao(); 
             
             $this->validarDetentor($detentor,$objExcecao);  
-            $this->validarIndexDetentor($detentor,$objExcecao); 
-                        
+            
             $objExcecao->lancar_validacoes();
             $objDetentorBD = new DetentorBD();
             $objDetentorBD->alterar($detentor,$objBanco);
@@ -135,14 +136,15 @@ class DetentorRN{
     }
 
 
-    public function pesquisar($campoBD, $valor_usuario) {
+     public function pesquisar_index(Detentor $detentor) {
         try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             $objExcecao->lancar_validacoes();
             $objDetentorBD = new DetentorBD();
-            $arr = $objDetentorBD->pesquisar($campoBD,$valor_usuario,$objBanco);
+            $arr = $objDetentorBD->pesquisar_index($detentor,$objBanco);
+            
             $objBanco->fecharConexao();
             return $arr;
         } catch (Exception $e) {

@@ -16,14 +16,18 @@ try{
     switch($_GET['action']){
         case 'cadastrar_sexoPaciente':
             if(isset($_POST['salvar_sexoPaciente'])){
+                
                 $objSexo->setSexo($_POST['txtSexo']);
                 $objSexo->setIndex_sexo(strtoupper($utils->tirarAcentos($_POST['txtSexo'])));
-                echo $objSexo->getIndex_sexo();
-                $objSexoRN->cadastrar($objSexo);
-                 $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                if(empty($objSexoRN->pesquisar_index($objSexo))){
+                    $objSexoRN->cadastrar($objSexo);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                }
+                 
             }else{
                 $objSexo->setIdSexo('');
                 $objSexo->setSexo('');
+                $objSexo->setIndex_sexo('');
             }
         break;
         
@@ -37,8 +41,11 @@ try{
                 $objSexo->setIdSexo($_GET['idSexoPaciente']);
                 $objSexo->setSexo($_POST['txtSexo']);
                 $objSexo->setIndex_sexo(strtoupper($utils->tirarAcentos($_POST['txtSexo'])));
-                $objSexoRN->alterar($objSexo);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                if(empty($objSexoRN->pesquisar_index($objSexo))){
+                    $objSexoRN->alterar($objSexo);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                }
+                
             }
             
             

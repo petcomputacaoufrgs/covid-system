@@ -122,14 +122,15 @@ class PerfilUsuarioRN{
     }
 
 
-    public function pesquisar($campoBD, $valor_usuario) {
+    public function pesquisar_index(PerfilUsuario $perfilUsuario) {
         try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             $objExcecao->lancar_validacoes();
             $objPerfilUsuarioBD = new PerfilUsuarioBD();
-            $arr = $objPerfilUsuarioBD->pesquisar($campoBD,$valor_usuario,$objBanco);
+            $arr = $objPerfilUsuarioBD->pesquisar_index($perfilUsuario,$objBanco);
+            
             $objBanco->fecharConexao();
             return $arr;
         } catch (Exception $e) {
