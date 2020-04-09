@@ -2,14 +2,14 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/LocalArmazenamento/LocalArmazenamento.php';
-require_once 'classes/LocalArmazenamento/LocalArmazenamentoRN.php';
-require_once 'classes/TipoLocalArmazenamento/TipoLocalArmazenamento.php';
-require_once 'classes/TipoLocalArmazenamento/TipoLocalArmazenamentoRN.php';
-require_once 'classes/TempoPermanencia/TempoPermanencia.php';
-require_once 'classes/TempoPermanencia/TempoPermanenciaRN.php';
+use InfUfrgs\Pagina\Pagina;
+use InfUfrgs\Excecao\Excecao;
+use InfUfrgs\LocalArmazenamento\LocalArmazenamento;
+use InfUfrgs\LocalArmazenamento\LocalArmazenamentoRN;
+use InfUfrgs\TipoLocalArmazenamento\TipoLocalArmazenamento;
+use InfUfrgs\TipoLocalArmazenamento\TipoLocalArmazenamentoRN;
+use InfUfrgs\TempoPermanencia\TempoPermanencia;
+use InfUfrgs\TempoPermanencia\TempoPermanenciaRN;
 
 $objPagina = new Pagina();
 $objLocalArmazenamento = new LocalArmazenamento();

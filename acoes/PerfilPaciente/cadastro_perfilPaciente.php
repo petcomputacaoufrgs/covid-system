@@ -2,10 +2,10 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/PerfilPaciente/PerfilPaciente.php';
-require_once 'classes/PerfilPaciente/PerfilPacienteRN.php';
+use InfUfrgs\Pagina\Pagina;
+use InfUfrgs\Excecao\Excecao;
+use InfUfrgs\PerfilPaciente\PerfilPaciente;
+use InfUfrgs\PerfilPaciente\PerfilPacienteRN;
 
 $objPagina = new Pagina();
 $objPerfilPaciente = new PerfilPaciente();

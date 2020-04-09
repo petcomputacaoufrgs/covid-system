@@ -2,20 +2,20 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Paciente/Paciente.php';
-require_once 'classes/Paciente/PacienteRN.php';
-require_once 'classes/PerfilPaciente/PerfilPaciente.php';
-require_once 'classes/PerfilPaciente/PerfilPacienteRN.php';
-require_once 'classes/Sexo/Sexo.php';
-require_once 'classes/Sexo/SexoRN.php';
-require_once 'classes/Amostra/Amostra.php';
-require_once 'classes/Amostra/AmostraRN.php';
-require_once 'classes/EstadoOrigem/EstadoOrigem.php';
-require_once 'classes/EstadoOrigem/EstadoOrigemRN.php';
-require_once 'classes/LugarOrigem/LugarOrigem.php';
-require_once 'classes/LugarOrigem/LugarOrigemRN.php';
+use InfUfrgs\Pagina\Pagina;
+use InfUfrgs\Excecao\Excecao;
+use InfUfrgs\Paciente\Paciente;
+use InfUfrgs\Paciente\PacienteRN;
+use InfUfrgs\PerfilPaciente\PerfilPaciente;
+use InfUfrgs\PerfilPaciente\PerfilPacienteRN;
+use InfUfrgs\Sexo\Sexo;
+use InfUfrgs\Sexo\SexoRN;
+use InfUfrgs\Amostra\Amostra;
+use InfUfrgs\Amostra\AmostraRN;
+use InfUfrgs\EstadoOrigem\EstadoOrigem;
+use InfUfrgs\EstadoOrigem\EstadoOrigemRN;
+use InfUfrgs\LugarOrigem\LugarOrigem;
+use InfUfrgs\LugarOrigem\LugarOrigemRN;
 
 
 date_default_timezone_set('America/Sao_Paulo');
