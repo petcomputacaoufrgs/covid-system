@@ -21,7 +21,7 @@ class TempoPermanenciaBD
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objTempoPermanencia->setIdTempoPermanencia($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro cadastrando o tempo de permanência  no BD.", $ex);
         }
     }
@@ -39,7 +39,7 @@ class TempoPermanenciaBD
             $arrayBind[] = array('i',$objTempoPermanencia->getIdTempoPermanencia());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro alterando o tempo de permanência no BD.", $ex);
         }
     }
@@ -61,7 +61,7 @@ class TempoPermanenciaBD
                 $array_permanencia[] = $objTempoPermanencia;
             }
             return $array_permanencia;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando o tempo de permanência no BD.", $ex);
         }
     }
@@ -81,7 +81,7 @@ class TempoPermanenciaBD
             $permanencia->setTempoPermanencia($arr[0]['tempoPermanencia']);
 
             return $permanencia;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando o tempo de permanência no BD.", $ex);
         }
     }
@@ -93,7 +93,7 @@ class TempoPermanenciaBD
             $arrayBind = array();
             $arrayBind[] = array('i',$objTempoPermanencia->getIdTempoPermanencia());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro removendo o tempo de permanência no BD.", $ex);
         }
     }

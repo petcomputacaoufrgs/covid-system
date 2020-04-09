@@ -23,7 +23,7 @@ class DetentorBD
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objDetentor->setIdDetentor($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro cadastrando detentor  no BD.", $ex);
         }
     }
@@ -41,7 +41,7 @@ class DetentorBD
             $arrayBind[] = array('i',$objDetentor->getIdDetentor());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro alterando detentor no BD.", $ex);
         }
     }
@@ -63,7 +63,7 @@ class DetentorBD
                 $array_detentor[] = $objDetentor;
             }
             return $array_detentor;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando detentor no BD.", $ex);
         }
     }
@@ -83,7 +83,7 @@ class DetentorBD
             $detentor->setDetentor($arr[0]['detentor']);
 
             return $detentor;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando detentor no BD.", $ex);
         }
     }
@@ -95,7 +95,7 @@ class DetentorBD
             $arrayBind = array();
             $arrayBind[] = array('i',$objDetentor->getIdDetentor());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro removendo detentor no BD.", $ex);
         }
     }

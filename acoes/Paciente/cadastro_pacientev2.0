@@ -2,14 +2,14 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Paciente/Paciente.php';
-require_once 'classes/Paciente/PacienteRN.php';
-require_once 'classes/PerfilPaciente/PerfilPaciente.php';
-require_once 'classes/PerfilPaciente/PerfilPacienteRN.php';
-require_once 'classes/Sexo/Sexo.php';
-require_once 'classes/Sexo/SexoRN.php';
+use InfUfrgs\Pagina\Pagina;
+use InfUfrgs\Excecao\Excecao;
+use InfUfrgs\Paciente\Paciente;
+use InfUfrgs\Paciente\PacienteRN;
+use InfUfrgs\PerfilPaciente\PerfilPaciente;
+use InfUfrgs\PerfilPaciente\PerfilPacienteRN;
+use InfUfrgs\Sexo\Sexo;
+use InfUfrgs\Sexo\SexoRN;
 
 
 $objPagina = new Pagina();

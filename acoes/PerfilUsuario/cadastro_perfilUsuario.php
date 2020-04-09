@@ -2,10 +2,10 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/PerfilUsuario/PerfilUsuario.php';
-require_once 'classes/PerfilUsuario/PerfilUsuarioRN.php';
+use InfUfrgs\Pagina\Pagina;
+use InfUfrgs\Excecao\Excecao;
+use InfUfrgs\PerfilUsuario\PerfilUsuario;
+use InfUfrgs\PerfilUsuario\PerfilUsuarioRN;
 
 $objPagina = new Pagina();
 $objPerfilUsuario = new PerfilUsuario();

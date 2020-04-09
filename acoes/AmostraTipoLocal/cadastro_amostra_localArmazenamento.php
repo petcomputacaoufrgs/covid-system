@@ -3,8 +3,8 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
+use InfUfrgs\Pagina\Pagina;
+use InfUfrgs\Excecao\Excecao;
 session_start();
 
 date_default_timezone_set('America/Sao_Paulo');

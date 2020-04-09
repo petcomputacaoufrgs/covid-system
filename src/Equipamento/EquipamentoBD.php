@@ -25,7 +25,7 @@ class EquipamentoBD
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objEquipamento->setIdEquipamento($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro cadastrando equipamento no BD.", $ex);
         }
     }
@@ -53,7 +53,7 @@ class EquipamentoBD
             $arrayBind[] = array('i',$objEquipamento->getIdEquipamento());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro alterando equipamento no BD.", $ex);
         }
     }
@@ -79,7 +79,7 @@ class EquipamentoBD
                 $array_equipamento[] = $objEquipamento;
             }
             return $array_equipamento;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando equipamento no BD.", $ex);
         }
     }
@@ -104,7 +104,7 @@ class EquipamentoBD
             $equipamento->setDataChegada($arr[0]['dataChegada']);
 
             return $equipamento;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando equipamento no BD.", $ex);
         }
     }
@@ -116,7 +116,7 @@ class EquipamentoBD
             $arrayBind = array();
             $arrayBind[] = array('i',$objEquipamento->getIdEquipamento());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro removendo equipamento no BD.", $ex);
         }
     }

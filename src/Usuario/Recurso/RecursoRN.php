@@ -70,7 +70,7 @@ class RecursoRN
             $objRecursoBD->cadastrar($recurso, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando o recurso.', $e);
         }
     }
@@ -90,7 +90,7 @@ class RecursoRN
             $objRecursoBD->alterar($recurso, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro alterando o recurso.', $e);
         }
     }
@@ -107,7 +107,7 @@ class RecursoRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro consultando o recurso.', $e);
         }
     }
@@ -123,7 +123,7 @@ class RecursoRN
             $arr =  $objRecursoBD->remover($recurso, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro removendo o recurso.', $e);
         }
     }
@@ -141,7 +141,7 @@ class RecursoRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando o recurso.', $e);
         }
     }
@@ -158,7 +158,7 @@ class RecursoRN
             $arr = $objRecursoBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando o recurso.', $e);
         }
     }

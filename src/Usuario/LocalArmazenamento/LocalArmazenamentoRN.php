@@ -54,7 +54,7 @@ class LocalArmazenamentoRN
             $objLocalArmazenamentoBD->cadastrar($localArmazenamento, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando o local de armazenamento.', $e);
         }
     }
@@ -74,7 +74,7 @@ class LocalArmazenamentoRN
             $objLocalArmazenamentoBD->alterar($localArmazenamento, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro alterando o local de armazenamento.', $e);
         }
     }
@@ -91,7 +91,7 @@ class LocalArmazenamentoRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro consultando o local de armazenamento.', $e);
         }
     }
@@ -107,7 +107,7 @@ class LocalArmazenamentoRN
             $arr =  $objLocalArmazenamentoBD->remover($localArmazenamento, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro removendo o local de armazenamento.', $e);
         }
     }
@@ -125,7 +125,7 @@ class LocalArmazenamentoRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando o local de armazenamento.', $e);
         }
     }
@@ -142,7 +142,7 @@ class LocalArmazenamentoRN
             $arr = $objLocalArmazenamentoBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando o local de armazenamento.', $e);
         }
     }

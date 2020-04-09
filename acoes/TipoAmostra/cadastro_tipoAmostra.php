@@ -2,10 +2,10 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/TipoAmostra/TipoAmostra.php';
-require_once 'classes/TipoAmostra/TipoAmostraRN.php';
+use InfUfrgs\Pagina\Pagina;
+use InfUfrgs\Excecao\Excecao;
+use InfUfrgs\TipoAmostra\TipoAmostra;
+use InfUfrgs\TipoAmostra\TipoAmostraRN;
 
 $objPagina = new Pagina();
 $objTipoAmostra = new TipoAmostra();

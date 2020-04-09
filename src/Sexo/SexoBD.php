@@ -21,7 +21,7 @@ class SexoBD
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objSexo->setIdSexo($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro cadastrando sexo do paciente no BD.", $ex);
         }
     }
@@ -39,7 +39,7 @@ class SexoBD
             $arrayBind[] = array('i',$objSexo->getIdSexo());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro alterando sexo do paciente no BD.", $ex);
         }
     }
@@ -61,7 +61,7 @@ class SexoBD
                 $array_sexo[] = $objSexo;
             }
             return $array_sexo;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando sexo do paciente no BD.", $ex);
         }
     }
@@ -81,7 +81,7 @@ class SexoBD
             $sexoAmostra->setSexo($arr[0]['sexo']);
 
             return $sexoAmostra;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando sexo do paciente no BD.", $ex);
         }
     }
@@ -93,7 +93,7 @@ class SexoBD
             $arrayBind = array();
             $arrayBind[] = array('i',$objSexo->getIdSexo());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro removendo sexo do paciente no BD.", $ex);
         }
     }

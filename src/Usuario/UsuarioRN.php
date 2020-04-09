@@ -53,7 +53,7 @@ class UsuarioRN
             $objUsuarioBD->cadastrar($usuario, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando o usuário.', $e);
         }
     }
@@ -72,7 +72,7 @@ class UsuarioRN
             $objUsuarioBD->alterar($usuario, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro alterando o usuário.', $e);
         }
     }
@@ -89,7 +89,7 @@ class UsuarioRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro consultando o usuário.', $e);
         }
     }
@@ -105,7 +105,7 @@ class UsuarioRN
             $arr =  $objUsuarioBD->remover($usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro removendo o usuário.', $e);
         }
     }
@@ -123,7 +123,7 @@ class UsuarioRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando o usuário.', $e);
         }
     }
@@ -140,7 +140,7 @@ class UsuarioRN
             $arr = $objUsuarioBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando o usuário.', $e);
         }
     }

@@ -1,7 +1,13 @@
-<!-- <?php
-require __DIR__ . '/vendor/autoload.php';
-?> -->
+<?php 
+require __DIR__ . '/../vendor/autoload.php';
 
+if (isset($_SESSION['DATA_LOGIN'])) {
+    header('Location: login/index.php');
+    exit;
+}
+
+?>
+<!DOCTYPE html>
 <!--
 To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
@@ -83,5 +89,5 @@ and open the template in the editor.
       </main>
 
         <?php
-          require "style/footer.php"
-         ?>
+            require "style/footer.php"
+        ?>

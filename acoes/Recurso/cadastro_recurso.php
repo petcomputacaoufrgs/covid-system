@@ -2,10 +2,10 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Recurso/Recurso.php';
-require_once 'classes/Recurso/RecursoRN.php';
+use InfUfrgs\Pagina\Pagina;
+use InfUfrgs\Excecao\Excecao;
+use InfUfrgs\Recurso\Recurso;
+use InfUfrgs\Recurso\RecursoRN;
 
 $objPagina = new Pagina();
 $objRecurso = new Recurso();

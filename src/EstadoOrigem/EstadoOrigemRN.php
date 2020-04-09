@@ -24,7 +24,7 @@ class EstadoOrigemRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro consultando o estado de origem.', $e);
         }
     }
@@ -43,7 +43,7 @@ class EstadoOrigemRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando o estado de origem.', $e);
         }
     }
@@ -60,7 +60,7 @@ class EstadoOrigemRN
             $arr = $objEstadoOrigemBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando o estado de origem.', $e);
         }
     }

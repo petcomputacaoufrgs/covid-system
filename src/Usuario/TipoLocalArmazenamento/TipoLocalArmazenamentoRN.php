@@ -88,7 +88,7 @@ class TipoLocalArmazenamentoRN
             $objTipoLocalArmazenamentoBD->cadastrar($tipoLocalArmazenamento, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando o tipo do local de armazenamento.', $e);
         }
     }
@@ -109,7 +109,7 @@ class TipoLocalArmazenamentoRN
             $objTipoLocalArmazenamentoBD->alterar($tipoLocalArmazenamento, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro alterando o tipo do local de armazenamento.', $e);
         }
     }
@@ -126,7 +126,7 @@ class TipoLocalArmazenamentoRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro consultando o tipo do local de armazenamento.', $e);
         }
     }
@@ -142,7 +142,7 @@ class TipoLocalArmazenamentoRN
             $arr =  $objTipoLocalArmazenamentoBD->remover($tipoLocalArmazenamento, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro removendo o tipo do local de armazenamento.', $e);
         }
     }
@@ -160,7 +160,7 @@ class TipoLocalArmazenamentoRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando o tipo do local de armazenamento.', $e);
         }
     }
@@ -177,7 +177,7 @@ class TipoLocalArmazenamentoRN
             $arr = $objTipoLocalArmazenamentoBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando o tipo do local de armazenamento.', $e);
         }
     }

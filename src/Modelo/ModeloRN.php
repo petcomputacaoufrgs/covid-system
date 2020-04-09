@@ -50,7 +50,7 @@ class ModeloRN
             $objModeloBD->cadastrar($detentor, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando o modelo.', $e);
         }
     }
@@ -69,7 +69,7 @@ class ModeloRN
             $objModeloBD->alterar($detentor, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro alterando o modelo.', $e);
         }
     }
@@ -86,7 +86,7 @@ class ModeloRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro consultando o modelo.', $e);
         }
     }
@@ -102,7 +102,7 @@ class ModeloRN
             $arr =  $objModeloBD->remover($detentor, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro removendo o modelo.', $e);
         }
     }
@@ -120,7 +120,7 @@ class ModeloRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando o modelo.', $e);
         }
     }
@@ -137,7 +137,7 @@ class ModeloRN
             $arr = $objModeloBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando o modelo.', $e);
         }
     }

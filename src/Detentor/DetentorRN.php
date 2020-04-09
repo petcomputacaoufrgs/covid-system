@@ -50,7 +50,7 @@ class DetentorRN
             $objDetentorBD->cadastrar($detentor, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando o detentor.', $e);
         }
     }
@@ -69,7 +69,7 @@ class DetentorRN
             $objDetentorBD->alterar($detentor, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro alterando o detentor.', $e);
         }
     }
@@ -86,7 +86,7 @@ class DetentorRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro consultando o detentor.', $e);
         }
     }
@@ -102,7 +102,7 @@ class DetentorRN
             $arr =  $objDetentorBD->remover($detentor, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro removendo o detentor.', $e);
         }
     }
@@ -120,7 +120,7 @@ class DetentorRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando o detentor.', $e);
         }
     }
@@ -137,7 +137,7 @@ class DetentorRN
             $arr = $objDetentorBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando o detentor.', $e);
         }
     }

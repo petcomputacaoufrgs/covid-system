@@ -9,7 +9,7 @@ namespace InfUfrgs\Banco;
 class Banco
 {
     private $host = "localhost";
-    private $dbUsername = "root";
+    private $dbUsername = "covid-teste";
     private $dbPassword = "";
     private $dbName = "amostras_covid19";
     private $conn;
@@ -24,7 +24,7 @@ class Banco
         }
         set_time_limit(3000);
         if (mysqli_connect_error()) {
-            throw new Exception('Erro abrindo conexão com o banco de dados:' . mysqli_connect_error()); // die('Connect Error('.mysqli_connect_errno().')'.mysqli_connect_errno());
+            throw new \Exeception('Erro abrindo conexão com o banco de dados:' . mysqli_connect_error()); // die('Connect Error('.mysqli_connect_errno().')'.mysqli_connect_errno());
         }
     }
 
@@ -56,7 +56,7 @@ class Banco
 
 
         if (($stmt = mysqli_prepare($this->conn, $sql)) === false) {
-            throw new Exception(mysqli_error($this->conn));
+            throw new \Exception(mysqli_error($this->conn));
         }
         
         if ($arrCamposBind != null && count($arrCamposBind)) {
@@ -76,13 +76,13 @@ class Banco
             }
 
             if (call_user_func_array('mysqli_stmt_bind_param', $arrParams) === false) {
-                throw new Exception(mysqli_error($this->conn));
+                throw new \Exeception(mysqli_error($this->conn));
             }
         }
         
         //print_r($arrParams);
         if (mysqli_stmt_execute($stmt) === false) {
-            throw new Exception(mysqli_error($this->conn));
+            throw new \Exeception(mysqli_error($this->conn));
         }
         
         
@@ -101,7 +101,7 @@ class Banco
 
 
         if (($stmt = mysqli_prepare($this->conn, $sql)) === false) {
-            throw new Exception(mysqli_error($this->conn));
+            throw new \Exeception(mysqli_error($this->conn));
         }
         
         if ($arrCamposBind != null && count($arrCamposBind)) {
@@ -121,18 +121,18 @@ class Banco
             }
 
             if (call_user_func_array('mysqli_stmt_bind_param', $arrParams) === false) {
-                throw new Exception(mysqli_error($this->conn));
+                throw new \Exeception(mysqli_error($this->conn));
             }
         }
         if (mysqli_stmt_execute($stmt) === false) {
-            throw new Exception(mysqli_error($this->conn));
+            throw new \Exeception(mysqli_error($this->conn));
         }
 
 
         $resultado = mysqli_stmt_get_result($stmt);
 
         if ($resultado === false) {
-            throw new Exception(mysqli_error($this->conn));
+            throw new \Exeception(mysqli_error($this->conn));
         }
 
         while ($registro = mysqli_fetch_array($resultado, MYSQLI_ASSOC)) {

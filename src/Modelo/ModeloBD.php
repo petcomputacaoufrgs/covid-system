@@ -23,7 +23,7 @@ class ModeloBD
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objModelo->setIdModelo($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro cadastrando modelo  no BD.", $ex);
         }
     }
@@ -41,7 +41,7 @@ class ModeloBD
             $arrayBind[] = array('i',$objModelo->getIdModelo());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro alterando modelo no BD.", $ex);
         }
     }
@@ -63,7 +63,7 @@ class ModeloBD
                 $array_modelo[] = $objModelo;
             }
             return $array_modelo;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando modelo no BD.", $ex);
         }
     }
@@ -83,7 +83,7 @@ class ModeloBD
             $modelo->setModelo($arr[0]['modelo']);
 
             return $modelo;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando modelo no BD.", $ex);
         }
     }
@@ -95,7 +95,7 @@ class ModeloBD
             $arrayBind = array();
             $arrayBind[] = array('i',$objModelo->getIdModelo());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro removendo modelo no BD.", $ex);
         }
     }

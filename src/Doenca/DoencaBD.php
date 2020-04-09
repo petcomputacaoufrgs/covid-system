@@ -23,7 +23,7 @@ class DoencaBD
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objDoenca->setIdDoenca($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro cadastrando doença paciente no BD.", $ex);
         }
     }
@@ -41,7 +41,7 @@ class DoencaBD
             $arrayBind[] = array('i',$objDoenca->getIdDoenca());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro alterando doença no BD.", $ex);
         }
     }
@@ -63,7 +63,7 @@ class DoencaBD
                 $array_doença[] = $objDoenca;
             }
             return $array_doença;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando doença no BD.", $ex);
         }
     }
@@ -83,7 +83,7 @@ class DoencaBD
             $doença->setDoenca($arr[0]['doenca']);
 
             return $doença;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando doença no BD.", $ex);
         }
     }
@@ -95,7 +95,7 @@ class DoencaBD
             $arrayBind = array();
             $arrayBind[] = array('i',$objDoenca->getIdDoenca());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro removendo doença no BD.", $ex);
         }
     }

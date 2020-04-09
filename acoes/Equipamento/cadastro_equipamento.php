@@ -2,16 +2,16 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Equipamento/Equipamento.php';
-require_once 'classes/Equipamento/EquipamentoRN.php';
-require_once 'classes/Detentor/Detentor.php';
-require_once 'classes/Detentor/DetentorRN.php';
-require_once 'classes/Marca/Marca.php';
-require_once 'classes/Marca/MarcaRN.php';
-require_once 'classes/Modelo/Modelo.php';
-require_once 'classes/Modelo/ModeloRN.php';
+use InfUfrgs\Pagina\Pagina;
+use InfUfrgs\Excecao\Excecao;
+use InfUfrgs\Equipamento\Equipamento;
+use InfUfrgs\Equipamento\EquipamentoRN;
+use InfUfrgs\Detentor\Detentor;
+use InfUfrgs\Detentor\DetentorRN;
+use InfUfrgs\Marca\Marca;
+use InfUfrgs\Marca\MarcaRN;
+use InfUfrgs\Modelo\Modelo;
+use InfUfrgs\Modelo\ModeloRN;
 
 $objPagina = new Pagina();
 $objEquipamento = new Equipamento();

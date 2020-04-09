@@ -50,7 +50,7 @@ class MarcaRN
             $objMarcaBD->cadastrar($detentor, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando a marca.', $e);
         }
     }
@@ -69,7 +69,7 @@ class MarcaRN
             $objMarcaBD->alterar($detentor, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro alterando a marca.', $e);
         }
     }
@@ -86,7 +86,7 @@ class MarcaRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro consultando a marca.', $e);
         }
     }
@@ -102,7 +102,7 @@ class MarcaRN
             $arr =  $objMarcaBD->remover($detentor, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro removendo a marca.', $e);
         }
     }
@@ -120,7 +120,7 @@ class MarcaRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando a marca.', $e);
         }
     }
@@ -137,7 +137,7 @@ class MarcaRN
             $arr = $objMarcaBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando a marca.', $e);
         }
     }

@@ -2,10 +2,10 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Doenca/Doenca.php';
-require_once 'classes/Doenca/DoencaRN.php';
+use InfUfrgs\Pagina\Pagina;
+use InfUfrgs\Excecao\Excecao;
+use InfUfrgs\Doenca\Doenca;
+use InfUfrgs\Doenca\DoencaRN;
 
 $objPagina = new Pagina();
 $objDoenca = new Doenca();

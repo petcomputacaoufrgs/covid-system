@@ -76,7 +76,7 @@ class AmostraRN
             $objAmostraBD->cadastrar($amostra, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando amostra.', $e);
         }
     }
@@ -97,8 +97,8 @@ class AmostraRN
             $objAmostraBD = new AmostraBD();
             $objAmostraBD->alterar($amostra, $objBanco);
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
-            throw new Exception('Erro alterando amostra.', null, $e);
+        } catch (\Exeception $e) {
+            throw new \Exeception('Erro alterando amostra.', null, $e);
         }
     }
 
@@ -113,8 +113,8 @@ class AmostraRN
             $arr = $objAmostraBD->consultar($amostra, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
-            throw new Exception('Erro consultando amostra.', null, $e);
+        } catch (\Exeception $e) {
+            throw new \Exeception('Erro consultando amostra.', null, $e);
         }
     }
 
@@ -129,8 +129,8 @@ class AmostraRN
             $arr =  $objAmostraBD->remover($amostra, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
-            throw new Exception('Erro removendo amostra.', null, $e);
+        } catch (\Exeception $e) {
+            throw new \Exeception('Erro removendo amostra.', null, $e);
         }
     }
 
@@ -145,8 +145,8 @@ class AmostraRN
             $arr =  $objAmostraBD->listar($amostra, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
-            throw new Exception('Erro listando amostra.', null, $e);
+        } catch (\Exeception $e) {
+            throw new \Exeception('Erro listando amostra.', null, $e);
         }
     }
 }

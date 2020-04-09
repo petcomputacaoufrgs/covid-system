@@ -2,10 +2,10 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Marca/Marca.php';
-require_once 'classes/Marca/MarcaRN.php';
+use InfUfrgs\Pagina\Pagina;
+use InfUfrgs\Excecao\Excecao;
+use InfUfrgs\Marca\Marca;
+use InfUfrgs\Marca\MarcaRN;
 
 $objPagina = new Pagina();
 $objMarca = new Marca();

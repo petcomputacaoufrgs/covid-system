@@ -6,7 +6,7 @@
 
 namespace InfUfrgs\Excecao;
 
-class Excecao extends Exception
+class Excecao extends \Exeception
 {
     private $array_validacoes;
     private $e;
