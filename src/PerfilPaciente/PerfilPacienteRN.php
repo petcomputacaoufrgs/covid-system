@@ -50,7 +50,7 @@ class PerfilPacienteRN
             $objPerfilPacienteBD->cadastrar($perfilPaciente, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando o perfil do paciente.', $e);
         }
     }
@@ -69,7 +69,7 @@ class PerfilPacienteRN
             $objPerfilPacienteBD->alterar($perfilPaciente, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro alterando o perfil do paciente.', $e);
         }
     }
@@ -86,7 +86,7 @@ class PerfilPacienteRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro consultando o perfil do paciente.', $e);
         }
     }
@@ -102,7 +102,7 @@ class PerfilPacienteRN
             $arr =  $objPerfilPacienteBD->remover($perfilPaciente, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro removendo o perfil do paciente.', $e);
         }
     }
@@ -120,7 +120,7 @@ class PerfilPacienteRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando o perfil do paciente.', $e);
         }
     }
@@ -137,7 +137,7 @@ class PerfilPacienteRN
             $arr = $objPerfilPacienteBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando o perfil do paciente.', $e);
         }
     }

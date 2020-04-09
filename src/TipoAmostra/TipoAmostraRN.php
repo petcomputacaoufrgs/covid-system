@@ -50,7 +50,7 @@ class TipoAmostraRN
             $objTipoAmostraBD->cadastrar($tipoAmostra, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando o tipo da amostra.', $e);
         }
     }
@@ -69,7 +69,7 @@ class TipoAmostraRN
             $objTipoAmostraBD->alterar($tipoAmostra, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro alterando o tipo da amostra.', $e);
         }
     }
@@ -86,7 +86,7 @@ class TipoAmostraRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             die($e);
             throw new Excecao('Erro consultando o tipo da amostra.', $e);
         }
@@ -102,7 +102,7 @@ class TipoAmostraRN
             $objTipoAmostraBD = new TipoAmostraBD();
             $arr = $objTipoAmostraBD->remover($tipoAmostra, $objBanco);
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro removendo o tipo da amostra.', $e);
         }
     }
@@ -120,7 +120,7 @@ class TipoAmostraRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando o tipo da amostra.', $e);
         }
     }
@@ -137,7 +137,7 @@ class TipoAmostraRN
             $arr =$objTipoAmostraBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando o tipo da amostra.', $e);
         }
     }

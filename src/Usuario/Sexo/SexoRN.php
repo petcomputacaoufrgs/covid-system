@@ -50,7 +50,7 @@ class SexoRN
             $objSexoBD->cadastrar($sexo, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando o sexo do paciente.', $e);
         }
     }
@@ -69,7 +69,7 @@ class SexoRN
             $objSexoBD->alterar($sexo, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro alterando o sexo do paciente.', $e);
         }
     }
@@ -86,7 +86,7 @@ class SexoRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro consultando o sexo do paciente.', $e);
         }
     }
@@ -102,7 +102,7 @@ class SexoRN
             $arr =  $objSexoBD->remover($sexo, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro removendo o sexo do paciente.', $e);
         }
     }
@@ -120,7 +120,7 @@ class SexoRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando o sexo do paciente.', $e);
         }
     }
@@ -137,7 +137,7 @@ class SexoRN
             $arr = $objSexoBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando o sexo do paciente.', $e);
         }
     }

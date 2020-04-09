@@ -22,7 +22,7 @@ class TipoLocalArmazenamentoBD
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objTipoLocalArmazenamento->setIdTipoLocalArmazenamento($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro cadastrando o tipo de local de armazenamento no BD.", $ex);
         }
     }
@@ -44,7 +44,7 @@ class TipoLocalArmazenamentoBD
             $arrayBind[] = array('i',$objTipoLocalArmazenamento->getIdTipoLocalArmazenamento());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro alterando o tipo de local de armazenamento no BD.", $ex);
         }
     }
@@ -68,7 +68,7 @@ class TipoLocalArmazenamentoBD
                 $array_tipoLocais[] = $objTipoLocalArmazenamento;
             }
             return $array_tipoLocais;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando o tipo de local de armazenamento no BD.", $ex);
         }
     }
@@ -90,7 +90,7 @@ class TipoLocalArmazenamentoBD
             $sexoAmostra->setQntEspacosAmostra($arr[0]['qntEspacosAmostra']);
 
             return $sexoAmostra;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando o tipo de local de armazenamento no BD.", $ex);
         }
     }
@@ -102,7 +102,7 @@ class TipoLocalArmazenamentoBD
             $arrayBind = array();
             $arrayBind[] = array('i',$objTipoLocalArmazenamento->getIdTipoLocalArmazenamento());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro removendo o tipo de local de armazenamento no BD.", $ex);
         }
     }

@@ -23,7 +23,7 @@ class MarcaBD
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objMarca->setIdMarca($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro cadastrando marca  no BD.", $ex);
         }
     }
@@ -41,7 +41,7 @@ class MarcaBD
             $arrayBind[] = array('i',$objMarca->getIdMarca());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro alterando marca no BD.", $ex);
         }
     }
@@ -63,7 +63,7 @@ class MarcaBD
                 $array_marca[] = $objMarca;
             }
             return $array_marca;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando marca no BD.", $ex);
         }
     }
@@ -83,7 +83,7 @@ class MarcaBD
             $marca->setMarca($arr[0]['marca']);
 
             return $marca;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando marca no BD.", $ex);
         }
     }
@@ -95,7 +95,7 @@ class MarcaBD
             $arrayBind = array();
             $arrayBind[] = array('i',$objMarca->getIdMarca());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro removendo marca no BD.", $ex);
         }
     }

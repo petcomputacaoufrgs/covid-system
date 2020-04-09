@@ -29,7 +29,7 @@ class AmostraBD
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objAmostra->setIdAmostra($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro cadastrando paciente no BD.", $ex);
         }
     }
@@ -59,7 +59,7 @@ class AmostraBD
             $arrayBind[] = array('i',$objAmostra->getIdAmostra());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro alterando paciente no BD.", $ex);
         }
     }
@@ -88,7 +88,7 @@ class AmostraBD
                 $array_paciente[] = $objAmostra;
             }
             return $array_paciente;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando paciente no BD.", $ex);
         }
     }
@@ -115,7 +115,7 @@ class AmostraBD
             $objAmostra->setAceita_recusa($arr[0]['a_r']);
 
             return $paciente;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando paciente no BD.", $ex);
         }
     }
@@ -127,7 +127,7 @@ class AmostraBD
             $arrayBind = array();
             $arrayBind[] = array('i',$objAmostra->getIdAmostra());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro removendo paciente no BD.", $ex);
         }
     }

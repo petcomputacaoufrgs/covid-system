@@ -21,7 +21,7 @@ class TipoAmostraBD
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objTipoAmostra->setIdTipoAmostra($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro cadastrando tipo de amostra.", $ex);
         }
     }
@@ -39,7 +39,7 @@ class TipoAmostraBD
             $arrayBind[] = array('i',$objTipoAmostra->getIdTipoAmostra());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro alterando tipo de amostra.", $ex);
         }
     }
@@ -61,7 +61,7 @@ class TipoAmostraBD
                 $arrTiposAmostras[] = $objTipoAmostra;
             }
             return $arrTiposAmostras;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando tipo de amostra.", $ex);
         }
     }
@@ -81,7 +81,7 @@ class TipoAmostraBD
             $tipoAmostra->setTipo($arr[0]['tipo']);
 
             return $tipoAmostra;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando tipo de amostra.", $ex);
         }
     }
@@ -93,7 +93,7 @@ class TipoAmostraBD
             $arrayBind = array();
             $arrayBind[] = array('i',$objTipoAmostra->getIdTipoAmostra());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro removendo tipo de amostra.", $ex);
         }
     }

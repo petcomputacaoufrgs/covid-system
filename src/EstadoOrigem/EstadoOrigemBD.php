@@ -28,7 +28,7 @@ class EstadoOrigemBD
                 $array_marca[] = $objEstadoOrigem;
             }
             return $array_marca;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando marca no BD.", $ex);
         }
     }
@@ -49,7 +49,7 @@ class EstadoOrigemBD
             $estadoOrigem->setNome($arr[0]['nome']);
 
             return $estadoOrigem;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando marca no BD.", $ex);
         }
     }

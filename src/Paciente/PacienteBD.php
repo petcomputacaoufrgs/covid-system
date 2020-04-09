@@ -35,7 +35,7 @@ class PacienteBD
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objPaciente->setIdPaciente($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro cadastrando marca  no BD.", $ex);
         }
     }
@@ -76,7 +76,7 @@ class PacienteBD
             $arrayBind[] = array('i',$objPaciente->getIdPaciente());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro alterando marca no BD.", $ex);
         }
     }
@@ -110,7 +110,7 @@ class PacienteBD
                 $array_marca[] = $objPaciente;
             }
             return $array_marca;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando marca no BD.", $ex);
         }
     }
@@ -142,7 +142,7 @@ class PacienteBD
             $paciente->setObsNomeMae($arr[0]['obsNomeMae']);
 
             return $paciente;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando marca no BD.", $ex);
         }
     }
@@ -154,7 +154,7 @@ class PacienteBD
             $arrayBind = array();
             $arrayBind[] = array('i',$objPaciente->getIdPaciente());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro removendo marca no BD.", $ex);
         }
     }

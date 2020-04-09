@@ -23,7 +23,7 @@ class PerfilUsuarioBD
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objPerfilUsuario->setIdPerfilUsuario($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro cadastrando perfil do usuário no BD.", $ex);
         }
     }
@@ -41,7 +41,7 @@ class PerfilUsuarioBD
             $arrayBind[] = array('i',$objPerfilUsuario->getIdPerfilUsuario());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro alterando perfil do usuário no BD.", $ex);
         }
     }
@@ -63,7 +63,7 @@ class PerfilUsuarioBD
                 $array_perfilUsu[] = $objPerfilUsuario;
             }
             return $array_perfilUsu;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando perfil do usuário no BD.", $ex);
         }
     }
@@ -83,7 +83,7 @@ class PerfilUsuarioBD
             $perfilUsu->setPerfil($arr[0]['perfil']);
 
             return $perfilUsu;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando perfil do usuário no BD.", $ex);
         }
     }
@@ -95,7 +95,7 @@ class PerfilUsuarioBD
             $arrayBind = array();
             $arrayBind[] = array('i',$objPerfilUsuario->getIdPerfilUsuario());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro removendo perfil do usuário no BD.", $ex);
         }
     }

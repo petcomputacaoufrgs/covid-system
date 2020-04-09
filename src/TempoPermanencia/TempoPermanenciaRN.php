@@ -50,7 +50,7 @@ class TempoPermanenciaRN
             $objTempoPermanenciaBD->cadastrar($tempoPermanencia, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando a permanência.', $e);
         }
     }
@@ -69,7 +69,7 @@ class TempoPermanenciaRN
             $objTempoPermanenciaBD->alterar($tempoPermanencia, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro alterando a permanência.', $e);
         }
     }
@@ -86,7 +86,7 @@ class TempoPermanenciaRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro consultando a permanência.', $e);
         }
     }
@@ -102,7 +102,7 @@ class TempoPermanenciaRN
             $arr =  $objTempoPermanenciaBD->remover($tempoPermanencia, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro removendo a permanência.', $e);
         }
     }
@@ -120,7 +120,7 @@ class TempoPermanenciaRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando a permanência.', $e);
         }
     }
@@ -137,7 +137,7 @@ class TempoPermanenciaRN
             $arr = $objTempoPermanenciaBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando a permanência.', $e);
         }
     }

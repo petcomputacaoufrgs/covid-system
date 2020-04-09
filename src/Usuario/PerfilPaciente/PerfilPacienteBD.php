@@ -23,7 +23,7 @@ class PerfilPacienteBD
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objPerfilPaciente->setIdPerfilPaciente($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro cadastrando perfil do paciente no BD.", $ex);
         }
     }
@@ -41,7 +41,7 @@ class PerfilPacienteBD
             $arrayBind[] = array('i',$objPerfilPaciente->getIdPerfilPaciente());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro alterando perfil do paciente no BD.", $ex);
         }
     }
@@ -63,7 +63,7 @@ class PerfilPacienteBD
                 $array_perfil[] = $objPerfilPaciente;
             }
             return $array_perfil;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando perfil do paciente no BD.", $ex);
         }
     }
@@ -83,7 +83,7 @@ class PerfilPacienteBD
             $perfilAmostra->setPerfil($arr[0]['perfil']);
 
             return $perfilAmostra;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando perfil do paciente no BD.", $ex);
         }
     }
@@ -95,7 +95,7 @@ class PerfilPacienteBD
             $arrayBind = array();
             $arrayBind[] = array('i',$objPerfilPaciente->getIdPerfilPaciente());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro removendo perfil do paciente no BD.", $ex);
         }
     }

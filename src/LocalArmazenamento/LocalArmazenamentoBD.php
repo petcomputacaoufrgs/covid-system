@@ -25,7 +25,7 @@ class LocalArmazenamentoBD
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objLocalArmazenamento->setIdLocalArmazenamento($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro cadastrando armazenamento  no BD.", $ex);
         }
     }
@@ -49,7 +49,7 @@ class LocalArmazenamentoBD
             $arrayBind[] = array('i',$objLocalArmazenamento->getIdLocalArmazenamento());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro alterando armazenamento no BD.", $ex);
         }
     }
@@ -74,7 +74,7 @@ class LocalArmazenamentoBD
                 $array_detentor[] = $objLocalArmazenamento;
             }
             return $array_detentor;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando armazenamento no BD.", $ex);
         }
     }
@@ -97,7 +97,7 @@ class LocalArmazenamentoBD
             $localArmazenamento ->setDataHoraFim($arr[0]['dataHoraFim']);
 
             return  $localArmazenamento ;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando armazenamento no BD.", $ex);
         }
     }
@@ -109,7 +109,7 @@ class LocalArmazenamentoBD
             $arrayBind = array();
             $arrayBind[] = array('i',$objLocalArmazenamento->getIdLocalArmazenamento());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro removendo armazenamento no BD.", $ex);
         }
     }

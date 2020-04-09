@@ -218,7 +218,7 @@ class PacienteRN
             
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando a marca.', $e);
         }
     }
@@ -246,7 +246,7 @@ class PacienteRN
             $objPacienteBD->alterar($paciente, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro alterando a marca.', $e);
         }
     }
@@ -263,7 +263,7 @@ class PacienteRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro consultando a marca.', $e);
         }
     }
@@ -279,7 +279,7 @@ class PacienteRN
             $arr =  $objPacienteBD->remover($paciente, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro removendo a marca.', $e);
         }
     }
@@ -297,7 +297,7 @@ class PacienteRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando a marca.', $e);
         }
     }
@@ -314,7 +314,7 @@ class PacienteRN
             $arr = $objPacienteBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando a marca.', $e);
         }
     }

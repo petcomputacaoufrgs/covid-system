@@ -17,7 +17,7 @@ class Amostra
         
         if ($strEmail == '') {
             $objExcecao->adicionar_validacao('Email não informado.');
-        //throw new Exception('Email não informado.');
+        //throw new \Exeception('Email não informado.');
         } else {
             if (strlen($strEmail) > 60) {
                 $objExcecao->adicionar_validacao('O email possui mais de 50 caracteres.');
@@ -51,7 +51,7 @@ class Amostra
             $objAmostraBD->cadastrar($amostra);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando amostra.', $e);
         }
     }
@@ -66,8 +66,8 @@ class Amostra
             $objExcecao->lancar_validacoes();
             $objAmostraBD = new AmostraBD();
             $objAmostraBD->alterar($amostra);
-        } catch (Exception $e) {
-            throw new Exception('Erro alterando amostra.', null, $e);
+        } catch (\Exeception $e) {
+            throw new \Exeception('Erro alterando amostra.', null, $e);
         }
     }
 
@@ -76,8 +76,8 @@ class Amostra
         try {
             $objAmostraBD = new AmostraBD();
             return $objAmostraBD->consultar($amostra);
-        } catch (Exception $e) {
-            throw new Exception('Erro consultando amostra.', null, $e);
+        } catch (\Exeception $e) {
+            throw new \Exeception('Erro consultando amostra.', null, $e);
         }
     }
 
@@ -86,8 +86,8 @@ class Amostra
         try {
             $objAmostraBD = new AmostraBD();
             return $objAmostraBD->remover($amostra);
-        } catch (Exception $e) {
-            throw new Exception('Erro removendo amostra.', null, $e);
+        } catch (\Exeception $e) {
+            throw new \Exeception('Erro removendo amostra.', null, $e);
         }
     }
 
@@ -96,8 +96,8 @@ class Amostra
         try {
             $objAmostraBD = new AmostraBD();
             return $objAmostraBD->listar($amostra);
-        } catch (Exception $e) {
-            throw new Exception('Erro listando amostra.', null, $e);
+        } catch (\Exeception $e) {
+            throw new \Exeception('Erro listando amostra.', null, $e);
         }
     }
 
@@ -107,8 +107,8 @@ class Amostra
         try {
             $objAmostraBD = new AmostraBD();
             return $objAmostraBD->logar($amostra);
-        } catch (Exception $e) {
-            throw new Exception('Erro logando amostra.', null, $e);
+        } catch (\Exeception $e) {
+            throw new \Exeception('Erro logando amostra.', null, $e);
         }
     }
 
@@ -117,8 +117,8 @@ class Amostra
         try {
             $objAmostraBD = new AmostraBD();
             return $objAmostraBD->pesquisar($campoBD, $valor_usuario);
-        } catch (Exception $e) {
-            throw new Exception('Erro pesquisando amostra.', null, $e);
+        } catch (\Exeception $e) {
+            throw new \Exeception('Erro pesquisando amostra.', null, $e);
         }
     }
 }

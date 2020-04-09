@@ -24,7 +24,7 @@ class RecursoBD
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objRecurso->setIdRecurso($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro cadastrando recurso paciente no BD.", $ex);
         }
     }
@@ -44,7 +44,7 @@ class RecursoBD
             $arrayBind[] = array('i',$objRecurso->getIdRecurso());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro alterando recurso no BD.", $ex);
         }
     }
@@ -67,7 +67,7 @@ class RecursoBD
                 $array_recurso[] = $objRecurso;
             }
             return $array_recurso;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando recurso no BD.", $ex);
         }
     }
@@ -88,7 +88,7 @@ class RecursoBD
             $recurso->get_s_n_menu($arr[0]['s_n_menu']);
 
             return $recurso;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando recurso no BD.", $ex);
         }
     }
@@ -100,7 +100,7 @@ class RecursoBD
             $arrayBind = array();
             $arrayBind[] = array('i',$objRecurso->getIdRecurso());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro removendo recurso no BD.", $ex);
         }
     }

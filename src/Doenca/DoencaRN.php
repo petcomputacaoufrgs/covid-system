@@ -50,7 +50,7 @@ class DoencaRN
             $objDoencaBD->cadastrar($doenca, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando o doença.', $e);
         }
     }
@@ -69,7 +69,7 @@ class DoencaRN
             $objDoencaBD->alterar($doenca, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro alterando o doença.', $e);
         }
     }
@@ -86,7 +86,7 @@ class DoencaRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro consultando o doença.', $e);
         }
     }
@@ -102,7 +102,7 @@ class DoencaRN
             $arr =  $objDoencaBD->remover($doenca, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro removendo o doença.', $e);
         }
     }
@@ -120,7 +120,7 @@ class DoencaRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando o doença.', $e);
         }
     }
@@ -137,7 +137,7 @@ class DoencaRN
             $arr = $objDoencaBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando o doença.', $e);
         }
     }

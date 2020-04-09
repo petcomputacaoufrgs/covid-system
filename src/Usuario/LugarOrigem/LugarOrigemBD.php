@@ -27,7 +27,7 @@ class LugarOrigemBD
                 $array_marca[] = $objLugarOrigem;
             }
             return $array_marca;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro listando marca no BD.", $ex);
         }
     }
@@ -47,7 +47,7 @@ class LugarOrigemBD
             $marca->setNome($arr[0]['nome']);
 
             return $marca;
-        } catch (Exception $ex) {
+        } catch (\Exeception $ex) {
             throw new Excecao("Erro consultando marca no BD.", $ex);
         }
     }

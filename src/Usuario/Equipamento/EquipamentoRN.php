@@ -67,7 +67,7 @@ class EquipamentoRN
             $objEquipamentoBD->cadastrar($equipamento, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando o equipamento.', $e);
         }
     }
@@ -87,7 +87,7 @@ class EquipamentoRN
             $objEquipamentoBD->alterar($equipamento, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro alterando o equipamento.', $e);
         }
     }
@@ -104,7 +104,7 @@ class EquipamentoRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro consultando o equipamento.', $e);
         }
     }
@@ -120,7 +120,7 @@ class EquipamentoRN
             $arr =  $objEquipamentoBD->remover($equipamento, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro removendo o equipamento.', $e);
         }
     }
@@ -138,7 +138,7 @@ class EquipamentoRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando o equipamento.', $e);
         }
     }
@@ -155,7 +155,7 @@ class EquipamentoRN
             $arr = $objEquipamentoBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando o equipamento.', $e);
         }
     }

@@ -14,7 +14,7 @@ class Pagina
     {
         $this->array_validacoes = array();
     }
-    public function processar_excecao(Exception $e)
+    public function processar_excecao(\Exeception $e)
     {
         if ($e instanceof Excecao && $e->possui_validacoes()) {
             $this->array_validacoes = $e->get_validacoes();

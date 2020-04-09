@@ -24,7 +24,7 @@ class LugarOrigemRN
             $objLugarOrigemBD->cadastrar($detentor, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro cadastrando o lugar de origem.', $e);
         }
     }
@@ -41,7 +41,7 @@ class LugarOrigemRN
             $objLugarOrigemBD->alterar($detentor, $objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro alterando o lugar de origem.', $e);
         }
     }
@@ -58,7 +58,7 @@ class LugarOrigemRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro consultando o lugar de origem.', $e);
         }
     }
@@ -74,7 +74,7 @@ class LugarOrigemRN
             $arr =  $objLugarOrigemBD->remover($detentor, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro removendo o lugar de origem.', $e);
         }
     }
@@ -92,7 +92,7 @@ class LugarOrigemRN
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro listando o lugar de origem.', $e);
         }
     }
@@ -109,7 +109,7 @@ class LugarOrigemRN
             $arr = $objLugarOrigemBD->pesquisar($campoBD, $valor_usuario, $objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (\Exeception $e) {
             throw new Excecao('Erro pesquisando o lugar de origem.', $e);
         }
     }
