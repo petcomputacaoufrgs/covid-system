@@ -6,11 +6,16 @@
 
 
 
-class Excecao extends Exception{
+class Excecao extends Exception {
     private $array_validacoes;
     private $e;
     
     function __construct($texto = null, $e = null) {
+        if ($e != null) {
+            parent::__construct((string) $texto, $e->getCode(), $e);
+        } else if ($text != null) {
+            parent::__construct($texto);
+        }
         
         $this->array_validacoes = array();
         

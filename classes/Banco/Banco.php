@@ -7,7 +7,7 @@
 class Banco {
 
     private $host = "localhost";
-    private $dbUsername = "root";
+    private $dbUsername = "covid-teste";
     private $dbPassword = "";
     private $dbName = "amostras_covid19";
     private $conn;
