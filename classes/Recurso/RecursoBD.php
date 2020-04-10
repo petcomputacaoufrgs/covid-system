@@ -9,11 +9,12 @@ class RecursoBD{
         try{
             //echo $objRecurso->getRecurso();
             //die("die");
-            $INSERT = 'INSERT INTO tb_recurso (nome,s_n_menu) VALUES (?,?)';
+            $INSERT = 'INSERT INTO tb_recurso (nome,s_n_menu,etapa) VALUES (?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('s',$objRecurso->getNome());
-            $arrayBind[] = array('s',$objRecurso->get_s_n_menu());
+            $arrayBind[] = array('s',$objRecurso->getS_n_menu());
+            $arrayBind[] = array('s',$objRecurso->getEtapa());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -27,14 +28,16 @@ class RecursoBD{
     public function alterar(Recurso $objRecurso, Banco $objBanco) {
         try{
             $UPDATE = 'UPDATE tb_recurso SET '
-                . ' nome = ?'
-                . ' s_n_menu = ?'
+                    . ' nome = ?,'
+                    . ' s_n_menu = ?,'
+                    . ' etapa = ?'
                 . '  where idRecurso = ?';
         
                 
             $arrayBind = array();
             $arrayBind[] = array('s',$objRecurso->getRecurso());
-            $arrayBind[] = array('s',$objRecurso->get_s_n_menu());
+            $arrayBind[] = array('s',$objRecurso->getS_n_menu());
+            $arrayBind[] = array('s',$objRecurso->getEtapa());
             $arrayBind[] = array('i',$objRecurso->getIdRecurso());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
@@ -58,7 +61,8 @@ class RecursoBD{
                 $objRecurso = new Recurso();
                 $objRecurso->setIdRecurso($reg['idRecurso']);
                 $objRecurso->setNome($reg['nome']);
-                $objRecurso->set_s_n_menu($reg['s_n_menu']);
+                $objRecurso->setS_n_menu($reg['s_n_menu']);
+                $objRecurso->setEtapa($reg['etapa']);
 
                 $array_recurso[] = $objRecurso;
             }
@@ -83,7 +87,8 @@ class RecursoBD{
             $recurso = new Recurso();
             $recurso->setIdRecurso($arr[0]['idRecurso']);
             $recurso->getNome($arr[0]['nome']);
-            $recurso->get_s_n_menu($arr[0]['s_n_menu']);
+            $recurso->getS_n_menu($arr[0]['s_n_menu']);
+            $recurso->getEtapa($arr[0]['etapa']);
 
             return $recurso;
         } catch (Exception $ex) {
@@ -104,6 +109,38 @@ class RecursoBD{
             
         } catch (Exception $ex) {
             throw new Excecao("Erro removendo recurso no BD.",$ex);
+        }
+    }
+    
+    public function validar_cadastro(Recurso $objRecurso, Banco $objBanco) {
+
+        try{
+            
+            $SELECT = 'SELECT * from tb_recurso WHERE nome = ? AND etapa=? AND s_n_menu=?';
+            
+            $arrayBind = array();
+            $arrayBind[] = array('s',$objRecurso->getNome());
+            $arrayBind[] = array('s',$objRecurso->getEtapa());
+            $arrayBind[] = array('s',$objRecurso->getS_n_menu());
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
+            
+            if(empty($arr)){
+                return $arr;
+            }
+            $arr_recursos = array();
+             
+            foreach ($arr as $reg){
+                $objRecurso = new Recurso();
+                $objRecurso->setIdRecurso($reg['idRecurso']);
+                $objRecurso->setNome($reg['nome']);
+                $objRecurso->setEtapa($reg['etapa']);
+                $objRecurso->setS_n_menu($reg['s_n_menu']);
+                $arr_recursos[] = $objRecurso;
+            }
+             return $arr_recursos;
+            
+        } catch (Exception $ex) {
+            throw new Excecao("Erro pesquisando o perfil do usuário no BD.",$ex);
         }
     }
     

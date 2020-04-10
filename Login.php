@@ -2,8 +2,9 @@
 require_once 'classes/Pagina/Pagina.php';
 
 $objPagina = new Pagina();
-Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico de COVID-19"); 
-Pagina::fechar_head(); 
+Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico de COVID-19");  ?>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<?php Pagina::fechar_head(); 
 ?>
     <main>
       <div class="form-box">

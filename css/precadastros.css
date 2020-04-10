@@ -1,0 +1,56 @@
+    .dropdown-toggle{
+
+        height: 35px;
+    }   
+    .conteudo_tabela{
+        width: 98%;
+        margin-top: 40px;
+        margin-right: 1%;
+        margin-left: 1%;
+
+        padding:10px;
+    }
+    
+     .conteudo{
+         /*background-color: gray;*/
+         width: 80%;
+         margin-top: 40px;
+         margin-right: 10%;
+         margin-left: 10%;
+         
+         padding:10px;
+         
+     }
+     form{
+         /*background-color: blue;*/
+         width: 50%;
+         margin-right: 25%;
+         margin-left: 25%;
+     }
+     
+     form .btn-primary{
+         /*border:1px solid red;*/
+         width: 40%;
+         margin-right: 30%;
+         margin-left: 30%;
+     }
+    .placeholder_colored::-webkit-input-placeholder  {
+        color: red;
+        text-align: left;
+    } 
+    .sucesso{
+        width: 100%;
+        background-color: green;
+    }
+    
+    .a_precadastro{
+        background-color: #66ccff;
+        padding: 3px; 
+        margin-top: 20px;
+    }
+    
+    td,th{
+        text-align: center;
+    }
+    
+    

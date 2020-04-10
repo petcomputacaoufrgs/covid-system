@@ -123,7 +123,7 @@ class Banco {
 
 
         $resultado = mysqli_stmt_get_result($stmt);
-
+        
         if ($resultado === FALSE) {
             throw new Exception(mysqli_error($this->conn));
         }

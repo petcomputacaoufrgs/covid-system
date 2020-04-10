@@ -546,7 +546,7 @@ function montar_select_sexo(&$select_sexos, $objSexoPaciente, $objSexoPacienteRN
 
 
 
-
+<DIV class="conteudo">
 <div class="formulario">
     <form method="POST">
 
@@ -801,7 +801,7 @@ function montar_select_sexo(&$select_sexos, $objSexoPaciente, $objSexoPacienteRN
             
              <?php } ?>
     </form>
-   
+</div> 
 <script src="js/amostra.js?<?=rand(1, 50)?>"></script>
 <script src="js/paciente.js?<?=rand(51, 100)?>"></script> 
 

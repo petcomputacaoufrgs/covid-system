@@ -7,12 +7,12 @@ require_once 'classes/Excecao/Excecao.php';
 require_once 'classes/PerfilUsuario/PerfilUsuario.php';
 require_once 'classes/PerfilUsuario/PerfilUsuarioRN.php';
 require_once 'utils/Utils.php';
-
+require_once 'utils/Alert.php';
 $utils = new Utils();
 $objPagina = new Pagina();
 $objPerfilUsuario = new PerfilUsuario();
 $objPerfilUsuarioRN = new PerfilUsuarioRN();
-$sucesso = '';
+$alert = '';
 
 
 try{
@@ -24,8 +24,8 @@ try{
                 $objPerfilUsuario->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilUsuario'])));
                 if(empty($objPerfilUsuarioRN->pesquisar_index($objPerfilUsuario))){
                     $objPerfilUsuarioRN->cadastrar($objPerfilUsuario);
-                    $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
-                }
+                    $alert= Alert::alert_success_cadastrar();
+                }else{$alert= Alert::alert_error_cadastrar_editar();}
                 
             }else{
                 $objPerfilUsuario->setIdPerfilUsuario('');
@@ -45,11 +45,10 @@ try{
                 $objPerfilUsuario->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilUsuario'])));
                 if(empty($objPerfilUsuarioRN->pesquisar_index($objPerfilUsuario))){
                     $objPerfilUsuarioRN->alterar($objPerfilUsuario);
-                    $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
-                }
+                    $alert= Alert::alert_success_editar();
+                }else{$alert= Alert::alert_error_cadastrar_editar();}
             }
-            
-            
+
             break;
         default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador em cadastro_perfilUsuario.php');  
     }
@@ -61,22 +60,14 @@ try{
 ?>
 
 <?php Pagina::abrir_head("Cadastrar Perfil do usuário"); ?>
- <style>
-    .placeholder_colored::-webkit-input-placeholder  {
-        color: red;
-        text-align: left;
-    } 
-    .sucesso{
-        width: 100%;
-        background-color: green;
-    }
-</style>
+<link rel="stylesheet" type="text/css" href="css/precadastros.css">
 <?php Pagina::fechar_head();?>
 <?php $objPagina->montar_menu_topo();?>
-<?=$sucesso?>
+<?=$alert?>
+<div class="conteudo">
 <form method="POST">
     <div class="form-row">
-        <div class="col-md-4 mb-3">
+        <div class="col-md-12 mb-3">
             <label for="label_perfilUsuario">Digite o perfil do usuário:</label>
             <input type="text" class="form-control" id="idPerfilUsuario" placeholder="Perfil do usuário" 
                    onblur="validaPerfilUsuario()" name="txtPerfilUsuario" required value="<?=$objPerfilUsuario->getPerfil()?>">
@@ -86,6 +77,7 @@ try{
     </div>  
     <button class="btn btn-primary" type="submit" name="salvar_perfilUsuario">Salvar</button>
 </form>
+</div>
 
 <script src="js/perfilUsuario.js"></script>
 <script src="js/fadeOut.js"></script>

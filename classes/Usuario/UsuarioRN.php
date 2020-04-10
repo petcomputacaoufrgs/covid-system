@@ -10,30 +10,35 @@ require_once 'classes/Usuario/UsuarioBD.php';
 class UsuarioRN{
     
 
-    private function validarMatricula(Usuario $usuario,Excecao $objExcecao){
-        $strMatricula = trim($usuario->getMatricula());
-        
-        if ($strMatricula == '') {
-            $objExcecao->adicionar_validacao('A matrícula não foi informado','idMatricula');
+   private function validarMatricula(Usuario $usuario,Excecao $objExcecao){
+        $strMatriculaUsuario = trim($usuario->getMatricula());
+       
+        if ($strMatriculaUsuario == '') {
+            $objExcecao->adicionar_validacao('A matrícula do usuário não foi informada','idMatricula');
         }else{
-            if (strlen($strMatricula) > 0 && strlen($strMatricula) < 8) {
-                $objExcecao->adicionar_validacao('A matrícula não possui 8 números.','idMatricula');
-            }
-            if (strlen($strMatricula) > 8) {
-                $objExcecao->adicionar_validacao('A matrícula possui mais que 8 números.','idMatricula');
-            }
-            
-            $usuario_aux_RN = new UsuarioRN();
-            $array_matriculas = $usuario_aux_RN->listar($usuario);
-            //print_r($array_sexos);
-            foreach ($array_matriculas as $m){
-                if($m->getMatricula() == $usuario->getMatricula()){
-                    $objExcecao->adicionar_validacao('A matrícula já existe.','idMatricula');
-                }
+            if (strlen($strMatriculaUsuario) > 8) {
+                $objExcecao->adicionar_validacao('A matrícula do usuário possui mais que 8 caracteres.','idMatricula');
             }
         }
         
-        return $usuario->setMatricula($strMatricula);
+        return $usuario->setMatricula($strMatriculaUsuario);
+
+    }
+    
+     private function validarSenha(Usuario $usuario,Excecao $objExcecao){
+        $strSenhaUsuario = trim($usuario->getSenha());
+       
+        if ($strSenhaUsuario == '') {
+            $objExcecao->adicionar_validacao('A senha do usuário não foi informada','idPassword');
+        }else{
+            if (strlen($strSenhaUsuario) > 50) {
+                $objExcecao->adicionar_validacao('A senha do usuário possui mais que 12 caracteres.','idPassword');
+            }
+            
+            //validacoes de senha
+        }
+        
+        return $usuario->setSenha($strSenhaUsuario);
 
     }
      
@@ -46,6 +51,8 @@ class UsuarioRN{
             $objBanco->abrirConexao(); 
             
             $this->validarMatricula($usuario,$objExcecao); 
+            $this->validarSenha($usuario,$objExcecao); 
+            
             $objExcecao->lancar_validacoes();
             $objUsuarioBD = new UsuarioBD();
             $objUsuarioBD->cadastrar($usuario,$objBanco);
@@ -64,6 +71,7 @@ class UsuarioRN{
             $objBanco->abrirConexao(); 
             
             $this->validarMatricula($usuario,$objExcecao);   
+            $this->validarSenha($usuario,$objExcecao); 
                         
             $objExcecao->lancar_validacoes();
             $objUsuarioBD = new UsuarioBD();
@@ -122,6 +130,23 @@ class UsuarioRN{
             return $arr;
         } catch (Exception $e) {
             throw new Excecao('Erro listando o usuário.',$e);
+        }
+    }
+    
+    
+     public function validar_cadastro(Usuario $usuario) {
+        try {
+            $objExcecao = new Excecao();
+            $objBanco = new Banco();
+            $objBanco->abrirConexao(); 
+            $objExcecao->lancar_validacoes();
+            $objUsuarioBD = new UsuarioBD();
+            $arr = $objUsuarioBD->validar_cadastro($usuario,$objBanco);
+
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Exception $e) {
+            throw new Excecao('Erro validando cadastro do usuário.', $e);
         }
     }
 

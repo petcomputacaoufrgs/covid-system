@@ -5,15 +5,13 @@ $objPagina = new Pagina();
 Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico de COVID-19"); ?>
 
       	<style>
-	.fas{
-		color:green;
-	}
+	
         .conteudo{
-        background-color: white;
-        padding: 5px;
-        margin-top: 100px;
-        text-align: center;
-      }
+            background-color: white;
+            padding: 5px;
+            margin-top: 100px;
+            text-align: center;
+          }
         
         .conteudo h4 {
             color: #808080;
@@ -27,31 +25,31 @@ Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico
           }
           
           .conteudo .navbar-nav{
-  background: purple;
-  margin-top: -8px;
-}
+              background: purple;
+              margin-top: -8px;
+          }
 
-.conteudo .navbar-nav li{
-  background-color: #bdbebd;
-  padding: 10px;
-  font-size: 20px;
-}
+          .conteudo .navbar-nav li{
+              background-color: #bdbebd;
+              padding: 10px;
+              font-size: 20px;
+          }
 
-.conteudo .navbar-nav li a{
-  text-decoration: none;
-  color: white;
-}
+          .conteudo .navbar-nav li a{
+              text-decoration: none;
+              color: white;
+          }
 
-.conteudo .navbar-nav li:hover{
-  text-decoration: none;
-  color: white;
-  background-color: #949494;
-}
+          .conteudo .navbar-nav li:hover{
+              text-decoration: none;
+              color: white;
+              background-color: #949494;
+          }
 
         
 	</style>
 <?php Pagina::fechar_head(); ?>
-        
+<?php $objPagina->montar_menu_topo();?>        
     
     <body>
         
@@ -59,7 +57,7 @@ Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico
         
         
         <!-- PRINCIPAIS -->
-        <div class="conteudo">
+       <!-- <div class="conteudo">
           <div class="row">
              <div class="col-md-2"><h1>TELAS PRINCIPAIS</h1></div>
              <div class="col-md-2">
@@ -103,7 +101,7 @@ Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico
              </div>
              
             </div>
-        </div>
+        </div> -->
         
         <div class="conteudo">
           <div class="row">
@@ -135,16 +133,16 @@ Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico
              </div>
               
               
-              <!--
+              
               <div class="col-md-2">
-                <h4>...</h4>
+                <h4>NÍVEL DE PRIORIDADE</h4>
                 <ul class="navbar-nav">
-                  <li><a href="controlador.php?action=#">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=#">Listar</a></li>
+                  <li><a href="controlador.php?action=cadastrar_nivelPrioridade">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=listar_nivelPrioridade">Listar</a></li>
                 </ul>               
              </div>
               
-              <div class="col-md-2">
+              <!--<div class="col-md-2">
                 <h4>...</h4>
                 <ul class="navbar-nav">
                   <li><a href="controlador.php?action=#">Cadastrar</a></li>
@@ -257,13 +255,19 @@ Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico
                 </ul>               
              </div>
               
-              
-              
               <div class="col-md-2">
                 <h4>PERFIS USUÁRIO</h4>
                 <ul class="navbar-nav">
                    <li><a href="controlador.php?action=cadastrar_perfilUsuario">Cadastrar</a></li>
                     <li><a href="controlador.php?action=listar_perfilUsuario">Listar</a></li>
+                </ul>               
+             </div>
+              
+              <div class="col-md-2">
+                <h4>USUÁRIO + PERFIL + RECURSO </h4>
+                <ul class="navbar-nav">
+                   <li><a href="controlador.php?action=cadastrar_rel_usuario_perfil_recurso">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=listar_rel_usuario_perfil_recurso">Listar</a></li>
                 </ul>               
              </div>
               
@@ -286,6 +290,15 @@ Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico
                 <ul class="navbar-nav">
                     <li><a href="controlador.php?action=cadastrar_tipoLocalArmazenamento">Cadastrar</a></li>
                     <li><a href="controlador.php?action=listar_tipoLocalArmazenamento">Listar</a></li>
+                </ul>               
+             </div>
+              
+               <div class="col-md-2">
+                <h4>CAPELA</h4>
+                <ul class="navbar-nav">
+                    <li><a href="controlador.php?action=cadastrar_capela">Cadastrar</a></li>
+                    <li><a href="controlador.php?action=listar_capela">Listar</a></li>
+                    <li><a href="controlador.php?action=bloquear_capela">Bloquear</a></li>
                 </ul>               
              </div>
              
