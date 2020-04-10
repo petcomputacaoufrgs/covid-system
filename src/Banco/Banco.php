@@ -24,7 +24,8 @@ class Banco
         }
         set_time_limit(3000);
         if (mysqli_connect_error()) {
-            throw new \Exeception('Erro abrindo conexão com o banco de dados:' . mysqli_connect_error()); // die('Connect Error('.mysqli_connect_errno().')'.mysqli_connect_errno());
+            throw new \Exception('Erro abrindo conexão com o banco de dados:' . mysqli_connect_error());
+            // die('Connect Error('.mysqli_connect_errno().')'.mysqli_connect_errno());
         }
     }
 
@@ -76,13 +77,13 @@ class Banco
             }
 
             if (call_user_func_array('mysqli_stmt_bind_param', $arrParams) === false) {
-                throw new \Exeception(mysqli_error($this->conn));
+                throw new \Exception(mysqli_error($this->conn));
             }
         }
         
         //print_r($arrParams);
         if (mysqli_stmt_execute($stmt) === false) {
-            throw new \Exeception(mysqli_error($this->conn));
+            throw new \Exception(mysqli_error($this->conn));
         }
         
         
