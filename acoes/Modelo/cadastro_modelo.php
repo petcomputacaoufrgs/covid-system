@@ -2,11 +2,13 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-use InfUfrgs\Pagina\Pagina;
-use InfUfrgs\Excecao\Excecao;
-use InfUfrgs\Modelo\Modelo;
-use InfUfrgs\Modelo\ModeloRN;
+require_once 'classes/Pagina/Pagina.php';
+require_once 'classes/Excecao/Excecao.php';
+require_once 'classes/Modelo/Modelo.php';
+require_once 'classes/Modelo/ModeloRN.php';
+require_once 'utils/Utils.php';
 
+$utils = new Utils();
 $objPagina = new Pagina();
 $objModelo = new Modelo();
 $objModeloRN = new ModeloRN();
@@ -16,9 +18,14 @@ try{
     switch($_GET['action']){
         case 'cadastrar_modelo':
             if(isset($_POST['salvar_modelo'])){
-                $objModelo->setModelo(mb_strtolower($_POST['txtModelo'],'utf-8'));
-                $objModeloRN->cadastrar($objModelo);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                $objModelo->setModelo($_POST['txtModelo']);
+                $objModelo->setIndex_modelo(strtoupper($utils->tirarAcentos($_POST['txtModelo'])));
+                if(empty($objModeloRN->pesquisar_index($objModelo))){
+                    $objModeloRN->cadastrar($objModelo);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                }
+                //$sucesso= '<div id="sucesso_bd" class="sucesso"> Já tinha existe um modelo com este nome cadastrado anterirormente com sucesso</div>';
+                                
             }else{
                 $objModelo->setIdModelo('');
                 $objModelo->setModelo('');
@@ -34,9 +41,13 @@ try{
             
              if(isset($_POST['salvar_modelo'])){ //se enviou o formulário com as alterações
                 $objModelo->setIdModelo($_GET['idModelo']);
-                $objModelo->setModelo( mb_strtolower($_POST['txtModelo'],'utf-8'));
-                $objModeloRN->alterar($objModelo);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                $objModelo->setModelo($_POST['txtModelo']);
+                $objModelo->setIndex_modelo(strtoupper($utils->tirarAcentos($_POST['txtModelo'])));
+                if(empty($objModeloRN->pesquisar_index($objModelo))){
+                    $objModeloRN->alterar($objModelo);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                }
+                $sucesso= '<div id="sucesso_bd" class="sucesso">Já exsite um modelo com esse nome</div>';
             }
             
             

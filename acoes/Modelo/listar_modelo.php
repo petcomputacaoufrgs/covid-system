@@ -3,10 +3,10 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-use InfUfrgs\Pagina\Pagina;
-use InfUfrgs\Excecao\Excecao;
-use InfUfrgs\Modelo\Modelo;
-use InfUfrgs\Modelo\ModeloRN;
+require_once 'classes/Pagina/Pagina.php';
+require_once 'classes/Excecao/Excecao.php';
+require_once 'classes/Modelo/Modelo.php';
+require_once 'classes/Modelo/ModeloRN.php';
 
 $objPagina = new Pagina();
 $objModelo = new Modelo();

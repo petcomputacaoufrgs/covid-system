@@ -2,11 +2,12 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-use InfUfrgs\Pagina\Pagina;
-use InfUfrgs\Excecao\Excecao;
-use InfUfrgs\Marca\Marca;
-use InfUfrgs\Marca\MarcaRN;
-
+require_once 'classes/Pagina/Pagina.php';
+require_once 'classes/Excecao/Excecao.php';
+require_once 'classes/Marca/Marca.php';
+require_once 'classes/Marca/MarcaRN.php';
+require_once 'utils/Utils.php';
+$utils = new Utils();
 $objPagina = new Pagina();
 $objMarca = new Marca();
 $objMarcaRN = new MarcaRN();
@@ -16,9 +17,14 @@ try{
     switch($_GET['action']){
         case 'cadastrar_marca':
             if(isset($_POST['salvar_marca'])){
-                $objMarca->setMarca(mb_strtolower($_POST['txtMarca'],'utf-8'));
-                $objMarcaRN->cadastrar($objMarca);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                $objMarca->setMarca($_POST['txtMarca']);
+                $objMarca->setIndex_marca(strtoupper($utils->tirarAcentos($_POST['txtMarca'])));
+                if(empty($objMarcaRN->pesquisar_index($objMarca))){
+                    $objMarcaRN->cadastrar($objMarca);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                }
+                $sucesso= '<div id="sucesso_bd" class="sucesso">Já existe uma marca com esse nome</div>';
+                
             }else{
                 $objMarca->setIdMarca('');
                 $objMarca->setMarca('');
@@ -32,10 +38,14 @@ try{
             }
             
              if(isset($_POST['salvar_marca'])){ //se enviou o formulário com as alterações
-                $objMarca->setIdMarca($_GET['idMarca']);
-                $objMarca->setMarca( mb_strtolower($_POST['txtMarca'],'utf-8'));
-                $objMarcaRN->alterar($objMarca);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                $objMarca->setMarca($_POST['txtMarca']);
+                $objMarca->setIndex_marca(strtoupper($utils->tirarAcentos($_POST['txtMarca'])));
+                if(empty($objMarcaRN->pesquisar_index($objMarca))){
+                    $objMarcaRN->alterar($objMarca);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                }
+                
+                $sucesso= '<div id="sucesso_bd" class="sucesso">Já exsite uma marca com esse nome</div>';
             }
             
             
@@ -81,9 +91,9 @@ try{
     <button class="btn btn-primary" type="submit" name="salvar_marca">Salvar</button>
 </form>
 </div>
-
-<script src="js/marca.js"></script>
 <script src="js/fadeOut.js"></script>
+<script src="js/marca.js"></script>
+
 
 <?php 
 $objPagina->mostrar_excecoes(); 

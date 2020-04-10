@@ -3,10 +3,10 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-use InfUfrgs\Pagina\Pagina;
-use InfUfrgs\Excecao\Excecao;
-use InfUfrgs\TempoPermanencia\TempoPermanencia;
-use InfUfrgs\TempoPermanencia\TempoPermanenciaRN;
+require_once 'classes/Pagina/Pagina.php';
+require_once 'classes/Excecao/Excecao.php';
+require_once 'classes/TempoPermanencia/TempoPermanencia.php';
+require_once 'classes/TempoPermanencia/TempoPermanenciaRN.php';
 
 $objPagina = new Pagina();
 $objTempoPermanencia = new TempoPermanencia();

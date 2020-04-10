@@ -1,8 +1,4 @@
 {
-  "require": {
-    "ext-mbstring": "*",
-    "simplesamlphp/simplesamlphp": "^1.18"
-  },
   "autoload": {
       "psr-4": {"InfUfrgs\\": "src/"}
   },

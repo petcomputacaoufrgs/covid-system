@@ -2,11 +2,12 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-use InfUfrgs\Pagina\Pagina;
-use InfUfrgs\Excecao\Excecao;
-use InfUfrgs\Detentor\Detentor;
-use InfUfrgs\Detentor\DetentorRN;
-
+require_once 'classes/Pagina/Pagina.php';
+require_once 'classes/Excecao/Excecao.php';
+require_once 'classes/Detentor/Detentor.php';
+require_once 'classes/Detentor/DetentorRN.php';
+require_once 'utils/Utils.php';
+$utils = new Utils();
 $objPagina = new Pagina();
 $objDetentor = new Detentor();
 $objDetentorRN = new DetentorRN();
@@ -16,9 +17,14 @@ try{
     switch($_GET['action']){
         case 'cadastrar_detentor':
             if(isset($_POST['salvar_detentor'])){
-                $objDetentor->setDetentor(mb_strtolower($_POST['txtDetentor'],'utf-8'));
-                $objDetentorRN->cadastrar($objDetentor);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                $objDetentor->setDetentor($_POST['txtDetentor']);
+                $objDetentor->setIndex_detentor(strtoupper($utils->tirarAcentos($_POST['txtDetentor'])));
+                if(empty($objDetentorRN->pesquisar_index($objDetentor))){
+                    $objDetentorRN->cadastrar($objDetentor);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                }
+                //$sucesso= '<div id="sucesso_bd" class="sucesso">Já existe um detentor com esse nome</div>';
+                
             }else{
                 $objDetentor->setIdDetentor('');
                 $objDetentor->setDetentor('');
@@ -33,9 +39,13 @@ try{
             
              if(isset($_POST['salvar_detentor'])){ //se enviou o formulário com as alterações
                 $objDetentor->setIdDetentor($_GET['idDetentor']);
-                $objDetentor->setDetentor( mb_strtolower($_POST['txtDetentor'],'utf-8'));
-                $objDetentorRN->alterar($objDetentor);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                $objDetentor->setDetentor($_POST['txtDetentor']);
+                $objDetentor->setIndex_detentor(strtoupper($utils->tirarAcentos($_POST['txtDetentor'])));
+                if(empty($objDetentorRN->pesquisar_index($objDetentor))){
+                    $objDetentorRN->alterar($objDetentor);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                }
+               //$sucesso= '<div id="sucesso_bd" class="sucesso">Já existe um detentor com esse nome</div>';
             }
             
             
@@ -81,7 +91,13 @@ try{
     <button class="btn btn-primary" type="submit" name="salvar_detentor">Salvar</button>
 </form>
 </div>
-
+<script>
+     $(document).ready(function () {
+        setTimeout(function () {
+            $('#sucesso_bd').fadeOut(500);
+        }, 500);
+    });
+    </script>
 <script src="js/detentor.js"></script>
 <script src="js/fadeOut.js"></script>
 

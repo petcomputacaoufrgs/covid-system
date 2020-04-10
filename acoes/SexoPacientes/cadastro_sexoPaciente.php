@@ -2,11 +2,12 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-use InfUfrgs\Pagina\Pagina;
-use InfUfrgs\Excecao\Excecao;
-use InfUfrgs\Sexo\Sexo;
-use InfUfrgs\Sexo\SexoRN;
-
+require_once 'classes/Pagina/Pagina.php';
+require_once 'classes/Excecao/Excecao.php';
+require_once 'classes/Sexo/Sexo.php';
+require_once 'classes/Sexo/SexoRN.php';
+require_once 'utils/Utils.php';
+$utils = new Utils();
 $objPagina = new Pagina();
 $objSexo = new Sexo();
 $objSexoRN = new SexoRN();
@@ -15,12 +16,18 @@ try{
     switch($_GET['action']){
         case 'cadastrar_sexoPaciente':
             if(isset($_POST['salvar_sexoPaciente'])){
-                $objSexo->setSexo(mb_strtolower($_POST['txtSexo'],'utf-8'));
-                $objSexoRN->cadastrar($objSexo);
-                 $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                
+                $objSexo->setSexo($_POST['txtSexo']);
+                $objSexo->setIndex_sexo(strtoupper($utils->tirarAcentos($_POST['txtSexo'])));
+                if(empty($objSexoRN->pesquisar_index($objSexo))){
+                    $objSexoRN->cadastrar($objSexo);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                }
+                 
             }else{
                 $objSexo->setIdSexo('');
                 $objSexo->setSexo('');
+                $objSexo->setIndex_sexo('');
             }
         break;
         
@@ -32,9 +39,13 @@ try{
             
              if(isset($_POST['salvar_sexoPaciente'])){ //se enviou o formulário com as alterações
                 $objSexo->setIdSexo($_GET['idSexoPaciente']);
-                $objSexo->setSexo(mb_strtolower($_POST['txtSexo'],'utf-8'));
-                $objSexoRN->alterar($objSexo);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                $objSexo->setSexo($_POST['txtSexo']);
+                $objSexo->setIndex_sexo(strtoupper($utils->tirarAcentos($_POST['txtSexo'])));
+                if(empty($objSexoRN->pesquisar_index($objSexo))){
+                    $objSexoRN->alterar($objSexo);
+                    $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                }
+                
             }
             
             

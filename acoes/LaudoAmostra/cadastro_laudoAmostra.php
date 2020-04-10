@@ -3,24 +3,24 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-use InfUfrgs\Pagina\Pagina;
-use InfUfrgs\Excecao\Excecao;
+require_once 'classes/Pagina/Pagina.php';
+require_once 'classes/Excecao/Excecao.php';
 session_start();
-
+$objPagina = new Pagina();
 date_default_timezone_set('America/Sao_Paulo');
 $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 $dateLogin = date('d/m/Y  H:i:s');
 $_SESSION['DATA_LOGIN']  = $dateLogin;
 
  //echo $actual_link;
-$objPagina = new Pagina();
+
 ?>
 
 
 <?php Pagina::abrir_head("Cadastrar Paciente"); ?>
 <style>
     body,html{
-        font-size: 20px !important;
+        font-size: 14px !important;
     }
     .dropdown-toggle{
 

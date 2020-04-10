@@ -3,10 +3,10 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-use InfUfrgs\Pagina\Pagina;
-use InfUfrgs\Excecao\Excecao;
-use InfUfrgs\Usuario\Usuario;
-use InfUfrgs\Usuario\UsuarioRN;
+require_once 'classes/Pagina/Pagina.php';
+require_once 'classes/Excecao/Excecao.php';
+require_once 'classes/Usuario/Usuario.php';
+require_once 'classes/Usuario/UsuarioRN.php';
 
 $objPagina = new Pagina();
 $objUsuario = new Usuario();

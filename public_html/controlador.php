@@ -11,6 +11,23 @@ switch ($_GET['action']):
         require_once 'index.php';
         break;
     
+    
+    case 'cadastrar_amostra_localArmazenamento':
+        require_once 'telas_prototipos/cadastro_amostra_localArmazenamento.php';
+        break;
+    case 'extrair_amostra':
+        require_once 'telas_prototipos/etapa_extracao.php';
+        break;
+    case 'exibir_laudo':
+        require_once 'telas_prototipos/etapa_laudo.php';
+        break;
+    case 'imprimir_laudo':
+        require_once 'telas_prototipos/impressao_laudo.php';
+        break;
+    case 'recepcionar_amostra':
+        require_once 'telas_prototipos/etapa_recepcaoAmostra.php';
+        break;
+    
     case 'cadastrar_tipoAmostra':
     case 'editar_tipoAmostra':
         require_once '../acoes/TipoAmostra/cadastro_tipoAmostra.php';

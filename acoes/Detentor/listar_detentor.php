@@ -3,10 +3,10 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-use InfUfrgs\Pagina\Pagina;
-use InfUfrgs\Excecao\Excecao;
-use InfUfrgs\Detentor\Detentor;
-use InfUfrgs\Detentor\DetentorRN;
+require_once 'classes/Pagina/Pagina.php';
+require_once 'classes/Excecao/Excecao.php';
+require_once 'classes/Detentor/Detentor.php';
+require_once 'classes/Detentor/DetentorRN.php';
 
 $objPagina = new Pagina();
 $objDetentor = new Detentor();

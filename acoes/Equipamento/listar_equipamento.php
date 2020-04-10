@@ -3,10 +3,10 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-use InfUfrgs\Pagina\Pagina;
-use InfUfrgs\Excecao\Excecao;
-use InfUfrgs\Equipamento\Equipamento;
-use InfUfrgs\Equipamento\EquipamentoRN;
+require_once 'classes/Pagina/Pagina.php';
+require_once 'classes/Excecao/Excecao.php';
+require_once 'classes/Equipamento/Equipamento.php';
+require_once 'classes/Equipamento/EquipamentoRN.php';
 
 $objPagina = new Pagina();
 $objEquipamento = new Equipamento();
