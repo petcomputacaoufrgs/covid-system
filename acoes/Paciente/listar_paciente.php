@@ -62,10 +62,11 @@ try{
 ?>
 
 <?php Pagina::abrir_head("Listar Pacientees"); ?>
+<link rel="stylesheet" type="text/css" href="css/precadastros.css">
 <?php Pagina::fechar_head(); ?>
 <?php $objPagina->montar_menu_topo();?>
 
-
+<div class="conteudo_tabela">
 <table class="table table-hover">
   <thead>
     <tr>
@@ -85,6 +86,7 @@ try{
     <?=$html?>    
   </tbody>
 </table>
+</div>
 
 
 <?php 

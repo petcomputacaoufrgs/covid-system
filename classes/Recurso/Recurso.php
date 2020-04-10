@@ -6,6 +6,7 @@
 class Recurso{
     private $idRecurso;
     private $nome;
+    private $etapa;
     private $s_n_menu;
     
     function __construct() {
@@ -20,7 +21,11 @@ class Recurso{
         return $this->nome;
     }
 
-    function get_s_n_menu() {
+    function getEtapa() {
+        return $this->etapa;
+    }
+
+    function getS_n_menu() {
         return $this->s_n_menu;
     }
 
@@ -32,12 +37,13 @@ class Recurso{
         $this->nome = $nome;
     }
 
-    function set_s_n_menu($s_n_menu) {
-        $this->s_n_menu = $s_n_menu;
+    function setEtapa($etapa) {
+        $this->etapa = $etapa;
     }
 
-
-
+    function setS_n_menu($s_n_menu) {
+        $this->s_n_menu = $s_n_menu;
+    }
 
 
 }

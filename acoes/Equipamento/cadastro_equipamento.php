@@ -51,10 +51,7 @@ try {
         case 'cadastrar_equipamento':
 
             if (isset($_POST['salvar_equipamento'])) {
-                /*salvar_detentor($objDetentor, $objDetentorRN, $objEquipamento);
-                salvar_marca($objMarca, $objMarcaRN, $objEquipamento);
-                salvar_modelo($objModelo, $objModeloRN, $objEquipamento);*/
-                
+                              
                 $objDetentor->setDetentor($_POST['txtDetentor']);
                 $objDetentor->setIndex_detentor(strtoupper($utils->tirarAcentos($_POST['txtDetentor'])));
                 $arr_detentores = $objDetentorRN->pesquisar_index($objDetentor);
@@ -87,10 +84,14 @@ try {
                 $objEquipamento->setDataUltimaCalibragem($_POST['dtUltimaCalibragem']);
                 $objEquipamento->setDataChegada($_POST['dtChegada']);
 
-                print_r($objEquipamento);
                 $objEquipamentoRN->cadastrar($objEquipamento);
-
-                $sucesso = '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
+                $sucesso = '<div class="alert alert-success alert-dismissible fade show" role="alert" id="div_alerta" >
+                                <strong>Sucesso!</strong>  Dado CADASTRADO com sucesso.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>';
+                
             }else{
                 $objEquipamento->setIdEquipamento('');
                 $objEquipamento->setIdDetentor_fk('');
@@ -147,15 +148,19 @@ try {
                     $objModeloRN->alterar($objModelo);
                     $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
                 }else $objModelo->setIdModelo($arr_modelos[0]->getIdModelo());
-                echo $objModelo->getModelo();
-                
+                               
                 
                 $objEquipamento->setDataUltimaCalibragem($_POST['dtUltimaCalibragem']);
                 $objEquipamento->setDataChegada($_POST['dtChegada']);
 
                 $objEquipamentoRN->alterar($objEquipamento);
 
-                $sucesso = '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
+                $sucesso = '<div class="alert alert-success alert-dismissible fade show" role="alert" id="div_alerta" >
+                                <strong>Sucesso!</strong>  Dado ALTERADO com sucesso.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>';
             }
 
             break;
@@ -166,83 +171,6 @@ try {
 }
 
 
-/*
-function salvar_detentor($objDetentor, $objDetentorRN, &$objEquipamento) {
-    $d = array();
-    if (isset($_POST['sel_detentores']) && $_POST['sel_detentores']) {
-        $objDetentor->setIdDetentor($_POST['sel_detentores']);
-        $d = $objDetentorRN->consultar($objDetentor);
-        $objEquipamento->setIdDetentor_fk($d->getIdDetentor());
-    }
-}
-
-function salvar_marca($objMarca, $objMarcaRN, &$objEquipamento) {
-    $mr = array();
-    if (isset($_POST['sel_marcas']) && $_POST['sel_marcas'] != null) {
-        $objMarca->setIdMarca($_POST['sel_marcas']);
-        $mr = $objMarcaRN->consultar($objMarca);
-        $objEquipamento->setIdMarca_fk($mr->getIdMarca());
-    }
-}
-
-function salvar_modelo($objModelo, $objModeloRN, &$objEquipamento) {
-    $md = array();
-    if (isset($_POST['sel_modelos']) && $_POST['sel_modelos'] != null) {
-        $objModelo->setIdModelo($_POST['sel_modelos']);
-        $md = $objModeloRN->consultar($objModelo);
-        $objEquipamento->setIdModelo_fk($md->getIdModelo());
-    }
-}
-
-function montar_select_detentores(&$select_detentores, $objDetentor, $objDetentorRN, &$objEquipamento) {
-    // DETENTORES 
-    $selected = '';
-    $arr_detentores = $objDetentorRN->listar($objDetentor);
-    $select_detentores =  '<option data-tokens=""></option>';
-
-    foreach ($arr_detentores as $detentor) {
-
-        if ($detentor->getIdDetentor() == $objEquipamento->getIdDetentor_fk()) {
-            $selected = 'selected';
-        }
-        $select_detentores .= '<option ' . $selected . ' value="' . $detentor->getIdDetentor() . '" data-tokens="' . $detentor->getDetentor() . '">' . $detentor->getDetentor() . '</option>';
-    }
-    
-}
-
-function montar_select_marcas(&$select_marcas, $objMarca, $objMarcaRN, &$objEquipamento) {
-    // MARCAS 
-    $selected = '';
-
-    $arr_marcas = $objMarcaRN->listar($objMarca);
-    $select_marcas = '<select class="form-control selectpicker" id="select-country idDetentor" data-live-search="true" name="sel_marcas">'
-            . '<option data-tokens=""></option>';
-
-    foreach ($arr_marcas as $marca) {
-        if ($marca->getIdMarca() == $objEquipamento->getIdMarca_fk()) {
-            $selected = 'selected';
-        }
-        $select_marcas .= '<option ' . $selected . '  value="' . $marca->getIdMarca() . '" data-tokens="' . $marca->getMarca() . '">' . $marca->getMarca() . '</option>';
-    }
-    $select_marcas .= '</select>';
-}
-
-function montar_select_modelos(&$select_modelos, $objModelo, $objModeloRN, &$objEquipamento) {
-    // MODELOS 
-    $selected = '';
-    $arr_modelos = $objModeloRN->listar($objModelo);
-    $select_modelos = '<select class="form-control selectpicker" id="select-country modelo" data-live-search="true" name="sel_modelos">'
-            . '<option data-tokens=""></option>';
-
-    foreach ($arr_modelos as $modelo) {
-        if ($modelo->getIdModelo() == $objEquipamento->getIdModelo_fk()) {
-            $selected = 'selected';
-        }
-        $select_modelos .= '<option ' . $selected . '  value="' . $modelo->getIdModelo() . '" data-tokens="' . $modelo->getModelo() . '">' . $modelo->getModelo() . '</option>';
-    }
-    $select_modelos .= '</select>';
-}
-*/
 ?>
 
 <?php Pagina::abrir_head("Cadastrar Equipamento"); ?>
@@ -263,15 +191,8 @@ function montar_select_modelos(&$select_modelos, $objModelo, $objModeloRN, &$obj
     } 
     .sucesso{
         width: 100%;
-        background-color: green;
     }
-    /*.form-control-label{
-        background-color: green;
-    }*/
-    .selectpicker{
-        /*background-color: purple;*/
-    }
-
+    
     .formulario{
         margin:50px;
         padding: 10px;

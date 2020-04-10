@@ -6,6 +6,7 @@
 class Doenca{
     private $idDoenca;
     private $doenca;
+    private $index_doenca;
     
     function __construct() {
         
@@ -26,6 +27,15 @@ class Doenca{
     function setDoenca($doenca) {
         $this->doenca = $doenca;
     }
+    
+    function getIndex_doenca() {
+        return $this->index_doenca;
+    }
+
+    function setIndex_doenca($index_doenca) {
+        $this->index_doenca = $index_doenca;
+    }
+
 
 
 

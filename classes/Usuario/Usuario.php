@@ -5,6 +5,7 @@
 class Usuario{
     private $idUsuario;
     private $matricula;
+    private $senha;
     
     function __construct() {
         
@@ -25,6 +26,15 @@ class Usuario{
     function setMatricula($matricula) {
         $this->matricula = $matricula;
     }
+    
+    function getSenha() {
+        return $this->senha;
+    }
+
+    function setSenha($senha) {
+        $this->senha = $senha;
+    }
+
 
 
 

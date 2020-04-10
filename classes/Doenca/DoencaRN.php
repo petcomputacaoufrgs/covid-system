@@ -123,14 +123,14 @@ class DoencaRN{
     }
 
 
-    public function pesquisar($campoBD, $valor_usuario) {
+    public function pesquisar_index(Doenca $doenca) {
         try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
             $objExcecao->lancar_validacoes();
             $objDoencaBD = new DoencaBD();
-            $arr = $objDoencaBD->pesquisar($campoBD,$valor_usuario,$objBanco);
+            $arr = $objDoencaBD->pesquisar_index($doenca,$objBanco);
             $objBanco->fecharConexao();
             return $arr;
         } catch (Exception $e) {

@@ -113,7 +113,20 @@ switch ($_GET['action']):
         require_once '../acoes/Doenca/remover_doenca.php';
         break;
     
-     
+     /* NÍVEL DE PRIORIDADE */
+    case 'cadastrar_nivelPrioridade':
+    case 'editar_nivelPrioridade':
+        require_once '../acoes/NivelPrioridade/cadastro_nivelPrioridade.php';
+        break;
+    
+    case 'listar_nivelPrioridade':
+        require_once '../acoes/NivelPrioridade/listar_nivelPrioridade.php';
+        break;
+    
+    case 'remover_nivelPrioridade':
+        require_once '../acoes/NivelPrioridade/remover_nivelPrioridade.php';
+        break;
+    
     /* USUÁRIO */
     case 'cadastrar_usuario':
     case 'editar_usuario':
@@ -258,7 +271,7 @@ switch ($_GET['action']):
     
     
     /* AMOSTRA + TIPO + LOCAL */
-    case 'cadastrar_amostra_localArmazenamento':
+    /*case 'cadastrar_amostra_localArmazenamento':
     case 'editar_amostra_localArmazenamento':
         require_once '../acoes/AmostraTipoLocal/cadastro_amostra_localArmazenamento.php';
         break;
@@ -269,7 +282,39 @@ switch ($_GET['action']):
     
     case 'remover_amostra_localArmazenamento':
         require_once '../acoes/AmostraTipoLocal/remover_amostra_localArmazenamento.php';
+        break;*/
+    
+    /* CAPELA */
+    case 'cadastrar_capela':
+    case 'editar_capela':
+        require_once '../acoes/Capela/cadastro_capela.php';
         break;
+    
+    case 'listar_capela':
+        require_once '../acoes/Capela/listar_capela.php';
+        break;
+    
+    case 'remover_capela':
+        require_once '../acoes/Capela/remover_capela.php';
+        break;
+     case 'bloquear_capela':
+        require_once '../acoes/Capela/LOCK_capela.php';
+        break;
+    
+    /* USUÁRIO + PERFIL + RECURSO */
+    case 'cadastrar_rel_usuario_perfil_recurso':
+    case 'editar_rel_usuario_perfil_recurso':
+        require_once '../acoes/UsuarioPerfilRecurso/cadastro_upr.php';
+        break;
+    
+    case 'listar_rel_usuario_perfil_recurso':
+        require_once '../acoes/UsuarioPerfilRecurso/listar_upr.php';
+        break;
+    
+    case 'remover_rel_usuario_perfil_recurso':
+        require_once '../acoes/UsuarioPerfilRecurso/remover_upr.php';
+        break;
+    
     
     default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador geral.');
 endswitch;

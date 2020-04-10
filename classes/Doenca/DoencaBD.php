@@ -9,10 +9,11 @@ class DoencaBD{
         try{
             //echo $objDoenca->getDoenca();
             //die("die");
-            $INSERT = 'INSERT INTO tb_doenca (doenca) VALUES (?)';
+            $INSERT = 'INSERT INTO tb_doenca (doenca,index_doenca) VALUES (?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('s',$objDoenca->getDoenca());
+            $arrayBind[] = array('s',$objDoenca->getIndex_doenca());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -26,12 +27,14 @@ class DoencaBD{
     public function alterar(Doenca $objDoenca, Banco $objBanco) {
         try{
             $UPDATE = 'UPDATE tb_doenca SET '
-                . ' doenca = ?'
+                    . ' doenca = ?,'
+                    . ' index_doenca = ?'
                 . '  where idDoenca = ?';
         
                 
             $arrayBind = array();
             $arrayBind[] = array('s',$objDoenca->getDoenca());
+            $arrayBind[] = array('s',$objDoenca->getIndex_doenca());
             $arrayBind[] = array('i',$objDoenca->getIdDoenca());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
@@ -55,6 +58,7 @@ class DoencaBD{
                 $objDoenca = new Doenca();
                 $objDoenca->setIdDoenca($reg['idDoenca']);
                 $objDoenca->setDoenca($reg['doenca']);
+                $objDoenca->setIndex_doenca($reg['index_doenca']);
 
                 $array_doença[] = $objDoenca;
             }
@@ -69,7 +73,7 @@ class DoencaBD{
 
         try{
 
-            $SELECT = 'SELECT idDoenca,doenca FROM tb_doenca WHERE idDoenca = ?';
+            $SELECT = 'SELECT idDoenca,doenca,index_doenca FROM tb_doenca WHERE idDoenca = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objDoenca->getIdDoenca());
@@ -79,6 +83,7 @@ class DoencaBD{
             $doença = new Doenca();
             $doença->setIdDoenca($arr[0]['idDoenca']);
             $doença->setDoenca($arr[0]['doenca']);
+            $doença->setIndex_doenca($arr[0]['index_doenca']);
 
             return $doença;
         } catch (Exception $ex) {
@@ -102,6 +107,38 @@ class DoencaBD{
         }
     }
     
+    public function pesquisar_index(Doenca $objDoenca, Banco $objBanco) {
+
+        try{
+
+            $SELECT = 'SELECT idDoenca,doenca,index_doenca FROM tb_doenca WHERE index_doenca = ?';
+
+            $arrayBind = array();
+            $arrayBind[] = array('s',$objDoenca->getIndex_doenca());
+
+            $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
+            
+            if(empty($arr)){
+                return $arr;
+            }
+            $arr_doencas = array();
+             
+            foreach ($arr as $reg){
+                $doenca = new Doenca();
+                $doenca->setIdDoenca($reg['idDoenca']);
+                $doenca->setDoenca($reg['doenca']);
+                $doenca->setIndex_doenca($reg['index_doenca']);
+                $arr_doencas[] = $doenca;
+            }
+             return $arr_doencas;
+
+            
+        } catch (Exception $ex) {
+       
+            throw new Excecao("Erro consultando doença no BD.",$ex);
+        }
+
+    }
     
 
     

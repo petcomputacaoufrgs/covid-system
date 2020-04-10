@@ -7,13 +7,14 @@ require_once 'classes/Excecao/Excecao.php';
 require_once 'classes/PerfilPaciente/PerfilPaciente.php';
 require_once 'classes/PerfilPaciente/PerfilPacienteRN.php';
 require_once 'utils/Utils.php';
+require_once 'utils/Alert.php';
 $utils = new Utils();
 $objPagina = new Pagina();
 $objPerfilPaciente = new PerfilPaciente();
 $objPerfilPacienteRN = new PerfilPacienteRN();
 
 $cadastrado_sucesso = '';
-$sucesso ='';
+$alert ='';
 try{
     switch($_GET['action']){
         case 'cadastrar_perfilPaciente':
@@ -22,8 +23,8 @@ try{
                 $objPerfilPaciente->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilPaciente'])));  
                 if(empty($objPerfilPacienteRN->pesquisar_index($objPerfilPaciente))){
                    $objPerfilPacienteRN->cadastrar($objPerfilPaciente);
-                    $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
-                }
+                   $alert= Alert::alert_success_cadastrar();
+                }else {$alert= Alert::alert_error_cadastrar_editar();}
                 
             }else{
                 $objPerfilPaciente->setIdPerfilPaciente('');
@@ -43,8 +44,8 @@ try{
                 $objPerfilPaciente->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilPaciente'])));
                 if(empty($objPerfilPacienteRN->pesquisar_index($objPerfilPaciente))){
                     $objPerfilPacienteRN->alterar($objPerfilPaciente);
-                    $sucesso= '<div id="sucesso_bd" class="sucesso">Alterado com sucesso</div>';
-                }
+                    $alert= Alert::alert_success_editar();
+                }else {$alert= Alert::alert_error_cadastrar_editar();}
                 
             }
             
@@ -60,22 +61,15 @@ try{
 ?>
 
 <?php Pagina::abrir_head("Cadastrar Perfil do paciente"); ?>
- <style>
-    .placeholder_colored::-webkit-input-placeholder  {
-        color: red;
-        text-align: left;
-    } 
-    .sucesso{
-        width: 100%;
-        background-color: green;
-    }
-</style>
+<link rel="stylesheet" type="text/css" href="css/precadastros.css">
 <?php Pagina::fechar_head();?>
 <?php $objPagina->montar_menu_topo();?>
-<?=$sucesso?>
+
+<?=$alert?>
+<DIV class="conteudo">
 <form method="POST">
     <div class="form-row">
-        <div class="col-md-4 mb-3">
+        <div class="col-md-12 mb-3">
             <label for="label_perfilPaciente">Digite o perfil do paciente:</label>
             <input type="text" class="form-control" id="idPerfilPaciente" placeholder="Perfil do paciente" 
                    onblur="validaPerfilPaciente()" name="txtPerfilPaciente" required value="<?=$objPerfilPaciente->getPerfil()?>">
@@ -85,7 +79,7 @@ try{
     </div>  
     <button class="btn btn-primary" type="submit" name="salvar_perfilPaciente">Salvar</button>
 </form>
-
+</DIV>
 <script src="js/perfilPaciente.js"></script>
 <script src="js/fadeOut.js"></script>
 
