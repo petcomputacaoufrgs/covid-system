@@ -4,6 +4,7 @@
  */
 require_once 'classes/Banco/Banco.php';
 require_once 'classes/Excecao/Excecao.php';
+require_once 'classes/Excecao/NaoEncontrado.php';
 
 class SexoBD{
 
@@ -79,6 +80,10 @@ class SexoBD{
             $arrayBind[] = array('i',$objSexo->getIdSexo());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
+
+            if (count($arr) == 0) {
+                throw new NaoEncontrado();
+            }
 
             $sexo = new Sexo();
             $sexo->setIdSexo($arr[0]['idSexo']);
