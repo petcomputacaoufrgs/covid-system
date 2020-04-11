@@ -13,7 +13,7 @@ class Excecao extends Exception {
     function __construct($texto = null, $e = null) {
         if ($e != null) {
             parent::__construct((string) $texto, $e->getCode(), $e);
-        } else if ($text != null) {
+        } else if ($texto != null) {
             parent::__construct($texto);
         }
         
