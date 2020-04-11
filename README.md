@@ -4,7 +4,7 @@ Para testar e formatar o código, instale o composer!
 
 # Configurar O Banco
 ```
-cp config/db.php.default config.db.php
+cp config/db.php.default config/db.php
 ```
 
 E editar o arquivo de config :)
