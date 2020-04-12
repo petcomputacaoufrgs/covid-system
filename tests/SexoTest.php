@@ -72,12 +72,12 @@ final class SexoTest extends TestCase {
         $this->assertEquals('FEMININO', $fem2->getIndex_sexo());
 
         $erro = new Sexo();
-        $erro->setSexo("Este sexo é propositadamente e extremamente longo!!!!");
+        $erro->setSexo('Este sexo é propositadamente e extremamente longo!!!!');
         $this->expectException(Excecao::class);
         $rn->cadastrar($erro);
 
         $erro = new Sexo();
-        $erro->setSexo("");
+        $erro->setSexo('');
         $this->expectException(Excecao::class);
         $rn->cadastrar($erro);
     }
@@ -126,12 +126,12 @@ final class SexoTest extends TestCase {
         $this->assertEquals('FEMININO', $sempre_fem2->getIndex_sexo());
 
         $erro = new Sexo();
-        $erro->setSexo("Este sexo é propositadamente e extremamente longo!!!!");
+        $erro->setSexo('Este sexo é propositadamente e extremamente longo!!!!');
         $this->expectException(Excecao::class);
         $rn->alterar($erro);
 
         $erro = new Sexo();
-        $erro->setSexo("");
+        $erro->setSexo('');
         $this->expectException(Excecao::class);
         $rn->alterar($erro);
     }
@@ -151,25 +151,25 @@ final class SexoTest extends TestCase {
 
         $arr = $rn->listar(new Sexo());
 
-        $has_masc = false;
-        $has_fem = false;
+        $tem_masc = false;
+        $tem_fem = false;
 
         foreach ($arr as $elem) {
             if ($elem->getIdSexo() == $masc->getIdSexo()) {
-                $this->assertNotTrue($has_masc);
-                $has_masc = true;
+                $this->assertNotTrue($tem_masc);
+                $tem_masc = true;
                 $this->assertEquals('Masculino', $elem->getSexo());
                 $this->assertEquals('MASCULINO', $elem->getIndex_sexo());
             } elseif ($elem->getIdSexo() == $fem->getIdSexo()) {
-                $this->assertNotTrue($has_fem);
-                $has_fem= true;
+                $this->assertNotTrue($tem_fem);
+                $tem_fem= true;
                 $this->assertEquals('Feminino', $elem->getSexo());
                 $this->assertEquals('FEMININO', $elem->getIndex_sexo());
             }
         }
 
-        $this->assertTrue($has_masc);
-        $this->assertTrue($has_fem);
+        $this->assertTrue($tem_masc);
+        $this->assertTrue($tem_fem);
     }
 
     public function testRemover() {
@@ -212,18 +212,18 @@ final class SexoTest extends TestCase {
         $masc2->setIndex_sexo('MASCULINO');
         $arr = $rn->pesquisar_index($masc2);
 
-        $has_masc = false;
+        $tem_masc = false;
 
         foreach ($arr as $elem) {
             if ($elem->getIdSexo() == $masc->getIdSexo()) {
-                $this->assertNotTrue($has_masc);
-                $has_masc = true;
+                $this->assertNotTrue($tem_masc);
+                $tem_masc = true;
                 $this->assertEquals('Masculino', $elem->getSexo());
                 $this->assertEquals('MASCULINO', $elem->getIndex_sexo());
             }
         }
 
-        $this->assertTrue($has_masc);
+        $this->assertTrue($tem_masc);
     }
 
     public function testPesquisarIndexNaoAcha() {
@@ -233,15 +233,14 @@ final class SexoTest extends TestCase {
         $nao_existe ->setIndex_sexo('Nûnca Será Cadastrádo');
         $arr = $rn->pesquisar_index($nao_existe);
 
-        $has = false;
-
+        $tem = false;
         foreach ($arr as $elem) {
             if ($elem->getIndex_sexo() == $nao_existe->getIndex_sexo()) {
-                $has = true;
+                $tem = true;
                 break;
             }
         }
 
-        $this->assertNotTrue($has);
+        $this->assertNotTrue($tem);
     }
 }

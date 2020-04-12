@@ -12,6 +12,7 @@ class Banco {
     private $dbPassword;
     private $dbName;
     private $conn;
+    private $isDebugMode;
 
     public function __construct() {
         require 'config/db.php';
@@ -19,6 +20,7 @@ class Banco {
         $this->dbUsername = $dbUsername;
         $this->dbPassword = $dbPassword;
         $this->dbName = $dbName;
+        $this->isDebugMode = isset($isDebugMode) && $isDebugMode;
     }
 
     public function abrirConexao() {
@@ -30,7 +32,13 @@ class Banco {
                 $this->dbName
             );
         } catch (Exception $e) {
-            throw new Exception("Erro abrindo conexão com o banco de dados.");
+            $msg = "Erro abrindo conexão com o banco de dados.";
+            if ($this->isDebugMode) {
+                $exc = new Exception($msg, $e->getCode(), $e);
+            } else {
+                $exc = new Exception($msg, $e->getCode());
+            }
+            throw $exc;
         }
 
         if (mysqli_connect_error()) {
