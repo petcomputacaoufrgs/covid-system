@@ -23,9 +23,16 @@ class Configuracao{
              
              */
             
+             /*
              'banco' => array('servidor' => 'localhost', 
                              'nome' => 'amostras_covid19',
                              'usuario' => 'root',
+                             'senha' => ''),
+              */
+
+             'banco' => array('servidor' => 'localhost', 
+                             'nome' => 'amostras_covid19',
+                             'usuario' => 'covid-teste',
                              'senha' => ''),
         );
     }

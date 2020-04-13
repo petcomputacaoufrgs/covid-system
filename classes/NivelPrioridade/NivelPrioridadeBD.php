@@ -7,7 +7,7 @@ class NivelPrioridadeBD{
 
     public function cadastrar(NivelPrioridade $objNivelPrioridade, Banco $objBanco) {
         try{
-            $INSERT = 'INSERT INTO tb_niveis_prioridade (nivel) VALUES (?)';
+            $INSERT = 'INSERT INTO tb_nivelprioridade (nivel) VALUES (?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objNivelPrioridade->getNivel());
@@ -23,7 +23,7 @@ class NivelPrioridadeBD{
     
     public function alterar(NivelPrioridade $objNivelPrioridade, Banco $objBanco) {
         try{
-            $UPDATE = 'UPDATE tb_niveis_prioridade SET '
+            $UPDATE = 'UPDATE tb_nivelprioridade SET '
                     . ' nivel = ?'
                 . '  where idNivelPrioridade = ?';
         
@@ -43,7 +43,7 @@ class NivelPrioridadeBD{
      public function listar(NivelPrioridade $objNivelPrioridade, Banco $objBanco) {
          try{
       
-            $SELECT = "SELECT * FROM tb_niveis_prioridade";
+            $SELECT = "SELECT * FROM tb_nivelprioridade";
 
 
             $arr = $objBanco->consultarSQL($SELECT);
@@ -67,18 +67,18 @@ class NivelPrioridadeBD{
 
         try{
 
-            $SELECT = 'SELECT idNivelPrioridade,nivel FROM tb_niveis_prioridade WHERE idNivelPrioridade = ?';
+            $SELECT = 'SELECT idNivelPrioridade,nivel FROM tb_nivelprioridade WHERE idNivelPrioridade = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objNivelPrioridade->getIdNivelPrioridade());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
 
-            $niveis_prioridade = new NivelPrioridade();
-            $niveis_prioridade->setIdNivelPrioridade($arr[0]['idNivelPrioridade']);
-            $niveis_prioridade->setNivel($arr[0]['nivel']);
+            $nivelprioridade = new NivelPrioridade();
+            $nivelprioridade->setIdNivelPrioridade($arr[0]['idNivelPrioridade']);
+            $nivelprioridade->setNivel($arr[0]['nivel']);
 
-            return $niveis_prioridade;
+            return $nivelprioridade;
         } catch (Exception $ex) {
        
             throw new Excecao("Erro consultando o nível de prioridade no BD.",$ex);
@@ -90,7 +90,7 @@ class NivelPrioridadeBD{
 
         try{
             
-            $DELETE = 'DELETE FROM tb_niveis_prioridade WHERE idNivelPrioridade = ? ';  
+            $DELETE = 'DELETE FROM tb_nivelprioridade WHERE idNivelPrioridade = ? ';  
             $arrayBind = array();
             $arrayBind[] = array('i',$objNivelPrioridade->getIdNivelPrioridade());
             $objBanco->executarSQL($DELETE, $arrayBind);
@@ -104,7 +104,7 @@ class NivelPrioridadeBD{
 
         try{
             
-            $SELECT = 'SELECT * from tb_niveis_prioridade WHERE nivel = ?';
+            $SELECT = 'SELECT * from tb_nivelprioridade WHERE nivel = ?';
             
             $arrayBind = array();
             $arrayBind[] = array('s',$objNivelPrioridade->getNivel());

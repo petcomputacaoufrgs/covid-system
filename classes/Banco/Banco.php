@@ -20,7 +20,7 @@ class Banco {
                 
                 $this->conn = mysqli_init();
                 if (!$this->conn) {
-                    throw new Exception("Erro inicializando conexão com o banco de dados.");
+                    throw new Exception("Erro inicializando conexão com o banco de dados: ". mysqli_connect_error());
                 }
 
                 //	mysqli_ssl_set ( $this->conn , null,null,null,null,null);
@@ -37,10 +37,17 @@ class Banco {
             }
             
             if (mysqli_connect_error()) {
-                throw new Exception('Erro abrindo conexÃ£o com o banco de dados:' . mysqli_connect_error()); // die('Connect Error('.mysqli_connect_errno().')'.mysqli_connect_errno());
+                throw new Exception('Erro abrindo conexão com o banco de dados:' . mysqli_connect_error()); // die('Connect Error('.mysqli_connect_errno().')'.mysqli_connect_errno());
             }
         } catch (Exception $e) {
-            throw new Exception("Erro abrindo conexão com o banco de dados.");
+            $msg = "Erro abrindo conexão com o banco de dados.";
+            $prod = Configuracao::getInstance()->getValor('producao');
+            if ($prod) {
+                $exc = new Exception($msg);
+            } else {
+                $exc = new Exception($msg, $e->getCode(), $e);
+            }
+            throw $exc;
         }
     }
 
