@@ -4,10 +4,8 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-use InfUfrgs\Pagina\Pagina;
-use InfUfrgs\Excecao\Excecao;
+require_once '../classes/Pagina/Pagina.php';
+require_once '../classes/Excecao/Excecao.php';
 
 date_default_timezone_set('America/Sao_Paulo');
 $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";

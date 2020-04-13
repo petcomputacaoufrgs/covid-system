@@ -102,7 +102,8 @@ try {
 
             if (isset($_POST['salvar_upr'])) { //se enviou o formulário com as alterações
                 if (isset($_POST['sel_perfil'])) {
-
+                    
+                    $perfis_selecionados_anteriormente = array();
                     $objUsuario->setIdUsuario($_GET['idUsuario']);
                     $objUsuario = $objUsuarioRN->consultar($objUsuario);
                     

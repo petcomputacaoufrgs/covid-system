@@ -4,8 +4,6 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-//require_once __DIR__ . '/../vendor/autoload.php';
-
 switch ($_GET['action']):
     case 'principal':
         require_once 'index.php';

@@ -2,7 +2,12 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
+
 require_once '../classes/Banco/Banco.php';
+require_once 'classes/Banco/Banco.php';
+require_once 'classes/Excecao/Excecao.php';
+require_once 'classes/Excecao/NaoEncontrado.php';
+
 class SexoBD{
 
     public function cadastrar(Sexo $objSexo, Banco $objBanco) {
@@ -77,6 +82,10 @@ class SexoBD{
             $arrayBind[] = array('i',$objSexo->getIdSexo());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
+
+            if (count($arr) == 0) {
+                throw new NaoEncontrado();
+            }
 
             $sexo = new Sexo();
             $sexo->setIdSexo($arr[0]['idSexo']);
