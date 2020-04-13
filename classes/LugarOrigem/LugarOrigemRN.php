@@ -4,8 +4,8 @@
  *  Classe das regras de negócio do lugar de origem do paciente
  */
 
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/LugarOrigem/LugarOrigemBD.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/LugarOrigem/LugarOrigemBD.php';
 
 class LugarOrigemRN{
     

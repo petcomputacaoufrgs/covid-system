@@ -1,56 +1,125 @@
-    .dropdown-toggle{
+    
+.conteudo_listar{
+    background-color: #fff;
+}
+.conteudo_listar .conteudo_tabela{
+    margin-top: 10px;
+}
 
-        height: 35px;
-    }   
-    .conteudo_tabela{
-        width: 98%;
-        margin-top: 40px;
-        margin-right: 1%;
-        margin-left: 1%;
+.topo_listar{
+    width:100%;
+    padding-right: 1.5%;
+    padding-left: 1.5%;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    background-color: #3a5261;
+    color: #fff;
+}
 
-        padding:10px;
+.topo_listar .btn-primary{
+    
+    text-align: center;
+    border-radius: 0px;
+    background-color: #3a5261;
+    margin-right: 50px;
+    color: #fff;
+    
+}
+
+.topo_listar .btn-primary:hover{
+    border-radius: 2px;
+    background-color: #fff;
+    color: #3a5261;
+    transition: .5s;
+   
+}
+
+
+.conteudo_grande{
+    /*background-color: black;*/
+    width: 95%;
+    margin-right: 2.5%;
+    margin-left: 2.5%;
+    margin-top: 40px;         
+    padding:10px;
+}
+.conteudo_grande form{
+    width: 80%;
+    margin-right: 10%;
+    margin-left: 10%;
+}
+
+.dropdown-toggle{
+
+    height: 35px;
+}   
+.conteudo_tabela{
+    width: 100%;
+    margin-top: 40px;
+    /*margin-right: 1%;
+    margin-left: 1%;*/
+    padding:10px;
+}
+
+.conjunto_itens{
+    /*background-color: pink;
+    border: 2px solid red;*/
+    width: 98%;
+    margin-left: 1%;
+    margin-right: 1%;
     }
-    
-     .conteudo{
-         /*background-color: gray;*/
-         width: 80%;
-         margin-top: 40px;
-         margin-right: 10%;
-         margin-left: 10%;
-         
-         padding:10px;
-         
-     }
-     form{
-         /*background-color: blue;*/
-         width: 50%;
-         margin-right: 25%;
-         margin-left: 25%;
-     }
-     
-     form .btn-primary{
-         /*border:1px solid red;*/
-         width: 40%;
-         margin-right: 30%;
-         margin-left: 30%;
-     }
-    .placeholder_colored::-webkit-input-placeholder  {
-        color: red;
-        text-align: left;
-    } 
-    .sucesso{
-        width: 100%;
-        background-color: green;
-    }
-    
-    .a_precadastro{
-        background-color: #66ccff;
-        padding: 3px; 
-        margin-top: 20px;
-    }
-    
-    td,th{
-        text-align: center;
-    }
-    
-    
+
+.conjunto_itens .col-md-2{
+    margin-top: 10px;
+}
+
+.conjunto_itens .btn-primary{
+    width: 100%;
+}
+
+.conteudo{
+    /*background-color: gray;*/
+    width: 90%;
+    margin-top: 40px;
+    margin-right: 5%;
+    margin-left: 5%;
+
+    padding:10px;
+
+}
+form{
+    /*background-color: blue;*/
+    width: 50%;
+    margin-right: 25%;
+    margin-left: 25%;
+}
+
+form .btn-primary{
+    /*border:1px solid red;*/
+    width: 40%;
+    margin-right: 30%;
+    margin-left: 30%;
+
+}
+.placeholder_colored::-webkit-input-placeholder  {
+    color: red;
+    text-align: left;
+} 
+.sucesso{
+    width: 100%;
+    background-color: green;
+}
+
+.a_precadastro{
+    background-color: #66ccff;
+    padding: 3px; 
+    margin-top: 20px;
+}
+
+td,th{
+    text-align: center;
+}
+
+.form-row{
+    margin-bottom: 10px;
+}

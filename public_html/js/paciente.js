@@ -286,3 +286,114 @@ function validaCodGAL(){
     }
     
 }
+
+
+function val() {
+                                       $('.selectpicker').change(function (e) {
+                                           //alert(e.target.value);
+                                           //document.getElementById("class1").innerHTML = e.target.value ;
+                                           window.location.href = "controlador.php?action=cadastrar_paciente&valuePerfilSelected=" + e.target.value;
+                                           /*$.post("cadastro_paciente.php", {perfilSelecionado:e.target.value},function(data){
+                                            alert("data sent and received: "+data);
+                                            });*/
+
+                                       });
+                                   }
+
+                                   function val_sexo() {
+                                       $('.selectpicker').change(function (e) {
+                                           alert(e.target.value);
+                                           //document.getElementById("class1").innerHTML = e.target.value ;
+
+                                           /*$.post("cadastro_paciente.php", {perfilSelecionado:e.target.value},function(data){
+                                            alert("data sent and received: "+data);
+                                            });*/
+
+                                       });
+                                   }
+                                   function val_radio_obsNomeMae() {
+
+                                       var radios = document.getElementsByName('obs');
+                                       //var input_outro = document.getElementById('idObsNomeMae');
+                                       for (var i = 0, length = radios.length; i < length; i++) {
+                                           if (radios[0].checked) {
+                                               // do whatever you want with the checked radio
+                                               //alert("desconhecido");
+                                               document.getElementById('idObsNomeMae').readOnly = true;
+                                               // only one radio can be logically checked, don't check the rest
+                                               break;
+                                           }
+                                           if (radios[1].checked) {
+                                               // do whatever you want with the checked radio
+                                               //alert("outro");
+                                               document.getElementById('idObsNomeMae').readOnly = false;
+                                               // only one radio can be logically checked, don't check the rest
+                                               break;
+                                           }
+                                       }
+
+                                   }
+
+                                   function val_radio_obsCPF() {
+
+                                       var radios = document.getElementsByName('obsCPF');
+                                       //var input_outro = document.getElementById('idObsNomeMae');
+                                       for (var i = 0, length = radios.length; i < length; i++) {
+                                           if (radios[0].checked) {
+                                               // do whatever you want with the checked radio
+                                               //alert("desconhecido");
+                                               document.getElementById('idObsCPF').readOnly = true;
+                                               // only one radio can be logically checked, don't check the rest
+                                               break;
+                                           }
+                                           if (radios[1].checked) {
+                                               // do whatever you want with the checked radio
+                                               //alert("outro");
+                                               document.getElementById('idObsCPF').readOnly = false;
+                                               // only one radio can be logically checked, don't check the rest
+                                               break;
+                                           }
+                                       }
+
+                                   }
+
+                                   function val_radio_obsRG() {
+
+                                       var radios = document.getElementsByName('obsRG');
+                                       //var input_outro = document.getElementById('idObsNomeMae');
+                                       for (var i = 0, length = radios.length; i < length; i++) {
+                                           if (radios[0].checked) {
+                                               // do whatever you want with the checked radio
+                                               //alert("desconhecido");
+                                               document.getElementById('idObsRG').readOnly = true;
+                                               // only one radio can be logically checked, don't check the rest
+                                               break;
+                                           }
+                                           if (radios[1].checked) {
+                                               // do whatever you want with the checked radio
+                                               //alert("outro");
+                                               document.getElementById('idObsRG').readOnly = false;
+                                               // only one radio can be logically checked, don't check the rest
+                                               break;
+                                           }
+                                       }
+
+                                   }
+
+
+                                   function val_radio_obsSexo() {
+
+                                       var radios = document.getElementsByName('obsSexo');
+                                       //var input_outro = document.getElementById('idObsNomeMae');
+                                       for (var i = 0, length = radios.length; i < length; i++) {
+                                           if (radios[0].checked) {
+                                               document.getElementById('idObsSexo').readOnly = true;
+                                               break;
+                                           }
+                                           if (radios[1].checked) {
+                                               document.getElementById('idObsSexo').readOnly = false;
+                                               break;
+                                           }
+                                       }
+
+                                   }

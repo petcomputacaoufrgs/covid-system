@@ -2,7 +2,7 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Banco/Banco.php';
+require_once '../classes/Banco/Banco.php';
 class MarcaBD{
 
     public function cadastrar(Marca $objMarca, Banco $objBanco) {
@@ -83,7 +83,7 @@ class MarcaBD{
             $marca = new Marca();
             $marca->setIdMarca($arr[0]['idMarca']);
             $marca->setMarca($arr[0]['marca']);
-            $marca->setMarca($arr[0]['index_marca']);
+            $marca->setIndex_marca($arr[0]['index_marca']);
 
             return $marca;
         } catch (Exception $ex) {

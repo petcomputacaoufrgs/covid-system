@@ -4,8 +4,8 @@
  *  Classe das regras de negócio do usuário do paciente
  */
 
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Rel_perfilUsuario_recurso/Rel_perfilUsuario_recurso_BD.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/Rel_perfilUsuario_recurso/Rel_perfilUsuario_recurso_BD.php';
 
 class Rel_perfilUsuario_recurso_RN{
         
@@ -97,6 +97,40 @@ class Rel_perfilUsuario_recurso_RN{
         }
     }
     
+    public function listar_recursos(Rel_perfilUsuario_recurso $relPerfilRecurso) {
+        try {
+            $objExcecao = new Excecao();
+            $objBanco = new Banco();
+            $objBanco->abrirConexao(); 
+            $objExcecao->lancar_validacoes();
+            $objRel_perfilUsuario_recurso_BD = new Rel_perfilUsuario_recurso_BD();
+            
+            $arr = $objRel_perfilUsuario_recurso_BD->listar_recursos($relPerfilRecurso,$objBanco);
+            
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Exception $e) {
+            throw new Excecao('Erro listando o relacionamento do perfil do usuário com o seu recurso.',$e);
+        }
+    }
+    
+    
+    public function validar_cadastro(Rel_perfilUsuario_recurso $relPerfilRecurso) {
+        try {
+            $objExcecao = new Excecao();
+            $objBanco = new Banco();
+            $objBanco->abrirConexao(); 
+            $objExcecao->lancar_validacoes();
+            $objRel_perfilUsuario_recurso_BD = new Rel_perfilUsuario_recurso_BD();
+            
+            $arr = $objRel_perfilUsuario_recurso_BD->validar_cadastro($relPerfilRecurso,$objBanco);
+            
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Exception $e) {
+            throw new Excecao('Erro listando o relacionamento do usuário com o seu perfil.',$e);
+        }
+    }
     
     public function pesquisar($campoBD, $valor_usuario) {
         try {

@@ -4,8 +4,8 @@
  *  Classe das regras de negócio do nível de prioridade do paciente
  */
 
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/NivelPrioridade/NivelPrioridadeBD.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/NivelPrioridade/NivelPrioridadeBD.php';
 
 class NivelPrioridadeRN{
     

@@ -2,7 +2,7 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Banco/Banco.php';
+require_once '../classes/Banco/Banco.php';
 class CapelaBD{
 
     public function cadastrar(Capela $objCapela, Banco $objBanco) {
@@ -145,10 +145,11 @@ class CapelaBD{
 
         try{
             
-            $SELECT = 'SELECT * from tb_capela WHERE numero = ?';
+            $SELECT = 'SELECT * from tb_capela WHERE numero = ? AND statusCapela = ?';
             
             $arrayBind = array();
             $arrayBind[] = array('i',$objCapela->getNumero());
+            $arrayBind[] = array('s',$objCapela->getStatusCapela());
             $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
             
             if(empty($arr)){

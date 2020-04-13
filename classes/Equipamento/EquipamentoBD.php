@@ -2,7 +2,7 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Banco/Banco.php';
+require_once '../classes/Banco/Banco.php';
 class EquipamentoBD{
 
     public function cadastrar(Equipamento $objEquipamento, Banco $objBanco) {
@@ -59,7 +59,24 @@ class EquipamentoBD{
          try{
       
             $SELECT = "SELECT * FROM tb_equipamento";
+            
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+            if($objEquipamento->getIdDetentor_fk() != null){
+                $WHERE .= $AND." idDetentor_fk = ?";
+                $AND = ' and '; 
+                $arrayBind[] = array('i',$objEquipamento->getIdDetentor_fk());
+            }
+            
 
+            if($WHERE != ''){
+                $WHERE = ' where '.$WHERE;
+            } 
+        
+            //echo $SELECT.$WHERE;
+
+            $arr = $objBanco->consultarSQL($SELECT.$WHERE,$arrayBind);
 
             $arr = $objBanco->consultarSQL($SELECT);
 

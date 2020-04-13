@@ -2,15 +2,18 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Detentor/Detentor.php';
-require_once 'classes/Detentor/DetentorRN.php';
-require_once 'utils/Utils.php';
-require_once 'utils/Alert.php';
-require_once 'classes/Detentor/DetentorRN.php';
+
+session_start();
+require_once '../classes/Sessao/Sessao.php';
+require_once '../classes/Pagina/Pagina.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/Detentor/Detentor.php';
+require_once '../classes/Detentor/DetentorRN.php';
+require_once '../utils/Utils.php';
+require_once '../utils/Alert.php';
+require_once '../classes/Detentor/DetentorRN.php';
+
 $utils = new Utils();
-$objPagina = new Pagina();
 $objDetentor = new Detentor();
 $objDetentorRN = new DetentorRN();
 $alert = '';
@@ -52,45 +55,40 @@ try {
         default : die('Ação [' . $_GET['action'] . '] não reconhecida pelo controlador em cadastro_detentor.php');
     }
 } catch (Exception $ex) {
-    $objPagina->processar_excecao($ex);
+    Pagina::getInstance()->processar_excecao($ex);
 }
-?>
 
-<?php Pagina::abrir_head("Cadastrar Detentor"); ?>
-<link rel="stylesheet" type="text/css" href="css/precadastros.css">
-<?php Pagina::fechar_head(); ?>
-<?php $objPagina->montar_menu_topo(); ?>
-<?= $alert ?>
-<div class="conteudo">
-    <div class="formulario">
-        <form method="POST">
-            <div class="form-row">
-                <div class="col-md-12 mb-3">
-                    <label for="label_detentor">Digite o detentor:</label>
-                    <input type="text" class="form-control" id="idDetentor" placeholder="Detentor" 
-                           onblur="validaDetentor()" name="txtDetentor" required value="<?= $objDetentor->getDetentor() ?>">
-                    <div id ="feedback_detentor"></div>
 
-                </div>
+Pagina::abrir_head("Cadastrar Detentor");
+Pagina::getInstance()->adicionar_css("precadastros");
+Pagina::getInstance()->adicionar_javascript("detentor");
+Pagina::getInstance()->fechar_head();
+Pagina::getInstance()->montar_menu_topo();
 
-            </div>  
-            <button class="btn btn-primary" type="submit" name="salvar_detentor">Salvar</button>
-        </form>
-    </div>
-</div>
-<script>
-    $(document).ready(function () {
-        setTimeout(function () {
-            $('#sucesso_bd').fadeOut(500);
-        }, 500);
-    });
-</script>
-<script src="js/detentor.js"></script>
-<script src="js/fadeOut.js"></script>
+echo $alert.  
+    Pagina::montar_topo_listar('CADASTRAR DETENTOR', 'listar_detentor', 'LISTAR DETENTORES').
+    '<div class="conteudo">
+        <div class="formulario">
+            <form method="POST">
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <label for="label_detentor">Digite o detentor:</label>
+                        <input type="text" class="form-control" id="idDetentor" placeholder="Detentor" 
+                               onblur="validaDetentor()" name="txtDetentor" 
+                               required value="'. Pagina::formatar_html($objDetentor->getDetentor()).'">
+                        <div id ="feedback_detentor"></div>
 
-<?php
-$objPagina->mostrar_excecoes();
-$objPagina->fechar_corpo();
-?>
+                    </div>
+
+                </div>  
+                <button class="btn btn-primary" type="submit" name="salvar_detentor">Salvar</button>
+            </form>
+        </div>
+    </div>';
+
+
+Pagina::getInstance()->mostrar_excecoes();
+Pagina::getInstance()->fechar_corpo();
+
 
 

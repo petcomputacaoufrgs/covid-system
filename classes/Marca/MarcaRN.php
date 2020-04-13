@@ -4,8 +4,8 @@
  *  Classe das regras de negócio da marca do paciente
  */
 
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Marca/MarcaBD.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/Marca/MarcaBD.php';
 
 class MarcaRN{
     
@@ -25,6 +25,7 @@ class MarcaRN{
         return $detentor->setMarca($strMarca);
     }
     
+        
   
     public function cadastrar(Marca $detentor) {
         try {
@@ -53,7 +54,7 @@ class MarcaRN{
             $objBanco->abrirConexao(); 
             
             $this->validarMarca($detentor,$objExcecao);   
-            $this->validarIndexMarca($detentor,$objExcecao); 
+            
                         
             $objExcecao->lancar_validacoes();
             $objMarcaBD = new MarcaBD();

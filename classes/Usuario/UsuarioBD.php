@@ -2,7 +2,7 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Banco/Banco.php';
+require_once '../classes/Banco/Banco.php';
 class UsuarioBD{
     
      
@@ -51,10 +51,26 @@ class UsuarioBD{
      public function listar(Usuario $objUsuario, Banco $objBanco) {
          try{
       
+             
             $SELECT = "SELECT * FROM tb_usuario";
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+            if($objUsuario->getMatricula() != null){
+                $WHERE .= $AND." matricula = ?";
+                $AND = ' and ';
+                 
+                $arrayBind[] = array('i',$objUsuario->getMatricula());
+            }
+            
 
+            if($WHERE != ''){
+                $WHERE = ' where '.$WHERE;
+            } 
+        
+            //echo $SELECT.$WHERE;
 
-            $arr = $objBanco->consultarSQL($SELECT);
+            $arr = $objBanco->consultarSQL($SELECT.$WHERE,$arrayBind);
 
             $array_usuario = array();
             foreach ($arr as $reg){
@@ -75,20 +91,21 @@ class UsuarioBD{
     public function consultar(Usuario $objUsuario, Banco $objBanco) {
 
         try{
-
+            //print_r($objUsuario);
             $SELECT = 'SELECT idUsuario,matricula,senha FROM tb_usuario WHERE idUsuario = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objUsuario->getIdUsuario());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
+            
+            //print_r($arr);
+            $usuario = new Usuario();
+            $usuario->setIdUsuario($arr[0]['idUsuario']);
+            $usuario->setMatricula($arr[0]['matricula']);
+            $usuario->setSenha($arr[0]['senha']);
 
-            $usuário = new Usuario();
-            $usuário->setIdUsuario($arr[0]['idUsuario']);
-            $usuário->setMatricula($arr[0]['matricula']);
-            $usuário->setSenha($arr[0]['senha']);
-
-            return $usuário;
+            return $usuario;
         } catch (Exception $ex) {
        
             throw new Excecao("Erro consultando usuário no BD.",$ex);

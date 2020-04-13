@@ -5,8 +5,19 @@
 
 class Alert{
    
+    private static $instance;
+    
+    public static  function getInstance(){
+        if(self::$instance == null){
+            self::$instance= new Alert();
+        }
+        return self::$instance;
+    }
+    
+    
+    
     public static function alert_error_cadastrar_editar(){
-        return '<div class="alert alert-warning alert-dismissible fade show" role="alert" id="alert_id">
+        return '<div class="alert alert-warning alert-dismissible fade show" role="alert" id="alert_id" >
                 <strong>Opa!</strong> Os dados foram já haviam sido cadastrados anteriormente.
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>

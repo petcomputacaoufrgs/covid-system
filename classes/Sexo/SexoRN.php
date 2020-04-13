@@ -4,8 +4,8 @@
  *  Classe das regras de negócio do tipo da amostra
  */
 
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Sexo/SexoBD.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/Sexo/SexoBD.php';
 
 class SexoRN{
     

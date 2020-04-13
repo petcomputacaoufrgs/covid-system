@@ -2,12 +2,12 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Banco/Banco.php';
+require_once '../classes/Banco/Banco.php';
 class RecursoBD{
 
     public function cadastrar(Recurso $objRecurso, Banco $objBanco) {
         try{
-            //echo $objRecurso->getRecurso();
+            
             //die("die");
             $INSERT = 'INSERT INTO tb_recurso (nome,s_n_menu,etapa) VALUES (?,?,?)';
 
@@ -35,7 +35,7 @@ class RecursoBD{
         
                 
             $arrayBind = array();
-            $arrayBind[] = array('s',$objRecurso->getRecurso());
+            $arrayBind[] = array('s',$objRecurso->getNome());
             $arrayBind[] = array('s',$objRecurso->getS_n_menu());
             $arrayBind[] = array('s',$objRecurso->getEtapa());
             $arrayBind[] = array('i',$objRecurso->getIdRecurso());
@@ -76,20 +76,21 @@ class RecursoBD{
     public function consultar(Recurso $objRecurso, Banco $objBanco) {
 
         try{
-
-            $SELECT = 'SELECT idRecurso,nome,s_n_menu FROM tb_recurso WHERE idRecurso = ?';
+            
+            $SELECT = 'SELECT * FROM tb_recurso WHERE idRecurso = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objRecurso->getIdRecurso());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
-
+            
+            
             $recurso = new Recurso();
             $recurso->setIdRecurso($arr[0]['idRecurso']);
-            $recurso->getNome($arr[0]['nome']);
-            $recurso->getS_n_menu($arr[0]['s_n_menu']);
-            $recurso->getEtapa($arr[0]['etapa']);
-
+            $recurso->setNome($arr[0]['nome']);
+            $recurso->setS_n_menu($arr[0]['s_n_menu']);
+            $recurso->setEtapa($arr[0]['etapa']);
+            
             return $recurso;
         } catch (Exception $ex) {
        

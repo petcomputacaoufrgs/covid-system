@@ -2,11 +2,12 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/TempoPermanencia/TempoPermanencia.php';
-require_once 'classes/TempoPermanencia/TempoPermanenciaRN.php';
+session_start();
+require_once '../classes/Sessao/Sessao.php';
+require_once '../classes/Pagina/Pagina.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/TempoPermanencia/TempoPermanencia.php';
+require_once '../classes/TempoPermanencia/TempoPermanenciaRN.php';
 
 $objPagina = new Pagina();
 $objTempoPermanencia = new TempoPermanencia();

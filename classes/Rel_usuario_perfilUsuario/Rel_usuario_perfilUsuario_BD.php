@@ -2,7 +2,7 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Banco/Banco.php';
+require_once '../classes/Banco/Banco.php';
 class Rel_usuario_perfilUsuario_BD{
     
      
@@ -52,13 +52,28 @@ class Rel_usuario_perfilUsuario_BD{
       
             $SELECT = "SELECT * FROM tb_rel_usuario_perfilUsuario";
 
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+            if($objRel_usuario_perfilUsuario->getIdUsuario_fk() != null){
+                $WHERE .= $AND." idUsuario_fk = ?";
+                $AND = ' and '; 
+                $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdUsuario_fk());
+            }
+            
 
-            $arr = $objBanco->consultarSQL($SELECT);
+            if($WHERE != ''){
+                $WHERE = ' where '.$WHERE;
+            } 
+        
+            //echo $SELECT.$WHERE;
 
+            $arr = $objBanco->consultarSQL($SELECT.$WHERE,$arrayBind);
+            
             $array_usuario = array();
             foreach ($arr as $reg){
                 $objRel_usuario_perfilUsuario = new Rel_usuario_perfilUsuario();
-                $objRel_usuario_perfilUsuario->setIdRel_usuario_perfilUsuario($reg['id_rel_usuario_perfilUsuario']);
+                $objRel_usuario_perfilUsuario->setId_rel_usuario_perfilUsuario($reg['id_rel_usuario_perfilUsuario']);
                 $objRel_usuario_perfilUsuario->setIdPerfilUsuario_fk($reg['idPerfilUsuario_fk']);
                 $objRel_usuario_perfilUsuario->setIdUsuario_fk($reg['idUsuario_fk']);
 
@@ -99,9 +114,10 @@ class Rel_usuario_perfilUsuario_BD{
 
         try{
             
-            $DELETE = 'DELETE FROM tb_rel_usuario_perfilUsuario WHERE id_rel_usuario_perfilUsuario = ? ';  
+            $DELETE = 'DELETE FROM tb_rel_usuario_perfilUsuario WHERE idUsuario_fk = ? AND idPerfilUsuario_fk = ?';  
             $arrayBind = array();
-            $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdRel_usuario_perfilUsuario());
+            $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdUsuario_fk());
+            $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdPerfilUsuario_fk());
             $objBanco->executarSQL($DELETE, $arrayBind);
             
         } catch (Exception $ex) {

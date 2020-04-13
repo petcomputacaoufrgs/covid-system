@@ -2,7 +2,7 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Banco/Banco.php';
+require_once '../classes/Banco/Banco.php';
 class PerfilPacienteBD{
 
     public function cadastrar(PerfilPaciente $objPerfilPaciente, Banco $objBanco) {

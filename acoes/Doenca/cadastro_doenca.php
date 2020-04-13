@@ -2,12 +2,17 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Doenca/Doenca.php';
-require_once 'classes/Doenca/DoencaRN.php';
-require_once 'utils/Utils.php';
-require_once 'utils/Alert.php';
+
+require_once '../classes/Sessao/Sessao.php';
+require_once '../classes/Pagina/Pagina.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/Doenca/Doenca.php';
+require_once '../classes/Doenca/DoencaRN.php';
+require_once '../utils/Utils.php';
+require_once '../utils/Alert.php';
+session_start();
+Sessao::getInstance()->validar();
+
 
 $utils = new Utils();
 $objPagina = new Pagina();
@@ -56,36 +61,35 @@ try{
     }
    
 } catch (Exception $ex) {
-    $objPagina->processar_excecao($ex);
+    Pagina::getInstance()->processar_excecao($ex);
 }
 
-?>
 
-<?php Pagina::abrir_head("Cadastrar Doença"); ?>
-<link rel="stylesheet" type="text/css" href="css/precadastros.css">
+Pagina::abrir_head("Cadastrar Doença");
+Pagina::getInstance()->adicionar_css("precadastros");
+Pagina::getInstance()->adicionar_javascript("doenca");
+Pagina::getInstance()->fechar_head();
+Pagina::getInstance()->montar_menu_topo();
+echo 
+     $alert.
+     Pagina::montar_topo_listar('CADASTRAR DOENÇA', 'listar_doenca', 'LISTAR DOENÇAS').
+    '<DIV class="conteudo">
+        <form method="POST">
+            <div class="form-row">
+                <div class="col-md-12 mb-3">
+                    <label for="label_doenca">Digite a doença:</label>
+                    <input type="text" class="form-control" id="idDoenca" placeholder="Doença" 
+                           onblur="validaDoenca()" name="txtDoenca" required 
+                           value="'. Pagina::formatar_html($objDoenca->getDoenca()).'">
+                    <div id ="feedback_doenca"></div>
 
-<?php Pagina::fechar_head();?>
-<?php $objPagina->montar_menu_topo();?>
-<?=$alert?>
-<DIV class="conteudo">
-    <form method="POST">
-        <div class="form-row">
-            <div class="col-md-12 mb-3">
-                <label for="label_doenca">Digite a doença:</label>
-                <input type="text" class="form-control" id="idDoenca" placeholder="Doença" 
-                       onblur="validaDoenca()" name="txtDoenca" required value="<?=$objDoenca->getDoenca()?>">
-                <div id ="feedback_doenca"></div>
-
-            </div>
-        </div>  
-        <button class="btn btn-primary" type="submit" name="salvar_doenca">Salvar</button>
-    </form>
-</DIV>
-
-<script src="js/doenca.js"></script>
-<?php 
-$objPagina->mostrar_excecoes(); 
-$objPagina->fechar_corpo(); 
-?>
+                </div>
+            </div>  
+            <button class="btn btn-primary" type="submit" name="salvar_doenca">Salvar</button>
+        </form>
+    </DIV>';
 
 
+
+Pagina::getInstance()->mostrar_excecoes();
+Pagina::getInstance()->fechar_corpo();
