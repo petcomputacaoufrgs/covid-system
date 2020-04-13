@@ -50,36 +50,6 @@ final class SexoTest extends TestCase {
         $fem2 = $rn->consultar($fem2);
         $this->assertEquals('Feminino', $fem2->getSexo());
         $this->assertEquals('FEMININO', $fem2->getIndex_sexo());
-        
-        $masc = new Sexo();
-        $masc->setSexo('Masculino  ');
-        $masc->setIndex_sexo('MASCULINO');
-        $rn->cadastrar($masc);
-        $masc2 = new Sexo();
-        $masc2->setIdSexo($masc->getIdSexo());
-        $masc2 = $rn->consultar($masc2);
-        $this->assertEquals('Masculino', $masc2->getSexo());
-        $this->assertEquals('MASCULINO', $masc2->getIndex_sexo());
-
-        $fem = new Sexo();
-        $fem->setSexo(' Feminino');
-        $fem->setIndex_sexo('FEMININO');
-        $rn->cadastrar($fem);
-        $fem2 = new Sexo();
-        $fem2->setIdSexo($fem->getIdSexo());
-        $fem2 = $rn->consultar($fem2);
-        $this->assertEquals('Feminino', $fem2->getSexo());
-        $this->assertEquals('FEMININO', $fem2->getIndex_sexo());
-
-        $erro = new Sexo();
-        $erro->setSexo('Este sexo é propositadamente e extremamente longo!!!!');
-        $this->expectException(Excecao::class);
-        $rn->cadastrar($erro);
-
-        $erro = new Sexo();
-        $erro->setSexo('');
-        $this->expectException(Excecao::class);
-        $rn->cadastrar($erro);
     }
 
     public function testAlteracaoConsulta() {

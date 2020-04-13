@@ -45,14 +45,6 @@ final class NivelPrioridadeTest extends TestCase {
         $alto2 = $rn->consultar($alto2);
         $this->assertEquals('4', $alto2->getNivel());
         
-        $baixo = new NivelPrioridade();
-        $baixo->setNivel('1   ');
-        $rn->cadastrar($baixo);
-        $baixo2 = new NivelPrioridade();
-        $baixo2->setIdNivelPrioridade($baixo->getIdNivelPrioridade());
-        $baixo2 = $rn->consultar($baixo2);
-        $this->assertEquals('1', $baixo2->getNivel());
-
         $erro = new NivelPrioridade();
         $erro->setNivel('');
         $this->expectException(Excecao::class);
