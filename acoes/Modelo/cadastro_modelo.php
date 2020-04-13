@@ -2,14 +2,18 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Modelo/Modelo.php';
-require_once 'classes/Modelo/ModeloRN.php';
-require_once 'utils/Utils.php';
-require_once 'utils/Alert.php';
+
+session_start();
+require_once '../classes/Sessao/Sessao.php';
+require_once '../classes/Pagina/Pagina.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/Modelo/Modelo.php';
+require_once '../classes/Modelo/ModeloRN.php';
+require_once '../utils/Utils.php';
+require_once '../utils/Alert.php';
+
 $utils = new Utils();
-$objPagina = new Pagina();
+
 $objModelo = new Modelo();
 $objModeloRN = new ModeloRN();
 $alert = '';
@@ -54,39 +58,38 @@ try {
         default : die('Ação [' . $_GET['action'] . '] não reconhecida pelo controlador em cadastro_modelo.php');
     }
 } catch (Exception $ex) {
-    $objPagina->processar_excecao($ex);
+    Pagina::getInstance()->processar_excecao($ex);
 }
-?>
 
-<?php Pagina::abrir_head("Cadastrar Modelo"); ?>
-<link rel="stylesheet" type="text/css" href="css/precadastros.css">
-<?php Pagina::fechar_head(); ?>
-<?php $objPagina->montar_menu_topo(); ?>
-<?= $alert ?>
 
-<div class="conteudo">
-    <div class="formulario">
-        <form method="POST">
-            <div class="form-row">
-                <div class="col-md-12 mb-3">
-                    <label for="label_modelo">Digite o modelo:</label>
-                    <input type="text" class="form-control" id="idModelo" placeholder="Modelo" 
-                           onblur="validaModelo()" name="txtModelo" required value="<?= $objModelo->getModelo() ?>">
-                    <div id ="feedback_modelo"></div>
+Pagina::getInstance()->abrir_head("Cadastrar Modelo");
+Pagina::getInstance()->adicionar_css("precadastros");
+Pagina::getInstance()->adicionar_javascript("modelo");
+Pagina::getInstance()->fechar_head();
+Pagina::getInstance()->montar_menu_topo();
 
-                </div>
+    echo  $alert.
+          Pagina::montar_topo_listar('CADASTRAR MODELO', 'listar_modelo', 'LISTAR MODELO').
+        '<div class="conteudo">
+            <div class="formulario">
+                <form method="POST">
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="label_modelo">Digite o modelo:</label>
+                            <input type="text" class="form-control" id="idModelo" placeholder="Modelo" 
+                                   onblur="validaModelo()" name="txtModelo" required value="'. Pagina::formatar_html($objModelo->getModelo()).'">
+                            <div id ="feedback_modelo"></div>
 
-            </div>  
-            <button class="btn btn-primary" type="submit" name="salvar_modelo">Salvar</button>
-        </form>
-    </div>
-</div>
-        <script src="js/modelo.js"></script>
-        <script src="js/fadeOut.js"></script>
+                        </div>
 
-<?php
-$objPagina->mostrar_excecoes();
-$objPagina->fechar_corpo();
-?>
+                    </div>  
+                    <button class="btn btn-primary" type="submit" name="salvar_modelo">Salvar</button>
+                </form>
+            </div>
+        </div>';
+      
+Pagina::getInstance()->mostrar_excecoes();
+Pagina::getInstance()->fechar_corpo();
+
 
 

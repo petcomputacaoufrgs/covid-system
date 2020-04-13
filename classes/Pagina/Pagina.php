@@ -3,15 +3,48 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
+require_once '../classes/Sessao/Sessao.php';
 
 class Pagina {
 
     private $array_validacoes;
-
+    private static $instance;
+    
+    public static  function getInstance(){
+        if(self::$instance == null){
+            self::$instance= new Pagina();
+        }
+        return self::$instance;
+    }
+    
     function __construct() {
         $this->array_validacoes = array();
     }
 
+    
+    
+    public function adicionar_javascript($strArquivo){
+        $strVersao ='';
+        if(Configuracao::getInstance()->getValor('producao')){
+            $strVersao =Configuracao::getInstance()->getValor('versao');
+        }else{
+           $strVersao = rand(); 
+        }
+        
+        echo '<script type="text/javascript" src="js/'.$strArquivo.'.js?'.$strVersao.'"></script>';
+    }
+    
+    public function adicionar_css($strArquivo){
+        $strVersao ='';
+        if(Configuracao::getInstance()->getValor('producao')){
+            $strVersao =Configuracao::getInstance()->getValor('versao');
+        }else{
+           $strVersao = rand(); 
+        }
+
+        echo '<link rel="stylesheet" type="text/css" href="css/'.$strArquivo.'.css?'.$strVersao.'">';
+    }
+    
     public function processar_excecao(Exception $e) {
         if ($e instanceof Excecao && $e->possui_validacoes()) {
             $this->array_validacoes = $e->get_validacoes();
@@ -24,7 +57,7 @@ class Pagina {
     public function montar_menu_topo() {
         //echo '<a href="controlador.php?action=tela_inicial">TELA INICIAL</a>';
         echo'<hearder >
-            <a href="controlador.php?action=tela_inicial" ><img src="img/header.png" class="HeaderImg" style="height:20%; width: 100%;"></a>
+            <a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" ><img src="img/header.png" class="HeaderImg" style="height:20%; width: 100%;"></a>
             
            <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <div class="mx-auto d-sm-flex d-block flex-sm-nowrap">
@@ -35,17 +68,23 @@ class Pagina {
                 <div class="collapse navbar-collapse text-center" id="navbarsExample11">
                     <ul class="navbar-nav">
                         <li class="nav-item active">
-                            <a class="nav-link" href="#">Link</a>
+                            <a class="nav-link" href="#">Cadastro Amostra</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
+                            <a class="nav-link" href="#">Preparo e Armazenamento</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
+                            <a class="nav-link" href="#">Extração</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">RTPCR</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Laudo</a>
                         </li>
                          <li class="nav-item divisor"></li>
                         <li class="nav-item">
-                            <a class="nav-link disabled" href="#">usuário logado</a>
+                            <a class="nav-link disabled" href="#">Usuário logado:  '.Sessao::getInstance()->getMatricula().'</a>
                         </li>
                     </ul>
                 </div>
@@ -56,37 +95,9 @@ class Pagina {
           </hearder>';
     }
 
-    public function montar_menu_topo_precadastro($listar) {
-        //echo '<a href="controlador.php?action=tela_inicial">TELA INICIAL</a>';
-        echo"<nav class=\"navbar-expand-md navbar-light  navbar-transparent \" style=\"height:60px;position:relative;margin-top:120px;background-color:rgba(0,0,0,0.2);padding-top:20px;\">
-            <!--<a href=\"controlador.php?action=tela_inicial\"><img src=\"img/header.png\" class=\"HeaderImg\" style=\" height:20%; width: 100%;\"></a> -->
-                                    
-        <div class=\"container\">
-          <button class=\"navbar-toggler\" data-toggle=\"collapse\" data-target=\"#nav-principal\">
-            <i class=\"fas fa-bars text-white\"></i>
-          </button>
+    
 
-          <div class=\"collapse navbar-collapse\">
-            <ul class=\"navbar-nav ml-auto\">
-              <li class=\"nav-item\">
-                <a href=\"controlador.php?action=tela_inicial\" class=\"nav-link\">Tela Inicial</a>
-              </li>
-               <li class=\"nav-item\">
-                <a href=\"' . $listar . '\" class=\"nav-link\">Listar</a>
-              </li>
-              
-               <li class=\"nav-item divisor\">
-               </li>
-               <li class=\"nav-item\">
-                <a href=\"\" class=\"nav-link\">Usuário logado</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>";
-    }
-
-    public static function abrir_head($titulo) {
+    public  function abrir_head($titulo) {
         echo '<html>
                     <head>
                         <meta charset="utf-8">
@@ -179,12 +190,12 @@ class Pagina {
         ;
     }
 
-    public static function fechar_head() {
+    public  function fechar_head() {
         echo "</head>
                     
-                     <!--   <a href=\"controlador.php?action=tela_inicial\"><img src=\"img/header.png\" class=\"HeaderImg\" style=\" height:20%; width: 100%;\"></a>-->
-                      
-                    <body>";
+            <!--   <a href=\"controlador.php?action=tela_inicial\"><img src=\"img/header.png\" class=\"HeaderImg\" style=\" height:20%; width: 100%;\"></a>-->
+
+           <body>";
     }
 
     public function mostrar_excecoes() {
@@ -227,5 +238,23 @@ class Pagina {
         echo '     </body>
                 </html>';
     }
-
+    
+    public static function formatar_html($strValor){
+        return htmlentities($strValor,ENT_QUOTES);
+    }
+    
+    public static function montar_topo_listar($titulo,$link,$novo) {
+        echo '<div class="topo_listar">
+                <div class="row">
+                    <div class="col-md-9"><h3>'.$titulo.'</h3></div>
+                    <div class="col-md-3">';
+                      if(Sessao::getInstance()->verificar_permissao($link)){ //só aparece o botão de cadastro para alguns perfis
+                          echo '<a class="btn btn-primary " 
+                            href="' . Sessao::getInstance()->assinar_link('controlador.php?action='.$link). '">'.$novo.'</a> ';
+                      }
+                    echo '</div>
+                </div>
+            </div>';
+                
+    }
 }

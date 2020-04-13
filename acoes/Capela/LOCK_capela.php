@@ -1,12 +1,15 @@
 <?php
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Capela/Capela.php';
-require_once 'classes/Capela/CapelaRN.php';
-require_once 'utils/Utils.php';
-require_once 'utils/Alert.php';
+
+session_start();
+require_once '../classes/Sessao/Sessao.php';
+require_once '../classes/Pagina/Pagina.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/Capela/Capela.php';
+require_once '../classes/Capela/CapelaRN.php';
+require_once '../utils/Utils.php';
+require_once '../utils/Alert.php';
+
 $utils = new Utils();
-$objPagina = new Pagina();
 $objCapela = new Capela();
 $objCapelaRN = new CapelaRN();
 $alert = '';
@@ -27,25 +30,19 @@ if(isset($_POST['lock_capela'])){
 
 
 
-?>
 
+Pagina::abrir_head("LOCK capela");
+Pagina::getInstance()->adicionar_css("precadastros");
+Pagina::getInstance()->fechar_head();
+Pagina::getInstance()->montar_menu_topo();
 
-<?php Pagina::abrir_head("LOCK_Capela"); ?>
-<link rel="stylesheet" type="text/css" href="css/precadastros.css">
-<?php Pagina::fechar_head();?>
-<?php $objPagina->montar_menu_topo();?>
-<?=$alert?>
-<div class="conteudo">
-    <form method="POST">
-        
-        <button class="btn btn-primary" type="submit" name="lock_capela">LOCK</button>
-    </form>
-</div>
+echo $alert.
+        '<div class="conteudo">
+            <form method="POST">
 
-<script src="js/perfilUsuario.js"></script>
-<script src="js/fadeOut.js"></script>
+                <button class="btn btn-primary" type="submit" name="lock_capela">LOCK</button>
+            </form>
+        </div>';
 
-<?php 
-$objPagina->mostrar_excecoes(); 
-$objPagina->fechar_corpo(); 
-?>
+Pagina::getInstance()->mostrar_excecoes();
+Pagina::getInstance()->fechar_corpo();

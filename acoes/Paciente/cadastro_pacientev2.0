@@ -2,6 +2,9 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
+
+session_start();
+require_once '../classes/Sessao/Sessao.php';
 require_once 'classes/Pagina/Pagina.php';
 require_once 'classes/Excecao/Excecao.php';
 require_once 'classes/Paciente/Paciente.php';

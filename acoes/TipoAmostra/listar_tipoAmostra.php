@@ -2,10 +2,12 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/TipoAmostra/TipoAmostra.php';
-require_once 'classes/TipoAmostra/TipoAmostraRN.php';
+session_start();
+require_once '../classes/Sessao/Sessao.php';
+require_once '../classes/Pagina/Pagina.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/TipoAmostra/TipoAmostra.php';
+require_once '../classes/TipoAmostra/TipoAmostraRN.php';
 
 $objPagina = new Pagina();
 $objTipoAmostra = new TipoAmostra();

@@ -1,10 +1,23 @@
 <?php 
+session_start();
+require_once '../classes/Sessao/Sessao.php';
 require_once '../classes/Pagina/Pagina.php';
 
-$objPagina = new Pagina();
-Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico de COVID-19"); ?>
+require_once '../classes/Usuario/Usuario.php';
+require_once '../classes/Usuario/UsuarioRN.php';
 
-      	<style>
+Sessao::getInstance()->validar();
+
+$objUsuario = new Usuario();
+$objUsuarioRN = new UsuarioRN();
+$objUsuario->setIdUsuario(Sessao::getInstance()->getIdUsuario());
+$objUsuario = $objUsuarioRN->consultar($objUsuario);
+
+
+Pagina::getInstance()->abrir_head("Login - Processo de tratamento de amostras para diagnóstico de COVID-19"); 
+Pagina::getInstance()->adicionar_css("precadastros"); ?>
+      	
+<style>
 	
         .conteudo{
             background-color: white;
@@ -47,73 +60,183 @@ Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico
           }
 
         
-	</style>
-<?php Pagina::fechar_head(); ?>
-<?php $objPagina->montar_menu_topo();?>        
+	</style> 
+<?php Pagina::getInstance()->fechar_head(); 
+      Pagina::getInstance()->montar_menu_topo();
+?>        
     
     <body>
         
-
         
-        
-        <!-- PRINCIPAIS -->
-       <!-- <div class="conteudo">
+        <div class="conjunto_itens">
           <div class="row">
-             <div class="col-md-2"><h1>TELAS PRINCIPAIS</h1></div>
-             <div class="col-md-2">
-                <h4>CADASTRAR AMOSTRA</h4>
-                <ul class="navbar-nav">
-                  <li><a href="controlador.php?action=#">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=#">Listar</a></li>
-                </ul>               
-             </div>
               
-              <div class="col-md-2">
-                <h4>ARMAZENAR AMOSTRA</h4>
-                <ul class="navbar-nav">
-                  <li><a href="controlador.php?action=#">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=#">Listar</a></li>
-                </ul>               
-             </div>
+              <?php 
+                    // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+                    if(Sessao::getInstance()->verificar_permissao('listar_amostra')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_amostra').'">AMOSTRA</a>'
+                                  . '</div>';
+                    } 
+              ?>
               
-              <div class="col-md-2">
-                <h4>EXTRAIR AMOSTRA</h4>
-                <ul class="navbar-nav">
-                  <li><a href="controlador.php?action=#">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=#">Listar</a></li>
-                </ul>               
-             </div>
+              <?php 
+                    if(Sessao::getInstance()->verificar_permissao('listar_capela')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_capela').'">CAPELA</a>'
+                                  . '</div>';
+                    } 
+              ?>
               
-              <div class="col-md-2">
-                <h4>RTPCR AMOSTRA</h4>
-                <ul class="navbar-nav">
-                  <li><a href="controlador.php?action=#">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=#">Listar</a></li>
-                </ul>               
-             </div>
+               <?php 
+                    if(Sessao::getInstance()->verificar_permissao('listar_detentor')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_detentor').'">DETENTOR</a>'
+                                  . '</div>';
+                    } 
+              ?>
               
-              <div class="col-md-2">
-                <h4>LAUDO AMOSTRA</h4>
-                <ul class="navbar-nav">
-                  <li><a href="controlador.php?action=#">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=#">Listar</a></li>
-                </ul>               
-             </div>
+              <?php 
+                    if(Sessao::getInstance()->verificar_permissao('listar_doenca')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_doenca').'">DOENÇA</a>'
+                                  . '</div>';
+                    } 
+              ?>
+              
+              <?php 
+                    // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+                    if(Sessao::getInstance()->verificar_permissao('listar_equipamento')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_equipamento').'">EQUIPAMENTO</a>'
+                                  . '</div>';
+                    } 
+              ?>
              
-            </div>
-        </div> -->
+              <?php 
+                    if(Sessao::getInstance()->verificar_permissao('listar_marca')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_marca').'">MARCA</a>'
+                                  . '</div>';
+                    } 
+              ?>
+               
+          </div>
+        </div>
+        
+        <div class="conjunto_itens">
+          <div class="row">
+              
+                <?php 
+                    if(Sessao::getInstance()->verificar_permissao('listar_modelo')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_modelo').'">MODELO</a>'
+                                  . '</div>';
+                    } 
+              ?>
+             
+              
+               <?php 
+                    // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+                    if(Sessao::getInstance()->verificar_permissao('listar_nivelPrioridade')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_nivelPrioridade').'">NÍVEL PRIORIDADE</a>'
+                                  . '</div>';
+                    } 
+              ?>
+              
+              <?php 
+                    if(Sessao::getInstance()->verificar_permissao('listar_paciente')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_paciente').'">PACIENTE</a>'
+                                  . '</div>';
+                    } 
+              ?>
+              
+             
+              
+              <?php 
+                    if(Sessao::getInstance()->verificar_permissao('listar_perfilPaciente')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_perfilPaciente').'">PERFIL PACIENTE</a>'
+                                  . '</div>';
+                    } 
+              ?>
+              
+             
+             
+              
+              
+              
+              <?php 
+                    if(Sessao::getInstance()->verificar_permissao('listar_rel_perfilUsuario_recurso')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_rel_perfilUsuario_recurso').'">PERFIL USUÁRIO + RECURSO</a>'
+                                  . '</div>';
+                    } 
+              ?>
+              
+               <?php 
+                    if(Sessao::getInstance()->verificar_permissao('listar_usuario_perfilUsuario')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_usuario_perfilUsuario').'">USUÁRIO + PERFIL</a>'
+                                  . '</div>';
+                    } 
+              ?>
+          </div>
+        </div>
+        
+        
+        <div class="conjunto_itens">
+          <div class="row">
+              
+             
+              
+              <?php 
+                    if(Sessao::getInstance()->verificar_permissao('listar_recurso')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_recurso').'">RECURSO</a>'
+                                  . '</div>';
+                    } 
+              ?>
+              
+               
+               <?php 
+                    if(Sessao::getInstance()->verificar_permissao('listar_sexoPaciente')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_sexoPaciente').'">SEXO PACIENTE</a>'
+                                  . '</div>';
+                    } 
+              ?>
+              
+               
+              <?php 
+                    if(Sessao::getInstance()->verificar_permissao('listar_usuario')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_usuario').'">USUÁRIO</a>'
+                                  . '</div>';
+                    } 
+              ?>
+             <?php 
+                    if(Sessao::getInstance()->verificar_permissao('listar_perfilUsuario')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_perfilUsuario').'">PERFIL USUÁRIO</a>'
+                                  . '</div>';
+                    } 
+              ?>
+             
+          </div>
+        </div>
+        
+        
+             
+        
+        
+        
         
         <div class="conteudo">
-          <div class="row">
-              <div class="col-md-2"><h1>AMOSTRA</h1></div>
-              <div class="col-md-2">
-                <h4>AMOSTRA</h4>
-                <ul class="navbar-nav">
-                   <li><a href="controlador.php?action=cadastrar_amostra">Cadastrar</a></li>
-                   <li><a href="controlador.php?action=listar_amostra">Listar</a></li>
-                </ul>               
-             </div>
-
+                <div class="row">        
+                       
              <div class="col-md-2">
                 <h4>TIPO DE AMOSTRA</h4>
                 <ul class="navbar-nav">
@@ -122,163 +245,7 @@ Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico
                 </ul>               
              </div>
               
-                           
-              
-            <div class="col-md-2">
-                <h4>DOENÇA</h4>
-                <ul class="navbar-nav">
-                  <li><a href="controlador.php?action=cadastrar_doenca">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=listar_doenca">Listar</a></li>
-                </ul>               
-             </div>
-              
-              
-              
               <div class="col-md-2">
-                <h4>NÍVEL DE PRIORIDADE</h4>
-                <ul class="navbar-nav">
-                  <li><a href="controlador.php?action=cadastrar_nivelPrioridade">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=listar_nivelPrioridade">Listar</a></li>
-                </ul>               
-             </div>
-              
-              <!--<div class="col-md-2">
-                <h4>...</h4>
-                <ul class="navbar-nav">
-                  <li><a href="controlador.php?action=#">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=#">Listar</a></li>
-                </ul>               
-             </div> -->
-             
-            </div>
-        </div>
-        
-         <div class="conteudo">
-          <div class="row">
-              <div class="col-md-2"><h1>PACIENTE</h1></div>
-              <div class="col-md-2">
-                <h4>PACIENTES</h4>
-                <ul class="navbar-nav">
-                  <li><a href="controlador.php?action=cadastrar_paciente">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=listar_paciente">Listar</a></li>
-                </ul>               
-             </div>
-             
-                           
-              
-              <div class="col-md-2">
-                <h4>SEXO PACIENTES</h4>
-                <ul class="navbar-nav">
-                  <li><a href="controlador.php?action=cadastrar_sexoPaciente">Cadastrar</a></li>
-                <li><a href="controlador.php?action=listar_sexoPaciente">Listar</a></li>
-                </ul>               
-             </div>
-              
-              
-              
-              <div class="col-md-2">
-                <h4>PERFIL PACIENTE</h4>
-                <ul class="navbar-nav">
-                  <li><a href="controlador.php?action=cadastrar_perfilPaciente">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=listar_perfilPaciente">Listar</a></li>
-                </ul>               
-             </div>
-              
-              
-             
-            </div>
-        </div>
-          
-          
-        
-        <div class="conteudo">
-          <div class="row">
-              <div class="col-md-2"><h1>EQUIPAMENTO</h1></div>
-              <div class="col-md-2">
-                <h4>EQUIPAMENTO</h4>
-                <ul class="navbar-nav">
-                 <li><a href="controlador.php?action=cadastrar_equipamento">Cadastrar</a></li>
-                <li><a href="controlador.php?action=listar_equipamento">Listar</a></li>
-                </ul>               
-             </div>
-             
-                           
-              
-              <div class="col-md-2">
-                <h4>MARCA</h4>
-                <ul class="navbar-nav">
-                 <li><a href="controlador.php?action=cadastrar_marca">Cadastrar</a></li>
-                <li><a href="controlador.php?action=listar_marca">Listar</a></li>
-                </ul>               
-             </div>
-              
-              
-              
-              <div class="col-md-2">
-                <h4>MODELO</h4>
-                <ul class="navbar-nav">
-                   <li><a href="controlador.php?action=cadastrar_modelo">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=listar_modelo">Listar</a></li>
-                </ul>               
-             </div>
-              
-               <div class="col-md-2">
-                <h4>DETENTOR</h4>
-                <ul class="navbar-nav">
-                 <li><a href="controlador.php?action=cadastrar_detentor">Cadastrar</a></li>
-                <li><a href="controlador.php?action=listar_detentor">Listar</a></li>
-                </ul>               
-             </div>
-             
-            </div>
-        </div>
-        
-        
-         <div class="conteudo">
-          <div class="row">
-              <div class="col-md-2"><h1>USUÁRIO</h1></div>
-              <div class="col-md-2">
-                <h4>USUÁRIO</h4>
-                <ul class="navbar-nav">
-                    <li><a href="controlador.php?action=cadastrar_usuario">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=listar_usuario">Listar</a></li>
-                </ul>               
-             </div>
-             
-                           
-              
-              <div class="col-md-2">
-                <h4>RECURSO</h4>
-                <ul class="navbar-nav">
-                    <li><a href="controlador.php?action=cadastrar_recurso">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=listar_recurso">Listar</a></li>
-                </ul>               
-             </div>
-              
-              <div class="col-md-2">
-                <h4>PERFIS USUÁRIO</h4>
-                <ul class="navbar-nav">
-                   <li><a href="controlador.php?action=cadastrar_perfilUsuario">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=listar_perfilUsuario">Listar</a></li>
-                </ul>               
-             </div>
-              
-              <div class="col-md-2">
-                <h4>USUÁRIO + PERFIL + RECURSO </h4>
-                <ul class="navbar-nav">
-                   <li><a href="controlador.php?action=cadastrar_rel_usuario_perfil_recurso">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=listar_rel_usuario_perfil_recurso">Listar</a></li>
-                </ul>               
-             </div>
-              
-                            
-            </div>
-        </div>
-        
-        <div class="conteudo">
-          <div class="row">
-              <div class="col-md-3"><h1>ARMAZENAMENTO</h1></div>
-                <div class="col-md-2">
                 <h4>LOCAL ARMAZENAMENTO</h4>
                 <ul class="navbar-nav">
                     <li><a href="controlador.php?action=cadastrar_localArmazenamento">Cadastrar</a></li>
@@ -292,32 +259,12 @@ Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico
                     <li><a href="controlador.php?action=listar_tipoLocalArmazenamento">Listar</a></li>
                 </ul>               
              </div>
-              
-               <div class="col-md-2">
-                <h4>CAPELA</h4>
-                <ul class="navbar-nav">
-                    <li><a href="controlador.php?action=cadastrar_capela">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=listar_capela">Listar</a></li>
-                    <li><a href="controlador.php?action=bloquear_capela">Bloquear</a></li>
-                </ul>               
-             </div>
+         
              
-                           
-              
-             
-              
-              
             </div>
         </div>
+          
         
-           <li><a href="controlador.php?action=recepcionar_amostra">Etapa Recepção Amostra</a></li>
-        <li><a href="controlador.php?action=cadastrar_amostra_localArmazenamento">Preparação e Armazenamento</a></li>
-        <li><a href="controlador.php?action=extrair_amostra">Etapa Extração</a></li>
-        <li><a href="controlador.php?action=exibir_laudo">Etapa Laudo</a></li>    
-        
-        
-        
-        
+<?php
+    Pagina::getInstance()->fechar_corpo();
 
-    <?php
-    $objPagina->fechar_corpo();

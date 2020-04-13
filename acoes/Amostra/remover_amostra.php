@@ -2,12 +2,14 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-    require_once 'classes/Pagina/Pagina.php';
-    require_once 'classes/Excecao/Excecao.php';
-    require_once 'classes/Amostra/Amostra.php';
-    require_once 'classes/Amostra/AmostraRN.php';
+    session_start();
+    require_once '../classes/Sessao/Sessao.php';
+    require_once '../classes/Pagina/Pagina.php';
+    require_once '../classes/Excecao/Excecao.php';
+    require_once '../classes/Amostra/Amostra.php';
+    require_once '../classes/Amostra/AmostraRN.php';
     
-    $objPagina = new Pagina();
+       
     $objAmostra = new Amostra();
     $objAmostraRN = new AmostraRN();
     try{
@@ -15,9 +17,9 @@
         $objAmostra->setIdAmostra($_GET['idAmostra']);
         $objAmostraRN->remover($objAmostra);
 
-        header('Location: controlador.php?action=listar_amostra');
+        header('Location: '. Sessao::getInstance()->assinar_link('controlador.php?action=listar_amostra'));
+        die();
     } catch (Exception $ex) {
-        $objPagina->processar_excecao($ex);
+        Pagina::getInstance()->processar_excecao($ex);
     }
 
-?>

@@ -4,11 +4,15 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
+//require_once __DIR__ . '/../vendor/autoload.php';
 
 switch ($_GET['action']):
-    case 'tela_inicial':
+    case 'principal':
         require_once 'index.php';
+        break;
+    
+    case 'login':
+        require_once 'Login.php';
         break;
     
     
@@ -315,6 +319,33 @@ switch ($_GET['action']):
         require_once '../acoes/UsuarioPerfilRecurso/remover_upr.php';
         break;
     
+    /* PERFIL USUÁRIO + RECURSO */
+    case 'cadastrar_rel_perfilUsuario_recurso':
+    case 'editar_rel_perfilUsuario_recurso':
+        require_once '../acoes/PerfilRecurso/cadastro_perfilRecurso.php';
+        break;
+    
+    case 'listar_rel_perfilUsuario_recurso':
+        require_once '../acoes/PerfilRecurso/listar_perfilRecurso.php';
+        break;
+    
+    case 'remover_rel_perfilUsuario_recurso':
+        require_once '../acoes/PerfilRecurso/remover_perfilRecurso.php';
+        break;
+    
+    /* USUÁRIO + PERFIL USUÁRIO  */
+    case 'cadastrar_usuario_perfilUsuario':
+    case 'editar_usuario_perfilUsuario':
+        require_once '../acoes/UsuarioPerfil/cadastro_usuarioPerfil.php';
+        break;
+    
+    case 'listar_usuario_perfilUsuario':
+        require_once '../acoes/UsuarioPerfil/listar_usuarioPerfil.php';
+        break;
+    
+    case 'remover_usuario_perfilUsuario':
+        require_once '../acoes/UsuarioPerfil/remover_usuarioPerfil.php';
+        break;
     
     default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador geral.');
 endswitch;

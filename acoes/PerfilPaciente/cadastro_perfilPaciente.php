@@ -2,14 +2,16 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/PerfilPaciente/PerfilPaciente.php';
-require_once 'classes/PerfilPaciente/PerfilPacienteRN.php';
-require_once 'utils/Utils.php';
-require_once 'utils/Alert.php';
+session_start();
+require_once '../classes/Sessao/Sessao.php';
+require_once '../classes/Pagina/Pagina.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/PerfilPaciente/PerfilPaciente.php';
+require_once '../classes/PerfilPaciente/PerfilPacienteRN.php';
+require_once '../utils/Utils.php';
+require_once '../utils/Alert.php';
+
 $utils = new Utils();
-$objPagina = new Pagina();
 $objPerfilPaciente = new PerfilPaciente();
 $objPerfilPacienteRN = new PerfilPacienteRN();
 
@@ -55,37 +57,36 @@ try{
     }
    
 } catch (Exception $ex) {
-    $objPagina->processar_excecao($ex);
+    Pagina::getInstance()->processar_excecao($ex);
 }
 
-?>
 
-<?php Pagina::abrir_head("Cadastrar Perfil do paciente"); ?>
-<link rel="stylesheet" type="text/css" href="css/precadastros.css">
-<?php Pagina::fechar_head();?>
-<?php $objPagina->montar_menu_topo();?>
+Pagina::abrir_head("Cadastrar Perfil Paciente");
+Pagina::getInstance()->adicionar_css("precadastros");
+Pagina::getInstance()->adicionar_javascript("perfilPaciente");
+Pagina::getInstance()->fechar_head();
+Pagina::getInstance()->montar_menu_topo();
 
-<?=$alert?>
-<DIV class="conteudo">
-<form method="POST">
-    <div class="form-row">
-        <div class="col-md-12 mb-3">
-            <label for="label_perfilPaciente">Digite o perfil do paciente:</label>
-            <input type="text" class="form-control" id="idPerfilPaciente" placeholder="Perfil do paciente" 
-                   onblur="validaPerfilPaciente()" name="txtPerfilPaciente" required value="<?=$objPerfilPaciente->getPerfil()?>">
-            <div id ="feedback_perfilPaciente"></div>
+echo $alert.
+     Pagina::montar_topo_listar('CADASTRAR PERFIL PACIENTE', 'listar_perfilPaciente', 'LISTAR PERFIL PACIENTE').
+        '<DIV class="conteudo">
+            <form method="POST">
+                <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                        <label for="label_perfilPaciente">Digite o perfil do paciente:</label>
+                        <input type="text" class="form-control" id="idPerfilPaciente" placeholder="Perfil do paciente" 
+                               onblur="validaPerfilPaciente()" name="txtPerfilPaciente" 
+                               required value="'. Pagina::formatar_html($objPerfilPaciente->getPerfil()).'">
+                        <div id ="feedback_perfilPaciente"></div>
 
-        </div>
-    </div>  
-    <button class="btn btn-primary" type="submit" name="salvar_perfilPaciente">Salvar</button>
-</form>
-</DIV>
-<script src="js/perfilPaciente.js"></script>
-<script src="js/fadeOut.js"></script>
+                    </div>
+                </div>  
+                <button class="btn btn-primary" type="submit" name="salvar_perfilPaciente">Salvar</button>
+            </form>
+        </DIV>';
 
-<?php 
-$objPagina->mostrar_excecoes(); 
-$objPagina->fechar_corpo(); 
-?>
+Pagina::getInstance()->mostrar_excecoes(); 
+Pagina::getInstance()->fechar_corpo(); 
+
 
 

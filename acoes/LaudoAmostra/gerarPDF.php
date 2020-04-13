@@ -1,4 +1,6 @@
 <?php
+session_start();
+require_once '../classes/Sessao/Sessao.php';
 require 'C:\Users\Carine\vendor\autoload.php';
 //$mpdf = new \Mpdf\Mpdf();
 

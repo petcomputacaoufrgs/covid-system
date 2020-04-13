@@ -2,7 +2,7 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Banco/Banco.php';
+require_once '../classes/Banco/Banco.php';
 class AmostraBD{
 
     public function cadastrar(Amostra $objAmostra, Banco $objBanco) {

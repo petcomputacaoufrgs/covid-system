@@ -4,8 +4,8 @@
  *  Classe das regras de negócio do usuário do paciente
  */
 
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Usuario/UsuarioBD.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/Usuario/UsuarioBD.php';
 
 class UsuarioRN{
     

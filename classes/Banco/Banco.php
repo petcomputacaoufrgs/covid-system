@@ -5,26 +5,36 @@
  */
 
 //require_once '../Excecao/Excecao.php';
+require_once '../classes/Configuracao.php';
 class Banco {
 
-    private $host = "db2.inf.ufrgs.br";
-    private $dbUsername = "covid19_rtpcr";
-    private $dbPassword = "tu4ei%PeaEe?p2Oew3Gei";
-    private $dbName = "covid19_rtpcr";
     private $conn;
 
     public function abrirConexao() {
         try {
-            $this->conn = mysqli_init();
-            if (!$this->conn) {
-                throw new Exception("Erro inicializando conexão com o banco de dados.");
+            
+            $array_config = Configuracao::getInstance()->getValor('banco');
+            
+            if(Configuracao::getInstance()->getValor('producao')){
+                
+                $this->conn = mysqli_init();
+                if (!$this->conn) {
+                    throw new Exception("Erro inicializando conexão com o banco de dados.");
+                }
+
+                //	mysqli_ssl_set ( $this->conn , null,null,null,null,null);
+                //$this->conn = mysqli_real_connect("db2.inf.ufrgs.br","covid19_rtpcr", "tu4ei%PeaEe?p2Oew3Gei", "covid19_rtpcr");
+
+                mysqli_real_connect($this->conn, $array_config['servidor'], $array_config['usuario'], $array_config['senha'], $array_config['nome'], null, null, MYSQLI_CLIENT_SSL);
+            }else{
+
+                $this->conn = mysqli_connect($array_config['servidor'], $array_config['usuario'], $array_config['senha'], $array_config['nome']);
+                if (!mysqli_set_charset($this->conn, "utf8")) {
+                    printf("Error loading character set utf8: %s\n", mysqli_error($this->conn));
+                    exit();
+                }
             }
-
-            //	mysqli_ssl_set ( $this->conn , null,null,null,null,null);
-            //$this->conn = mysqli_real_connect("db2.inf.ufrgs.br","covid19_rtpcr", "tu4ei%PeaEe?p2Oew3Gei", "covid19_rtpcr");
-
-            mysqli_real_connect($this->conn, $this->host, $this->dbUsername, $this->dbPassword, $this->dbName, null, null, MYSQLI_CLIENT_SSL);
-
+            
             if (mysqli_connect_error()) {
                 throw new Exception('Erro abrindo conexÃ£o com o banco de dados:' . mysqli_connect_error()); // die('Connect Error('.mysqli_connect_errno().')'.mysqli_connect_errno());
             }

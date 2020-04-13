@@ -2,11 +2,14 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Recurso/Recurso.php';
-require_once 'classes/Recurso/RecursoRN.php';
-require_once 'utils/Alert.php';
+
+session_start();
+require_once '../classes/Sessao/Sessao.php';
+require_once '../classes/Pagina/Pagina.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/Recurso/Recurso.php';
+require_once '../classes/Recurso/RecursoRN.php';
+require_once '../utils/Alert.php';
 $objPagina = new Pagina();
 $objRecurso = new Recurso();
 $objRecursoRN = new RecursoRN();
@@ -16,7 +19,7 @@ try{
     switch($_GET['action']){
         case 'cadastrar_recurso':
             if(isset($_POST['salvar_recurso'])){
-                $objRecurso->setNome(mb_strtolower($_POST['txtNome'],'utf-8'));
+                $objRecurso->setNome($_POST['txtNome']);
                 $objRecurso->setS_n_menu( mb_strtolower($_POST['txtSN'],'utf-8'));
                 $objRecurso->setEtapa(mb_strtoupper($_POST['txtEtapa'],'utf-8'));
                 
@@ -42,8 +45,8 @@ try{
             
              if(isset($_POST['salvar_recurso'])){ //se enviou o formulário com as alterações
                 $objRecurso->setIdRecurso($_GET['idRecurso']);
-                $objRecurso->setNome( mb_strtolower($_POST['txtNome'],'utf-8'));
-                $objRecurso->setS_n_menu( mb_strtolower($_POST['txtSN'],'utf-8'));
+                $objRecurso->setNome($_POST['txtNome']);
+                $objRecurso->setS_n_menu( strtolower($_POST['txtSN']));
                 $objRecurso->setEtapa(mb_strtoupper($_POST['txtEtapa'],'utf-8'));
                 $arr_recursos = $objRecursoRN->validar_cadastro($objRecurso);
                 if(empty($arr_recursos)){

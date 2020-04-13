@@ -2,12 +2,14 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Usuario/Usuario.php';
-require_once 'classes/Usuario/UsuarioRN.php';
-require_once 'utils/Utils.php';
-require_once 'utils/Alert.php';
+session_start();
+require_once '../classes/Sessao/Sessao.php';
+require_once '../classes/Pagina/Pagina.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/Usuario/Usuario.php';
+require_once '../classes/Usuario/UsuarioRN.php';
+require_once '../utils/Utils.php';
+require_once '../utils/Alert.php';
 
 $utils = new Utils();
 $objPagina = new Pagina();

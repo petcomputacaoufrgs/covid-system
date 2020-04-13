@@ -2,7 +2,7 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once 'classes/Banco/Banco.php';
+require_once '../classes/Banco/Banco.php';
 class DetentorBD{
 
     public function cadastrar(Detentor $objDetentor, Banco $objBanco) {
@@ -26,6 +26,7 @@ class DetentorBD{
     
     public function alterar(Detentor $objDetentor, Banco $objBanco) {
         try{
+            //print_r($objDetentor);
             $UPDATE = 'UPDATE tb_detentor SET '
                     . ' detentor = ?,'
                     . ' index_detentor = ?'
@@ -51,7 +52,24 @@ class DetentorBD{
             $SELECT = "SELECT * FROM tb_detentor";
 
 
-            $arr = $objBanco->consultarSQL($SELECT);
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+            if($objDetentor->getIndex_detentor() != null){
+                $WHERE .= $AND." index_detentor = ?";
+                $AND = ' and '; 
+                $arrayBind[] = array('s',$objDetentor->getIndex_detentor());
+            }
+            
+
+            if($WHERE != ''){
+                $WHERE = ' where '.$WHERE;
+            } 
+        
+            //echo $SELECT.$WHERE;
+
+            $arr = $objBanco->consultarSQL($SELECT.$WHERE,$arrayBind);
+            
 
             $array_detentor = array();
             foreach ($arr as $reg){
