@@ -91,7 +91,7 @@ class Pagina {
                     <head>
                         <meta charset="utf-8">
                         <title>' . $titulo . '</title>
-                        <link rel="icon" type="text/css" href="img/coronavirus.jpg"><!--<i class="fas fa-virus"></i>-->
+                        <link rel="icon" type="text/css" href="docs/img/coronavirus.png"><!--<i class="fas fa-virus"></i>-->
                         <!--<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />-->
                         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -182,7 +182,7 @@ class Pagina {
     public static function fechar_head() {
         echo "</head>
                     
-                     <!--   <a href=\"controlador.php?action=tela_inicial\"><img src=\"img/header.png\" class=\"HeaderImg\" style=\" height:20%; width: 100%;\"></a>-->
+                     <a href=\"controlador.php?action=tela_inicial\"><img src=\"img/header.png\" class=\"HeaderImg\"></a>
                       
                     <body>";
     }
