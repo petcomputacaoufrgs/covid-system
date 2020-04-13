@@ -182,7 +182,7 @@ class Pagina {
     public static function fechar_head() {
         echo "</head>
                     
-                     <!--   <a href=\"controlador.php?action=tela_inicial\"><img src=\"img/header.png\" class=\"HeaderImg\" style=\" height:20%; width: 100%;\"></a>-->
+                     <a href=\"controlador.php?action=tela_inicial\"><img src=\"img/header.png\" class=\"HeaderImg\"></a>
                       
                     <body>";
     }
