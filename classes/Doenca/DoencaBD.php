@@ -2,7 +2,7 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once '../classes/Banco/Banco.php';
+require_once __DIR__ . '/../Banco/Banco.php';
 class DoencaBD{
 
     public function cadastrar(Doenca $objDoenca, Banco $objBanco) {

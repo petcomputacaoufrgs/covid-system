@@ -2,7 +2,7 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once '../classes/Banco/Banco.php';
+require_once __DIR__ . '/../Banco/Banco.php';
 class DetentorBD{
 
     public function cadastrar(Detentor $objDetentor, Banco $objBanco) {

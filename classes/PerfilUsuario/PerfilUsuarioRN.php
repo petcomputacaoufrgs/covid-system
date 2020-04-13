@@ -4,8 +4,8 @@
  *  Classe das regras de negócio do perfil do usuário
  */
 
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/PerfilUsuario/PerfilUsuarioBD.php';
+require_once __DIR__ . '/../Excecao/Excecao.php';
+require_once __DIR__ . '/PerfilUsuarioBD.php';
 
 class PerfilUsuarioRN{
     

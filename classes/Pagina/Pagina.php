@@ -3,7 +3,7 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once '../classes/Sessao/Sessao.php';
+require_once __DIR__ . '/../Sessao/Sessao.php';
 
 class Pagina {
 

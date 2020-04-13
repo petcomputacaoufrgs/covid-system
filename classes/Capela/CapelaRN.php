@@ -4,8 +4,8 @@
  *  Classe das regras de negócio da capela do paciente
  */
 
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Capela/CapelaBD.php';
+require_once __DIR__ . '/../Excecao/Excecao.php';
+require_once __DIR__ . '/CapelaBD.php';
 
 class CapelaRN{
     

@@ -1,10 +1,10 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-require_once 'classes/Banco/Banco.php';
-require_once 'classes/Sexo/Sexo.php';
-require_once 'classes/Sexo/SexoBD.php';
-require_once 'classes/Sexo/SexoRN.php';
+require_once __DIR__ . '/../classes/Banco/Banco.php';
+require_once __DIR__ . '/../classes/Sexo/Sexo.php';
+require_once __DIR__ . '/../classes/Sexo/SexoBD.php';
+require_once __DIR__ . '/../classes/Sexo/SexoRN.php';
 
 final class SexoTest extends TestCase {
     public function testObjeto() {

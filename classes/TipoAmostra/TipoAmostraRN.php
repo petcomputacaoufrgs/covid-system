@@ -4,8 +4,8 @@
  *  Classe das regras de negócio do tipo da amostra
  */
 
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/TipoAmostra/TipoAmostraBD.php';
+require_once __DIR__ . '/../Excecao/Excecao.php';
+require_once __DIR__ . '/TipoAmostraBD.php';
 
 class TipoAmostraRN{
 

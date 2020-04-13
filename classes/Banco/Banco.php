@@ -6,7 +6,7 @@
  */
 
 //require_once '../Excecao/Excecao.php';
-require_once '../classes/Configuracao.php';
+require_once __DIR__ . '/../Configuracao.php';
 class Banco {
 
     private $conn;

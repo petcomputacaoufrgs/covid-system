@@ -3,8 +3,8 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Amostra/AmostraBD.php';
+require_once __DIR__ . '/../Excecao/Excecao.php';
+require_once __DIR__ . '/AmostraBD.php';
 
 class AmostraRN{
    

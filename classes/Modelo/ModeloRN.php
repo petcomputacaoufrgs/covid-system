@@ -4,8 +4,8 @@
  *  Classe das regras de negócio do modelo do paciente
  */
 
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Modelo/ModeloBD.php';
+require_once __DIR__ . '/../Excecao/Excecao.php';
+require_once __DIR__ . '/ModeloBD.php';
 
 class ModeloRN{
     

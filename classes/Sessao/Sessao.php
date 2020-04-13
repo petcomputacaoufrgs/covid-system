@@ -1,17 +1,17 @@
 <?php
-require_once '../classes/Excecao/Excecao.php';
+require_once __DIR__ . '/../Excecao/Excecao.php';
 
-require_once '../classes/Usuario/Usuario.php';
-require_once '../classes/Usuario/UsuarioRN.php';
+require_once __DIR__ . '/../Usuario/Usuario.php';
+require_once __DIR__ . '/../Usuario/UsuarioRN.php';
 
-require_once '../classes/Recurso/Recurso.php';
-require_once '../classes/Recurso/RecursoRN.php';
+require_once __DIR__ . '/../Recurso/Recurso.php';
+require_once __DIR__ . '/../Recurso/RecursoRN.php';
 
-require_once '../classes/Rel_usuario_perfilUsuario/Rel_usuario_perfilUsuario.php';
-require_once '../classes/Rel_usuario_perfilUsuario/Rel_usuario_perfilUsuario_RN.php';
+require_once __DIR__ . '/../Rel_usuario_perfilUsuario/Rel_usuario_perfilUsuario.php';
+require_once __DIR__ . '/../Rel_usuario_perfilUsuario/Rel_usuario_perfilUsuario_RN.php';
 
-require_once '../classes/Rel_perfilUsuario_recurso/Rel_perfilUsuario_recurso.php';
-require_once '../classes/Rel_perfilUsuario_recurso/Rel_perfilUsuario_recurso_RN.php';
+require_once __DIR__ . '/../Rel_perfilUsuario_recurso/Rel_perfilUsuario_recurso.php';
+require_once __DIR__ . '/../Rel_perfilUsuario_recurso/Rel_perfilUsuario_recurso_RN.php';
 
 
 // $_SESSION['CHAVE'] = hash('sha256', 'abcd');

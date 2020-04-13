@@ -4,8 +4,8 @@
  *  Classe das regras de negócio da marca do paciente
  */
 
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Marca/MarcaBD.php';
+require_once __DIR__ . '/../Excecao/Excecao.php';
+require_once __DIR__ . '/MarcaBD.php';
 
 class MarcaRN{
     

@@ -4,8 +4,8 @@
  *  Classe das regras de negócio do detentor do paciente
  */
 
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Detentor/DetentorBD.php';
+require_once __DIR__ . '/../Excecao/Excecao.php';
+require_once __DIR__ . '/DetentorBD.php';
 
 class DetentorRN{
     

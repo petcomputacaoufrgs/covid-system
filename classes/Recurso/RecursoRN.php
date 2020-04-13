@@ -4,8 +4,8 @@
  *  Classe das regras de negócio do recurso 
  */
 
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Recurso/RecursoBD.php';
+require_once __DIR__ . '/../Excecao/Excecao.php';
+require_once __DIR__ . '/RecursoBD.php';
 
 class RecursoRN{
     

@@ -4,8 +4,8 @@
  *  Classe das regras de negócio do perfil do paciente
  */
 
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/PerfilPaciente/PerfilPacienteBD.php';
+require_once __DIR__ . '/../Excecao/Excecao.php';
+require_once __DIR__ . '/PerfilPacienteBD.php';
 
 class PerfilPacienteRN{
     

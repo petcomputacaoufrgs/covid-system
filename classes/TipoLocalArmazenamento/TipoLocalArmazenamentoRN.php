@@ -4,8 +4,8 @@
  *  Classe das regras de negócio do tipo da amostra
  */
 
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/TipoLocalArmazenamento/TipoLocalArmazenamentoBD.php';
+require_once __DIR__ . '/../Excecao/Excecao.php';
+require_once __DIR__ . '/TipoLocalArmazenamentoBD.php';
 
 class TipoLocalArmazenamentoRN{
     

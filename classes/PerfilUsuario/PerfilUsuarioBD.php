@@ -2,7 +2,7 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-require_once '../classes/Banco/Banco.php';
+require_once __DIR__ . '/../Banco/Banco.php';
 class PerfilUsuarioBD{
 
     public function cadastrar(PerfilUsuario $objPerfilUsuario, Banco $objBanco) {
