@@ -11,30 +11,8 @@ class Configuracao{
     }
     
     private function getArray(){
-        return array(
-            'versao' => '1.0.0',
-            'producao' => false,
-            /*
-            
-            'banco' => array('servidor' => 'db2.inf.ufrgs.br', 
-                             'nome' => 'covid19_rtpcr',
-                             'usuario' => 'covid19_rtpcr',
-                             'senha' => 'tu4ei%PeaEe?p2Oew3Gei'),
-             
-             */
-            
-             /*
-             'banco' => array('servidor' => 'localhost', 
-                             'nome' => 'amostras_covid19',
-                             'usuario' => 'root',
-                             'senha' => ''),
-              */
-
-             'banco' => array('servidor' => 'localhost', 
-                             'nome' => 'amostras_covid19',
-                             'usuario' => 'covid-teste',
-                             'senha' => ''),
-        );
+        require __DIR__ . '/../config.php';
+        return $config;
     }
     public function getValor($strChave){
         $arr = $this->getArray();

@@ -1,4 +1,4 @@
 /vendor
 /.php_cs.cache
 /nbproject/private/
-/config/db.php
+/config.php
