@@ -35,11 +35,12 @@ ul .first{
 li{
     list-style: none;
     text-decoration: none;
-    margin-top: 15px;
+    margin-top: 5px;
+    font-size: 13px;
 }
 
 li .a{
-  padding: 12px;
+  padding: 5px;
   color: rgb(133, 133, 133);
   text-decoration: none;
 }
@@ -49,13 +50,13 @@ li .a{
 /*CLASSES*/
 .HeaderImg{
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 
 .main{
   margin-top: 10px;
   width: 100%;
-  height: 150px;
+  height: 130px;
   background-color: #464646;
   box-shadow: 0px 0px 5px #a8a8a8;
 }
@@ -67,8 +68,9 @@ li .a{
 }
 
 .main a{
-  padding: 12px;
+  padding: 9px;
   color: #b7b7b7;
+  font-size: 15px;;
   text-decoration: none;
 }
 
@@ -97,8 +99,8 @@ li .a{
 
 .second-boxes{
   width: 100%;
-  height: 600px;
-  display: flexbox;
+  height: auto;
+  display: inline-block;
 }
 
 .box-second{
