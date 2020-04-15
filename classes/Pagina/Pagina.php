@@ -114,11 +114,11 @@ class Pagina {
                         <script src="js/html5shiv.min.js"></script>
                         <![endif]-->
                         <!-- Bootstrap CSS -->
-                        <!--<link rel="stylesheet" href="css/bootstrap.min.css">
+                        <!--<link rel="stylesheet" href="css/bootstrap.min.css">-->
                         <script src="js/jquery-3.3.1.slim.min.js"></script>
                         <script src="js/popper.min.js"></script>
                         <script src="js/bootstrap.min.js"></script>
-                        <script src="js/jquery.min.js"></script>-->
+                        <script src="js/jquery.min.js"></script>
                         
                         <!-- Bootstrap CSS -->
                         <link rel="stylesheet" href="css/bootstrap.min.css">

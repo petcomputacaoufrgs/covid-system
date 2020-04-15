@@ -4,7 +4,7 @@
  *  Classe das regras de negócio da marca do paciente
  */
 
-require_once __DIR__ . '/../excecao/Excecao.php';
+require_once __DIR__ . '/../Excecao/Excecao.php';
 require_once __DIR__ . '/PacienteBD.php';
 
 class PacienteRN{
@@ -84,10 +84,10 @@ class PacienteRN{
             // Faz o calculo para validar o CPF
             for ($t = 9; $t < 11; $t++) {
                 for ($d = 0, $c = 0; $c < $t; $c++) {
-                    $d += $cpf{$c} * (($t + 1) - $c);
+                    $d += $cpf[$c] * (($t + 1) - $c);
                 }
                 $d = ((10 * $d) % 11) % 10;
-                if ($cpf{$c} != $d) {
+                if ($cpf[$c] != $d) {
                     $objExcecao->adicionar_validacao('O CPF do paciente não é válido.','idCPF');
                 }
             }
