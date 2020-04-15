@@ -1,9 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-require_once __DIR__ . '/../classes/Banco/Banco.php';
 require_once __DIR__ . '/../classes/Sexo/Sexo.php';
-require_once __DIR__ . '/../classes/Sexo/SexoBD.php';
 require_once __DIR__ . '/../classes/Sexo/SexoRN.php';
 
 final class SexoTest extends TestCase {
@@ -13,8 +11,8 @@ final class SexoTest extends TestCase {
         $sexo->setIdSexo(1);
         $this->assertEquals($sexo->getIdSexo(), 1);
         $this->assertEquals($sexo->getSexo(), 'Masculíno');
-        $sexo->setIndex_sexo('Masculino');
-        $this->assertEquals($sexo->getIndex_sexo(), 'Masculino');
+        $sexo->setIndex_sexo('MASCULINO');
+        $this->assertEquals($sexo->getIndex_sexo(), 'MASCULINO');
     }
 
     public function testConsultaNaoExiste() {
@@ -50,6 +48,12 @@ final class SexoTest extends TestCase {
         $fem2 = $rn->consultar($fem2);
         $this->assertEquals('Feminino', $fem2->getSexo());
         $this->assertEquals('FEMININO', $fem2->getIndex_sexo());
+
+        $masc2 = new Sexo();
+        $masc2->setIdSexo($masc->getIdSexo());
+        $masc2 = $rn->consultar($masc2);
+        $this->assertEquals('Masculino', $masc2->getSexo());
+        $this->assertEquals('MASCULINO', $masc2->getIndex_sexo());
     }
 
     public function testAlteracaoConsulta() {

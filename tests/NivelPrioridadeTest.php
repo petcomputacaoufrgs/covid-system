@@ -1,9 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-require_once __DIR__ . '/../classes/Banco/Banco.php';
 require_once __DIR__ . '/../classes/NivelPrioridade/NivelPrioridade.php';
-require_once __DIR__ . '/../classes/NivelPrioridade/NivelPrioridadeBD.php';
 require_once __DIR__ . '/../classes/NivelPrioridade/NivelPrioridadeRN.php';
 
 final class NivelPrioridadeTest extends TestCase {
