@@ -129,7 +129,7 @@ class Pagina {
                         <link rel="stylesheet" href="css/bootstrap-select.min.css">
 
                         <!-- Estilo customizado -->
-                        <!--<link rel="stylesheet" type="text/css" href="css/style.css">-->
+                        <link rel="stylesheet" type="text/css" href="css/style.css">
                         
                         <style>
                         /* Barra de rolagem */
