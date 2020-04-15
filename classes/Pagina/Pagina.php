@@ -115,7 +115,7 @@ class Pagina {
                         <![endif]-->
 
                         <!-- JQuery -->
-                        <script src="js/jquery-3.4.1.slim.min.js"></script>
+                        <script src="js/jquery.slim.min.js"></script>
 
                         <!-- Popper -->
                         <script src="js/popper.min.js"></script>
