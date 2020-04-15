@@ -4,7 +4,7 @@ require_once '../classes/Pagina/Pagina.php';
 require_once '../classes/Sessao/Sessao.php';
 
 //Sessao::getInstance()->logar('00274715','12345678');
-if(isset($_POST['login-submit'])){
+if(isset($_POST['login-submit'], $_POST['cartaoufrgs'], $_POST['pwd'])){
     Sessao::getInstance()->logar($_POST['cartaoufrgs'],$_POST['pwd']);
 }
 
