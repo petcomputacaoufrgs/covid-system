@@ -102,6 +102,10 @@ class Sessao {
                 die();
             }
         } catch (Exception $ex) {
+            if (!Configuracao::getInstance()->getValor("producao")) {
+                echo "<pre>" . $ex . "</pre>";
+            }
+
             die("erro na sessão");
         }
     }
