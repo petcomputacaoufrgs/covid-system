@@ -174,9 +174,7 @@ class Pagina {
                         </style>
                                                 
                         <!-- google fonts -->
-                        <link href="https://fonts.googleapis.com/css?family=Baloo+Chettan+2&display=swap" rel="stylesheet">'
-
-        ;
+                        <link href="https://fonts.googleapis.com/css?family=Baloo+Chettan+2&display=swap" rel="stylesheet">';
     }
 
     public  function fechar_head() {

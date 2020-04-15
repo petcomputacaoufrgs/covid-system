@@ -14,7 +14,7 @@ session_destroy();
 <?php
 
     Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico de COVID-19");
-    Pagina::getInstance()->adicionar_css("style");
+    //Pagina::getInstance()->adicionar_css("style");
     //Pagina::getInstance()->adicionar_javascript();
     ?>
     <img src="img/header.png" class="HeaderImg">
