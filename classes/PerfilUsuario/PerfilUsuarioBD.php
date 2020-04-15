@@ -47,7 +47,7 @@ class PerfilUsuarioBD{
      public function listar(PerfilUsuario $objPerfilUsuario, Banco $objBanco) {
          try{
       
-            $SELECT = "SELECT * FROM tb_perfilUsuario";
+            $SELECT = "SELECT * FROM tb_perfilusuario";
 
 
             $arr = $objBanco->consultarSQL($SELECT);

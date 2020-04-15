@@ -9,6 +9,7 @@ session_start();
 
 require_once '../classes/Sessao/Sessao.php';
 require_once '../classes/Pagina/Pagina.php';
+require_once '../classes/Pagina/Interf.php';
 require_once '../classes/Excecao/Excecao.php';
 
 require_once '../classes/Usuario/Usuario.php';
@@ -103,12 +104,12 @@ $read_only = '';
 $cpf_obrigatorio = '';
 try {
 
-    montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente);
-    montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objPaciente, $disabled);
-    montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra); //por default RS
-    montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra);
-    montar_select_aceitaRecusada($select_a_r, $objAmostra);
-    montar_select_niveis_prioridade($select_nivelPrioridade, $objNivelPrioridade, $objNivelPrioridadeRN, $objAmostra);
+    Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente);
+    Interf::getInstance()->montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objPaciente, $disabled);
+    Interf::getInstance()->montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra); //por default RS
+    Interf::getInstance()->montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra);
+    Interf::getInstance()->montar_select_aceitaRecusada($select_a_r, $objAmostra);
+    Interf::getInstance()->montar_select_niveis_prioridade($select_nivelPrioridade, $objNivelPrioridade, $objNivelPrioridadeRN, $objAmostra);
 
 
 
@@ -117,7 +118,7 @@ try {
       $objSexoPaciente->setIdSexo($_POST['sel_sexo']);
       $objSexoPaciente = $objSexoPacienteRN->consultar($objSexoPaciente);
       $objPaciente->setIdSexo_fk($objSexoPaciente->getIdSexo());
-      montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente);
+      Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente);
       } */
 
 
@@ -130,7 +131,7 @@ try {
                 $objPerfilPaciente->setIdPerfilPaciente($_POST['sel_perfil']);
                 $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
                 $objPaciente->setIdPerfilPaciente_fk($objPerfilPaciente->getIdPerfilPaciente());
-                montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objPaciente, $disabled);
+                Interf::getInstance()->montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objPaciente, $disabled);
 	
             }
 
@@ -227,9 +228,9 @@ try {
                     $objAmostra = $arr_amostra;
                 }
 
-                montar_select_aceitaRecusada($select_a_r, $objAmostra);
-                montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra); //por default RS
-                montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra);
+                Interf::getInstance()->montar_select_aceitaRecusada($select_a_r, $objAmostra);
+                Interf::getInstance()->montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra); //por default RS
+                Interf::getInstance()->montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra);
 
                 $alert = Alert::alert_success_cadastrar();
                 
@@ -264,7 +265,7 @@ try {
             if (!isset($_POST['salvar_amostra'])) { //enquanto nÃ£o enviou o formulÃ¡rio com as alteraÃ§Ãµes
                 $objAmostra->setIdAmostra($_GET['idAmostra']);
                 $objAmostra = $objAmostraRN->consultar($objAmostra);
-                montar_select_aceitaRecusada($select_a_r, $objAmostra);
+                Interf::getInstance()->montar_select_aceitaRecusada($select_a_r, $objAmostra);
 
                 $objPaciente->setIdPaciente($objAmostra->getIdPaciente_fk());
                 $objPaciente = $objPacienteRN->consultar($objPaciente);
@@ -276,12 +277,12 @@ try {
                 if ($objPaciente->getIdSexo_fk() != 0) {
                     $objSexoPaciente->setIdSexo($objPaciente->getIdSexo_fk());
                     $objSexoPaciente = $objSexoPacienteRN->consultar($objSexoPaciente);
-                    montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente);
+                    Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente);
                 }
 
                 $objPerfilPaciente->setIdPerfilPaciente($objPaciente->getIdPerfilPaciente_fk());
                 $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
-                montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objPaciente, $disabled);
+                Interf::getInstance()->montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objPaciente, $disabled);
 
                 if ($objAmostra->getIdCodGAL_fk() != null) {
                     $objCodigoGAL->setIdCodigoGAL($objAmostra->getIdCodGAL_fk());
@@ -291,15 +292,15 @@ try {
 
                 $objEstadoOrigem->setCod_estado($objAmostra->getIdEstado_fk());
                 $objEstadoOrigem = $objEstadoOrigemRN->consultar($objEstadoOrigem);
-                montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra); //por default RS
+                Interf::getInstance()->montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra); //por default RS
 
                 $objLugarOrigem->setIdLugarOrigem($objAmostra->getIdLugarOrigem_fk());
                 $objLugarOrigemRN->consultar($objLugarOrigem);
-                montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra);
+                Interf::getInstance()->montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra);
             }
 
             if (isset($_POST['salvar_amostra'])) {
-                //echo "aqui";
+                
                 //Parte da coleta
                 $objAmostra->setIdAmostra($_GET['idAmostra']);
 
@@ -325,9 +326,7 @@ try {
 
 
                 $objAmostraRN->alterar($objAmostra);
-                //print_r($objAmostra);
-
-
+               
                 $objPaciente->setIdPaciente($objAmostra->getIdPaciente_fk());
                 $objPaciente = $objPacienteRN->consultar($objPaciente);
                 $objPaciente->setCPF($_POST['txtCPF']);
@@ -366,9 +365,9 @@ try {
                 //die("aqui");
                 $objPacienteRN->alterar($objPaciente);
 
-                montar_select_aceitaRecusada($select_a_r, $objAmostra);
-                montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra); //por default RS
-                montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra);
+                Interf::getInstance()->montar_select_aceitaRecusada($select_a_r, $objAmostra);
+                Interf::getInstance()->montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra); //por default RS
+                Interf::getInstance()->montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra);
                 $alert = Alert::alert_success_editar();
 
 
@@ -376,181 +375,13 @@ try {
             }
 
             break;
-        default : die('AÃ§Ã£o [' . $_GET['action'] . '] nÃ£o reconhecida pelo controlador em cadastro_amostra.php');
+        default : die('Ação [' . $_GET['action'] . '] não reconhecida pelo controlador em CadastroAmostra.php');
     }
 
 } catch (Throwable $ex) {
     Pagina::getInstance()->processar_excecao($ex);
 }
 
-function montar_select_niveis_prioridade(&$select_nivelPrioridade, $objNivelPrioridade, $objNivelPrioridadeRN, &$objAmostra) {
-    /* TIPOS AMOSTRA */
-
-
-    $selected = '';
-    $arr_niveisPrioridade = $objNivelPrioridadeRN->listar($objNivelPrioridade);
-
-    $select_nivelPrioridade = '<select class="form-control selectpicker" '
-            . 'id="select-country idSel_niveisPrioridade" data-live-search="true" name="sel_niveisPrioridade">'
-            . '<option data-tokens="" ></option>';
-
-    foreach ($arr_niveisPrioridade as $nivel) {
-        $selected = '';
-        if ($nivel->getIdNivelPrioridade() == $objAmostra->getIdNivelPrioridade_fk()) {
-            $selected = 'selected';
-        }
-
-        $select_nivelPrioridade .= '<option ' . $selected . '  '
-                . 'value="' . Pagina::formatar_html($nivel->getIdNivelPrioridade()) .
-                '" data-tokens="' . Pagina::formatar_html($nivel->getNivel()) . '">' 
-                . Pagina::formatar_html($nivel->getNivel()) . '</option>';
-    }
-    $select_nivelPrioridade .= '</select>';
-}
-
-function montar_select_aceitaRecusada(&$select_a_r, &$objAmostra) {
-    $selectedr = '';
-    $selecteda = '';
-    if ($objAmostra != null) {
-        if ($objAmostra->getAceita_recusa() == 'r') {
-            $selectedr = ' selected ';
-        }
-        if ($objAmostra->getAceita_recusa() == 'a') {
-            $selecteda = ' selected ';
-        }
-    }
-    $select_a_r = ' <select id="idSelAceitaRecusada" class="form-control" name="sel_aceita_recusada" onblur="">
-                        <option value="">Selecione</option>
-                        <option' . Pagina::formatar_html($selecteda) . ' value="a">Aceita</option>
-                        <option' . Pagina::formatar_html($selectedr) . ' value="r">Recusada</option>
-                    </select>';
-}
-
-function montar_select_tiposAmostra(&$select_tiposAmostra, $objTipoAmostra, $objTipoAmostraRN, &$objAmostra) {
-    /* TIPOS AMOSTRA */
-    $selected = '';
-    $arr_tiposAmostra = $objTipoAmostraRN->listar($objTipoAmostra);
-
-    $select_tiposAmostra = '<select class="form-control selectpicker" '
-            . 'id="select-country idSel_tiposAmostra" data-live-search="true" name="sel_tipoAmostra">'
-            . '<option data-tokens="" ></option>';
-
-    foreach ($arr_tiposAmostra as $tipoAmostra) {
-        $selected = '';
-        if ($tipoAmostra->getIdTipoAmostra() == $objAmostra->getIdTipoAmostra_fk()) {
-            $selected = 'selected';
-        }
-
-        $select_tiposAmostra .= '<option ' . $selected . 
-                '  value="' . Pagina::formatar_html($tipoAmostra->getIdTipoAmostra()) .
-                '" data-tokens="' . Pagina::formatar_html($tipoAmostra->getTipo()) . '">' 
-                . Pagina::formatar_html($tipoAmostra->getTipo()) . '</option>';
-    }
-    $select_tiposAmostra .= '</select>';
-}
-
-function montar_select_estado(&$select_estados, $objEstadoOrigem, $objEstadoOrigemRN, &$objAmostra) {
-    /* ESTADO */
-    $selected = '';
-    $arr_estados = $objEstadoOrigemRN->listar($objEstadoOrigem);
-
-    $select_estados = '<select class="form-control selectpicker" onchange="this.form.submit()" disabled '
-            . 'id="select-country idSel_estados"'
-            . ' data-live-search="true" name="sel_estados">'
-            . '<option data-tokens="" ></option>';
-
-    foreach ($arr_estados as $estado) {
-        $selected = '';
-        if ($estado->getCod_estado() == $objAmostra->getIdEstado_fk()) {
-            $selected = 'selected';
-        }
-        if ($estado->getSigla() == 'RS' && $objAmostra->getIdEstado_fk() == null) {
-            $selected = 'selected';
-        }
-
-        $select_estados .= '<option ' . $selected . 
-                '  value="' . Pagina::formatar_html($estado->getCod_estado()) . '" '
-                . 'data-tokens="' . Pagina::formatar_html($estado->getSigla()) . '">'
-                . Pagina::formatar_html($estado->getSigla()) . '</option>';
-    }
-    $select_estados .= '</select>';
-}
-
-function montar_select_cidade(&$select_municipios, $objLugarOrigem, $objLugarOrigemRN, &$objEstadoOrigem, &$objAmostra) {
-    /* MUNICÃPIOS */
-    $selected = '';
-    $arr_municipios = $objLugarOrigemRN->listar($objLugarOrigem);
-
-    $select_municipios = '<select class="form-control selectpicker"  '
-            . 'id="select-country idSel_cidades" data-live-search="true" name="sel_cidades">'
-            . '<option data-tokens="" ></option>';
-
-    foreach ($arr_municipios as $lugarOrigem) {
-        $selected = '';
-        if ($lugarOrigem->getCod_estado() == 43) {
-            if ($lugarOrigem->getIdLugarOrigem() == $objAmostra->getIdLugarOrigem_fk()) {
-                $selected = 'selected';
-            }
-            $select_municipios .= '<option ' . $selected .
-                    '  value="' . Pagina::formatar_html($lugarOrigem->getIdLugarOrigem()) .
-                    '" data-tokens="' . Pagina::formatar_html($lugarOrigem->getNome()) . '">'
-                    . Pagina::formatar_html($lugarOrigem->getNome()) . '</option>';
-        }
-    }
-    $select_municipios .= '</select>';
-}
-
-function montar_select_perfilPaciente(&$select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, &$objPaciente, $disabled) {
-    /* PERFIL DO PACIENTE */
-    $selected = '';
-    $arr_perfis = $objPerfilPacienteRN->listar($objPerfilPaciente);
-
-    $select_perfis = '<select class="form-control selectpicker" onchange="this.form.submit()" id="select-country idSel_perfil"'
-            . ' data-live-search="true" name="sel_perfil"' . $disabled . '>'
-            . '<option data-tokens="" ></option>';
-
-    foreach ($arr_perfis as $perfil) {
-        $selected = '';
-        if ($perfil->getIdPerfilPaciente() == $objPaciente->getIdPerfilPaciente_fk()) {
-            $selected = 'selected';
-        }
-
-        $select_perfis .= '<option ' . $selected . 
-                '  value="' . Pagina::formatar_html($perfil->getIdPerfilPaciente()) 
-                . '" data-tokens="' . Pagina::formatar_html($perfil->getPerfil()) . '">'
-                . Pagina::formatar_html($perfil->getPerfil()) . '</option>';
-    }
-    $select_perfis .= '</select>';
-}
-
-function montar_select_sexo(&$select_sexos, $objSexoPaciente, $objSexoPacienteRN, &$objPaciente) {
-    /* SEXO DO PACIENTE */
-    $selected = '';
-    $arr_sexos = $objSexoPacienteRN->listar($objSexoPaciente);
-
-    $select_sexos = '<select  onchange="" '
-            . 'class="form-control selectpicker" '
-            . 'id="select-country idSexo" data-live-search="true" '
-            . 'name="sel_sexo">'
-            . '<option data-tokens=""></option>';
-
-    foreach ($arr_sexos as $sexo) {
-        $selected = '';
-        if ($sexo->getIdSexo() == $objPaciente->getIdSexo_fk()) {
-            $selected = 'selected';
-        }
-        $select_sexos .= '<option ' . $selected . 
-                '  value="' . Pagina::formatar_html($sexo->getIdSexo()) 
-                . '" data-tokens="' . Pagina::formatar_html($sexo->getSexo()) . '">'
-                . Pagina::formatar_html($sexo->getSexo()) . '</option>';
-    }
-    $select_sexos .= '</select>';
-}
-?>
-
-
-
-<?php
 
 Pagina::abrir_head("Cadastrar Amostra");
 Pagina::getInstance()->adicionar_css("precadastros");
@@ -607,10 +438,10 @@ echo $alert.
 
                     </div>
 
-                    <!-- Nome da mÃ£e -->
+                    <!-- Nome da mãe -->
                     <div class="col-md-4 mb-9">
-                        <label for="label_nomeMae">Digite o nome da mÃ£e:</label>
-                        <input type="text" class="form-control" id="idNomeMae" placeholder="Nome da mÃ£e" 
+                        <label for="label_nomeMae">Digite o nome da mãe:</label>
+                        <input type="text" class="form-control" id="idNomeMae" placeholder="Nome da mãe" 
                                onblur="validaNomeMae()" name="txtNomeMae" required value="<?= $objPaciente->getNomeMae() ?>">
                         <div id ="feedback_nomeMae"></div>
                         <div class="desaparecer_aparecer" id="id_desaparecer_aparecerObsNomeMae" style="display:none" >

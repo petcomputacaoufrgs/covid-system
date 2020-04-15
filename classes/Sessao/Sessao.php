@@ -107,10 +107,12 @@ class Sessao {
     }
 
     public function logoff() {
-        die("logooff");
+        die("logoff");
+        
         session_destroy();
-
-        //header('Location: controlador.php?action=listar_perfilPaciente');
+        //header('Location: controlador.php?action=login');
+        
+        
     }
 
     public function validar() {

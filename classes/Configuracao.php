@@ -14,6 +14,9 @@ class Configuracao{
         require __DIR__ . '/../config.php';
         return $config;
     }
+    
+    
+    
     public function getValor($strChave){
         $arr = $this->getArray();
         if(!isset($arr[$strChave])){
