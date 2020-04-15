@@ -102,7 +102,7 @@ class Pagina {
                     <head>
                         <meta charset="utf-8">
                         <title>' . $titulo . '</title>
-                        <link rel="icon" type="text/css" href="docs/img/coronavirus.jpg"><!--<i class="fas fa-virus"></i>-->
+                        <link rel="icon" type="text/css" href="docs/img/coronavirus.png"><!--<i class="fas fa-virus"></i>-->
                         <!--<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />-->
                         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -125,10 +125,6 @@ class Pagina {
 
                         <!-- Latest compiled and minified CSS -->
                         <link rel="stylesheet" href="css/bootstrap-select.min.css">
-                        <!-- Optional JavaScript -->
-                        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-                        <script src="js/popper.min.js"></script>
-                        <script src="js/bootstrap.min.js"></script>
 
                         <!-- Latest compiled and minified JavaScript -->
                         <script src="js/bootstrap-select.min.js"></script>
