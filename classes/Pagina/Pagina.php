@@ -97,7 +97,7 @@ class Pagina {
 
     
 
-    public  function abrir_head($titulo) {
+    public static function abrir_head($titulo) {
         echo '<html>
                     <head>
                         <meta charset="utf-8">
