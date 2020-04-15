@@ -118,10 +118,14 @@ class Pagina {
                         <script src="js/jquery-3.3.1.slim.min.js"></script>
                         <script src="js/jquery.min.js"></script>
 
-                        <!-- Bootstrap CSS -->
+                        <!-- Popper -->
                         <script src="js/popper.min.js"></script>
+
+                        <!-- Bootstrap JS -->
                         <script src="js/bootstrap.min.js"></script>
                         <script src="js/bootstrap-select.min.js"></script>
+
+                        <!-- Bootstrap CSS -->
                         <link rel="stylesheet" href="css/bootstrap.min.css">
                         <link rel="stylesheet" href="css/bootstrap-select.min.css">
 
