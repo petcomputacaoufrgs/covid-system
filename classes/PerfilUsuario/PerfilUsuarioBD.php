@@ -111,7 +111,7 @@ class PerfilUsuarioBD{
 
         try{
             
-            $SELECT = 'SELECT * from tb_perfilUsuario WHERE index_perfil = ?';
+            $SELECT = 'SELECT * from tb_perfilusuario WHERE index_perfil = ?';
             
             $arrayBind = array();
             $arrayBind[] = array('s',$objPerfilUsuario->getIndex_perfil());

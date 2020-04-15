@@ -270,4 +270,3 @@ class PacienteRN{
 
 }
 
-?>

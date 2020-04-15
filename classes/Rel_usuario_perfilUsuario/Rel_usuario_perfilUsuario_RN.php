@@ -132,4 +132,3 @@ class Rel_usuario_perfilUsuario_RN{
 
 }
 
-?>
