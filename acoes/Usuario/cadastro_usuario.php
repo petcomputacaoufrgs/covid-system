@@ -78,8 +78,8 @@ try {
         <div class="form-row">
             <div class="col-md-6 mb-3">
                 <label for="label_matricula">Digite a matrícula:</label>
-                <input type="number" class="form-control" id="idMatricula" placeholder="Matrícula" 
-                       onblur="validaMatricula()" name="numMatricula" required value="<?= $objUsuario->getMatricula() ?>">
+                <input type="text" class="form-control" id="idMatricula" placeholder="Matrícula" 
+                       onblur="" name="numMatricula" required value="<?= $objUsuario->getMatricula() ?>">
                 <div id ="feedback_matricula"></div>
 
             </div>

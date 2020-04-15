@@ -1,7 +1,9 @@
+
 <?php
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
+
 
 session_start();
 
@@ -14,11 +16,13 @@ require_once '../classes/Usuario/UsuarioRN.php';
 
 require_once '../classes/Paciente/Paciente.php';
 require_once '../classes/Paciente/PacienteRN.php';
+
 require_once '../classes/PerfilPaciente/PerfilPaciente.php';
 require_once '../classes/PerfilPaciente/PerfilPacienteRN.php';
 require_once '../classes/Sexo/Sexo.php';
 require_once '../classes/Sexo/SexoRN.php';
 require_once '../classes/Amostra/Amostra.php';
+
 require_once '../classes/Amostra/AmostraRN.php';
 require_once '../classes/EstadoOrigem/EstadoOrigem.php';
 require_once '../classes/EstadoOrigem/EstadoOrigemRN.php';
@@ -28,13 +32,17 @@ require_once '../classes/CodigoGAL/CodigoGAL.php';
 require_once '../classes/CodigoGAL/CodigoGAL_RN.php';
 require_once '../classes/NivelPrioridade/NivelPrioridade.php';
 require_once '../classes/NivelPrioridade/NivelPrioridadeRN.php';
+
+require_once '../classes/CadastroAmostra/CadastroAmostra.php';
+require_once '../classes/CadastroAmostra/CadastroAmostraRN.php';
+
 require_once '../utils/Utils.php';
 require_once '../utils/Alert.php';
 
 $utils = new Utils();
 
 date_default_timezone_set('America/Sao_Paulo');
-$_SESSION['DATA_LOGIN'] = date('d/m/Y  H:i:s');
+$_SESSION['DATA_LOGIN'] = date("Y-m-d H:i:s"); 
 
 
 
@@ -75,6 +83,13 @@ $objLugarOrigemRN = new LugarOrigemRN();
 $objNivelPrioridade = new NivelPrioridade();
 $objNivelPrioridadeRN = new NivelPrioridadeRN();
 
+
+/* CADASTRO AMOSTRA */
+$objCadastroAmostra = new CadastroAmostra();
+$objCadastroAmostraRN = new CadastroAmostraRN();
+
+
+
 $alert = '';
 $select_sexos = '';
 $select_estados = '';
@@ -108,31 +123,38 @@ try {
 
     switch ($_GET['action']) {
         case 'cadastrar_amostra':
+	    
+            $_SESSION['DATA_SAIDA'] = date("Y-m-d H:i:s"); 
             $disabled = '';
-            if (isset($_POST['sel_perfil'])) {
+      	if (isset($_POST['sel_perfil'])) {
                 $objPerfilPaciente->setIdPerfilPaciente($_POST['sel_perfil']);
                 $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
                 $objPaciente->setIdPerfilPaciente_fk($objPerfilPaciente->getIdPerfilPaciente());
                 montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objPaciente, $disabled);
+	
             }
+
+
             if (isset($_POST['salvar_amostra'])) {
+                
+	
 
                 $objPaciente->setCPF($_POST['txtCPF']);
                 $objPaciente->setIdPerfilPaciente_fk($objPerfilPaciente->getIdPerfilPaciente());
                 $objPaciente->setNome($_POST['txtNome']);
                 $objPaciente->setDataNascimento($_POST['dtDataNascimento']);
-
+		
 
                 //RG
                 if (isset($_POST['txtRG'])) {
                     $objPaciente->setRG($_POST['txtRG']);
                 }
-                if (isset($_POST['txtObsRG'])) {
+                /*if (isset($_POST['txtObsRG'])) {
                     $objPaciente->setObsRG($_POST['txtObsRG']);
                 }
                 if (!isset($_POST['txtRG']) && $_POST['txtRG'] = null && !isset($_POST['txtObsRG']) && $_POST['txtObsRG'] == null) {
                     $objPaciente->setObsRG('Desconhecido');
-                }
+                }*/
 
                 //SEXO
                 if (isset($_POST['sel_sexo'])) {
@@ -141,8 +163,7 @@ try {
                 if ($_POST['sel_sexo'] == 0) {
                     $objPaciente->setObsSexo('Desconhecido');
                 }
-
-                //NOME MÃE
+				                //NOME MÃƒE
                 if (isset($_POST['txtNomeMae'])) {
                     $objPaciente->setNomeMae($_POST['txtNomeMae']);
                 }
@@ -152,32 +173,42 @@ try {
                 if (!isset($_POST['txtNomeMae']) && !isset($_POST['txtObsNomeMae'])) {
                     $objPaciente->setObsNomeMae('Desconhecido');
                 }
-
+				
                 $arr = $objPacienteRN->validarCadastro($objPaciente);
+
                 if (empty($arr)) {
                     $objPacienteRN->cadastrar($objPaciente);
-                } else
+                } else{
                     $objPaciente->setIdPaciente($arr[0]->getIdPaciente());
+
+		}
+		
 
 
                 if (isset($_POST['txtCodGAL'])) {
+			
                     $objCodigoGAL->setCodigo($_POST['txtCodGAL']);
-                    $objCodigoGAL->getIdPaciente_fk($objPaciente->getIdPaciente());
-                    $objCodigoGAL_RN->cadastrar($objCodigoGAL);
-                    $objAmostra->setIdCodGAL_fk($objCodigoGAL->getIdCodigoGAL());
+
+                    $objCodigoGAL->setIdPaciente_fk($objPaciente->getIdPaciente());
+
+		    $objCodigoGAL_RN->cadastrar($objCodigoGAL);
+		   $objAmostra->setIdCodGAL_fk($objCodigoGAL->getIdCodigoGAL());
+
                 }
 
 
-
+		
                 //Parte da coleta
                 $objAmostra->setIdPaciente_fk($objPaciente->getIdPaciente());
                 $objAmostra->setDataHoraColeta($_POST['dtColeta']);
                 $objAmostra->setAceita_recusa($_POST['sel_aceita_recusada']);
+
+
                 if ($_POST['sel_aceita_recusada'] == 'a') {
-                    $objAmostra->setStatusAmostra('Aguardando Preparação');
+                    $objAmostra->setStatusAmostra('Aguardando PreparaÃ§Ã£o');
                 } else if ($_POST['sel_aceita_recusada'] == 'r') {
                     $objAmostra->setStatusAmostra('Descartada');
-                }
+                }	
                 $objAmostra->setObservacoes($_POST['txtAreaObs']);
                 $objAmostra->setIdEstado_fk(43); //ESTADO DO RS
                 $objAmostra->setIdLugarOrigem_fk($_POST['sel_cidades']);
@@ -186,6 +217,12 @@ try {
                 $arr_amostra = $objAmostraRN->validarCadastro($objAmostra);
                 if (empty($arr_amostra)) {
                     $objAmostraRN->cadastrar($objAmostra);
+                    $objCadastroAmostra->setIdAmostra_fk($objAmostra->getIdAmostra());
+                    $objCadastroAmostra->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+                    $objCadastroAmostra->setDataHoraInicio($_POST['dtHoraLoginInicio']);
+                    $objCadastroAmostra->setDataHoraFim($_SESSION['DATA_SAIDA']);
+                    $objCadastroAmostraRN->cadastrar($objCadastroAmostra);
+
                 } else {
                     $objAmostra = $arr_amostra;
                 }
@@ -193,6 +230,7 @@ try {
                 montar_select_aceitaRecusada($select_a_r, $objAmostra);
                 montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra); //por default RS
                 montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra);
+
                 $alert = Alert::alert_success_cadastrar();
                 
             } else {
@@ -223,7 +261,7 @@ try {
 
         case 'editar_amostra':
             $disabled = ' disabled ';
-            if (!isset($_POST['salvar_amostra'])) { //enquanto não enviou o formulário com as alterações
+            if (!isset($_POST['salvar_amostra'])) { //enquanto nÃ£o enviou o formulÃ¡rio com as alteraÃ§Ãµes
                 $objAmostra->setIdAmostra($_GET['idAmostra']);
                 $objAmostra = $objAmostraRN->consultar($objAmostra);
                 montar_select_aceitaRecusada($select_a_r, $objAmostra);
@@ -261,7 +299,7 @@ try {
             }
 
             if (isset($_POST['salvar_amostra'])) {
-                echo "aqui";
+                //echo "aqui";
                 //Parte da coleta
                 $objAmostra->setIdAmostra($_GET['idAmostra']);
 
@@ -269,7 +307,7 @@ try {
                 $objAmostra->setDataHoraColeta($_POST['dtColeta']);
                 $objAmostra->setAceita_recusa($_POST['sel_aceita_recusada']);
                 if ($_POST['sel_aceita_recusada'] == 'a') {
-                    $objAmostra->setStatusAmostra('Aguardando Preparação');
+                    $objAmostra->setStatusAmostra('Aguardando PreparaÃ§Ã£o');
                 } else if ($_POST['sel_aceita_recusada'] == 'r') {
                     $objAmostra->setStatusAmostra('Descartada');
                 }
@@ -287,7 +325,7 @@ try {
 
 
                 $objAmostraRN->alterar($objAmostra);
-                print_r($objAmostra);
+                //print_r($objAmostra);
 
 
                 $objPaciente->setIdPaciente($objAmostra->getIdPaciente_fk());
@@ -299,13 +337,13 @@ try {
 
                 //RG
                 if (isset($_POST['txtRG'])) {
-                    echo $_POST['txtRG'];
+                    //echo $_POST['txtRG'];
                     $objPaciente->setRG($_POST['txtRG']);
                     $objPaciente->setObsRG('');
                 } else if (isset($_POST['txtObsRG'])) {
                     $objPaciente->setObsRG($_POST['txtObsRG']);
                 } else if (!isset($_POST['txtRG']) && $_POST['txtRG'] = null && !isset($_POST['txtObsRG']) && $_POST['txtObsRG'] == null) {
-                    echo "aqui";
+                    //echo "aqui";
                     $objPaciente->setObsRG('Desconhecido');
                 }
 
@@ -316,7 +354,7 @@ try {
                     $objPaciente->setObsSexo('Desconhecido');
                 }
 
-                //NOME MÃE
+                //NOME MÃƒE
                 if (isset($_POST['txtNomeMae'])) {
                     $objPaciente->setNomeMae($_POST['txtNomeMae']);
                 } else if (isset($_POST['txtNomeMae'])) {
@@ -337,12 +375,12 @@ try {
                // header('Location: controlador.php?action=listar_amostra');
             }
 
-
             break;
-        default : die('Ação [' . $_GET['action'] . '] não reconhecida pelo controlador em cadastro_amostra.php');
+        default : die('AÃ§Ã£o [' . $_GET['action'] . '] nÃ£o reconhecida pelo controlador em cadastro_amostra.php');
     }
-} catch (Exception $ex) {
-    $objPagina->processar_excecao($ex);
+
+} catch (Throwable $ex) {
+    Pagina::getInstance()->processar_excecao($ex);
 }
 
 function montar_select_niveis_prioridade(&$select_nivelPrioridade, $objNivelPrioridade, $objNivelPrioridadeRN, &$objAmostra) {
@@ -439,7 +477,7 @@ function montar_select_estado(&$select_estados, $objEstadoOrigem, $objEstadoOrig
 }
 
 function montar_select_cidade(&$select_municipios, $objLugarOrigem, $objLugarOrigemRN, &$objEstadoOrigem, &$objAmostra) {
-    /* MUNICÍPIOS */
+    /* MUNICÃPIOS */
     $selected = '';
     $arr_municipios = $objLugarOrigemRN->listar($objLugarOrigem);
 
@@ -513,13 +551,14 @@ function montar_select_sexo(&$select_sexos, $objSexoPaciente, $objSexoPacienteRN
 
 
 <?php
+
 Pagina::abrir_head("Cadastrar Amostra");
 Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::getInstance()->adicionar_javascript("amostra");
 Pagina::getInstance()->adicionar_javascript("paciente");
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
-
+//			DIE("INT80");
 echo $alert.
      Pagina::montar_topo_listar('CADASTRAR AMOSTRA', 'listar_amostra', 'LISTAR AMOSTRAS');
 ?>
@@ -533,7 +572,7 @@ echo $alert.
                 <div class="col-md-9"><h3> Sobre o Paciente </h3></div>
                 <!--<div class="col-md-4">
                     <input type="text" class="form-control" id="idUsuarioLogado" readonly style="text-align: center;margin-bottom: 10px;"
-                           name="txtUsuarioLogado" required value="Identificador do usuário logado: <?= $objUsuario->getMatricula() ?>" >
+                           name="txtUsuarioLogado" required value="Identificador do usuÃ¡rio logado: <?= $objUsuario->getMatricula() ?>" >
                 </div> -->
                 <div class="col-md-3">
                     <input type="text" class="form-control" id="idDataHoraLogin" readonly style="text-align: center;"
@@ -568,10 +607,10 @@ echo $alert.
 
                     </div>
 
-                    <!-- Nome da mãe -->
+                    <!-- Nome da mÃ£e -->
                     <div class="col-md-4 mb-9">
-                        <label for="label_nomeMae">Digite o nome da mãe:</label>
-                        <input type="text" class="form-control" id="idNomeMae" placeholder="Nome da mãe" 
+                        <label for="label_nomeMae">Digite o nome da mÃ£e:</label>
+                        <input type="text" class="form-control" id="idNomeMae" placeholder="Nome da mÃ£e" 
                                onblur="validaNomeMae()" name="txtNomeMae" required value="<?= $objPaciente->getNomeMae() ?>">
                         <div id ="feedback_nomeMae"></div>
                         <div class="desaparecer_aparecer" id="id_desaparecer_aparecerObsNomeMae" style="display:none" >
@@ -580,7 +619,7 @@ echo $alert.
                                 <div class="col-auto my-1">
                                     <div class="custom-control custom-radio mb-3">
                                         <input onclick="val_radio_obsNomeMae()"  name="obs"  type="radio"  class="custom-control-input" id="customControlValidation2" name="radio-stacked" >
-                                        <label class="custom-control-label" for="customControlValidation2">Não informado</label>
+                                        <label class="custom-control-label" for="customControlValidation2">NÃ£o informado</label>
                                     </div>
                                 </div>
 
@@ -633,7 +672,7 @@ echo $alert.
                                   <div class="col-auto mb-1">
                                       <div class="custom-control custom-radio mb-3">
                                           <input onclick="val_radio_obsSexo()"  name="obsSexo" value="naoInformado" type="radio"  class="custom-control-input" id="customControlValidationSexo" name="radio-stacked2" >
-                                          <label class="custom-control-label" for="customControlValidationSexo">Não informado </label>
+                                          <label class="custom-control-label" for="customControlValidationSexo">NÃ£o informado </label>
                                       </div>
                                   </div>
                                   <div class="col-auto mb-1">
@@ -678,7 +717,7 @@ echo $alert.
                                     <div class="custom-control custom-radio mb-3">
                                         <input onclick="val_radio_obsRG()"  name="obsRG" value="naoInformado" type="radio"  
                                                class="custom-control-input" id="customControlValidationRG" name="radio-stacked3" >
-                                        <label class="custom-control-label" for="customControlValidationRG">Não informado </label>
+                                        <label class="custom-control-label" for="customControlValidationRG">NÃ£o informado </label>
                                     </div>
                                 </div>
                                 <div class="col-auto my-1">
@@ -720,7 +759,7 @@ echo $alert.
 
 
                 <h3> Sobre a Coleta </h3>
-                <hr width = “2” size = “100”>
+                <hr width = â€œ2â€ size = â€œ100â€>
                 <div class="form-row">  
                     <div class="col-md-2">
 
@@ -730,16 +769,16 @@ echo $alert.
                     </div>
                     <!--<div class="col-md-2">
                         <label for="labelQuantidadeTubos">Quantidade de tubos: </label>
-                        <input type="number" class="form-control" id="idQntTubos" placeholder="nº tubos" default
+                        <input type="number" class="form-control" id="idQntTubos" placeholder="nÂº tubos" default
                                onblur="validaQntTubos()" name="numQntTubos" required value="<?= $tubos ?>">
                         <div id ="feedback_qntTubos"></div>
                     </div> -->
 
                     <div class="col-md-4">
                         <label for="labelDataHora">Data e Hora:</label>
-                        <input type="datetime-local" class="form-control" id="idDtHrColeta" placeholder="00/00/0000 00:00:00" 
+                        <input type="datetime-local" class="form-control" id="idDtHrColeta" placeholder="0000-00-00 00:00:00" 
                                onblur="validaDataHoraColeta()" name="dtColeta" required 
-                               value="<?= str_replace(" ", "T", $objAmostra->getDataHoraColeta()) ?>"> <!--<?= str_replace(" ", "T", $objAmostra->getDataHoraColeta()) ?>-->
+                               value="<?=date("Y-m-d H:i:s")?>">
                         <div id ="feedback_dataColeta"></div>
 
                     </div>
@@ -751,7 +790,7 @@ echo $alert.
                     <div id ="feedback_estado"></div>
 
                     <div class="col-md-4">
-                        <label for="labelMunicípioColeta">Município:</label>
+                        <label for="labelMunicÃ­pioColeta">Município:</label>
     <?= $select_municipios ?>
                     </div>
 
@@ -764,7 +803,7 @@ echo $alert.
 
                 <div class="form-row">
                     <div class="col-md-12">
-                        <label for="observações amostra">Observações</label>
+                        <label for="observaÃ§Ãµes amostra">Observações</label>
                         <textarea onblur="validaObs()" id="idTxtAreaObs" name="txtAreaObs" rows="2" cols="100" class="form-control" id="obsAmostra" rows="3"></textarea>
                         <div id ="feedback_obsAmostra"></div>
                     </div>

@@ -16,9 +16,9 @@ class UsuarioRN{
         if ($strMatriculaUsuario == '') {
             $objExcecao->adicionar_validacao('A matrícula do usuário não foi informada','idMatricula');
         }else{
-            if (strlen($strMatriculaUsuario) > 8) {
+            /*if (strlen($strMatriculaUsuario) > 8) {
                 $objExcecao->adicionar_validacao('A matrícula do usuário possui mais que 8 caracteres.','idMatricula');
-            }
+            }*/
         }
         
         return $usuario->setMatricula($strMatriculaUsuario);

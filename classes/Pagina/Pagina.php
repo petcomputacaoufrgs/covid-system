@@ -57,7 +57,7 @@ class Pagina {
     public function montar_menu_topo() {
         //echo '<a href="controlador.php?action=tela_inicial">TELA INICIAL</a>';
         echo'<hearder >
-            <a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" ></a>
+            <!--<a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" ></a> -->
             
            <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <div class="mx-auto d-sm-flex d-block flex-sm-nowrap">
@@ -191,11 +191,12 @@ class Pagina {
     }
 
     public  function fechar_head() {
-        echo "</head>
+        echo '</head>
                     
-                     <a href=\"controlador.php?action=tela_inicial\"><img src=\"img/header.png\" class=\"HeaderImg\"></a>
+                    <a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" >'
+                         .'<img src="img/header.png" class="HeaderImg"></a> 
                       
-                    <body>";
+                    <body>';
 
     }
 

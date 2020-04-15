@@ -4,8 +4,9 @@
  *  Classe das regras de negócio do código GAL do paciente
  */
 
-require_once __DIR__ . '/../excecao/Excecao.php';
-require_once __DIR__ . '/CodigoGAL_BD.php';
+require_once __DIR__ . '/../Excecao/Excecao.php';
+require_once __DIR__ . '/CodigoGAL_RN.php';
+
 
 class CodigoGAL_RN{
     

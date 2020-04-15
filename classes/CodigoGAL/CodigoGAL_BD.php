@@ -7,7 +7,7 @@ class CodigoGAL_BD{
 
     public function cadastrar(CodigoGAL $objCodigoGAL, Banco $objBanco) {
         try{
-            $INSERT = 'INSERT INTO tb_codGAL (codigo,idPaciente_fk) VALUES (?,?)';
+            $INSERT = 'INSERT INTO tb_codgal (codigo,idPaciente_fk) VALUES (?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objCodigoGAL->getCodigo());
@@ -25,7 +25,7 @@ class CodigoGAL_BD{
     public function alterar(CodigoGAL $objCodigoGAL, Banco $objBanco) {
         try{
                       
-            $UPDATE = 'UPDATE tb_codGAL SET '
+            $UPDATE = 'UPDATE tb_codgal SET '
                     . ' codigo = ? ,'
                     . ' idPaciente_fk = ?'
                 . '  where idCodigoGAL = ?';
@@ -47,7 +47,7 @@ class CodigoGAL_BD{
      public function listar(CodigoGAL $objCodigoGAL, Banco $objBanco) {
          try{
       
-            $SELECT = "SELECT * FROM tb_codGAL";
+            $SELECT = "SELECT * FROM tb_codgal";
 
 
             $arr = $objBanco->consultarSQL($SELECT);
@@ -74,7 +74,7 @@ class CodigoGAL_BD{
 
         try{
 
-            $SELECT = 'SELECT idCodigoGAL,codigo,idPaciente_fk FROM tb_codGAL WHERE idCodigoGAL = ?';
+            $SELECT = 'SELECT idCodigoGAL,codigo,idPaciente_fk FROM tb_codGAL WHERE idCodigogal = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objCodigoGAL->getIdCodigoGAL());

@@ -6,11 +6,11 @@
 
 switch ($_GET['action']):
     case 'principal':
-        require_once 'index.php';
+        require_once 'principal.php';
         break;
     
     case 'login':
-        require_once 'Login.php';
+        require_once 'index.php';
         break;
     
     
@@ -260,11 +260,11 @@ switch ($_GET['action']):
     /* AMOSTRA */
     case 'cadastrar_amostra':
     case 'editar_amostra':
-        require_once '../acoes/Amostra/cadastro_amostra.php';
+        require_once '../acoes/CadastroAmostra/CadastroAmostra.php';
         break;
     
     case 'listar_amostra':
-        require_once '../acoes/Amostra/listar_amostra.php';
+        require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
         break;
     
     case 'remover_amostra':

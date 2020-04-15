@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../Excecao/Excecao.php';
 
 require_once __DIR__ . '/../Usuario/Usuario.php';
@@ -13,181 +14,175 @@ require_once __DIR__ . '/../Rel_usuario_perfilUsuario/Rel_usuario_perfilUsuario_
 require_once __DIR__ . '/../Rel_perfilUsuario_recurso/Rel_perfilUsuario_recurso.php';
 require_once __DIR__ . '/../Rel_perfilUsuario_recurso/Rel_perfilUsuario_recurso_RN.php';
 
-
 // $_SESSION['CHAVE'] = hash('sha256', 'abcd');
 // $_SESSION['ID_USUARIO'] = 1;
 // $_SESSION['RECURSOS'] = array('listar_doenca');
-class Sessao{
+class Sessao {
+
     private static $instance;
-    
-    public static  function getInstance(){
-        if(self::$instance == null){
-            self::$instance= new Sessao();
+
+    public static function getInstance() {
+        if (self::$instance == null) {
+            self::$instance = new Sessao();
         }
         return self::$instance;
     }
 
-    public function logar($matricula, $senha){
+    public function logar($matricula, $senha) {
         //$this->logoff();
-        
         //ver LDAP
-        try{
-            
+        try {
+
             unset($_SESSION['COVID19']);
-                       
-        
-        $objUsuario = new Usuario();
-        $objUsuarioRN = new UsuarioRN();
-        
-        $objUsuario->setMatricula($matricula);
-        $objUsuario->setSenha($senha);
-        $objUsuarioRN->validar_cadastro($objUsuario);
-        
-        $arr_valida = $objUsuarioRN->validar_cadastro($objUsuario);
-        
-        if(count($arr_valida) == 0 && empty($arr_valida)){
-            $objExcecao = new Excecao();
-            $objExcecao->adicionar_validacao("Usuário não encontrado.");   
-            die("Usuário não encontrado.");
-        }
-        
+            if ($matricula != null && $matricula != '' && $senha != '' && $senha != null) {
+
+                $objUsuario = new Usuario();
+                $objUsuarioRN = new UsuarioRN();
+
+                $objUsuario->setMatricula($matricula);
+                $objUsuario->setSenha($senha);
+                $objUsuarioRN->validar_cadastro($objUsuario);
+
+                $arr_valida = $objUsuarioRN->validar_cadastro($objUsuario);
+
+                if (count($arr_valida) == 0 && empty($arr_valida)) {
+                    $objExcecao = new Excecao();
+                    $objExcecao->adicionar_validacao("Usuário não encontrado.");
+                    die("Usuário não encontrado.");
+                }
+
+
+                $arr_usuario = $objUsuarioRN->listar($objUsuario);
+
+                $objRel_usuario_perfilUsuario = new Rel_usuario_perfilUsuario();
+                $objRel_usuario_perfilUsuario_RN = new Rel_usuario_perfilUsuario_RN();
+                $objRel_usuario_perfilUsuario->setIdUsuario_fk($arr_usuario[0]->getIdUsuario());
+                $perfis_usuario = $objRel_usuario_perfilUsuario_RN->listar($objRel_usuario_perfilUsuario);
+                //print_r($perfis_usuario);
                 
-        $arr_usuario = $objUsuarioRN->listar($objUsuario);
 
-        $objRel_usuario_perfilUsuario = new Rel_usuario_perfilUsuario();
-        $objRel_usuario_perfilUsuario_RN = new Rel_usuario_perfilUsuario_RN();
-        $objRel_usuario_perfilUsuario->setIdUsuario_fk($arr_usuario[0]->getIdUsuario());
-        $perfis_usuario = $objRel_usuario_perfilUsuario_RN->listar($objRel_usuario_perfilUsuario);
+                if (empty($perfis_usuario) && $perfis_usuario == null) {
+                    $objExcecao = new Excecao();
+                    $objExcecao->adicionar_validacao("Usuário não tem permissões no sistema.");
+                    die("Usuário não tem permissões no sistema.");
+                }
 
-        if(empty($perfis_usuario) && $perfis_usuario == null){
-            $objExcecao = new Excecao();
-            $objExcecao->adicionar_validacao("Usuário não tem permissões no sistema.");
-            die("Usuário não tem permissões no sistema.");
-        }
+                //print_r($perfis_usuario);
 
-        //print_r($perfis_usuario);
-        
-        $objRel_perfilUsuario_recurso = new Rel_perfilUsuario_recurso();
-        $objRel_perfilUsuario_recurso_RN = new Rel_perfilUsuario_recurso_RN();
-        
-        foreach ($perfis_usuario as $perfis){
-            $objRel_perfilUsuario_recurso->setIdPerfilUsuario_fk($perfis->getIdPerfilUsuario_fk());
-            $recursos = $objRel_perfilUsuario_recurso_RN->listar_recursos($objRel_perfilUsuario_recurso);
-        }
-        
-        if(empty($recursos) && $recursos == null){
-            $objExcecao = new Excecao();
-            $objExcecao->adicionar_validacao("Usuário não tem nenhum recurso no sistema.");
-        }
-        
-        $objRecurso = new Recurso();
-        $objRecursoRN = new RecursoRN();
-        foreach ($recursos as $r){
-            $objRecurso->setIdRecurso($r->getIdRecurso_fk());
-            $objRecurso = $objRecursoRN->consultar($objRecurso);
-            $arr_recursos[] = $objRecurso->getNome();
-        }
-        
-        //print_r($arr_recursos);
-        $_SESSION['COVID19'] = array();
-        $_SESSION['COVID19']['ID_USUARIO'] = $arr_usuario[0]->getIdUsuario();
-        $_SESSION['COVID19']['MATRICULA'] = $arr_usuario[0]->getMatricula();
-        $_SESSION['COVID19']['RECURSOS'] = $arr_recursos;
-        $_SESSION['COVID19']['CHAVE'] = hash('sha256', random_bytes(50));
-        
-        
-        header('Location: '.Sessao::getInstance()->assinar_link('controlador.php?action=principal'));
-        die();
-        }catch (Exception $ex) {
-           die("erro na sessão");
+                $objRel_perfilUsuario_recurso = new Rel_perfilUsuario_recurso();
+                $objRel_perfilUsuario_recurso_RN = new Rel_perfilUsuario_recurso_RN();
+
+                foreach ($perfis_usuario as $perfis) {
+                    $objRel_perfilUsuario_recurso->setIdPerfilUsuario_fk($perfis->getIdPerfilUsuario_fk());
+                    $recursos = $objRel_perfilUsuario_recurso_RN->listar_recursos($objRel_perfilUsuario_recurso);
+                }
+
+                if (empty($recursos) && $recursos == null) {
+                    $objExcecao = new Excecao();
+                    $objExcecao->adicionar_validacao("Usuário não tem nenhum recurso no sistema.");
+                }
+
+                $objRecurso = new Recurso();
+                $objRecursoRN = new RecursoRN();
+                foreach ($recursos as $r) {
+                    $objRecurso->setIdRecurso($r->getIdRecurso_fk());
+                    $objRecurso = $objRecursoRN->consultar($objRecurso);
+                    $arr_recursos[] = $objRecurso->getNome();
+                }
+
+                //print_r($arr_recursos);
+                $_SESSION['COVID19'] = array();
+                $_SESSION['COVID19']['ID_USUARIO'] = $arr_usuario[0]->getIdUsuario();
+                $_SESSION['COVID19']['MATRICULA'] = $arr_usuario[0]->getMatricula();
+                $_SESSION['COVID19']['RECURSOS'] = $arr_recursos;
+                $_SESSION['COVID19']['CHAVE'] = hash('sha256', random_bytes(50));
+
+
+                header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=principal'));
+                die();
+            }
+        } catch (Exception $ex) {
+            die("erro na sessão");
         }
     }
-    
-    public function logoff(){
+
+    public function logoff() {
         die("logooff");
         session_destroy();
-        
+
         //header('Location: controlador.php?action=listar_perfilPaciente');
     }
-    
-    public function validar(){
-        if(!isset($_SESSION['COVID19']['ID_USUARIO']) || $_SESSION['COVID19']['ID_USUARIO'] == null){
+
+    public function validar() {
+        if (!isset($_SESSION['COVID19']['ID_USUARIO']) || $_SESSION['COVID19']['ID_USUARIO'] == null) {
             //LOGIN
             //header('Location: controlador.php?action=listar_perfilPaciente');
         }
-        
-        foreach ($_GET as $strChave=>$strValor){
-            if(($strChave != 'action' && substr($strChave,0,2) != 'id' && $strChave != 'hash') 
-                || ($strChave == 'action' && !preg_match('/^[a-zA-Z0-9_]+/', $strValor)) 
-                || (substr($strChave,0,2) == 'id' && !is_numeric($strValor)) 
-                || ($strChave == 'hash' && (strlen($strValor) != 64 || !ctype_alnum($strValor)))
-                 ){
-                die('url inválida:'.$strChave."=".$strValor);
+
+        foreach ($_GET as $strChave => $strValor) {
+            if (($strChave != 'action' && substr($strChave, 0, 2) != 'id' && $strChave != 'hash') || ($strChave == 'action' && !preg_match('/^[a-zA-Z0-9_]+/', $strValor)) || (substr($strChave, 0, 2) == 'id' && !is_numeric($strValor)) || ($strChave == 'hash' && (strlen($strValor) != 64 || !ctype_alnum($strValor)))
+            ) {
+                die('url inválida:' . $strChave . "=" . $strValor);
                 //85748cf8e123a961cf78802e7f62ad65cf73fe3b11d01f66e05d4a735676b50f
             }
         }
-        
-         if(!$this->verificar_link()){
-             $this->logoff();   
-             die('hash inválida');
-                
-            }
-        
-        if(!$this->verificar_permissao($_GET['action'])){
-            
-            die("acesso negado"); 
+
+        if (!$this->verificar_link()) {
+            $this->logoff();
+            die('hash inválida');
         }
-        
+
+        if (!$this->verificar_permissao($_GET['action'])) {
+
+            die("acesso negado");
+        }
     }
-    
-    public  function getIdUsuario(){
+
+    public function getIdUsuario() {
         return $_SESSION['COVID19']['ID_USUARIO'];
     }
-    
-    public  function getMatricula(){
+
+    public function getMatricula() {
         return $_SESSION['COVID19']['MATRICULA'];
     }
-    
-    
-    
-    public function assinar_link($link){
+
+    public function assinar_link($link) {
         //http://localhost/covid-system/public_html/controlador.php?action=editar_doenca&idDoenca=8
-        
+
         $strPosParam = strpos($link, '?');
-        if($strPosParam !== FALSE){
-            $strParametros = substr($link, $strPosParam+1);
-            
-            $link = substr($link, 0,$strPosParam+1).$strParametros.'&hash='.hash('sha256', $strParametros.$_SESSION['COVID19']['CHAVE']);
-            
+        if ($strPosParam !== FALSE) {
+            $strParametros = substr($link, $strPosParam + 1);
+            //throw new Exception("XXXX");
+            $link = substr($link, 0, $strPosParam + 1) . $strParametros . '&hash=' . hash('sha256', $strParametros . $_SESSION['COVID19']['CHAVE']);
         }
         return $link;
     }
-    
-    public function verificar_link(){
+
+    public function verificar_link() {
         //http://localhost/covid-system/public_html/controlador.php?action=editar_doenca&idDoenca=8&hash=hhhhhh
         $link = $_SERVER['QUERY_STRING'];
-       
-         if(strlen($link)){
-           
-                  
-           $strPosHash = strpos($link, '&hash=');
-           if($strPosHash !== FALSE){
-               $strParametros = substr($link, 0,$strPosHash);
-              
-               if(hash('sha256', $strParametros.$_SESSION['COVID19']['CHAVE']) == $_GET['hash']){
-                  return true;
-               }
 
-           }
+        if (strlen($link)) {
+
+
+            $strPosHash = strpos($link, '&hash=');
+            if ($strPosHash !== FALSE) {
+                $strParametros = substr($link, 0, $strPosHash);
+
+                if (hash('sha256', $strParametros . $_SESSION['COVID19']['CHAVE']) == $_GET['hash']) {
+                    return true;
+                }
+            }
         }
         return false;
     }
-    
-    public function verificar_permissao($strRecurso){
-     
-        if(in_array($strRecurso, $_SESSION['COVID19']['RECURSOS'])){
-           return true;
+
+    public function verificar_permissao($strRecurso) {
+
+        if (in_array($strRecurso, $_SESSION['COVID19']['RECURSOS'])) {
+            return true;
         }
         return false;
     }
+
 }

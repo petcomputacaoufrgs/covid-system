@@ -14,7 +14,7 @@ class UsuarioBD{
             $INSERT = 'INSERT INTO tb_usuario (matricula,senha) VALUES (?,?)';
 
             $arrayBind = array();
-            $arrayBind[] = array('i',$objUsuario->getMatricula());
+            $arrayBind[] = array('s',$objUsuario->getMatricula());
             $arrayBind[] = array('s',$objUsuario->getSenha());
 
 
@@ -35,7 +35,7 @@ class UsuarioBD{
         
                 
             $arrayBind = array();
-            $arrayBind[] = array('i',$objUsuario->getMatricula());
+            $arrayBind[] = array('s',$objUsuario->getMatricula());
             $arrayBind[] = array('s',$objUsuario->getSenha());
             $arrayBind[] = array('i',$objUsuario->getIdUsuario());
             
@@ -60,7 +60,7 @@ class UsuarioBD{
                 $WHERE .= $AND." matricula = ?";
                 $AND = ' and ';
                  
-                $arrayBind[] = array('i',$objUsuario->getMatricula());
+                $arrayBind[] = array('s',$objUsuario->getMatricula());
             }
             
 
@@ -132,10 +132,11 @@ class UsuarioBD{
 
        try{
 
-            $SELECT = 'SELECT idUsuario,matricula,senha FROM tb_usuario WHERE matricula = ? ';
+            $SELECT = 'SELECT idUsuario,matricula,senha FROM tb_usuario WHERE matricula = ? AND senha = ? ';
 
             $arrayBind = array();
-            $arrayBind[] = array('i',$objUsuario->getMatricula());
+            $arrayBind[] = array('s',$objUsuario->getMatricula());
+            $arrayBind[] = array('s',$objUsuario->getSenha());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
 

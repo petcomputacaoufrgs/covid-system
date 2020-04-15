@@ -186,7 +186,7 @@ function montar_select_perfil(&$select_perfilUsu, $objPerfilUsuarioRN, &$objPerf
     Pagina::getInstance()->adicionar_css("precadastros");
     Pagina::getInstance()->fechar_head();
     Pagina::getInstance()->montar_menu_topo();
-
+    
     echo $alert.
      Pagina::montar_topo_listar('CADASTRAR RELACIONAMENTO DO PERFIL DO USUÁRIO COM SEUS RECURSOS', 'listar_rel_perfilUsuario_recurso',
              'LISTAR PERFIL + RECURSO').
@@ -196,12 +196,12 @@ function montar_select_perfil(&$select_perfilUsu, $objPerfilUsuarioRN, &$objPerf
                     <div class="form-row">
                         <div class="col-md-4">
                             <label for="label_perfis">Selecione o perfil deste usuário:</label><br>'.
-                            Pagina::formatar_html($select_perfilUsu)
+                            $select_perfilUsu
                         .'</div>
 
                         <div class="col-md-8">
                             <label for="label_recursos">Selecione os recursos deste usuário:</label><br>'.
-                            Pagina::formatar_html($select_recurso)
+                            $select_recurso
                         .'</div>
                     </div>
                     <button class="btn btn-primary" type="submit" name="salvar_upr">Salvar</button> 
