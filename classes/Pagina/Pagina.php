@@ -113,21 +113,17 @@ class Pagina {
                         <!--[if lt IE 9]>
                         <script src="js/html5shiv.min.js"></script>
                         <![endif]-->
-                        <!-- Bootstrap CSS -->
-                        <!--<link rel="stylesheet" href="css/bootstrap.min.css">-->
+
+                        <!-- JQuery -->
                         <script src="js/jquery-3.3.1.slim.min.js"></script>
+                        <script src="js/jquery.min.js"></script>
+
+                        <!-- Bootstrap CSS -->
                         <script src="js/popper.min.js"></script>
                         <script src="js/bootstrap.min.js"></script>
-                        <script src="js/jquery.min.js"></script>
-                        
-                        <!-- Bootstrap CSS -->
-                        <link rel="stylesheet" href="css/bootstrap.min.css">
-
-                        <!-- Latest compiled and minified CSS -->
-                        <link rel="stylesheet" href="css/bootstrap-select.min.css">
-
-                        <!-- Latest compiled and minified JavaScript -->
                         <script src="js/bootstrap-select.min.js"></script>
+                        <link rel="stylesheet" href="css/bootstrap.min.css">
+                        <link rel="stylesheet" href="css/bootstrap-select.min.css">
 
                         <!-- Estilo customizado -->
                         <!--<link rel="stylesheet" type="text/css" href="css/style.css">-->
