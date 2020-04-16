@@ -128,6 +128,9 @@ class Pagina {
                         <!-- Latest compiled and minified JavaScript -->
                         <script src="js/bootstrap-select.min.js"></script>
 
+                        <!-- Latest compiled and minified JavaScript -->
+                        <script src="js/datetime-copy-paste.js"></script>
+
                         <!-- Estilo customizado -->
                         <!--<link rel="stylesheet" type="text/css" href="css/style.css">-->
                         
