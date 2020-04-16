@@ -780,7 +780,12 @@ echo $alert.
                                onblur="validaDataHoraColeta()" name="dtColeta" required 
                                value="<?=date("Y-m-d H:i:s")?>">
                         <div id ="feedback_dataColeta"></div>
-
+                        <script>
+                            $("#idDtHrColeta").bind("paste", function(e){
+                                var pastedData = e.originalEvent.clipboardData.getData('text');
+                                alert(pastedData);
+                            } );
+                        </script>
                     </div>
 
                     <div class="col-md-2">
