@@ -107,7 +107,7 @@ class Rel_tubo_lote_RN{
         $objExcecao->lancar_validacoes();
         $objRel_tubo_lote_BD = new Rel_tubo_lote_BD();
         
-        $arr = $objRel_tubo_lote_BD->listar_recursos($relPerfilRecurso,$objBanco);
+        $arr = $objRel_tubo_lote_BD->listar_lotes($relTuboLote,$objBanco);
         
         $objBanco->fecharConexao();
         return $arr;
