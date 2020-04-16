@@ -128,6 +128,9 @@ class Pagina {
                         <link rel="stylesheet" href="css/bootstrap.min.css">
                         <link rel="stylesheet" href="css/bootstrap-select.min.css">
 
+                        <!-- Script para copiar e colar data em input date e datetime -->
+                        <script src="js/datetime-copy-paste.js"></script>
+
                         <!-- Estilo customizado -->
                         <link rel="stylesheet" type="text/css" href="css/style.css">
                         
