@@ -45,7 +45,7 @@ class Rel_tubo_lote_RN{
        }
    }
 
-   public function consultar(Rel_perfilUsuario_recurso $relPerfilRecurso) {
+   public function consultar(Rel_tubo_lote $relTuboLote) {
        try{
             $objExcecao = new Excecao();
             $objBanco = new Banco();
@@ -64,7 +64,7 @@ class Rel_tubo_lote_RN{
        }
    }
 
-   public function remover(Rel_perfilUsuario_recurso $relPerfilRecurso) {
+   public function remover(Rel_tubo_lote $relTuboLote) {
         try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
@@ -82,7 +82,7 @@ class Rel_tubo_lote_RN{
        }
    }
 
-   public function listar(Rel_perfilUsuario_recurso $relPerfilRecurso) {
+   public function listar(Rel_tubo_lote $relTuboLote) {
        try {
         $objExcecao = new Excecao();
         $objBanco = new Banco();
@@ -98,6 +98,23 @@ class Rel_tubo_lote_RN{
            throw new Excecao('Erro na listagem do relacionamento do tubo com seu respectivo lote.',$e);
        }
    }
+
+   public function listar_lotes(Rel_tubo_lote $relTuboLote) {
+    try {
+        $objExcecao = new Excecao();
+        $objBanco = new Banco();
+        $objBanco->abrirConexao(); 
+        $objExcecao->lancar_validacoes();
+        $objRel_tubo_lote_BD = new Rel_tubo_lote_BD();
+        
+        $arr = $objRel_tubo_lote_BD->listar_recursos($relPerfilRecurso,$objBanco);
+        
+        $objBanco->fecharConexao();
+        return $arr;
+    } catch (Exception $e) {
+        throw new Excecao('Erro na listagem do relacionamento do tubo com seu respectivo lote.',$e);
+    }
+}
 
    public function pesquisar($campoBD, $valor_usuario) {
         try {
