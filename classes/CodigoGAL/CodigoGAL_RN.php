@@ -15,8 +15,8 @@ class CodigoGAL_RN{
         $strCodGAL = trim($codGAL->getCodigo());
         
         
-        if (strlen($strCodGAL) > 20) {
-            $objExcecao->adicionar_validacao('O código GAL possui mais de 20 caracteres.','idCodGAL');
+        if (strlen($strCodGAL) > 12) {
+            $objExcecao->adicionar_validacao('O código GAL possui mais de 12 caracteres.','idCodGAL');
         }
         
         

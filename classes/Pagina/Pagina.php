@@ -55,13 +55,13 @@ class Pagina {
     }
 
     public function montar_menu_topo() {
-        //echo '<a href="controlador.php?action=tela_inicial">TELA INICIAL</a>';
-        echo'<hearder >
+        //echo '<a href="controlador.php?action=principal">TELA INICIAL</a>';
+        echo'<header >
             <!--<a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" ></a> -->
             
            <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <div class="mx-auto d-sm-flex d-block flex-sm-nowrap">
-                <a class="navbar-brand" href="controlador.php?action=tela_inicial">COVID19<i class="fas fa-virus"></i></a>
+                <a class="navbar-brand" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">COVID19<i class="fas fa-virus"></i></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -92,7 +92,7 @@ class Pagina {
         </nav>
                   
 
-          </hearder>';
+          </header>';
     }
 
     
@@ -180,10 +180,11 @@ class Pagina {
     public  function fechar_head() {
         echo '</head>
                     
-                    <a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" >'
-                         .'<img src="img/header.png" class="HeaderImg"></a> 
                       
-                    <body>';
+                    <body>
+
+                    <a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" >'
+                         .'<img src="img/header.png" class="HeaderImg"></a>';
 
     }
 
