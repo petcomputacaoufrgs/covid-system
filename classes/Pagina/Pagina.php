@@ -56,7 +56,7 @@ class Pagina {
 
     public function montar_menu_topo() {
         //echo '<a href="controlador.php?action=tela_inicial">TELA INICIAL</a>';
-        echo'<hearder >
+        echo'<header >
             <!--<a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" ></a> -->
             
            <nav class="navbar navbar-expand-sm navbar-light bg-light">
@@ -92,7 +92,7 @@ class Pagina {
         </nav>
                   
 
-          </hearder>';
+          </header>';
     }
 
     
@@ -118,7 +118,6 @@ class Pagina {
                         <script src="js/jquery-3.3.1.slim.min.js"></script>
                         <script src="js/popper.min.js"></script>
                         <script src="js/bootstrap.min.js"></script>
-                        <script src="js/jquery.min.js"></script>
                         
                         <!-- Bootstrap CSS -->
                         <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -183,10 +182,11 @@ class Pagina {
     public  function fechar_head() {
         echo '</head>
                     
-                    <a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" >'
-                         .'<img src="img/header.png" class="HeaderImg"></a> 
                       
-                    <body>';
+                    <body>
+
+                    <a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" >'
+                         .'<img src="img/header.png" class="HeaderImg"></a>';
 
     }
 

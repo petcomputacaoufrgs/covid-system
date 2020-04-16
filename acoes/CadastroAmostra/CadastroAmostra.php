@@ -163,7 +163,7 @@ try {
                 if ($_POST['sel_sexo'] == 0) {
                     $objPaciente->setObsSexo('Desconhecido');
                 }
-				                //NOME MÃƒE
+				                //NOME MÃE
                 if (isset($_POST['txtNomeMae'])) {
                     $objPaciente->setNomeMae($_POST['txtNomeMae']);
                 }
@@ -205,7 +205,7 @@ try {
 
 
                 if ($_POST['sel_aceita_recusada'] == 'a') {
-                    $objAmostra->setStatusAmostra('Aguardando PreparaÃ§Ã£o');
+                    $objAmostra->setStatusAmostra('Aguardando Preparação');
                 } else if ($_POST['sel_aceita_recusada'] == 'r') {
                     $objAmostra->setStatusAmostra('Descartada');
                 }	
@@ -261,7 +261,7 @@ try {
 
         case 'editar_amostra':
             $disabled = ' disabled ';
-            if (!isset($_POST['salvar_amostra'])) { //enquanto nÃ£o enviou o formulÃ¡rio com as alteraÃ§Ãµes
+            if (!isset($_POST['salvar_amostra'])) { //enquanto não enviou o formulário com as alterações
                 $objAmostra->setIdAmostra($_GET['idAmostra']);
                 $objAmostra = $objAmostraRN->consultar($objAmostra);
                 montar_select_aceitaRecusada($select_a_r, $objAmostra);
@@ -307,7 +307,7 @@ try {
                 $objAmostra->setDataHoraColeta($_POST['dtColeta']);
                 $objAmostra->setAceita_recusa($_POST['sel_aceita_recusada']);
                 if ($_POST['sel_aceita_recusada'] == 'a') {
-                    $objAmostra->setStatusAmostra('Aguardando PreparaÃ§Ã£o');
+                    $objAmostra->setStatusAmostra('Aguardando Preparação');
                 } else if ($_POST['sel_aceita_recusada'] == 'r') {
                     $objAmostra->setStatusAmostra('Descartada');
                 }
@@ -354,7 +354,7 @@ try {
                     $objPaciente->setObsSexo('Desconhecido');
                 }
 
-                //NOME MÃƒE
+                //NOME MÃE
                 if (isset($_POST['txtNomeMae'])) {
                     $objPaciente->setNomeMae($_POST['txtNomeMae']);
                 } else if (isset($_POST['txtNomeMae'])) {
@@ -376,7 +376,7 @@ try {
             }
 
             break;
-        default : die('AÃ§Ã£o [' . $_GET['action'] . '] nÃ£o reconhecida pelo controlador em cadastro_amostra.php');
+        default : die('Ação [' . $_GET['action'] . '] não reconhecida pelo controlador em cadastro_amostra.php');
     }
 
 } catch (Throwable $ex) {
@@ -477,7 +477,7 @@ function montar_select_estado(&$select_estados, $objEstadoOrigem, $objEstadoOrig
 }
 
 function montar_select_cidade(&$select_municipios, $objLugarOrigem, $objLugarOrigemRN, &$objEstadoOrigem, &$objAmostra) {
-    /* MUNICÃPIOS */
+    /* MUNICÍPIOS */
     $selected = '';
     $arr_municipios = $objLugarOrigemRN->listar($objLugarOrigem);
 
@@ -572,7 +572,7 @@ echo $alert.
                 <div class="col-md-9"><h3> Sobre o Paciente </h3></div>
                 <!--<div class="col-md-4">
                     <input type="text" class="form-control" id="idUsuarioLogado" readonly style="text-align: center;margin-bottom: 10px;"
-                           name="txtUsuarioLogado" required value="Identificador do usuÃ¡rio logado: <?= $objUsuario->getMatricula() ?>" >
+                           name="txtUsuarioLogado" required value="Identificador do usuário logado: <?= $objUsuario->getMatricula() ?>" >
                 </div> -->
                 <div class="col-md-3">
                     <input type="text" class="form-control" id="idDataHoraLogin" readonly style="text-align: center;"
@@ -607,10 +607,10 @@ echo $alert.
 
                     </div>
 
-                    <!-- Nome da mÃ£e -->
+                    <!-- Nome da mãe -->
                     <div class="col-md-4 mb-9">
-                        <label for="label_nomeMae">Digite o nome da mÃ£e:</label>
-                        <input type="text" class="form-control" id="idNomeMae" placeholder="Nome da mÃ£e" 
+                        <label for="label_nomeMae">Digite o nome da mãe:</label>
+                        <input type="text" class="form-control" id="idNomeMae" placeholder="Nome da mãe" 
                                onblur="validaNomeMae()" name="txtNomeMae" required value="<?= $objPaciente->getNomeMae() ?>">
                         <div id ="feedback_nomeMae"></div>
                         <div class="desaparecer_aparecer" id="id_desaparecer_aparecerObsNomeMae" style="display:none" >
@@ -619,7 +619,7 @@ echo $alert.
                                 <div class="col-auto my-1">
                                     <div class="custom-control custom-radio mb-3">
                                         <input onclick="val_radio_obsNomeMae()"  name="obs"  type="radio"  class="custom-control-input" id="customControlValidation2" name="radio-stacked" >
-                                        <label class="custom-control-label" for="customControlValidation2">NÃ£o informado</label>
+                                        <label class="custom-control-label" for="customControlValidation2">Não informado</label>
                                     </div>
                                 </div>
 
@@ -672,7 +672,7 @@ echo $alert.
                                   <div class="col-auto mb-1">
                                       <div class="custom-control custom-radio mb-3">
                                           <input onclick="val_radio_obsSexo()"  name="obsSexo" value="naoInformado" type="radio"  class="custom-control-input" id="customControlValidationSexo" name="radio-stacked2" >
-                                          <label class="custom-control-label" for="customControlValidationSexo">NÃ£o informado </label>
+                                          <label class="custom-control-label" for="customControlValidationSexo">Não informado </label>
                                       </div>
                                   </div>
                                   <div class="col-auto mb-1">
@@ -717,7 +717,7 @@ echo $alert.
                                     <div class="custom-control custom-radio mb-3">
                                         <input onclick="val_radio_obsRG()"  name="obsRG" value="naoInformado" type="radio"  
                                                class="custom-control-input" id="customControlValidationRG" name="radio-stacked3" >
-                                        <label class="custom-control-label" for="customControlValidationRG">NÃ£o informado </label>
+                                        <label class="custom-control-label" for="customControlValidationRG">Não informado </label>
                                     </div>
                                 </div>
                                 <div class="col-auto my-1">
@@ -790,7 +790,7 @@ echo $alert.
                     <div id ="feedback_estado"></div>
 
                     <div class="col-md-4">
-                        <label for="labelMunicÃ­pioColeta">Município:</label>
+                        <label for="labelMunicípioColeta">Município:</label>
     <?= $select_municipios ?>
                     </div>
 
@@ -803,7 +803,7 @@ echo $alert.
 
                 <div class="form-row">
                     <div class="col-md-12">
-                        <label for="observaÃ§Ãµes amostra">Observações</label>
+                        <label for="observações amostra">Observações</label>
                         <textarea onblur="validaObs()" id="idTxtAreaObs" name="txtAreaObs" rows="2" cols="100" class="form-control" id="obsAmostra" rows="3"></textarea>
                         <div id ="feedback_obsAmostra"></div>
                     </div>
@@ -816,7 +816,7 @@ echo $alert.
 <?php } ?>
         </form>
     </div> 
-
+</div>
 
 <?php
 Pagina::getInstance()->mostrar_excecoes();
