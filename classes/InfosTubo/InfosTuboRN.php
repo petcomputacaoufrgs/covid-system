@@ -59,12 +59,28 @@ class InfosTuboRN{
     }
 
     private function validarDataHora(InfosTubo $infosTubo, Excecao $objExcecao){
-        $strDataHora = trim($infosTubo->getDataHora());
-       
-        if ($strDataHora == '') {
+        $dthr = trim($infosTubo->getDataHora());
+
+        if ($dthr == '') {
             $objExcecao->adicionar_validacao('Informar a data e hora.','idDataHora');
+        }else{
+            $strDataHora = explode(";", "$dthr");
+
+            $data = explode("/", "$strDataHora[0]");
+            $hora = explode(":", "$strDataHora[1]");
+
+            $dia = $data[0];
+            $mes = $data[1];
+            $ano = $data[2];
+
+            /* Verifica se eh valida*/
+            $res_data = checkdate($mes, $dia, $ano);
+
+            if(!$res_data){
+                $objExcecao->adicionar_validacao('Informar a data valida.','idDataHora');
+            }
         }
-        $infosTubo->setDataHora($strDataHora);
+        $infosTubo->setDataHora($dthr);
     }
 
     private function validarVolume(InfosTubo $infosTubo, Excecao $objExcecao){
@@ -174,9 +190,4 @@ class InfosTuboRN{
             throw new Excecao('Erro na listagem das informacoes do tubo.', $e);
         }
     }
-
-
-
-
-
 }
