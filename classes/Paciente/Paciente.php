@@ -22,6 +22,7 @@ class Paciente{
     private $obsPassaporte;
     private $obsNomeMae;
     private $cadastroPendente;
+    private $obsCodGAL;
     
     
     function __construct() {
@@ -170,6 +171,15 @@ class Paciente{
     function setCadastroPendente($cadastroPendente) {
         $this->cadastroPendente = $cadastroPendente;
     }
+    
+    function getObsCodGAL() {
+        return $this->obsCodGAL;
+    }
+
+    function setObsCodGAL($obsCodGAL) {
+        $this->obsCodGAL = $obsCodGAL;
+    }
+
 
 
 

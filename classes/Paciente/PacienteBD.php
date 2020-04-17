@@ -9,8 +9,8 @@ class PacienteBD{
         try{
             //print_r($objPaciente);
             $INSERT = 'INSERT INTO tb_paciente (idSexo_fk,idEtnia_fk,nome,nomeMae,dataNascimento,CPF,RG,'
-                    . 'obsRG,obsNomeMae,CEP,endereco,obsEndereco,obsCEP,obsCPF,passaporte,obsPassaporte,cadastroPendente) '
-                    . ' VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+                    . 'obsRG,obsNomeMae,CEP,endereco,obsEndereco,obsCEP,obsCPF,passaporte,obsPassaporte,cadastroPendente, obsCodGAL) '
+                    . ' VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
             
             $arrayBind = array();
             $arrayBind[] = array('i',$objPaciente->getIdSexo_fk());
@@ -30,6 +30,7 @@ class PacienteBD{
             $arrayBind[] = array('s',$objPaciente->getPassaporte());
             $arrayBind[] = array('s',$objPaciente->getObsPassaporte());
             $arrayBind[] = array('s',$objPaciente->getCadastroPendente());
+            $arrayBind[] = array('s',$objPaciente->getObsCodGAL());
             
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -45,7 +46,8 @@ class PacienteBD{
         try{    
             $UPDATE = 'UPDATE tb_paciente SET idSexo_fk = ?,idEtnia_fk = ?, nome = ?, nomeMae = ?,dataNascimento = ?, CPF = ?,'
                     . ' RG = ?, obsRG = ?, obsNomeMae = ?, CEP = ?, endereco = ?, obsEndereco = ?, obsCEP = ?, obsCPF = ?,'
-                    . ' passaporte = ?,obsPassaporte = ?,cadastroPendente = ?  where idPaciente = ?';         
+                    . ' passaporte = ?,obsPassaporte = ?,cadastroPendente = ? , obsCodGAL = ? '
+                    . 'where idPaciente = ?';         
             $arrayBind = array();
             $arrayBind[] = array('i',$objPaciente->getIdSexo_fk());
             $arrayBind[] = array('i',$objPaciente->getIdEtnia_fk());
@@ -64,6 +66,7 @@ class PacienteBD{
             $arrayBind[] = array('s',$objPaciente->getPassaporte());
             $arrayBind[] = array('s',$objPaciente->getObsPassaporte());
             $arrayBind[] = array('s',$objPaciente->getCadastroPendente());
+            $arrayBind[] = array('s',$objPaciente->getObsCodGAL());
             $arrayBind[] = array('i',$objPaciente->getIdPaciente());
             $objBanco->executarSQL($UPDATE,$arrayBind);
         } catch (Exception $ex) { throw new Excecao("Erro alterando o paciente no BD.",$ex);  }

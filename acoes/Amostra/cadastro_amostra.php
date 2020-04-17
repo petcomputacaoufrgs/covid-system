@@ -777,6 +777,7 @@ echo $alert.
 <?php } ?>
         </form>
     </div> 
+</div>
 
 
 <?php
