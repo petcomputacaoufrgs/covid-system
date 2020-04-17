@@ -3,6 +3,9 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
+require_once __DIR__ . '/../classes/Sessao/Sessao.php';
+
+
 
 switch ($_GET['action']):
     case 'principal':
@@ -11,6 +14,15 @@ switch ($_GET['action']):
     
     case 'login':
         require_once 'index.php';
+        break;
+    
+     case 'erro':
+        require_once '../acoes/PaginaErro.php';
+        break;
+    
+    case 'sair':
+        Sessao::getInstance()->logoff();
+        header('Location: controlador.php?action=login');
         break;
     
     
@@ -343,6 +355,20 @@ switch ($_GET['action']):
     
     case 'remover_usuario_perfilUsuario':
         require_once '../acoes/UsuarioPerfil/remover_usuarioPerfil.php';
+        break;
+    
+     /* ETNIA  */
+    case 'cadastrar_etnia':
+    case 'editar_etnia':
+        require_once '../acoes/Etnia/cadastro_etnia.php';
+        break;
+    
+    case 'listar_etnia':
+        require_once '../acoes/Etnia/listar_etnia.php';
+        break;
+    
+    case 'remover_etnia':
+        require_once '../acoes/Etnia/remover_etnia.php';
         break;
     
     default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador geral.');

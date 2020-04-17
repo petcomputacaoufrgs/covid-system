@@ -11,7 +11,7 @@ require_once '../classes/Rel_perfilUsuario_recurso/Rel_perfilUsuario_recurso.php
 require_once '../classes/Rel_perfilUsuario_recurso/Rel_perfilUsuario_recurso_RN.php';
 
 try{
-
+    //Sessao::getInstance()->validar();
     /* PERFIL USUÁRIO + RECURSO */
     $objRel_perfilUsuario_recurso = new Rel_perfilUsuario_recurso();
     $objRel_perfilUsuario_recurso_RN = new Rel_perfilUsuario_recurso_RN();

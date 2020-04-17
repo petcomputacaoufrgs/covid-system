@@ -14,32 +14,34 @@ class AmostraRN{
         $strObservacoes = trim($objAmostra->getObservacoes());
        
         
-        if (strlen($strObservacoes) > 150) {
-            $objExcecao->adicionar_validacao('A observação possui mais de 150 caracteres.','idObsAmostra');
+        if (strlen($strObservacoes) > 300) {
+            $objExcecao->adicionar_validacao('A observação possui mais de 300 caracteres.','idObsAmostra');
         }
        
         $objAmostra->setObservacoes($strObservacoes);
 
     }
     
-    private function validarDataHoraColeta(Amostra $objAmostra, Excecao $objExcecao) {
-        $strDataHoraColeta = trim($objAmostra->getDataHoraColeta());
+    private function validarDataColeta(Amostra $objAmostra, Excecao $objExcecao) {
+        $strDataColeta = trim($objAmostra->getDataColeta());
        
-        if ($strDataHoraColeta == '') {
-            $objExcecao->adicionar_validacao('Informar a data e hora da coleta.','idDtHrColeta');
+        if ($strDataColeta == '') {
+            $objExcecao->adicionar_validacao('Informar a data da coleta.','idDtColeta');
         }
-        $objAmostra->setDataHoraColeta($strDataHoraColeta);
+        
+        //validar para que não se coloque datas futuras a atual
+        $objAmostra->setDataColeta($strDataColeta);
     }
     
-    private function validarAceitaRecusa(Amostra $objAmostra, Excecao $objExcecao) {
-        $strAceitaRecusa = trim($objAmostra->getAceita_recusa());
+    private function validar_a_r_g(Amostra $objAmostra, Excecao $objExcecao) {
+        $strARG = trim($objAmostra->get_a_r_g());
        
         
-        if ($strAceitaRecusa == '') {
-            $objExcecao->adicionar_validacao('Informar se a amostra é aceita ou recusada.','idAceitaRecusada');
+        if ($strARG == '') {
+            $objExcecao->adicionar_validacao('Informar se a amostra é aceita, recusada ou está a caminho.','idARG');
         }
        
-        $objAmostra->setAceita_recusa($strAceitaRecusa);
+        $objAmostra->set_a_r_g($strARG);
 
     }
      

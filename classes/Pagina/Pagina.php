@@ -4,6 +4,8 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 require_once __DIR__ . '/../Sessao/Sessao.php';
+require_once __DIR__ . '/../Log/Log.php';
+require_once __DIR__ . '/../Log/LogRN.php';
 
 class Pagina {
 
@@ -45,12 +47,26 @@ class Pagina {
         echo '<link rel="stylesheet" type="text/css" href="css/'.$strArquivo.'.css?'.$strVersao.'">';
     }
     
-    public function processar_excecao(Exception $e) {
+    public function processar_excecao($e) {
         if ($e instanceof Excecao && $e->possui_validacoes()) {
             $this->array_validacoes = $e->get_validacoes();
         } else {
 
-            die('pagina->processarexcecao ' . $e);
+            try {
+                
+                $log = new Log();
+                $log->setIdUsuario(Sessao::getInstance()->getIdUsuario());
+                $log->setTexto($e->__toString()."\n".$e->getTraceAsString());
+                $log->setDataHora(date("Y-m-d H:i:s"));
+                print_r($log);
+                $logRN = new LogRN();
+                $logRN->cadastrar($log);
+                //die("aqui");
+                
+            } catch (Throwable $ex) {      
+            }
+            header('Location: controlador.php?action=erro');
+            //die('pagina->processarexcecao ' . $e);
         }
     }
 
@@ -67,7 +83,7 @@ class Pagina {
                 </button>
                 <div class="collapse navbar-collapse text-center" id="navbarsExample11">
                     <ul class="navbar-nav">
-                        <li class="nav-item active">
+                       <!-- <li class="nav-item active">
                             <a class="nav-link" href="#">Cadastro Amostra</a>
                         </li>
                         <li class="nav-item">
@@ -82,7 +98,7 @@ class Pagina {
                         <li class="nav-item">
                             <a class="nav-link" href="#">Laudo</a>
                         </li>
-                         <li class="nav-item divisor"></li>
+                         <li class="nav-item divisor"></li> -->
                         <li class="nav-item">
                             <div class="dropdown">
                                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -90,7 +106,7 @@ class Pagina {
                                 </a>
 
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                  <a class="dropdown-item" href="">Logoff</a>
+                                  <a class="dropdown-item" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=sair').'">Logoff</a>
                                 </div>
                               </div>
                             
@@ -135,14 +151,14 @@ class Pagina {
 
                         <link rel="stylesheet" href="css/fontawesome.css">
                         <![endif]-->
-                        
-                        
 
-                        <!--<link rel="stylesheet" href="css/bootstrap.min.css">
+                        <!-- Bootstrap CSS -->
+                        <!--<link rel="stylesheet" href="css/bootstrap.min.css">-->
+
                         <script src="js/jquery-3.3.1.slim.min.js"></script>
                         <script src="js/popper.min.js"></script>
                         <script src="js/bootstrap.min.js"></script>
-                        <script src="js/jquery.min.js"></script>-->
+                        <script src="js/jquery.min.js"></script>
                         
                         <!-- Bootstrap CSS -->
                         <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -274,14 +290,20 @@ class Pagina {
         return htmlentities($strValor,ENT_QUOTES);
     }
     
-    public static function montar_topo_listar($titulo,$link,$novo) {
+    public static function montar_topo_listar($titulo =null,$link1 =null, $novo1,$link2,$novo2) {
         echo '<div class="topo_listar">
                 <div class="row">
-                    <div class="col-md-9"><h3>'.$titulo.'</h3></div>
+                    <div class="col-md-6"><h3>'.$titulo.'</h3></div>
                     <div class="col-md-3">';
-                      if(Sessao::getInstance()->verificar_permissao($link)){ //só aparece o botão de cadastro para alguns perfis
+                      if(Sessao::getInstance()->verificar_permissao($link1)){ //só aparece o botão de cadastro para alguns perfis
                           echo '<a class="btn btn-primary " 
-                            href="' . Sessao::getInstance()->assinar_link('controlador.php?action='.$link). '">'.$novo.'</a> ';
+                            href="' . Sessao::getInstance()->assinar_link('controlador.php?action='.$link1). '">'.$novo1.'</a> ';
+                      }
+                    echo '</div>
+                    <div class="col-md-3">';
+                      if(Sessao::getInstance()->verificar_permissao($link2)){ //só aparece o botão de cadastro para alguns perfis
+                          echo '<a class="btn btn-primary " 
+                            href="' . Sessao::getInstance()->assinar_link('controlador.php?action='.$link2). '">'.$novo2.'</a> ';
                       }
                     echo '</div>
                 </div>

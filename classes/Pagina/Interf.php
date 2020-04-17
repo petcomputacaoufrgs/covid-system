@@ -64,7 +64,7 @@ class Interf {
         $select_nivelPrioridade .= '</select>';
     }
 
-    function montar_select_aceitaRecusada(&$select_a_r, &$objAmostra) {
+    function montar_select_aceitaRecusadaAguarda(&$select_a_r_g, &$objAmostra) {
         $selectedr = '';
         $selecteda = '';
         if ($objAmostra != null) {
@@ -75,7 +75,7 @@ class Interf {
                 $selecteda = ' selected ';
             }
         }
-        $select_a_r = ' <select id="idSelAceitaRecusada" class="form-control" name="sel_aceita_recusada" onblur="">
+        $select_a_r_g = ' <select id="idSelAceitaRecusada" class="form-control" name="sel_aceita_recusada" onblur="">
                         <option value="">Selecione</option>
                         <option' . Pagina::formatar_html($selecteda) . ' value="a">Aceita</option>
                         <option' . Pagina::formatar_html($selectedr) . ' value="r">Recusada</option>
@@ -178,5 +178,54 @@ class Interf {
         }
         $select_sexos .= '</select>';
     }
+    
+    
+    function montar_select_etnias(&$select_etnias, $objEtnia, $objEtniaRN, &$objPaciente) {
+        /* ETNIAS */
 
+
+        $selected = '';
+        $arr_etnias = $objEtniaRN->listar($objEtnia);
+
+        $select_etnias = '<select class="form-control selectpicker" '
+                . 'id="select-country idSel_etnias" data-live-search="true" name="sel_etnias">'
+                . '<option data-tokens="" ></option>';
+
+        foreach ($arr_etnias as $etnia) {
+            $selected = '';
+            if ($etnia->getIdEtnia() == $objPaciente->getIdEtnia_fk()) {
+                $selected = 'selected';
+            }
+
+            $select_etnias .= '<option ' . $selected . '  '
+                    . 'value="' . Pagina::formatar_html($etnia->getIdEtnia()) .
+                    '" data-tokens="' . Pagina::formatar_html($etnia->getEtnia()) . '">'
+                    . Pagina::formatar_html($etnia->getEtnia()) . '</option>';
+        }
+        $select_etnias .= '</select>';
+    }
+    
+    
+    function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPaciente, $objSexoPacienteRN, &$objPaciente) {
+        $selected = '';
+        $arr_sexos = $objSexoPacienteRN->listar($objSexoPaciente);
+
+        $select_sexos = '<select  onchange="" '
+                . 'class="form-control selectpicker" '
+                . 'id="select-country idSexo" data-live-search="true" '
+                . 'name="sel_sexo">'
+                . '<option data-tokens=""></option>';
+
+        foreach ($arr_sexos as $sexo) {
+            $selected = '';
+            if ($sexo->getIdSexo() == $objPaciente->getIdSexo_fk()) {
+                $selected = 'selected';
+            }
+            $select_sexos .= '<option ' . $selected .
+                    '  value="' . Pagina::formatar_html($sexo->getIdSexo())
+                    . '" data-tokens="' . Pagina::formatar_html($sexo->getSexo()) . '">'
+                    . Pagina::formatar_html($sexo->getSexo()) . '</option>';
+        }
+        $select_sexos .= '</select>';
+    }
 }

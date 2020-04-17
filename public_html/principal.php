@@ -67,14 +67,14 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
     
     <body>
         
-        <!--<?php 
+        <?php 
             // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-            if(Sessao::getInstance()->verificar_permissao('cadastrar_amostra')){ 
+            if(Sessao::getInstance()->verificar_permissao('cadastrar_paciente')){ 
                   echo '<div class="col-md-2">
-                          <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra').'">CADASTRO AMOSTRA</a>'
+                          <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_paciente').'">CADASTRO PACIENTE</a>'
                           . '</div>';
             } 
-      ?>-->
+      ?>
         
         
         <div class="conjunto_itens">
@@ -230,6 +230,15 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                     if(Sessao::getInstance()->verificar_permissao('listar_perfilUsuario')){ 
                           echo '<div class="col-md-2">
                                   <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_perfilUsuario').'">PERFIL USUÁRIO</a>'
+                                  . '</div>';
+                    } 
+              ?>
+              
+              
+              <?php 
+                    if(Sessao::getInstance()->verificar_permissao('listar_etnia')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_etnia').'">ETNIA</a>'
                                   . '</div>';
                     } 
               ?>

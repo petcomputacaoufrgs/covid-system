@@ -50,9 +50,9 @@ function validaQntTubos(){
     
 }
 
-function validaDataHoraColeta(){
+function validaDataColeta(){
      
-    var strTipo = document.getElementById("idDtHrColeta");
+    var strTipo = document.getElementById("idDtColeta");
     var div_feedback = document.getElementById("feedback_dataColeta");
        
     if( strTipo.value.length == 0 ){ // não digitou nada
@@ -61,7 +61,7 @@ function validaDataHoraColeta(){
         if(div_feedback.classList.contains("valid-feedback"))
             div_feedback.classList.remove("valid-feedback");
         div_feedback.classList.add("invalid-feedback");
-        div_feedback.innerHTML = " Informe a data e o horário em que a coleta foi realizada. ";
+        div_feedback.innerHTML = " Informe a data em que a coleta foi realizada. ";
     }
     else if(strTipo.value.length == 0 || (strTipo.value.length > 0 && strTipo.value.length < 300)){
          strTipo.classList.add("is-valid");

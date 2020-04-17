@@ -28,7 +28,7 @@ class CodigoGAL_BD{
             $UPDATE = 'UPDATE tb_codgal SET '
                     . ' codigo = ? ,'
                     . ' idPaciente_fk = ?'
-                . '  where idCodigoGAL = ?';
+                . '  where idCodGAL = ?';
         
                 
             $arrayBind = array();
@@ -48,14 +48,37 @@ class CodigoGAL_BD{
          try{
       
             $SELECT = "SELECT * FROM tb_codgal";
+            
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+           
+            if($objCodigoGAL->getCodigo() != null){
+                $WHERE .= $AND." codigo = ?";
+                $AND = ' and '; 
+                $arrayBind[] = array('s',$objCodigoGAL->getCodigo());
+            }
+            
+            if($objCodigoGAL->getIdPaciente_fk() != null){
+                $WHERE .= $AND." idPaciente_fk = ?";
+                $AND = ' and '; 
+                $arrayBind[] = array('s',$objCodigoGAL->getIdPaciente_fk());
+            }
+           
+            
+            if($WHERE != ''){
+                $WHERE = ' where '.$WHERE;
+            } 
+        
+            //echo $SELECT.$WHERE;$WHERE
 
+            $arr = $objBanco->consultarSQL($SELECT.$WHERE,$arrayBind);
 
-            $arr = $objBanco->consultarSQL($SELECT);
 
             $array_marca = array();
             foreach ($arr as $reg){
                 $objCodigoGAL = new CodigoGAL();
-                $objCodigoGAL->setIdCodigoGAL($reg['idCodigoGAL']);
+                $objCodigoGAL->setIdCodigoGAL($reg['idCodGAL']);
                 $objCodigoGAL->setCodigo($reg['codigo']);
                 $objCodigoGAL->setIdPaciente_fk($reg['idPaciente_fk']);
                 
@@ -74,7 +97,7 @@ class CodigoGAL_BD{
 
         try{
 
-            $SELECT = 'SELECT idCodigoGAL,codigo,idPaciente_fk FROM tb_codGAL WHERE idCodigogal = ?';
+            $SELECT = 'SELECT idCodGAL ,codigo,idPaciente_fk FROM tb_codgal WHERE idCodGAL = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objCodigoGAL->getIdCodigoGAL());
@@ -98,7 +121,7 @@ class CodigoGAL_BD{
 
         try{
             
-            $DELETE = 'DELETE FROM tb_codGAL WHERE idCodigoGAL = ? ';  
+            $DELETE = 'DELETE FROM tb_codgal WHERE idCodGAL = ? ';  
             $arrayBind = array();
             $arrayBind[] = array('i',$objCodigoGAL->getIdCodigoGAL());
             $objBanco->executarSQL($DELETE, $arrayBind);

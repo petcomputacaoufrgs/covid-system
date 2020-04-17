@@ -6,20 +6,27 @@
 class Paciente{
     private $idPaciente;
     private $idSexo_fk;
-    private $idPerfilPaciente_fk;
+    private $idEtnia_fk;
     private $CPF;
     private $RG;
+    private $CEP;
+    private $endereco;
+    private $passaporte;
     private $nome;
     private $nomeMae;
     private $dataNascimento;
     private $obsRG;
-    private $obsSexo;
+    private $obsCPF;
+    private $obsCEP;
+    private $obsEndereco;
+    private $obsPassaporte;
     private $obsNomeMae;
+    private $cadastroPendente;
+    
     
     function __construct() {
         
     }
-    
     function getIdPaciente() {
         return $this->idPaciente;
     }
@@ -28,8 +35,8 @@ class Paciente{
         return $this->idSexo_fk;
     }
 
-    function getIdPerfilPaciente_fk() {
-        return $this->idPerfilPaciente_fk;
+    function getIdEtnia_fk() {
+        return $this->idEtnia_fk;
     }
 
     function getCPF() {
@@ -38,6 +45,18 @@ class Paciente{
 
     function getRG() {
         return $this->RG;
+    }
+
+    function getCEP() {
+        return $this->CEP;
+    }
+
+    function getEndereco() {
+        return $this->endereco;
+    }
+
+    function getPassaporte() {
+        return $this->passaporte;
     }
 
     function getNome() {
@@ -56,8 +75,20 @@ class Paciente{
         return $this->obsRG;
     }
 
-    function getObsSexo() {
-        return $this->obsSexo;
+    function getObsCPF() {
+        return $this->obsCPF;
+    }
+
+    function getObsCEP() {
+        return $this->obsCEP;
+    }
+
+    function getObsEndereco() {
+        return $this->obsEndereco;
+    }
+
+    function getObsPassaporte() {
+        return $this->obsPassaporte;
     }
 
     function getObsNomeMae() {
@@ -72,8 +103,8 @@ class Paciente{
         $this->idSexo_fk = $idSexo_fk;
     }
 
-    function setIdPerfilPaciente_fk($idPerfilPaciente_fk) {
-        $this->idPerfilPaciente_fk = $idPerfilPaciente_fk;
+    function setIdEtnia_fk($idEtnia_fk) {
+        $this->idEtnia_fk = $idEtnia_fk;
     }
 
     function setCPF($CPF) {
@@ -82,6 +113,18 @@ class Paciente{
 
     function setRG($RG) {
         $this->RG = $RG;
+    }
+
+    function setCEP($CEP) {
+        $this->CEP = $CEP;
+    }
+
+    function setEndereco($endereco) {
+        $this->endereco = $endereco;
+    }
+
+    function setPassaporte($passaporte) {
+        $this->passaporte = $passaporte;
     }
 
     function setNome($nome) {
@@ -100,12 +143,35 @@ class Paciente{
         $this->obsRG = $obsRG;
     }
 
-    function setObsSexo($obsSexo) {
-        $this->obsSexo = $obsSexo;
+    function setObsCPF($obsCPF) {
+        $this->obsCPF = $obsCPF;
+    }
+
+    function setObsCEP($obsCEP) {
+        $this->obsCEP = $obsCEP;
+    }
+
+    function setObsEndereco($obsEndereco) {
+        $this->obsEndereco = $obsEndereco;
+    }
+
+    function setObsPassaporte($obsPassaporte) {
+        $this->obsPassaporte = $obsPassaporte;
     }
 
     function setObsNomeMae($obsNomeMae) {
         $this->obsNomeMae = $obsNomeMae;
     }
     
+    function getCadastroPendente() {
+        return $this->cadastroPendente;
+    }
+
+    function setCadastroPendente($cadastroPendente) {
+        $this->cadastroPendente = $cadastroPendente;
+    }
+
+
+
+
 }

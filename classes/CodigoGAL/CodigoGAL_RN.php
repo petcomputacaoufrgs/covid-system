@@ -5,7 +5,7 @@
  */
 
 require_once __DIR__ . '/../Excecao/Excecao.php';
-require_once __DIR__ . '/CodigoGAL_RN.php';
+require_once __DIR__ . '/CodigoGAL_BD.php';
 
 
 class CodigoGAL_RN{
@@ -125,6 +125,22 @@ class CodigoGAL_RN{
             return $arr;
         } catch (Exception $e) {
             throw new Excecao('Erro pesquisando o código GAL.', $e);
+        }
+    }
+    
+    
+    public function validar_cadastro(CodigoGAL $codGAL) {
+        try {
+            $objExcecao = new Excecao();
+            $objBanco = new Banco();
+            $objBanco->abrirConexao(); 
+            $objExcecao->lancar_validacoes();
+            $objCodigoGAL_BD = new CodigoGAL_BD();
+            $arr = $objCodigoGAL_BD->validar_cadastro($codGAL,$objBanco);
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Exception $e) {
+            throw new Excecao('Erro validando cadastron do código GAL.', $e);
         }
     }
     

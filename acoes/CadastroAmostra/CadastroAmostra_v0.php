@@ -18,7 +18,8 @@ require_once '../classes/Usuario/UsuarioRN.php';
 require_once '../classes/Paciente/Paciente.php';
 require_once '../classes/Paciente/PacienteRN.php';
 
-
+require_once '../classes/PerfilPaciente/PerfilPaciente.php';
+require_once '../classes/PerfilPaciente/PerfilPacienteRN.php';
 require_once '../classes/Sexo/Sexo.php';
 require_once '../classes/Sexo/SexoRN.php';
 require_once '../classes/Amostra/Amostra.php';
@@ -41,8 +42,7 @@ require_once '../utils/Alert.php';
 
 require_once '../classes/Etnia/Etnia.php';
 require_once '../classes/Etnia/EtniaRN.php';
-/*require_once '../classes/PerfilPaciente/PerfilPaciente.php';
-require_once '../classes/PerfilPaciente/PerfilPacienteRN.php';*/
+
 try {
     Sessao::getInstance()->validar();
     $utils = new Utils();
@@ -126,9 +126,12 @@ try {
 
 
 
-    if (isset($_POST['txtCPF'])) {
-        ECHO "cpf";
-    } 
+    /* if (isset($_POST['sel_sexo']) && $_POST['sel_sexo'] != null) {
+      $objSexoPaciente->setIdSexo($_POST['sel_sexo']);
+      $objSexoPaciente = $objSexoPacienteRN->consultar($objSexoPaciente);
+      $objPaciente->setIdSexo_fk($objSexoPaciente->getIdSexo());
+      Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente);
+      } */
 
 
     switch ($_GET['action']) {
@@ -396,27 +399,254 @@ echo $alert .
  Pagina::montar_topo_listar('CADASTRAR AMOSTRA', 'listar_amostra', 'LISTAR AMOSTRAS');
 ?>
 
+
 <div class="conteudo_grande">
     <div class="formulario">
         <form method="POST">
-            <!-- CPF -->
-                <div class="col-md-3 mb-4">
-                    <label for="label_cpf">Digite o CPF:</label>
-                    <input type="text" class="form-control cep-mask" id="idCPF" placeholder="Ex.: 000.000.000-00" 
-                           onblur="validaCPF()" name="txtCPF" <?= $cpf_obrigatorio ?> 
-                           value="<?= Pagina::formatar_html($objPaciente->getCPF()) ?>">
-                    <div id ="feedback_cpf"></div>
-                    
 
-                </div> 
-             <button style="margin-top:20px;" class="btn btn-primary" type="submit" 
+            <div class="form-row">  
+                <div class="col-md-9"><h3> Sobre o Paciente </h3></div>
+                <!--<div class="col-md-4">
+                    <input type="text" class="form-control" id="idUsuarioLogado" readonly style="text-align: center;margin-bottom: 10px;"
+                           name="txtUsuarioLogado" required value="Identificador do usuÃ¡rio logado: <?= $objUsuario->getMatricula() ?>" >
+                </div> -->
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="idDataHoraLogin" readonly style="text-align: center;"
+                           name="dtHoraLoginInicio" required value="<?= $_SESSION['DATA_LOGIN'] ?>">
+                </div>
+
+            </div>           
+
+
+            <div class="form-row">  
+
+                <div class="col-md-12">
+                    <label for="perfil">Perfil:</label>
+<?= $select_perfis ?>
+                </div>
+
+            </div>
+
+
+                <div class="form-row" style="margin-top:10px;">
+
+                    <div class="col-md-4 mb-3">
+                        <label for="label_nome">Digite o nome:</label>
+                        <input type="text" class="form-control" id="idNome" placeholder="Nome" 
+                               onblur="validaNome()" name="txtNome" required value="<?= $objPaciente->getNome() ?>">
+                        <div id ="feedback_nome"></div>
+
+                    </div>
+
+                    <!-- Nome da mãe -->
+                    <div class="col-md-4 mb-9">
+                        <label for="label_nomeMae">Digite o nome da mãe:</label>
+                        <input type="text" class="form-control" id="idNomeMae" placeholder="Nome da mãe" 
+                               onblur="validaNomeMae()" name="txtNomeMae" required value="<?= $objPaciente->getNomeMae() ?>">
+                        <div id ="feedback_nomeMae"></div>
+                        <div class="desaparecer_aparecer" id="id_desaparecer_aparecerObsNomeMae" style="display:none" >
+
+                            <div class="form-row align-items-center" >
+                                <div class="col-auto my-1">
+                                    <div class="custom-control custom-radio mb-3">
+                                        <input onclick="val_radio_obsNomeMae()"  name="obs"  type="radio"  class="custom-control-input" id="customControlValidation2" name="radio-stacked" >
+                                        <label class="custom-control-label" for="customControlValidation2">NÃ£o informado</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-auto my-1">
+                                    <div class="custom-control custom-radio mb-3">
+                                        <input onchange="val_radio_obsNomeMae()"  name="obs" type="radio" class="custom-control-input" id="customControlValidation3" name="radio-stacked" >
+                                        <label class="custom-control-label" for="customControlValidation3">Outro</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-auto my-1">
+                                    <div class="custom-control  mb-3">
+
+                                        <input style="height: 35px; margin-left: -25px;margin-top: -5px;" readonly  type="text" class="form-control" id="idObsNomeMae" placeholder="motivo"  
+                                               onblur="validaObsNomeMae()" name="txtObsNomeMae" required value="<?= $objPaciente->getObsNomeMae() ?>">
+                                        <div id ="feedback_obsNomeMae"></div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    <!-- Data de nascimento -->
+                    <div class="col-md-4 mb-3">
+                        <label for="label_dtNascimento">Digite a data de nascimento:</label>
+                        <input type="date" class="form-control" id="idDataNascimento" placeholder="Data de nascimento"  
+                               onblur="validaDataNascimento()" name="dtDataNascimento"  max="<?php echo date('Y-m-d'); ?>" 
+                               required value="<?= Pagina::formatar_html($objPaciente->getDataNascimento()) ?>">
+                        <div id ="feedback_dtNascimento"></div>
+                    </div>
+
+
+
+                </div>  
+
+
+                <div class="form-row">
+                    <!-- Sexo -->
+                    <div class="col-md-3 mb-4">
+                        <label for="sexoPaciente" >Sexo:</label>
+    <?= $select_sexos ?>
+                        <div id ="feedback_sexo"></div>
+
+                        <!--  <div class="desaparecer_aparecer" id="id_desaparecer_aparecerObsSexo" style="margin-top:25px;" >
+                              <div class="form-row align-items-center" >
+                                  <div class="col-auto mb-1">
+                                      <div class="custom-control custom-radio mb-3">
+                                          <input onclick="val_radio_obsSexo()"  name="obsSexo" value="naoInformado" type="radio"  class="custom-control-input" id="customControlValidationSexo" name="radio-stacked2" >
+                                          <label class="custom-control-label" for="customControlValidationSexo">NÃ£o informado </label>
+                                      </div>
+                                  </div>
+                                  <div class="col-auto mb-1">
+                                      <div class="custom-control custom-radio mb-3">
+                                          <input onchange="val_radio_obsSexo()"  name="obsSexo" value="outro" type="radio" class="custom-control-input" id="customControlValidationSexo2" name="radio-stacked2" >
+                                          <label class="custom-control-label" for="customControlValidationSexo2">Outro</label>
+                                      </div>
+                                  </div>
+                                  <div class="col-auto my-1">
+                                      <div class="custom-control  mb-2">
+                                          <input style="height: 35px;margin-left: -25px;margin-top: -15px;" readonly  type="text" class="form-control" id="idObsSexo" placeholder="motivo"  
+                                                 onblur="validaObsSexo()" name="txtObsSexo" required value="<?= $objPaciente->getObsSexo() ?>">
+                                          <div id ="feedback_obsNomeMae"></div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div> -->
+                    </div>
+
+
+                    <!-- CPF -->
+                    <div class="col-md-3 mb-4">
+                        <label for="label_cpf">Digite o CPF:</label>
+                        <input type="text" class="form-control cep-mask" id="idCPF" placeholder="Ex.: 000.000.000-00" 
+                               onblur="validaCPF()" name="txtCPF" <?= $cpf_obrigatorio ?> 
+                               value="<?= Pagina::formatar_html($objPaciente->getCPF()) ?>">
+                        <div id ="feedback_cpf"></div>
+
+                    </div> 
+
+                    <!-- RG -->
+                    <div class="col-md-3 mb-3">
+                        <label for="label_rg">Digite o RG:</label>
+                        <input type="txt" class="form-control" id="idRG" placeholder="RG" 
+                               onblur="validaRG()" name="txtRG" 
+                               value="<?= Pagina::formatar_html($objPaciente->getRG()) ?>">
+                        <div id ="feedback_rg"></div>
+                        <div class="desaparecer_aparecer" id="id_desaparecer_aparecerObsRG" style="margin-top:25px; display: none;" >
+
+                            <div class="form-row align-items-center" >
+                                <!--<div class="col-auto my-1">
+                                    <div class="custom-control custom-radio mb-3">
+                                        <input onclick="val_radio_obsRG()"  name="obsRG" value="naoInformado" type="radio"  
+                                               class="custom-control-input" id="customControlValidationRG" name="radio-stacked3" >
+                                        <label class="custom-control-label" for="customControlValidationRG">NÃ£o informado </label>
+                                    </div>
+                                </div>
+                                <div class="col-auto my-1">
+                                    <div class="custom-control custom-radio mb-3">
+                                        <input onchange="val_radio_obsRG()"  name="obsRG" value="outro" type="radio" 
+                                               class="custom-control-input" id="customControlValidationRG2" name="radio-stacked3" >
+                                        <label class="custom-control-label" for="customControlValidationRG2">Outro</label>
+                                    </div>
+                                </div>-->
+
+                                <!--<div class="col-auto ">
+                                    <div class="custom-control  mb-3">
+                                        <input style="height: 35px;margin-left: -25px;margin-top: -20px;" 
+                                               type="text" class="form-control" id="idObsRG" placeholder="motivo"  
+                                               onblur="validaObsRG()" name="txtObsRG" required value="<?= $objPaciente->getObsRG() ?>">
+                                        <div id ="feedback_obsRG"></div>
+                                    </div>
+                                </div>-->
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <!-- CÓDIGO GAL -->
+    <?PHP if ($objPerfilPaciente->getPerfil() == 'Pacientes SUS') { ?>
+                        <div class="col-md-3 mb-3">
+                            <label for="label_codGal">Digite o código Gal:</label>
+                            <input type="text" class="form-control" id="idCodGAL" placeholder="000 0000 0000 0000" data-mask="000 0000 0000 0000"  <?= $read_only ?>
+                                   onblur="validaCodGAL()" name="txtCodGAL" required 
+                                   value="<?= Pagina::formatar_html($objCodigoGAL->getCodigo()) ?>">
+                            <div id ="feedback_codGal"></div>
+
+                        </div>
+    <?php } ?>
+
+
+                </div>  
+
+
+                <h3> Sobre a Coleta </h3>
+                <hr width = â€œ2â€ size = â€œ100â€>
+                <div class="form-row">  
+                    <div class="col-md-2">
+
+                        <label for="inputAceitaRecusada">Aceita ou recusada</label>
+    <?= $select_a_r_g ?>
+                        <div id ="feedback_aceita_recusada"></div>
+                    </div>
+                    <!--<div class="col-md-2">
+                        <label for="labelQuantidadeTubos">Quantidade de tubos: </label>
+                        <input type="number" class="form-control" id="idQntTubos" placeholder="nÂº tubos" default
+                               onblur="validaQntTubos()" name="numQntTubos" required value="<?= $tubos ?>">
+                        <div id ="feedback_qntTubos"></div>
+                    </div> -->
+
+                    <div class="col-md-4">
+                        <label for="labelDataHora">Data e Hora:</label>
+                        <input type="date" class="form-control" id="idDtColeta" placeholder="0000-00-00 00:00:00" 
+                               onblur="validaDataColeta()" name="dtColeta" required 
+                               value="<?= date("Y-m-d H:i:s") ?>">
+                        <div id ="feedback_dataColeta"></div>
+
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="labelEstadoColeta">Estado:</label>
+    <?= $select_estados ?>
+                    </div>
+                    <div id ="feedback_estado"></div>
+
+                    <div class="col-md-4">
+                        <label for="labelMunicípioColeta">Município:</label>
+                        <?= $select_municipios ?>
+                    </div>
+
+                    <!-- <div class="col-md-2">
+                         <label for="labelNivelPrioridade">Nivel de Prioridade:</label>
+                        <?= $select_nivelPrioridade ?>
+                     </div> -->
+
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label for="observações amostra">Observações</label>
+                        <textarea onblur="validaObs()" id="idTxtAreaObs" name="txtAreaObs" rows="2" cols="100" class="form-control" id="obsAmostra" rows="3"></textarea>
+                        <div id ="feedback_obsAmostra"></div>
+                    </div>
+                </div>
+
+
+                <button style="margin-top:20px;" class="btn btn-primary" type="submit" 
                         name="salvar_amostra">Salvar</button> 
+
+
         </form>
-    </div>
-</div>
-
-
-
+    </div> 
 
 
             <?php

@@ -8,7 +8,8 @@ require_once '../classes/Capela/Capela.php';
 require_once '../classes/Capela/CapelaRN.php';
 require_once '../utils/Utils.php';
 require_once '../utils/Alert.php';
-
+try {
+    Sessao::getInstance()->validar();
 $utils = new Utils();
 $objCapela = new Capela();
 $objCapelaRN = new CapelaRN();
@@ -28,7 +29,9 @@ if(isset($_POST['lock_capela'])){
     }
 }
 
-
+}catch (Throwable $ex) {
+    
+}
 
 
 Pagina::abrir_head("LOCK capela");

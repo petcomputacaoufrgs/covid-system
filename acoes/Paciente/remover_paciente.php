@@ -4,22 +4,24 @@
  */
 session_start();
 require_once '../classes/Sessao/Sessao.php';
-require_once 'classes/Pagina/Pagina.php';
-require_once 'classes/Excecao/Excecao.php';
-require_once 'classes/Paciente/Paciente.php';
-require_once 'classes/Paciente/PacienteRN.php';
+require_once '../classes/Pagina/Pagina.php';
+require_once '../classes/Excecao/Excecao.php';
+require_once '../classes/Paciente/Paciente.php';
+require_once '../classes/Paciente/PacienteRN.php';
 
-$objPagina = new Pagina();
-$objPaciente = new Paciente();
-$objPacienteRN = new PacienteRN();
+
 try{
-
+    Sessao::getInstance()->validar();
+    
+    $objPaciente = new Paciente();
+    $objPacienteRN = new PacienteRN();
+    
     $objPaciente->setIdPaciente($_GET['idPaciente']);
     $objPacienteRN->remover($objPaciente);
 
-    header('Location: controlador.php?action=listar_paciente');
+    header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_paciente'));
 } catch (Exception $ex) {
-    $objPagina->processar_excecao($ex);
+    Pagina::getInstance()->processar_excecao($ex);
 }
 
 

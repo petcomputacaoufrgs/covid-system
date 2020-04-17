@@ -16,6 +16,7 @@ $objRecursoRN = new RecursoRN();
 $alert = '';
 
 try{
+    Sessao::getInstance()->validar();
     switch($_GET['action']){
         case 'cadastrar_recurso':
             if(isset($_POST['salvar_recurso'])){
@@ -26,8 +27,8 @@ try{
                 $arr_recursos = $objRecursoRN->validar_cadastro($objRecurso);
                 if(empty($arr_recursos)){
                     $objRecursoRN->cadastrar($objRecurso);
-                    $alert= Alert::alert_success_cadastrar();
-                }else{$alert= Alert::alert_error_cadastrar_editar();}
+                    $alert.= Alert::alert_success("O recurso foi cadastrado");
+                }else{$alert.= Alert::alert_warning("O recurso já tinha sido cadastrado");}
                 
             }else{
                 $objRecurso->setIdRecurso('');
@@ -51,8 +52,8 @@ try{
                 $arr_recursos = $objRecursoRN->validar_cadastro($objRecurso);
                 if(empty($arr_recursos)){
                     $objRecursoRN->alterar($objRecurso);
-                   $alert = Alert::alert_success_editar();
-                }else{$alert= Alert::alert_error_cadastrar_editar();}
+                   $alert .= Alert::alert_success("O recurso foi alterado");
+                }else{$alert.= Alert::alert_danger("O recurso não foi alterado");}
              
             }
             
@@ -62,16 +63,17 @@ try{
     }
    
 } catch (Exception $ex) {
-    $objPagina->processar_excecao($ex);
+      Pagina::getInstance()->processar_excecao($ex);
 }
 
-?>
+Pagina::getInstance()->abrir_head("Listar Recursos");
+Pagina::getInstance()->adicionar_css("precadastros");
+Pagina::getInstance()->fechar_head();
+Pagina::getInstance()->montar_menu_topo();
 
-<?php Pagina::abrir_head("Cadastrar Recurso"); ?>
-<link rel="stylesheet" type="text/css" href="css/precadastros.css">
-<?php Pagina::fechar_head();?>
-<?php $objPagina->montar_menu_topo();?>
-<?=$alert?>
+echo $alert;
+
+?>
 
 <DIV class="conteudo">
 <form method="POST">
