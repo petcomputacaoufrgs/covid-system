@@ -77,11 +77,9 @@ class Pagina {
             
            <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <div class="mx-auto d-sm-flex d-block flex-sm-nowrap">
-<<<<<<< HEAD
-                <a class="navbar-brand" href="controlador.php?action=principal">COVID19<i class="fas fa-virus"></i></a>
-=======
+
                 <a class="navbar-brand" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">COVID19<i class="fas fa-virus"></i></a>
->>>>>>> e95511c42a0c6590db03da3bc4b40921f5f89fb5
+
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -171,6 +169,9 @@ class Pagina {
 
                         <!-- Latest compiled and minified JavaScript -->
                         <script src="js/bootstrap-select.min.js"></script>
+
+                        <!-- Latest compiled and minified JavaScript -->
+                        <script src="js/datetime-copy-paste.js"></script>
 
 
                         <!-- Estilo customizado -->

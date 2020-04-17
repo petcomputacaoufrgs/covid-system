@@ -29,7 +29,7 @@ function validaNome(){
 }
 
 
-function validaCPF(){
+function validaCPFSUS(){
         
     var strTipo = document.getElementById("idCPF");
     //var tipoAmostra = '<?=$objTipoAmostra->getTipo() ?>';
@@ -129,13 +129,13 @@ function validaCPF(){
     
 }
 */
-function validaCPFSUS(){
+function validaCPF(){
     
     var strTipo = document.getElementById("idCPF");
     var div_feedback = document.getElementById("feedback_cpf");
-    var x = document.getElementById("id_desaparecer_aparecerObsCPF");
+    var x = document.getElementById("id_desaparecer_aparecerCPF");
     
-    if(strTipo.value.length == 0 || strTipo.value.length > 11 ){ // não digitou nada
+    if( strTipo.value.length == 0  || strTipo.value.length != 11 ){ // não digitou nada
         strTipo.classList.add("is-invalid");
         if(strTipo.classList.contains("is-valid")) strTipo.classList.remove("is-valid");
         if(div_feedback.classList.contains("valid-feedback"))
@@ -147,9 +147,10 @@ function validaCPFSUS(){
                 x.style.display = "block";
             } 
         }
-        if(strTipo.value.length > 11 ) div_feedback.innerHTML = " Digite o CPF com 11 caracteres. ";
+        if(strTipo.value.length != 11 ) div_feedback.innerHTML = " Digite o CPF com 11 caracteres. ";
     }
-    else if(strTipo.value.length > 0){
+    
+    if(strTipo.value.length == 11){
         x.style.display = "none";
          strTipo.classList.add("is-valid");
         if(strTipo.classList.contains("is-invalid")) strTipo.classList.remove("is-invalid");
@@ -217,7 +218,7 @@ function validaCEP(){
         }
         if(strTipo.value.length > 8 ) div_feedback.innerHTML = " Digite o CEP com 8 caracteres. ";
     }
-    else if(strTipo.value.length > 0 && strTipo.value.length == 10 ){
+    else if(strTipo.value.length > 0 && strTipo.value.length == 8 ){
         x.style.display = "none";
          strTipo.classList.add("is-valid");
         if(strTipo.classList.contains("is-invalid")) strTipo.classList.remove("is-invalid");
@@ -251,7 +252,7 @@ function validaEndereco(){
         }
         if(strTipo.value.length > 150 ) div_feedback.innerHTML = " Digite um endereço com até 150 caracteres. ";
     }
-    else if(strTipo.value.length > 0 && strTipo.value.length == 10 ){
+    else if(strTipo.value.length > 0 && strTipo.value.length < 150 ){
         x.style.display = "none";
          strTipo.classList.add("is-valid");
         if(strTipo.classList.contains("is-invalid")) strTipo.classList.remove("is-invalid");
@@ -305,7 +306,7 @@ function validaCodGAL(){
     var div_feedback = document.getElementById("feedback_codGal");
     var x = document.getElementById("id_desaparecer_aparecerCodGAL");
     
-    if(strTipo.value.length == 0 || strTipo.value.length > 15 ){ // não digitou nada
+    if( strTipo.value.length != 15 ){ // não digitou nada
         strTipo.classList.add("is-invalid");
         if(strTipo.classList.contains("is-valid")) strTipo.classList.remove("is-valid");
         if(div_feedback.classList.contains("valid-feedback"))
@@ -318,9 +319,9 @@ function validaCodGAL(){
                 x.style.display = "block";
             } 
         }
-        if(strTipo.value.length > 15 ) div_feedback.innerHTML = " Digite o código GAL com até 15 caracteres. ";
+        if(strTipo.value.length != 15 ) div_feedback.innerHTML = " Digite o código GAL com até 15 caracteres. ";
     }
-    else if(strTipo.value.length > 0 && strTipo.value.length == 10 ){
+    else if(strTipo.value.length == 15 ){
         x.style.display = "none";
          strTipo.classList.add("is-valid");
         if(strTipo.classList.contains("is-invalid")) strTipo.classList.remove("is-invalid");

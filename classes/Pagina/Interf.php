@@ -155,12 +155,13 @@ class Interf {
         $select_perfis .= '</select>';
     }
 
-    function montar_select_sexo(&$select_sexos, $objSexoPaciente, $objSexoPacienteRN, &$objPaciente) {
+    function montar_select_sexo(&$select_sexos, $objSexoPaciente, $objSexoPacienteRN, &$objPaciente,$disabled) {
         /* SEXO DO PACIENTE */
         $selected = '';
         $arr_sexos = $objSexoPacienteRN->listar($objSexoPaciente);
-
-        $select_sexos = '<select  onchange="" '
+        
+        
+        $select_sexos = '<select  onchange="" ' . $disabled
                 . 'class="form-control selectpicker" '
                 . 'id="select-country idSexo" data-live-search="true" '
                 . 'name="sel_sexo">'
@@ -168,6 +169,10 @@ class Interf {
 
         foreach ($arr_sexos as $sexo) {
             $selected = '';
+            if($sexo->getIndex_sexo() == 'NAO INFORMADO' && $objPaciente->getIdSexo_fk() == ''){
+                $selected = 'selected';
+            }
+            
             if ($sexo->getIdSexo() == $objPaciente->getIdSexo_fk()) {
                 $selected = 'selected';
             }
@@ -180,19 +185,25 @@ class Interf {
     }
     
     
-    function montar_select_etnias(&$select_etnias, $objEtnia, $objEtniaRN, &$objPaciente) {
+    function montar_select_etnias(&$select_etnias, $objEtnia, $objEtniaRN, &$objPaciente,$disabled) {
         /* ETNIAS */
 
 
         $selected = '';
         $arr_etnias = $objEtniaRN->listar($objEtnia);
 
-        $select_etnias = '<select class="form-control selectpicker" '
+        $select_etnias = '<select class="form-control selectpicker" '. $disabled
                 . 'id="select-country idSel_etnias" data-live-search="true" name="sel_etnias">'
                 . '<option data-tokens="" ></option>';
 
         foreach ($arr_etnias as $etnia) {
             $selected = '';
+            if($etnia->getIndex_etnia() == 'SEM DECLARACAO' && $objPaciente->getIdEtnia_fk() == ''){
+                $selected = 'selected';
+            }
+            
+            
+            
             if ($etnia->getIdEtnia() == $objPaciente->getIdEtnia_fk()) {
                 $selected = 'selected';
             }
