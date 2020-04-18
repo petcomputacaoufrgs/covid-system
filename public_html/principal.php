@@ -67,11 +67,12 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
     
     <body>
         
+      
         <?php 
             // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-            if(Sessao::getInstance()->verificar_permissao('cadastrar_paciente')){ 
+            if(Sessao::getInstance()->verificar_permissao('cadastrar_amostra')){ 
                   echo '<div class="col-md-2">
-                          <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_paciente').'">CADASTRO PACIENTE</a>'
+                          <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra').'">CADASTRO AMOSTRA</a>'
                           . '</div>';
             } 
       ?>

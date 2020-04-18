@@ -272,11 +272,13 @@ switch ($_GET['action']):
     /* AMOSTRA */
     case 'cadastrar_amostra':
     case 'editar_amostra':
-        require_once '../acoes/CadastroAmostra/CadastroAmostra.php';
+        //require_once '../acoes/CadastroAmostra/CadastroAmostra.php';
+        require_once '../acoes/Amostra/cadastro_amostra.php';
         break;
     
     case 'listar_amostra':
-        require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
+        //require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
+        require_once '../acoes/Amostra/listar_amostra.php';
         break;
     
     case 'remover_amostra':

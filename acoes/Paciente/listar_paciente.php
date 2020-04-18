@@ -48,17 +48,45 @@ try{
             $etnia = '';
         }
          
+        if($p->getDataNascimento() == null){
+            $data = 'Desconhecida';
+        }else{  $data = $p->getDataNascimento(); }
+        
+        if($p->getPassaporte() == null){
+            $passaporte = $p->getObsPassaporte();
+        }else{  $passaporte = $p->getPassaporte(); }
+        
+        if($p->getNomeMae() == null){
+            $nomeMae = $p->getObsNomeMae();
+        }else{  $nomeMae = $p->getNomeMae(); }
+        
+        if($p->getCPF() == null){
+            $cpf = $p->getObsCPF();
+        }else{  $cpf = $p->getCPF(); }
+        
+        
+        if($p->getRG() == null){
+            $rg = $p->getObsRG();
+        }else{  $rg = $p->getRG(); }
+        
+        
+        if($p->getCEP() == null){
+            $cep = $p->getObsCEP();
+        }else{  $cep = $p->getCEP(); }
+        
+        
+        
         $html.='<tr>
                     <th scope="row">'.Pagina::formatar_html($p->getIdPaciente()).'</th>
                         <td>'.Pagina::formatar_html($p->getNome()).'</td>
-                        <td>'.Pagina::formatar_html($p->getNomeMae()).'</td>
+                        <td>'.Pagina::formatar_html($nomeMae).'</td>
                         <td>'.Pagina::formatar_html($objSexo->getSexo()).'</td>        
-                        <td>'.Pagina::formatar_html($p->getCEP()).'</td>        
+                        <td>'.Pagina::formatar_html($cep).'</td>        
                         <td>'.Pagina::formatar_html($etnia).'</td>        
-                        <td>'.Pagina::formatar_html($p->getPassaporte()).'</td>        
-                        <td>'.Pagina::formatar_html($p->getDataNascimento()).'</td>        
-                        <td>'.Pagina::formatar_html($p->getCPF()).'</td>        
-                        <td>'.Pagina::formatar_html($p->getRG()).'</td>        
+                        <td>'.Pagina::formatar_html($passaporte).'</td>        
+                        <td>'.Pagina::formatar_html($data).'</td>        
+                        <td>'.Pagina::formatar_html($cpf).'</td>        
+                        <td>'.Pagina::formatar_html($rg).'</td>        
                         
                         <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_paciente&idPaciente='.Pagina::formatar_html($p->getIdPaciente())).'">Editar</a></td>
                         <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_paciente&idPaciente='.Pagina::formatar_html($p->getIdPaciente())).'">Remover</a></td>

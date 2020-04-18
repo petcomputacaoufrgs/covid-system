@@ -142,10 +142,8 @@ class Pagina {
                         <!--<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />-->
                         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-                        <!-- Font Awesome -->
-
-                        <link rel="stylesheet" type="text/css" href="all.css">
-
+                        <!-- Font Awesome --><!-- NÃO REMOVER SENÃO NÃO APARECEM OS ÍCONES -->
+                        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
                         <!-- HTML5Shiv -->
                         <!--[if lt IE 9]>

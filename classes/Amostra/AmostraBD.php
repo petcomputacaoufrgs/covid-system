@@ -8,9 +8,26 @@ class AmostraBD{
     public function cadastrar(Amostra $objAmostra, Banco $objBanco) {
         try{
             //echo $objAmostra->getAmostra();
-            $INSERT = 'INSERT INTO tb_amostra (idPaciente_fk,cod_estado_fk,cod_municipio_fk,'
-                    . 'idCodGAL_fk,idNivelPrioridade_fk,observacoes,dataHoraColeta,a_r,statusAmostra)' 
-                    . 'VALUES (?,?,?,?,?,?,?,?,?)';
+            $INSERT = 'INSERT INTO tb_amostra ('
+                    . 'idPaciente_fk,'
+                    . 'cod_estado_fk,'
+                    . 'cod_municipio_fk,'
+                    . 'idCodGAL_fk,'
+                    . 'idNivelPrioridade_fk,'
+                    . 'idPerfilPaciente_fk,'
+                    . 'observacoes,'
+                    . 'dataColeta,'
+                    . 'a_r_g,'
+                    . 'horaColeta,'
+                    . 'motivo,'
+                    . 'CEP,'
+                    . 'codigoAmostra,'
+                    . 'obsCEPAmostra,'
+                    . 'obsHoraColeta,'
+                    . 'obsLugarOrigem,'
+                    . 'obsMotivo'
+                    . ')' 
+                    . 'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objAmostra->getIdPaciente_fk());
@@ -18,10 +35,20 @@ class AmostraBD{
             $arrayBind[] = array('i',$objAmostra->getIdLugarOrigem_fk());
             $arrayBind[] = array('i',$objAmostra->getIdCodGAL_fk());
             $arrayBind[] = array('i',$objAmostra->getIdNivelPrioridade_fk());
+            $arrayBind[] = array('i',$objAmostra->getIdPerfilPaciente_fk());
             $arrayBind[] = array('s',$objAmostra->getObservacoes());
-            $arrayBind[] = array('s',$objAmostra->getDataHoraColeta());
-            $arrayBind[] = array('s',$objAmostra->getAceita_recusa());
-            $arrayBind[] = array('s',$objAmostra->getStatusAmostra());
+            $arrayBind[] = array('s',$objAmostra->getDataColeta());
+            $arrayBind[] = array('s',$objAmostra->get_a_r_g());
+            $arrayBind[] = array('s',$objAmostra->getHoraColeta());
+            $arrayBind[] = array('s',$objAmostra->getMotivoExame());
+            $arrayBind[] = array('s',$objAmostra->getCEP());
+            $arrayBind[] = array('s',$objAmostra->getCodigoAmostra());
+            $arrayBind[] = array('s',$objAmostra->getObsCEP());
+            $arrayBind[] = array('s',$objAmostra->getObsHoraColeta());
+            $arrayBind[] = array('s',$objAmostra->getObsLugarOrigem());
+            $arrayBind[] = array('s',$objAmostra->getObsMotivo());
+            
+            
                         
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -37,15 +64,23 @@ class AmostraBD{
         try{
                       
             $UPDATE = 'UPDATE tb_amostra SET '
-                    . ' idPaciente_fk = ?,'
-                    . ' cod_estado_fk = ?,'
-                    . ' cod_municipio_fk = ?,'
-                    . ' idCodGAL_fk = ?,'
-                    . ' idNivelPrioridade_fk = ?,'
-                    . ' observacoes = ?,'
-                    . ' dataHoraColeta = ?,'
-                    . ' a_r = ?,'
-                    . ' statusAmostra = ?'
+                    . 'idPaciente_fk =? ,'
+                    . 'cod_estado_fk =?,'
+                    . 'cod_municipio_fk =?,'
+                    . 'idCodGAL_fk =?,'
+                    . 'idNivelPrioridade_fk =?,'
+                    . 'idPerfilPaciente_fk =?,'
+                    . 'observacoes =?,'
+                    . 'dataColeta =?,'
+                    . 'a_r_g =?, '
+                    . 'horaColeta =?,'
+                    . 'motivo =?, '
+                    . 'CEP  =?,'
+                    . 'codigoAmostra =?,'
+                    . 'obsCEPAmostra =?,'
+                    . 'obsHoraColeta =?,'
+                    . 'obsLugarOrigem =?,'
+                    . 'obsMotivo =?'
                 . '  where idAmostra = ?';
         
                 
@@ -55,10 +90,19 @@ class AmostraBD{
             $arrayBind[] = array('i',$objAmostra->getIdLugarOrigem_fk());
             $arrayBind[] = array('i',$objAmostra->getIdCodGAL_fk());
             $arrayBind[] = array('i',$objAmostra->getIdNivelPrioridade_fk());
+            $arrayBind[] = array('i',$objAmostra->getIdPerfilPaciente_fk());
             $arrayBind[] = array('s',$objAmostra->getObservacoes());
-            $arrayBind[] = array('s',$objAmostra->getDataHoraColeta());
-            $arrayBind[] = array('s',$objAmostra->getAceita_recusa());
-            $arrayBind[] = array('s',$objAmostra->getStatusAmostra());
+            $arrayBind[] = array('s',$objAmostra->getDataColeta());
+            $arrayBind[] = array('s',$objAmostra->get_a_r_g());
+            $arrayBind[] = array('s',$objAmostra->getHoraColeta());
+            $arrayBind[] = array('s',$objAmostra->getMotivoExame());
+            $arrayBind[] = array('s',$objAmostra->getCEP());
+            $arrayBind[] = array('s',$objAmostra->getCodigoAmostra());
+            $arrayBind[] = array('s',$objAmostra->getObsCEP());
+            $arrayBind[] = array('s',$objAmostra->getObsHoraColeta());
+            $arrayBind[] = array('s',$objAmostra->getObsLugarOrigem());
+            $arrayBind[] = array('s',$objAmostra->getObsMotivo());
+            
             $arrayBind[] = array('i',$objAmostra->getIdAmostra());
             
 
@@ -74,9 +118,47 @@ class AmostraBD{
          try{
       
             $SELECT = "SELECT * FROM tb_amostra";
+            
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($objAmostra->getCodigoAmostra() != null) {
+                $WHERE .= $AND . " codigoAmostra = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objAmostra->getCodigoAmostra());
+            }
+            
+            if ($objAmostra->get_a_r_g() != null) {
+                $WHERE .= $AND . " a_r_g = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objAmostra->get_a_r_g());
+            }
+
+            if ($objAmostra->getDataColeta() != null) {
+                $WHERE .= $AND . " dataColeta = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objAmostra->getDataColeta());
+            }
+            
+            if ($objAmostra->getIdPerfilPaciente_fk() != null) {
+                $WHERE .= $AND . " idPerfilPaciente_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objAmostra->getIdPerfilPaciente_fk());
+            }
+
+            
 
 
-            $arr = $objBanco->consultarSQL($SELECT);
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            //echo $SELECT.$WHERE;$WHERE
+
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
+            
+          
  
             $array_paciente = array();
             foreach ($arr as $reg){
@@ -85,12 +167,21 @@ class AmostraBD{
                 $objAmostra->setIdPaciente_fk($reg['idPaciente_fk']);
                 $objAmostra->setIdCodGAL_fk($reg['idCodGAL_fk']);
                 $objAmostra->setIdNivelPrioridade_fk($reg['idNivelPrioridade_fk']);
+                $objAmostra->setIdPerfilPaciente_fk($reg['idPerfilPaciente_fk']);
                 $objAmostra->setIdEstado_fk($reg['cod_estado_fk']);
                 $objAmostra->setIdLugarOrigem_fk($reg['cod_municipio_fk']);
                 $objAmostra->setObservacoes($reg['observacoes']);
-                $objAmostra->setDataHoraColeta($reg['dataHoraColeta']);
-                $objAmostra->setAceita_recusa($reg['a_r']);
-                $objAmostra->setStatusAmostra($reg['statusAmostra']);
+                $objAmostra->setDataColeta($reg['dataColeta']);
+                $objAmostra->set_a_r_g($reg['a_r_g']);
+                $objAmostra->setHoraColeta($reg['horaColeta']);
+                $objAmostra->setMotivoExame($reg['motivo']);
+                $objAmostra->setCEP($reg['CEP']);
+                $objAmostra->setCodigoAmostra($reg['codigoAmostra']);
+                $objAmostra->setObsCEP($reg['obsCEPAmostra']);
+                $objAmostra->setObsHoraColeta($reg['obsHoraColeta']);
+                $objAmostra->setObsLugarOrigem($reg['obsLugarOrigem']);
+                $objAmostra->setObsMotivo($reg['obsMotivo']);
+                
                 
 
                 $array_paciente[] = $objAmostra;
@@ -107,10 +198,7 @@ class AmostraBD{
 
         try{
 
-            $SELECT = 'SELECT idAmostra,idPaciente_fk,cod_estado_fk,cod_municipio_fk,'
-                    . 'idCodGAL_fk,idNivelPrioridade_fk,observacoes,dataHoraColeta,'
-                    . 'a_r,statusAmostra '
-                    . ' FROM tb_amostra WHERE idAmostra = ?';
+            $SELECT = 'SELECT *  FROM tb_amostra WHERE idAmostra = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objAmostra->getIdAmostra());
@@ -120,14 +208,22 @@ class AmostraBD{
             $objAmostra = new Amostra();
             $objAmostra->setIdAmostra($arr[0]['idAmostra']);
             $objAmostra->setIdPaciente_fk($arr[0]['idPaciente_fk']);
-            $objAmostra->setIdEstado_fk($arr[0]['cod_estado_fk']);
-            $objAmostra->setIdLugarOrigem_fk($arr[0]['cod_municipio_fk']);
             $objAmostra->setIdCodGAL_fk($arr[0]['idCodGAL_fk']);
             $objAmostra->setIdNivelPrioridade_fk($arr[0]['idNivelPrioridade_fk']);
+            $objAmostra->setIdPerfilPaciente_fk($arr[0]['idPerfilPaciente_fk']);
+            $objAmostra->setIdEstado_fk($arr[0]['cod_estado_fk']);
+            $objAmostra->setIdLugarOrigem_fk($arr[0]['cod_municipio_fk']);
             $objAmostra->setObservacoes($arr[0]['observacoes']);
-            $objAmostra->setDataHoraColeta($arr[0]['dataHoraColeta']);
-            $objAmostra->setAceita_recusa($arr[0]['a_r']);
-            $objAmostra->setStatusAmostra($arr[0]['statusAmostra']);
+            $objAmostra->setDataColeta($arr[0]['dataColeta']);
+            $objAmostra->set_a_r_g($arr[0]['a_r_g']);
+            $objAmostra->setHoraColeta($arr[0]['horaColeta']);
+            $objAmostra->setMotivoExame($arr[0]['motivo']);
+            $objAmostra->setCEP($arr[0]['CEP']);
+            $objAmostra->setCodigoAmostra($arr[0]['codigoAmostra']);
+            $objAmostra->setObsCEP($arr[0]['obsCEPAmostra']);
+            $objAmostra->setObsHoraColeta($arr[0]['obsHoraColeta']);
+            $objAmostra->setObsLugarOrigem($arr[0]['obsLugarOrigem']);
+            $objAmostra->setObsMotivo($arr[0]['obsMotivo']);
 
             return $objAmostra;
         } catch (Exception $ex) {

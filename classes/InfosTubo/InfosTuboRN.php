@@ -13,9 +13,9 @@ class InfosTuboRN{
     private function validarIdLocalArmazenamento_fk(InfosTubo $infosTubo, Excecao $objExcecao){
         $strIdLocalArmazenamento_fk = trim($infosTubo->getIdLocalArmazenamento_fk());
 
-        if($strIdLocalArmazenamento_fk == '' || $strIdLocalArmazenamento_fk == null){
-            $objExcecao->adicionar_validacao('O ID do local de armazenamento não foi informado.', 'idLocalArmazenamento_fk');
-        }
+        //if($strIdLocalArmazenamento_fk == '' || $strIdLocalArmazenamento_fk == null){
+        //    $objExcecao->adicionar_validacao('O ID do local de armazenamento não foi informado.', 'idLocalArmazenamento_fk');
+        //}
 
         return $infosTubo->setIdLocalArmazenamento_fk($strIdLocalArmazenamento_fk);
     }
@@ -23,9 +23,9 @@ class InfosTuboRN{
     private function validarIdTubo_fk(InfosTubo $infosTubo, Excecao $objExcecao){
         $strIdTubo_fk = trim($infosTubo->getIdTubo_fk());
 
-        if($strIdTubo_fk == '' || $strIdTubo_fk == null){
-            $objExcecao->adicionar_validacao('O ID do tubo não foi informado.', 'idTubo_fk');
-        }
+        //if($strIdTubo_fk == '' || $strIdTubo_fk == null){
+        //    $objExcecao->adicionar_validacao('O ID do tubo não foi informado.', 'idTubo_fk');
+        //}
 
         return $infosTubo->setIdTubo_fk($strIdTubo_fk);
     }
@@ -48,7 +48,7 @@ class InfosTuboRN{
         $strEtapa = trim($infosTubo->getEtapa());
 
         if($strEtapa == ''){
-            $objExcecao->adicionar_validacao('O a etapa nao foi informada.', 'idEtapa');
+            $objExcecao->adicionar_validacao('O nome da etapa nao foi informada.', 'idEtapa');
         }else{
             if(strlen($strEtapa) > 100){
                 $objExcecao->adicionar_validacao('O nome da etapa possui mais que 100 caracteres.','idEtapa');
@@ -60,35 +60,41 @@ class InfosTuboRN{
 
     private function validarDataHora(InfosTubo $infosTubo, Excecao $objExcecao){
         $dthr = trim($infosTubo->getDataHora());
-
-        if ($dthr == '') {
+        echo $infosTubo->getDataHora();
+        echo strlen($infosTubo->getDataHora());
+        if (strlen($infosTubo->getDataHora()) == 0) {
             $objExcecao->adicionar_validacao('Informar a data e hora.','idDataHora');
         }else{
-            $strDataHora = explode(";", "$dthr");
-
-            $data = explode("/", "$strDataHora[0]");
+            //echo $dthr;
+            
+            $strDataHora = explode(" ", "$dthr");
+            
+            $data = explode("-", "$strDataHora[0]");
             $hora = explode(":", "$strDataHora[1]");
 
-            $dia = $data[0];
+            $ano = $data[0];
             $mes = $data[1];
-            $ano = $data[2];
-
+            $dia = $data[2];
+            
+           
             /* Verifica se eh valida*/
             $res_data = checkdate($mes, $dia, $ano);
-
+            
+            
             if(!$res_data){
                 $objExcecao->adicionar_validacao('Informar a data valida.','idDataHora');
             }
         }
+        
         $infosTubo->setDataHora($dthr);
     }
 
     private function validarVolume(InfosTubo $infosTubo, Excecao $objExcecao){
         $strVolume = trim($infosTubo->getVolume());
         
-        if($strRG == ''){
+        /*if($strVolume == ''){
             $objExcecao->adicionar_validacao('Informe um volume.','idVolume');
-        }
+        }*/
                            
         return $infosTubo->setVolume($strVolume);
     }
@@ -99,7 +105,7 @@ class InfosTuboRN{
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
-            $objInfosTuboBD = new InfosTuboBD();
+
 
             $this->validarIdLocalArmazenamento_fk($infosTubo, $objExcecao);
             $this->validarIdTubo_fk($infosTubo, $objExcecao);
@@ -113,7 +119,9 @@ class InfosTuboRN{
             $objInfosTuboBD->cadastrar($infosTubo,$objBanco);
 
             $objBanco->fecharConexao();
-        }catch (Exception $e){
+            
+        }catch (Throwable $e){
+            die($e);
             throw new Excecao('Erro no cadastramento das informacoes do tubo.', $e);
         }
     }
@@ -137,7 +145,7 @@ class InfosTuboRN{
             $objInfosTuboBD->alterar($infosTubo,$objBanco);
 
             $objBanco->fecharConexao();
-        }catch (Exception $e){
+        }catch (Throwable $e){
             throw new Excecao('Erro na alteração das informacoes do tubo.', $e);
         }
     }
@@ -154,7 +162,7 @@ class InfosTuboRN{
 
             $objBanco->fecharConexao();
             return $arr;
-        }catch (Exception $e){
+        }catch (Throwable $e){
             throw new Excecao('Erro na consulta das informacoes do tubo.', $e);
         }
     }
@@ -170,7 +178,7 @@ class InfosTuboRN{
 
             $objBanco->fecharConexao();
             return $arr;
-        }catch (Exception $e){
+        }catch (Throwable $e){
             throw new Excecao('Erro na remoção das informacoes do tubo.', $e);
         }
     }
@@ -186,7 +194,7 @@ class InfosTuboRN{
 
             $objBanco->fecharConexao();
             return $arr;
-        }catch (Exception $e){
+        }catch (Throwable $e){
             throw new Excecao('Erro na listagem das informacoes do tubo.', $e);
         }
     }

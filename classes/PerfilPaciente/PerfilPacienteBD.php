@@ -9,11 +9,12 @@ class PerfilPacienteBD{
         try{
             //echo $objPerfilPaciente->getPerfil();
             //die("die");
-            $INSERT = 'INSERT INTO tb_perfilpaciente (perfil,index_perfil) VALUES (?,?)';
+            $INSERT = 'INSERT INTO tb_perfilpaciente (perfil,index_perfil,caractere) VALUES (?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('s',$objPerfilPaciente->getPerfil());
             $arrayBind[] = array('s',$objPerfilPaciente->getIndex_perfil());
+            $arrayBind[] = array('s',$objPerfilPaciente->getCaractere());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -28,14 +29,18 @@ class PerfilPacienteBD{
         try{
             $UPDATE = 'UPDATE tb_perfilpaciente SET '
                      . ' perfil = ?,'
-                     . ' index_perfil = ?'
+                     . ' index_perfil = ?,'
+                    . ' caractere = ?'
                 . '  where idPerfilPaciente = ?';
         
                 
             $arrayBind = array();
             $arrayBind[] = array('s',$objPerfilPaciente->getPerfil());
             $arrayBind[] = array('s',$objPerfilPaciente->getIndex_perfil());
+            $arrayBind[] = array('s',$objPerfilPaciente->getCaractere());
+            
             $arrayBind[] = array('i',$objPerfilPaciente->getIdPerfilPaciente());
+            
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
 
@@ -49,16 +54,52 @@ class PerfilPacienteBD{
          try{
       
             $SELECT = "SELECT * FROM tb_perfilpaciente";
+            
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($objPerfilPaciente->getIdPerfilPaciente() != null) {
+                $WHERE .= $AND . " idPerfilPaciente = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPerfilPaciente->getIdPerfilPaciente());
+            }
+
+            if ($objPerfilPaciente->getPerfil() != null) {
+                $WHERE .= $AND . " perfil = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPerfilPaciente->getPerfil());
+            }
+
+            if ($objPerfilPaciente->getIndex_perfil() != null) {
+                $WHERE .= $AND . " index_perfil = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPerfilPaciente->getIndex_perfil());
+            }
+            
+             if ($objPerfilPaciente->getCaractere() != null) {
+                $WHERE .= $AND . " caractere = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPerfilPaciente->getCaractere());
+            }
 
 
-            $arr = $objBanco->consultarSQL($SELECT);
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
 
+            //echo $SELECT.$WHERE;$WHERE
+
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
+
+            
             $array_perfil = array();
             foreach ($arr as $reg){
                 $objPerfilPaciente = new PerfilPaciente();
                 $objPerfilPaciente->setIdPerfilPaciente($reg['idPerfilPaciente']);
                 $objPerfilPaciente->setPerfil($reg['perfil']);
                 $objPerfilPaciente->setIndex_perfil($reg['index_perfil']);
+                $objPerfilPaciente->setCaractere($reg['caractere']);
                 
 
                 $array_perfil[] = $objPerfilPaciente;
@@ -74,7 +115,7 @@ class PerfilPacienteBD{
 
         try{
 
-            $SELECT = 'SELECT idPerfilPaciente,perfil,index_perfil '
+            $SELECT = 'SELECT * '
                     . 'FROM tb_perfilpaciente '
                     . 'WHERE idPerfilPaciente = ?';
 
@@ -82,11 +123,14 @@ class PerfilPacienteBD{
             $arrayBind[] = array('i',$objPerfilPaciente->getIdPerfilPaciente());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
-
             $perfilPaciente = new PerfilPaciente();
-            $perfilPaciente->setIdPerfilPaciente($arr[0]['idPerfilPaciente']);
-            $perfilPaciente->setPerfil($arr[0]['perfil']);
-            $perfilPaciente->setIndex_perfil($arr[0]['index_perfil']);
+            if($arr != null){
+                
+                $perfilPaciente->setIdPerfilPaciente($arr[0]['idPerfilPaciente']);
+                $perfilPaciente->setPerfil($arr[0]['perfil']);
+                $perfilPaciente->setIndex_perfil($arr[0]['index_perfil']);
+                $perfilPaciente->setCaractere($arr[0]['caractere']);
+            }
 
             return $perfilPaciente;
         } catch (Exception $ex) {
@@ -130,6 +174,7 @@ class PerfilPacienteBD{
                 $objPerfilPaciente->setIdPerfilPaciente($reg['idPerfilPaciente']);
                 $objPerfilPaciente->setPerfil($reg['perfil']);
                 $objPerfilPaciente->setIndex_perfil($reg['index_perfil']);
+                $objPerfilPaciente->setCaractere($reg['caractere']);
                 $arr_perfis_paciente[] = $objPerfilPaciente;
             }
              return $arr_perfis_paciente;

@@ -8,13 +8,18 @@ class Amostra{
     private $codigoAmostra; //letra + idAmostra
     private $idPerfilPaciente_fk;
     private $idEstado_fk;
+    private $idPaciente_fk;
     private $idLugarOrigem_fk;
     private $idCodGAL_fk;
     private $idNivelPrioridade_fk;
     private $observacoes;
     private $dataColeta;
+    private $horaColeta;
     private $a_r_g;
-    private $statusAmostra;
+    private $obsHoraColeta;
+    private $obsMotivo;
+    private $obsLugarOrigem;
+    private $obsCEP;
     private $CEP;
     private $motivoExame;
     
@@ -22,7 +27,24 @@ class Amostra{
         
     }
     
-    function getIdAmostra() {
+    function getIdPaciente_fk() {
+        return $this->idPaciente_fk;
+    }
+
+    function setIdPaciente_fk($idPaciente_fk) {
+        $this->idPaciente_fk = $idPaciente_fk;
+    }
+
+        
+    function getHoraColeta() {
+        return $this->horaColeta;
+    }
+
+    function setHoraColeta($horaColeta) {
+        $this->horaColeta = $horaColeta;
+    }
+
+        function getIdAmostra() {
         return $this->idAmostra;
     }
 
@@ -62,9 +84,6 @@ class Amostra{
         return $this->a_r_g;
     }
 
-    function getStatusAmostra() {
-        return $this->statusAmostra;
-    }
 
     function getCEP() {
         return $this->CEP;
@@ -114,10 +133,7 @@ class Amostra{
         $this->a_r_g = $a_r_g;
     }
 
-    function setStatusAmostra($statusAmostra) {
-        $this->statusAmostra = $statusAmostra;
-    }
-
+   
     function setCEP($CEP) {
         $this->CEP = $CEP;
     }
@@ -125,6 +141,39 @@ class Amostra{
     function setMotivoExame($motivoExame) {
         $this->motivoExame = $motivoExame;
     }
+    
+    function getObsHoraColeta() {
+        return $this->obsHoraColeta;
+    }
+
+    function getObsMotivo() {
+        return $this->obsMotivo;
+    }
+
+    function getObsLugarOrigem() {
+        return $this->obsLugarOrigem;
+    }
+
+    function getObsCEP() {
+        return $this->obsCEP;
+    }
+
+    function setObsHoraColeta($obsHoraColeta) {
+        $this->obsHoraColeta = $obsHoraColeta;
+    }
+
+    function setObsMotivo($obsMotivo) {
+        $this->obsMotivo = $obsMotivo;
+    }
+
+    function setObsLugarOrigem($obsLugarOrigem) {
+        $this->obsLugarOrigem = $obsLugarOrigem;
+    }
+
+    function setObsCEP($obsCEP) {
+        $this->obsCEP = $obsCEP;
+    }
+
 
 
 }

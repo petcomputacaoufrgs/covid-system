@@ -126,6 +126,7 @@ td,th{
 }
 
 .form-row{
+    /*margin-top: 10px;*/
     margin-bottom: 10px;
 }
 
@@ -141,4 +142,21 @@ td,th{
 .modal-footer a{
     text-decoration: none;
     color: white;
+}
+
+
+.btn-outline-add{
+    background-color:#3a5261;
+    color:white;
+}
+
+.btn-outline-add:hover{
+    background-color:#ddd;
+    color:#3a5261;
+}
+
+
+.form-inline{
+    width: 100%;
+    /*background-color: #7abaff;*/
 }

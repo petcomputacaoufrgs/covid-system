@@ -15,12 +15,12 @@ class Interf {
         return self::$instance;
     }
 
-    function montar_select_cidade(&$select_municipios, $objLugarOrigem, $objLugarOrigemRN, &$objEstadoOrigem, &$objAmostra) {
+    function montar_select_cidade(&$select_municipios, $objLugarOrigem, $objLugarOrigemRN, &$objEstadoOrigem, &$objAmostra, $disabled, $onchange) {
         /* MUNICÃPIOS */
         $selected = '';
         $arr_municipios = $objLugarOrigemRN->listar($objLugarOrigem);
 
-        $select_municipios = '<select class="form-control selectpicker"  '
+        $select_municipios = '<select class="form-control selectpicker "  ' . $disabled . $onchange
                 . 'id="select-country idSel_cidades" data-live-search="true" name="sel_cidades">'
                 . '<option data-tokens="" ></option>';
 
@@ -39,14 +39,14 @@ class Interf {
         $select_municipios .= '</select>';
     }
 
-    function montar_select_niveis_prioridade(&$select_nivelPrioridade, $objNivelPrioridade, $objNivelPrioridadeRN, &$objAmostra) {
+    function montar_select_niveis_prioridade(&$select_nivelPrioridade, $objNivelPrioridade, $objNivelPrioridadeRN, &$objAmostra, $disabled, $onchange) {
         /* TIPOS AMOSTRA */
 
 
         $selected = '';
         $arr_niveisPrioridade = $objNivelPrioridadeRN->listar($objNivelPrioridade);
 
-        $select_nivelPrioridade = '<select class="form-control selectpicker" '
+        $select_nivelPrioridade = '<select class="form-control selectpicker" ' . $disabled . $onchange
                 . 'id="select-country idSel_niveisPrioridade" data-live-search="true" name="sel_niveisPrioridade">'
                 . '<option data-tokens="" ></option>';
 
@@ -64,30 +64,36 @@ class Interf {
         $select_nivelPrioridade .= '</select>';
     }
 
-    function montar_select_aceitaRecusadaAguarda(&$select_a_r_g, &$objAmostra) {
+    function montar_select_aceitaRecusadaAguarda(&$select_a_r_g, &$objAmostra, $disabled, $onchange) {
         $selectedr = '';
         $selecteda = '';
+        $selectedg = '';
         if ($objAmostra != null) {
-            if ($objAmostra->getAceita_recusa() == 'r') {
+            if ($objAmostra->get_a_r_g() == 'r') {
                 $selectedr = ' selected ';
             }
-            if ($objAmostra->getAceita_recusa() == 'a') {
+            if ($objAmostra->get_a_r_g() == 'a') {
                 $selecteda = ' selected ';
             }
+            if ($objAmostra->get_a_r_g() == 'g') {
+                $selectedg = ' selected ';
+            }
         }
-        $select_a_r_g = ' <select id="idSelAceitaRecusada" class="form-control" name="sel_aceita_recusada" onblur="">
+        $select_a_r_g = ' <select id="idSelAceitaRecusada" ' . $disabled . $onchange .
+                'class="form-control" name="sel_a_r_g" onblur="">
                         <option value="">Selecione</option>
                         <option' . Pagina::formatar_html($selecteda) . ' value="a">Aceita</option>
                         <option' . Pagina::formatar_html($selectedr) . ' value="r">Recusada</option>
+                        <option' . Pagina::formatar_html($selectedg) . ' value="g">Aguardando chegada</option>
                     </select>';
     }
 
-    function montar_select_tiposAmostra(&$select_tiposAmostra, $objTipoAmostra, $objTipoAmostraRN, &$objAmostra) {
+    function montar_select_tiposAmostra(&$select_tiposAmostra, $objTipoAmostra, $objTipoAmostraRN, &$objAmostra, $disabled, $onchange) {
         /* TIPOS AMOSTRA */
         $selected = '';
         $arr_tiposAmostra = $objTipoAmostraRN->listar($objTipoAmostra);
 
-        $select_tiposAmostra = '<select class="form-control selectpicker" '
+        $select_tiposAmostra = '<select class="form-control selectpicker" ' . $disabled . $onchange
                 . 'id="select-country idSel_tiposAmostra" data-live-search="true" name="sel_tipoAmostra">'
                 . '<option data-tokens="" ></option>';
 
@@ -105,12 +111,12 @@ class Interf {
         $select_tiposAmostra .= '</select>';
     }
 
-    function montar_select_estado(&$select_estados, $objEstadoOrigem, $objEstadoOrigemRN, &$objAmostra) {
+    function montar_select_estado(&$select_estados, $objEstadoOrigem, $objEstadoOrigemRN, &$objAmostra, $disabled, $onchange) {
         /* ESTADO */
         $selected = '';
         $arr_estados = $objEstadoOrigemRN->listar($objEstadoOrigem);
 
-        $select_estados = '<select class="form-control selectpicker" onchange="this.form.submit()" disabled '
+        $select_estados = '<select class="form-control selectpicker is-valid"  disabled ' . $onchange
                 . 'id="select-country idSel_estados"'
                 . ' data-live-search="true" name="sel_estados">'
                 . '<option data-tokens="" ></option>';
@@ -132,18 +138,20 @@ class Interf {
         $select_estados .= '</select>';
     }
 
-    function montar_select_perfilPaciente(&$select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, &$objPaciente, $disabled) {
+    function montar_select_perfilPaciente(&$select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, &$objAmostra, $disabled, $onchange) {
         /* PERFIL DO PACIENTE */
         $selected = '';
-        $arr_perfis = $objPerfilPacienteRN->listar($objPerfilPaciente);
+        $objPerfilPacienteAux = new PerfilPaciente();
+        $arr_perfis = $objPerfilPacienteRN->listar($objPerfilPacienteAux);
 
-        $select_perfis = '<select class="form-control selectpicker" onchange="this.form.submit()" id="select-country idSel_perfil"'
+        $select_perfis = '<select class="form-control selectpicker"' . $onchange
+                . 'id="select-country idSel_perfil"'
                 . ' data-live-search="true" name="sel_perfil"' . $disabled . '>'
                 . '<option data-tokens="" ></option>';
 
         foreach ($arr_perfis as $perfil) {
             $selected = '';
-            if ($perfil->getIdPerfilPaciente() == $objPaciente->getIdPerfilPaciente_fk()) {
+            if ($perfil->getIdPerfilPaciente() == $objAmostra->getIdPerfilPaciente_fk()) {
                 $selected = 'selected';
             }
 
@@ -155,13 +163,13 @@ class Interf {
         $select_perfis .= '</select>';
     }
 
-    function montar_select_sexo(&$select_sexos, $objSexoPaciente, $objSexoPacienteRN, &$objPaciente,$disabled) {
+    function montar_select_sexo(&$select_sexos, $objSexoPaciente, $objSexoPacienteRN, &$objPaciente, $disabled, $onchange) {
         /* SEXO DO PACIENTE */
         $selected = '';
         $arr_sexos = $objSexoPacienteRN->listar($objSexoPaciente);
-        
-        
-        $select_sexos = '<select  onchange="" ' . $disabled
+
+
+        $select_sexos = '<select  onchange="" ' . $disabled . $onchange
                 . 'class="form-control selectpicker" '
                 . 'id="select-country idSexo" data-live-search="true" '
                 . 'name="sel_sexo">'
@@ -169,10 +177,10 @@ class Interf {
 
         foreach ($arr_sexos as $sexo) {
             $selected = '';
-            if($sexo->getIndex_sexo() == 'NAO INFORMADO' && $objPaciente->getIdSexo_fk() == ''){
+            if ($sexo->getIndex_sexo() == 'NAO INFORMADO' && $objPaciente->getIdSexo_fk() == '') {
                 $selected = 'selected';
             }
-            
+
             if ($sexo->getIdSexo() == $objPaciente->getIdSexo_fk()) {
                 $selected = 'selected';
             }
@@ -183,27 +191,26 @@ class Interf {
         }
         $select_sexos .= '</select>';
     }
-    
-    
-    function montar_select_etnias(&$select_etnias, $objEtnia, $objEtniaRN, &$objPaciente,$disabled) {
+
+    function montar_select_etnias(&$select_etnias, $objEtnia, $objEtniaRN, &$objPaciente, $disabled, $onchange) {
         /* ETNIAS */
 
 
         $selected = '';
         $arr_etnias = $objEtniaRN->listar($objEtnia);
 
-        $select_etnias = '<select class="form-control selectpicker" '. $disabled
+        $select_etnias = '<select class="form-control selectpicker" ' . $disabled . $onchange
                 . 'id="select-country idSel_etnias" data-live-search="true" name="sel_etnias">'
                 . '<option data-tokens="" ></option>';
 
         foreach ($arr_etnias as $etnia) {
             $selected = '';
-            if($etnia->getIndex_etnia() == 'SEM DECLARACAO' && $objPaciente->getIdEtnia_fk() == ''){
+            if ($etnia->getIndex_etnia() == 'SEM DECLARACAO' && $objPaciente->getIdEtnia_fk() == '') {
                 $selected = 'selected';
             }
-            
-            
-            
+
+
+
             if ($etnia->getIdEtnia() == $objPaciente->getIdEtnia_fk()) {
                 $selected = 'selected';
             }
@@ -215,8 +222,7 @@ class Interf {
         }
         $select_etnias .= '</select>';
     }
-    
-    
+
     function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPaciente, $objSexoPacienteRN, &$objPaciente) {
         $selected = '';
         $arr_sexos = $objSexoPacienteRN->listar($objSexoPaciente);
@@ -239,4 +245,47 @@ class Interf {
         }
         $select_sexos .= '</select>';
     }
+
+    /*
+     * SELECTS DAS LISTAS
+     */
+
+    static function montar_select_pesquisa($array_colunas,$positionSelected) {
+        $options = '';
+        $selected = '';
+        $position = 0;
+        
+        foreach ($array_colunas as $c) {
+            $selected = '';
+            /*if($positionSelected == $position){
+                 $selected = ' selected ';
+            }*/
+            $options .= '<option ' . $selected . ' value="' . $position . '">' . $c . '</option>' . "\n";
+            $position++;
+        }
+        return $options;
+    }
+
+    function montar_select_pp(&$select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, &$objAmostra, $disabled, $onchange) {
+        /* PERFIL DO PACIENTE */
+        $selected = '';
+        $objPerfilPacienteAux = new PerfilPaciente();
+        $arr_perfis = $objPerfilPacienteRN->listar($objPerfilPacienteAux);
+        $select_perfis = ' <select id="idPP" ' . $disabled . $onchange .
+                'class="form-control" name="sel_PP" onblur="">
+                        <option value="">Selecione</option>';
+
+        foreach ($arr_perfis as $perfil) {
+            $selected = '';
+            if ($perfil->getIdPerfilPaciente() == $objAmostra->getIdPerfilPaciente_fk()) {
+                $selected = 'selected';
+            }
+
+            $select_perfis .= '<option ' . $selected . ' value="' . Pagina::formatar_html($perfil->getIdPerfilPaciente())
+                    . '">' . Pagina::formatar_html($perfil->getPerfil()) . '</option>';
+        }
+    }
+    
+    
+    
 }

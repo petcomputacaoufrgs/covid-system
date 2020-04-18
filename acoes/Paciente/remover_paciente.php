@@ -20,6 +20,7 @@ try{
     $objPacienteRN->remover($objPaciente);
 
     header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_paciente'));
+    die();
 } catch (Exception $ex) {
     Pagina::getInstance()->processar_excecao($ex);
 }

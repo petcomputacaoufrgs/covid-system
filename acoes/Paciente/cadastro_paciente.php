@@ -31,6 +31,7 @@ try {
     $invalid  ='';
         
     $selected_rg = '';
+    $onchange = '';
     $selected_passaporte = '';
     $selected_codGal = '';
     $salvou = '';
@@ -64,25 +65,29 @@ try {
     $objSexoPaciente = new Sexo();
     $objSexoPacienteRN = new SexoRN();
 
-    Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente,$disabled);
-    Interf::getInstance()->montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente,$disabled);
+    Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente,$disabled,$onchange );
+    Interf::getInstance()->montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente,$disabled,$onchange);
 
 
     $popUp = '';
     switch ($_GET['action']) {
         case 'cadastrar_paciente':
 
+                      
+            
             $paciente = array();
             if (isset($_GET['idPaciente'])) {
                 $alert .= Alert::alert_success("Um paciente foi encontrado");
                 $objPaciente->setIdPaciente($_GET['idPaciente']);
                 $objPaciente = $objPacienteRN->consultar($objPaciente);
-
-
+                
+                $objCodigoGAL->setIdPaciente_fk($_GET['idPaciente']);
+                
                 if (isset($_GET['idCodigo'])) { //caso seja um paciente com GAL -- PACIENTE SUS
-                    $objCodigoGAL->setIdPaciente_fk($_GET['idPaciente']);
+                    
                     $objCodigoGAL->setCodigo($_GET['idCodigo']);
                     $arrgal = $objCodigoGAL_RN->listar($objCodigoGAL);
+                    
 
                     if (!empty($arrgal)) {
                         $SUS = true;
@@ -94,8 +99,8 @@ try {
                 }
 
 
-                Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente,$disabled);
-                Interf::getInstance()->montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente,$disabled);
+                Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente,$disabled,$onchange);
+                Interf::getInstance()->montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente,$disabled,$onchange);
             } else if (!isset($_POST['salvar_paciente'])) {
 
                 if (isset($_POST['sel_opcoesCadastro'])) {
@@ -203,7 +208,7 @@ try {
             if (isset($_POST['salvar_paciente'])) {
                 $disabled = '';
                 $erro = false;$GAL= false;
-                if (isset($_GET['idPaciente'])) { //caso de o paciente já existir, então só vai ocorrer a alteração desse usuário
+                if (isset($_GET['idPaciente'])){ //caso de o paciente já existir, então só vai ocorrer a alteração desse usuário
                     $arr_CPFs = array();
                     $arr_RGS = array();
                     $arr_passaportes = array();
@@ -316,7 +321,7 @@ try {
 
 
                     if (isset($_POST['txtCodGAL']) && $_POST['txtCodGAL'] != null) {
-                        echo "sus";
+                        //echo "sus";
                         $SUS = true;
                         $objCodigoGAL->setCodigo($_POST['txtCodGAL']);
                         $gals = $objCodigoGAL_RN->listar($objCodigoGAL);
@@ -420,6 +425,7 @@ try {
                                 $alert .= Alert::alert_success("O paciente foi CADASTRADO com sucesso");
                                 $alert .= Alert::alert_success("O código GAL do paciente foi CADASTRADO com sucesso");
                                 $salvou = ' hidden ';
+                                $disabled = ' disabled ';
                                 $cadastrarNovo = true;
                                 $editar = true;
                             }else{
@@ -438,8 +444,8 @@ try {
                     $alert .= Alert::alert_danger("O paciente não foi CADASTRADO com sucesso");
                 }
 
-                Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente,$disabled);
-                Interf::getInstance()->montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente,$disabled);
+                Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente,$disabled,$onchange);
+                Interf::getInstance()->montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente,$disabled,$onchange);
 
                 
 
@@ -449,6 +455,24 @@ try {
             break;
 
         case 'editar_paciente':
+            
+            $paciente = array();
+            if (isset($_GET['idPaciente'])) {
+                                                
+                $objCodigoGAL->setIdPaciente_fk($_GET['idPaciente']);
+                $arrgal = $objCodigoGAL_RN->listar($objCodigoGAL);
+                    
+
+                    if (!empty($arrgal)) {
+                        $SUS = true;
+                        $objCodigoGAL = $arrgal[0]; // é pra devolver sempre 1
+                        //print_r($objCodigoGAL);
+                    } else {
+                        $SUS = false;
+                    }
+                }
+            
+            
             if (!isset($_POST['salvar_paciente'])) { //enquanto não enviou o formulário com as alterações
                 $objPaciente->setIdPaciente($_GET['idPaciente']);
                 $objPaciente = $objPacienteRN->consultar($objPaciente);
@@ -522,7 +546,8 @@ try {
                         }
                     }
                     
-                    $objPaciente->setCEP($_POST['txtCEP']);
+                
+                $objPaciente->setCEP($_POST['txtCEP']);
                 $objPaciente->setNomeMae($_POST['txtNomeMae']);
                 $objPaciente->setEndereco($_POST['txtEndereco']);
                 $objPaciente->setNome($_POST['txtNome']);
@@ -561,8 +586,9 @@ try {
                 } else {
                     $objPaciente->setCadastroPendente('n');
                 }
-
-
+                
+                $objPaciente->setIdPaciente($_GET['idPaciente']);
+               
                 if (isset($_GET['idPaciente']) && !$erro) {
 
                     $objPacienteRN->alterar($objPaciente);

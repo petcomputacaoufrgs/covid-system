@@ -4,77 +4,90 @@ class InfosTubo{
     private $idInfosTubo;
     private $idLocalArmazenamento_fk;
     private $idTubo_fk;
+    private $idUsuario_fk;
     private $statusTubo;
     private $etapa;
     private $dataHora;
-    private $reteste; // fará o reteste ou nao (bool)
+    private $reteste; // fará o reteste ou nao (s/n)
     private $volume;
 
     function __construct() {
         
     }
+    
+    function getIdUsuario_fk() {
+        return $this->idUsuario_fk;
+    }
 
-    function getIdInfosTubo(){
+    function setIdUsuario_fk($idUsuario_fk) {
+        $this->idUsuario_fk = $idUsuario_fk;
+    }
+
+        
+    function getIdInfosTubo() {
         return $this->idInfosTubo;
     }
 
-    function getIdLocalArmazenamento_fk(){
+    function getIdLocalArmazenamento_fk() {
         return $this->idLocalArmazenamento_fk;
     }
 
-    function getIdTubo_fk(){
+    function getIdTubo_fk() {
         return $this->idTubo_fk;
     }
 
-    function getStatusTubo(){
+    function getStatusTubo() {
         return $this->statusTubo;
     }
 
-    function getEtapa(){
+    function getEtapa() {
         return $this->etapa;
     }
 
-    function getDataHora(){
+    function getDataHora() {
         return $this->dataHora;
     }
 
-    function getReteste(){
+    function getReteste() {
         return $this->reteste;
     }
 
-    function getVolume(){
+    function getVolume() {
         return $this->volume;
     }
 
-    function setIdInfosTubo($idInfosTubo){
+    function setIdInfosTubo($idInfosTubo) {
         $this->idInfosTubo = $idInfosTubo;
     }
 
-    function setIdLocalArmazenamento_fk($idLocalArmazenamento_fk){
+    function setIdLocalArmazenamento_fk($idLocalArmazenamento_fk) {
         $this->idLocalArmazenamento_fk = $idLocalArmazenamento_fk;
     }
 
-    function setIdTubo_fk($idTubo_fk){
+    function setIdTubo_fk($idTubo_fk) {
         $this->idTubo_fk = $idTubo_fk;
     }
 
-    function setStatusTubo($statusTubo){
+    function setStatusTubo($statusTubo) {
         $this->statusTubo = $statusTubo;
     }
 
-    function setEtapa($etapa){
+    function setEtapa($etapa) {
         $this->etapa = $etapa;
     }
 
-    function setDataHora($dataHora){
-        $this->dataHora= $dataHora;
+    function setDataHora($dataHora) {
+        $this->dataHora = $dataHora;
     }
 
-    function setReteste($reteste){
+    function setReteste($reteste) {
         $this->reteste = $reteste;
     }
 
-    function setVolume($volume){
+    function setVolume($volume) {
         $this->volume = $volume;
     }
+
+
+
 }
