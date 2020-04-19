@@ -91,7 +91,7 @@ class InfosTuboRN{
 
                 if(($h_ano < $ano) || 
                 (($h_ano == $ano) && ($h_mes < $mes)) || 
-                (($h_ano == $ano) && ($h_mes == mes) && ($h_dia < $dia))){
+                (($h_ano == $ano) && ($h_mes == $mes) && ($h_dia < $dia))){
                     $objExcecao->adicionar_validacao('Informar a data valida.','idDataHora');
                 }
             }
