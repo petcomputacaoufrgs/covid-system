@@ -14,10 +14,10 @@ class PacienteRN {
         $strNome = trim($paciente->getNome());
 
         if ($strNome == '') {
-            $objExcecao->adicionar_validacao('O nome do paciente não foi informado', 'idNome');
+            $objExcecao->adicionar_validacao('O nome do paciente não foi informado',  null, 'alert-danger');
         } else {
             if (strlen($strNome) > 130) {
-                $objExcecao->adicionar_validacao('O nome do paciente possui mais que 130 caracteres.', 'idNome');
+                $objExcecao->adicionar_validacao('O nome do paciente possui mais que 130 caracteres.',  null, 'alert-danger');
             }
         }
 
@@ -28,7 +28,7 @@ class PacienteRN {
         $strNomeMae = trim($paciente->getNomeMae());
 
         if (strlen($strNomeMae) > 130) {
-            $objExcecao->adicionar_validacao('O nome da mãe do paciente possui mais que 130 caracteres.', 'idNomeMae');
+            $objExcecao->adicionar_validacao('O nome da mãe do paciente possui mais que 130 caracteres.',  null, 'alert-danger');
         }
 
         /* if($strNomeMae == '' && $paciente->getObsNomeMae() == ''){
@@ -42,7 +42,7 @@ class PacienteRN {
         $strNomeMaeObs = trim($paciente->getObsNomeMae());
 
         if (strlen($strNomeMaeObs) > 150) {
-            $objExcecao->adicionar_validacao('Observações do nome da mãe do paciente possui mais que 150 caracteres.', 'idObsMae');
+            $objExcecao->adicionar_validacao('Observações do nome da mãe do paciente possui mais que 150 caracteres.',  null, 'alert-danger');
         }
 
         if ($strNomeMaeObs == '' && $paciente->getNomeMae() == '') {
@@ -58,10 +58,28 @@ class PacienteRN {
 
         if (strlen($strCPF) > 0) {
             if (strlen($strCPF) != 11) {
-                $objExcecao->adicionar_validacao('O CPF do paciente não possui  11 caracteres.', 'idCPF');
+                $objExcecao->adicionar_validacao('O CPF do paciente não possui  11 caracteres.',  null, 'alert-danger');
             }
-
-
+            
+            $objPacienteAux = new Paciente();
+            $objPacienteAuxRN = new PacienteRN();
+            
+            $arr = $objPacienteAuxRN->listar($objPacienteAux);
+            
+            foreach ($arr as $item){
+                if($item->getCPF() == $paciente->getCPF() ){
+                    if($paciente->getIdPaciente() != null){
+                        if($item->getIdPaciente() != $paciente->getIdPaciente()){
+                            $objExcecao->adicionar_validacao('O CPF já pertence a outro paciente', null, 'alert-danger');
+                        }
+                    }else{
+                        $objExcecao->adicionar_validacao('O CPF já pertence a outro paciente', null, 'alert-danger');
+                    }
+                    
+                }
+            }
+            
+            
             // Extrai somente os números
 
             $strCPF = preg_replace('/[^0-9]/is', '', $strCPF);
@@ -69,7 +87,7 @@ class PacienteRN {
             // Verifica se foi informado todos os digitos corretamente
             // Verifica se foi informada uma sequência de digitos repetidos. Ex: 111.111.111-11
             if (preg_match('/(\d)\1{10}/', $strCPF)) {
-                $objExcecao->adicionar_validacao('O CPF do paciente não é válido.', 'idCPF');
+                $objExcecao->adicionar_validacao('O CPF do paciente não é válido.',  null, 'alert-danger');
             }
             $cpf = intval($strCPF);
             // Faz o calculo para validar o CPF
@@ -79,7 +97,7 @@ class PacienteRN {
                 }
                 $d = ((10 * $d) % 11) % 10;
                 if ($cpf[$c] != $d) {
-                    $objExcecao->adicionar_validacao('O CPF do paciente não é válido.', 'idCPF');
+                    $objExcecao->adicionar_validacao('O CPF do paciente não é válido.',  null, 'alert-danger');
                 }
             }
         }
@@ -91,11 +109,24 @@ class PacienteRN {
     private function validarRG(Paciente $paciente, Excecao $objExcecao) {
         $strRG = trim($paciente->getRG());
 
-        /*if (strlen($strRG) > 0) {
-            if (strlen($strRG) != 10) {
-                $objExcecao->adicionar_validacao('O RG do paciente não possui 10 caracteres.', 'idRG');
+        if (strlen($strRG) > 0) {
+            $objPacienteAux = new Paciente();
+            $objPacienteAuxRN = new PacienteRN();
+            $arr = $objPacienteAuxRN->listar($objPacienteAux);
+            
+            foreach ($arr as $item){
+                if($item->getRG() == $paciente->getRG() ){
+                    if($paciente->getIdPaciente() != null){
+                        if($item->getIdPaciente() != $paciente->getIdPaciente()){
+                            $objExcecao->adicionar_validacao('O RG já pertence a outro paciente', null, 'alert-danger');
+                        }
+                    }else{
+                        $objExcecao->adicionar_validacao('O RG já pertence a outro paciente', null, 'alert-danger');
+                    }
+                    
+                }
             }
-        }*/
+        }
 
         return $paciente->setRG($strRG);
     }
@@ -104,7 +135,7 @@ class PacienteRN {
         $strObsRG = trim($paciente->getObsRG());
 
         if (strlen($strObsRG) > 150) {
-            $objExcecao->adicionar_validacao('As observações do RG do paciente possui mais que 150 caracteres.', 'idObsRG');
+            $objExcecao->adicionar_validacao('As observações do RG do paciente possui mais que 150 caracteres.', null, 'alert-danger');
         }
 
         if ($strObsRG == '' && $paciente->getRG() == '') {
@@ -117,7 +148,7 @@ class PacienteRN {
         $strObsCEP = trim($paciente->getObsCEP());
 
         if (strlen($strObsCEP) > 300) {
-            $objExcecao->adicionar_validacao('As observações do CEP do paciente possui mais que 300 caracteres.', 'idObsCEP');
+            $objExcecao->adicionar_validacao('As observações do CEP do paciente possui mais que 300 caracteres.',  null, 'alert-danger');
         }
 
         if ($strObsCEP == '' && $paciente->getCEP() == '') {
@@ -131,7 +162,7 @@ class PacienteRN {
         $strObsEndereco = trim($paciente->getObsEndereco());
 
         if (strlen($strObsEndereco) > 300) {
-            $objExcecao->adicionar_validacao('As observações do endereco do paciente possui mais que 300 caracteres.', 'idObsEndereco');
+            $objExcecao->adicionar_validacao('As observações do endereco do paciente possui mais que 300 caracteres.',  null, 'alert-danger');
         }
 
         if ($strObsEndereco == '' && $paciente->getEndereco() == '') {
@@ -161,12 +192,12 @@ class PacienteRN {
         }
 
         if (strlen($strObsCodGAL) > 300) {
-            $objExcecao->adicionar_validacao('As observações do código GAL do paciente possui mais que 300 caracteres.', 'idObsCodGAL');
+            $objExcecao->adicionar_validacao('As observações do código GAL do paciente possui mais que 300 caracteres.',  null, 'alert-danger');
         }
 
 
 
-        return $paciente->setObsEndereco($strObsEndereco);
+        return $paciente->setObsCodGAL($strObsCodGAL);
     }
 
     private function validarObsPassaporte(Paciente $paciente, Excecao $objExcecao) {
@@ -179,6 +210,7 @@ class PacienteRN {
         if ($strObsPassaporte == '' && $paciente->getPassaporte() == '') {
             return $paciente->setObsPassaporte('Desconhecido');
         }
+    
 
         return $paciente->setObsPassaporte($strObsPassaporte);
     }
@@ -203,6 +235,26 @@ class PacienteRN {
         if (strlen($strPassaporte) > 300) {
             $objExcecao->adicionar_validacao('O passaporte do paciente possui mais que 300 caracteres.', 'idPassaporte');
         }
+        
+        if(strlen($strPassaporte) > 0){
+            $objPacienteAux = new Paciente();
+            $objPacienteAuxRN = new PacienteRN();
+            $arr = $objPacienteAuxRN->listar($objPacienteAux);
+            
+            foreach ($arr as $item){
+                if($item->getPassaporte() == $paciente->getPassaporte() ){
+                    if($paciente->getIdPaciente() != null){
+                        if($item->getIdPaciente() != $paciente->getIdPaciente()){
+                            $objExcecao->adicionar_validacao('O passaporte já pertence a outro paciente', null, 'alert-danger');
+                        }
+                    }else{
+                        $objExcecao->adicionar_validacao('O passaporte já pertence a outro paciente', null, 'alert-danger');
+                    }
+                    
+                }
+            }
+        }
+        
 
         return $paciente->setPassaporte($strPassaporte);
     }
@@ -367,7 +419,71 @@ class PacienteRN {
 
         return $paciente;
     }
+    
+    private function validarCenarioPendente(Paciente $paciente, Excecao $objExcecao) {
+         /* ETNIA */
+        $objEtnia = new Etnia();
+        $objEtniaRN = new EtniaRN();
 
+        /* CÓDIGO GAL */
+        $objCodigoGAL = new CodigoGAL();
+        $objCodigoGAL_RN = new CodigoGAL_RN();
+
+        $idGAL = '';
+        $arr_codsGAL = $objCodigoGAL_RN->listar($objCodigoGAL);
+        foreach ($arr_codsGAL as $cg) {
+            if ($cg->getIdPaciente_fk() == $paciente->getIdPaciente()) {
+                $idGAL = $cg->getCodigo();
+            }
+        }
+
+
+        /* SEXO PACIENTE */
+        $objSexoPaciente = new Sexo();
+        $objSexoPacienteRN = new SexoRN();
+
+        $idEtnia = '';
+        $arr_etnias = $objEtniaRN->listar($objEtnia);
+        foreach ($arr_etnias as $ae) {
+            if ($ae->getIndex_etnia() == 'SEM DECLARACAO') {
+                $idEtnia = $ae->getIdEtnia();
+            }
+        }
+
+        $idSexo = '';
+        $arr_sexos = $objSexoPacienteRN->listar($objSexoPaciente);
+        foreach ($arr_sexos as $as) {
+            if ($as->getIndex_sexo() == 'NAO INFORMADO') {
+                $idSexo = $as->getIdSexo();
+            }
+        }
+
+        
+        if ($paciente->getCPF() == '' &&
+                $paciente->getRG() == '' &&
+                $paciente->getPassaporte() == '' &&
+                $paciente->getIdSexo_fk() == $idSexo &&
+                $paciente->getEndereco() == '' &&
+                $paciente->getCEP() == '' &&
+                $paciente->getNomeMae() == '' &&
+                $paciente->getDataNascimento() == '' &&
+                $idGAL == null && $paciente->getIdEtnia_fk() == $idEtnia && $paciente->getNome() != null & $paciente->getNome() != '') {
+
+            $paciente->setObsRG('Desconhecido');
+            $paciente->setObsCEP('Desconhecido');
+            $paciente->setObsCPF('Desconhecido');
+            $paciente->setObsEndereco('Desconhecido');
+            $paciente->setObsPassaporte('Desconhecido');
+            $paciente->setObsNomeMae('Desconhecido');
+            $paciente->setObsCodGAL('Desconhecido');
+            $paciente->setCadastroPendente('s');
+        }
+
+        
+        
+    }
+    
+    
     public function cadastrar(Paciente $paciente) {
         $objBanco = new Banco();
         try {
@@ -378,20 +494,17 @@ class PacienteRN {
             $objBanco->abrirTransacao();
             $objPacienteBD = new PacienteBD();
             
+            $this->validarCenarioPendente($paciente, $objExcecao);
             $this->validarCEP($paciente, $objExcecao);
-            
             $this->validarEndereco($paciente, $objExcecao);
             $this->validarCPF($paciente, $objExcecao);
-            
             //$this->validarDataNascimento($paciente,$objExcecao); 
             $this->validarNome($paciente, $objExcecao);
             $this->validarNomeMae($paciente, $objExcecao);
             $this->validarObsNomeMae($paciente, $objExcecao);
-            
             $this->validarObsRG($paciente, $objExcecao);
             $this->validarObsCPF($paciente, $objExcecao);
             //$this->validarPassaporte($paciente,$objExcecao);
-            
             $this->validarObsCEP($paciente, $objExcecao);
             $this->validarObsPassaporte($paciente, $objExcecao);
             $this->validarObsEndereco($paciente, $objExcecao);

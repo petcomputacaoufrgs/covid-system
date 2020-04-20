@@ -70,6 +70,12 @@ class TuboBD{
                 $arrayBind[] = array('i', $objTubo->getIdAmostra_fk());
             }
             
+            if ($objTubo->getTuboOriginal() != null) {
+                $WHERE .= $AND . " tuboOriginal = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objTubo->getTuboOriginal());
+            }
+            
             if ($WHERE != '') {
                 $WHERE = ' where ' . $WHERE;
             }

@@ -41,8 +41,6 @@ class Interf {
 
      function montar_select_niveis_prioridade(&$select_nivelPrioridade, $objNivelPrioridade, $objNivelPrioridadeRN, &$objAmostra, $disabled, $onchange) {
         /* TIPOS AMOSTRA */
-
-
         $selected = '';
         $arr_niveisPrioridade = $objNivelPrioridadeRN->listar($objNivelPrioridade);
 
@@ -63,6 +61,59 @@ class Interf {
         }
         $select_nivelPrioridade .= '</select>';
     }
+    
+    function montar_select_amostras(&$select_amostras, $objAmostra,$objAmostraRN, &$objPaciente, $disabled, $onchange){
+        /* AMOSTRAS */
+        $selected = '';
+        //$objAmostraAux = new Amostra(); 
+        //$objAmostraAux->setIdAmostra($objAmostra->getIdAmostra());
+        $arr_amostras = $objAmostraRN->listar($objAmostra);
+        print_r($arr_amostras);
+
+        $select_amostras = '<select class="form-control selectpicker"' . $onchange
+                . 'id="select-country idSel_amostras"'
+                . ' data-live-search="true" name="sel_amostras"' . $disabled . '>'
+                . '<option data-tokens="" ></option>';
+
+        foreach ($arr_amostras as $amostra) {
+            $selected = '';
+            if ($amostra->getIdAmostra() == $objAmostra->getIdAmostra()) {
+                $selected = 'selected';
+            }
+
+            $select_amostras .= '<option ' . $selected .
+                    '  value="' . Pagina::formatar_html($amostra->getIdAmostra())
+                    . '" data-tokens="' . Pagina::formatar_html($amostra->getCodigoAmostra()) . '">'
+                    . Pagina::formatar_html($amostra->getCodigoAmostra()) . '</option>';
+        }
+        $select_amostras .= '</select>';
+    }
+    
+    function montar_select_codsGAL(&$select_codsGAL, $objCodigoGAL,$objCodigoGAL_RN, &$objPaciente, $disabled, $onchange){
+        /* CÓDIGOS GAL */
+        $selected = '';
+                
+        $arr_cods = $objCodigoGAL_RN->listar($objCodigoGAL);
+
+        $select_codsGAL = '<select class="form-control selectpicker"' . $onchange
+                . 'id="select-country idSel_codsGAL"'
+                . ' data-live-search="true" name="sel_codGAL"' . $disabled . '>'
+                . '<option data-tokens="" ></option>';
+
+        foreach ($arr_cods as $cod) {
+            $selected = '';
+            if ($cod->getIdPaciente_fk() == $objPaciente->getIdPaciente()) {
+                $selected = 'selected';
+            }
+
+            $select_codsGAL .= '<option ' . $selected .
+                    '  value="' . Pagina::formatar_html($cod->getIdCodigoGAL())
+                    . '" data-tokens="' . Pagina::formatar_html($cod->getCodigo()) . '">'
+                    . Pagina::formatar_html($cod->getCodigo()) . '</option>';
+        }
+        $select_codsGAL .= '</select>';
+    }
+    
 
     function montar_select_aceitaRecusadaAguarda(&$select_a_r_g, &$objAmostra, $disabled, $onchange) {
         $selectedr = '';
