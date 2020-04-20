@@ -97,6 +97,50 @@ class CadastroAmostraRN{
     
     
     
+     public function consultarData(CadastroAmostra $cadastroAmostra,$data) {
+        try {
+            $objExcecao = new Excecao();
+            $objBanco = new Banco();
+            $objBanco->abrirConexao(); 
+            $objExcecao->lancar_validacoes();
+            
+                        
+            $dataAux  = explode("/", $data);
+            
+            $diaOriginal = $dataAux[0];
+            $mesOriginal = $dataAux[1];
+            $anoOriginal = $dataAux[2];
+            
+           
+            $objCadastroAmostraBD = new CadastroAmostraBD();
+            $arr =  $objCadastroAmostraBD->listar($cadastroAmostra,$objBanco);
+            $arr_resultado = array();
+            foreach ($arr as $ca){
+                
+                $datahora = $ca->getDataHoraInicio();
+                $strDataHora = explode(" ", $datahora);
+            
+                $data = explode("-", "$strDataHora[0]");
+                
+                $ano = $data[0];
+                $mes = $data[1];
+                $dia = $data[2];
+                
+                //echo $diaOriginal;
+                
+                if($dia == $diaOriginal && $mes == $mesOriginal && $ano == $anoOriginal ){
+                    $arr_resultado[] = $ca;
+                }
+            }
+            
+            
+            $objBanco->fecharConexao();
+            return $arr_resultado;
+        } catch (Exception $e) {
+            throw new Exception('Erro listando amostra.', NULL, $e);
+        }
+    }
+    
     
   
   

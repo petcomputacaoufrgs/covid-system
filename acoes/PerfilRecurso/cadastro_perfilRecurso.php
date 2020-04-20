@@ -31,7 +31,7 @@ $recursos_selecionados = '';
 $disabled = '';
 
 try {
-
+    //Sessao::getInstance()->validar();
     /* PERFIL DO USUÁRIO */
     $objPerfilUsuario = new PerfilUsuario();
     $objPerfilUsuarioRN = new PerfilUsuarioRN();
@@ -65,9 +65,9 @@ try {
                             $arrUP = $objRel_perfilUsuario_recurso_RN->validar_cadastro($objRel_perfilUsuario_recurso);
                             if (empty($arrUP)) {
                                 $objRel_perfilUsuario_recurso_RN->cadastrar($objRel_perfilUsuario_recurso);
-                                $alert = Alert::getInstance()->getInstance()->alert_success_cadastrar();
+                                $alert = Alert::alert_success("O relacionamento perfil usuário e seu recurso foi cadastrado");
                             } else {
-                                $alert = Alert::getInstance()->alert_error_cadastrar_editar();
+                                $alert = Alert::alert_warning("O relacionamento perfil usuário e seu recurso já tinha sido cadastrado");
                             }
                         }
                     }
@@ -115,9 +115,9 @@ try {
                         $arrUP = $objRel_perfilUsuario_recurso_RN->validar_cadastro($objRel_perfilUsuario_recurso);
                         if (empty($arrUP)) {
                             $objRel_perfilUsuario_recurso_RN->cadastrar($objRel_perfilUsuario_recurso);
-                            $alert = Alert::getInstance()->alert_success_cadastrar();
+                            $alert = Alert::alert_success("O relacionamento perfil usuário e seu recurso foi cadastrado");
                         } else {
-                            $alert = Alert::getInstance()->alert_error_cadastrar_editar();
+                            $alert = Alert::alert_warning("O relacionamento perfil usuário e seu recurso já tinha sido cadastrado");
                         }
                         $recursos_selecionados .= $_POST['sel_recursos'][$i] . ";";
                     }
@@ -188,7 +188,7 @@ function montar_select_perfil(&$select_perfilUsu, $objPerfilUsuarioRN, &$objPerf
     Pagina::getInstance()->montar_menu_topo();
     
     echo $alert.
-     Pagina::montar_topo_listar('CADASTRAR RELACIONAMENTO DO PERFIL DO USUÁRIO COM SEUS RECURSOS', 'listar_rel_perfilUsuario_recurso',
+     Pagina::montar_topo_listar('CADASTRAR RELACIONAMENTO DO PERFIL DO USUÁRIO COM SEUS RECURSOS', null,null,'listar_rel_perfilUsuario_recurso',
              'LISTAR PERFIL + RECURSO').
         '<div class="conteudo">
             <div class="formulario">

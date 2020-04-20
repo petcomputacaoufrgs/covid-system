@@ -100,7 +100,7 @@ class Rel_perfilUsuario_recurso_BD{
 
         try{
 
-            $SELECT = 'SELECT id_rel_perfilUsuario_recurso,idPerfilUsuario_fk,idRecurso_fk FROM tb_rel_perfilUsuario_recurso WHERE id_rel_perfilUsuario_recurso = ?';
+            $SELECT = 'SELECT id_rel_perfilUsuario_recurso,idPerfilUsuario_fk,idRecurso_fk FROM tb_rel_perfilusuario_recurso WHERE id_rel_perfilUsuario_recurso = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objRel_perfilUsuario_recurso->getId_rel_usuario_perfilUsuario());

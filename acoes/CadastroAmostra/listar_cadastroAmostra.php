@@ -24,9 +24,13 @@ require_once '../classes/PerfilPaciente/PerfilPacienteRN.php';
 require_once '../classes/Usuario/Usuario.php';
 require_once '../classes/Usuario/UsuarioRN.php';
 
+
+
+try {
+    Sessao::getInstance()->validar();
+
 $objPaciente = new Paciente();
 $objPacienteRN = new PacienteRN();
-
 $objPerfilPaciente = new PerfilPaciente();
 $objPerfilPacienteRN = new PerfilPacienteRN();
 
@@ -42,36 +46,41 @@ $objUsuario = new Usuario();
 $objUsuarioRN = new UsuarioRN();
 $html = '';
 
-try {
+
     
     $arrCadastroAmostras = $objCadastroAmostraRN->listar($objCadastroAmostra);
     
-    
+    //print_r($arrCadastroAmostras);
+    //die("caqui");
     foreach ($arrCadastroAmostras as $ca){
         $objUsuario->setIdUsuario($ca->getIdUsuario_fk());
         $objUsuario = $objUsuarioRN->consultar($objUsuario);
+        
         $objAmostra->setIdAmostra($ca->getIdAmostra_fk());
         $objAmostra = $objAmostraRN->consultar($objAmostra);
         $objPaciente->setIdPaciente($objAmostra->getIdPaciente_fk());
         $objPaciente = $objPacienteRN->consultar($objPaciente);
         
-        $objPerfilPaciente->setIdPerfilPaciente($objPaciente->getIdPerfilPaciente_fk());
-        $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
-        
+        //$objPerfilPaciente->setIdPerfilPaciente($objPaciente->getIdPerfilPaciente_fk());
+        //$objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
+        if($ca->getIdUsuario_fk() == $_SESSION['COVID19']['ID_USUARIO']){
         if ($objAmostra->getAceita_recusa() == 'r') {
             $result = 'Recusada';
             $style = ' style="background-color:rgba(255, 0, 0, 0.2);" ';
         } else if ($objAmostra->getAceita_recusa() == 'a') {
             $result = 'Aceita';
             $style = ' style="background-color:rgba(0, 255, 0, 0.2);" ';
+        }else if ($objAmostra->getAceita_recusa() == 'g') {
+            $result = 'Aguardando';
+            $style = ' style="background-color:rgba(255, 255, 0, 0.2);" ';
         }
+
         $html .= '<tr' . $style . '>
                     <th scope="row">' . Pagina::formatar_html($objAmostra->getIdAmostra()) . '</th>
                             <td>' . Pagina::formatar_html($result) . '</td>
                             <td>' . Pagina::formatar_html($objAmostra->getStatusAmostra()). '</td>
                             <td>' . Pagina::formatar_html($objAmostra->getDataHoraColeta()). '</td>
                             <td>' .Pagina::formatar_html($objUsuario->getMatricula()) . '</td>
-                            <td>' .Pagina::formatar_html($objPerfilPaciente->getPerfil()) . '</td>
                             <td>' .Pagina::formatar_html($objPaciente->getCPF()) . '</td>
                         <td>';
                 
@@ -84,12 +93,12 @@ try {
                }
                $html .= '</td></tr>';
         
-        
+        }
         
     }
     
     
-} catch (Exception $ex) {
+} catch (Throwable $ex) {
    Pagina::getInstance()->processar_excecao($ex);
 }
 

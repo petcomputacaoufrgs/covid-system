@@ -70,7 +70,7 @@ Pagina::getInstance()->montar_menu_topo();
 
 echo '
     <div class="conteudo_listar">'.
-       Pagina::montar_topo_listar('LISTAR RELACIONAMENTO DO USUÁRIO COM SEU PERFIL', 'cadastrar_usuario_perfilUsuario', 'NOVO USUÁRIO + PERFIL').
+       Pagina::montar_topo_listar('LISTAR RELACIONAMENTO DO USUÁRIO COM SEU PERFIL',null,null, 'cadastrar_usuario_perfilUsuario', 'NOVO USUÁRIO + PERFIL').
         '<div class="conteudo_tabela">
             <table class="table table-hover">
                 <thead>

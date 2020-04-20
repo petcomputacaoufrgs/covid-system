@@ -4,6 +4,9 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 require_once __DIR__ . '/../Sessao/Sessao.php';
+require_once __DIR__ . '/../Log/Log.php';
+require_once __DIR__ . '/../Log/LogRN.php';
+require_once '../utils/Alert.php';
 
 class Pagina {
 
@@ -45,12 +48,26 @@ class Pagina {
         echo '<link rel="stylesheet" type="text/css" href="css/'.$strArquivo.'.css?'.$strVersao.'">';
     }
     
-    public function processar_excecao(Exception $e) {
+    public function processar_excecao($e) {
         if ($e instanceof Excecao && $e->possui_validacoes()) {
             $this->array_validacoes = $e->get_validacoes();
         } else {
 
-            die('pagina->processarexcecao ' . $e);
+            try {
+                
+                $log = new Log();
+                $log->setIdUsuario(Sessao::getInstance()->getIdUsuario());
+                $log->setTexto($e->__toString()."\n".$e->getTraceAsString());
+                $log->setDataHora(date("Y-m-d H:i:s"));
+                print_r($log);
+                $logRN = new LogRN();
+                $logRN->cadastrar($log);
+                //die("aqui");
+                
+            } catch (Throwable $ex) {      
+            }
+            header('Location: controlador.php?action=erro');
+            //die('pagina->processarexcecao ' . $e);
         }
     }
 
@@ -61,13 +78,15 @@ class Pagina {
             
            <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <div class="mx-auto d-sm-flex d-block flex-sm-nowrap">
+
                 <a class="navbar-brand" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">COVID19<i class="fas fa-virus"></i></a>
+
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse text-center" id="navbarsExample11">
                     <ul class="navbar-nav">
-                        <li class="nav-item active">
+                       <!-- <li class="nav-item active">
                             <a class="nav-link" href="#">Cadastro Amostra</a>
                         </li>
                         <li class="nav-item">
@@ -82,9 +101,27 @@ class Pagina {
                         <li class="nav-item">
                             <a class="nav-link" href="#">Laudo</a>
                         </li>
-                         <li class="nav-item divisor"></li>
+                         <li class="nav-item divisor"></li> -->
                         <li class="nav-item">
-                            <a class="nav-link disabled" href="#">Usuário logado:  '.Sessao::getInstance()->getMatricula().'</a>
+                            <div class="dropdown">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Usuário logado:  '.Sessao::getInstance()->getMatricula().'
+                                </a>
+
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                  <a class="dropdown-item" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=sair').'">Logoff</a>
+                                </div>
+                              </div>
+                            
+                            <!--<div class="dropdown">
+                                <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 Usuário logado:  '.Sessao::getInstance()->getMatricula().'
+                                </button>
+                                 <div class="dropdown-menu">
+                                  <a class="dropdown-item" href=>Logoff</a>
+                                </div>
+                              </div>-->
+                          
                         </li>
                     </ul>
                 </div>
@@ -93,9 +130,7 @@ class Pagina {
                   
 
           </header>';
-    }
-
-    
+    } 
 
     public static function abrir_head($titulo) {
         echo '<html>
@@ -106,12 +141,14 @@ class Pagina {
                         <!--<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />-->
                         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-                        <!-- Font Awesome -->
-                        <link rel="stylesheet" href="css/fontawesome.css">
+                        <!-- Font Awesome --><!-- NÃO REMOVER SENÃO NÃO APARECEM OS ÍCONES -->
+                        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
                         <!-- HTML5Shiv -->
                         <!--[if lt IE 9]>
-                        <script src="js/html5shiv.min.js"></script>
+                          <script src="js/html5shiv.min.js"></script>
+
+                        <link rel="stylesheet" href="css/fontawesome.css">
                         <![endif]-->
 
                         <!-- JQuery -->
@@ -130,6 +167,7 @@ class Pagina {
 
                         <!-- Script para copiar e colar data em input date e datetime -->
                         <script src="js/datetime-copy-paste.js"></script>
+
 
                         <!-- Estilo customizado -->
                         <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -154,6 +192,20 @@ class Pagina {
                             transition: .5s;
                         }
                         
+                        .btn-secondary{
+                            background: none;
+                            border-radius: 0px;
+                            border: none;
+                            color:#3a5261;
+                        }
+                        
+                        .btn-secondary:hover,.btn-secondary:active{
+                            border-bottom: 1px solid #3a5261;
+                            background: none;
+                            color:#3a5261;
+                            /*color: white;
+                            background-color:#3a5261;*/
+                        }
 
                         
                        
@@ -194,19 +246,29 @@ class Pagina {
     public function mostrar_excecoes() {
         //print_r($this->array_validacoes);
         // $script = '';
+        
         if (count($this->array_validacoes)) {
-
-            echo '<script>';
+            //print_r($this->array_validacoes);
+            //ECHO count($this->array_validacoes);
+            $alert = '';
+            //echo $this->array_validacoes[0][0];
+            //$alert = Alert::alert_danger($this->array_validacoes[0][0]);
+            
+            //echo $alert;
+            
+           
             $msg = '';
             $campo = '';
-
+            
             foreach ($this->array_validacoes as $validacao) {
                 /* if($msg != ''){
                   $msg .= "\n";
                   } */
                 $msg .= $validacao[0];
+                $alert .= Alert::alert_msg($validacao[0],$validacao[2]);
+                             
 
-                if ($validacao[1] != null) {
+                /*if ($validacao[1] != null) {
 
                     echo 'var campo = document.getElementById("' . $validacao[1] . '");
                           
@@ -219,10 +281,18 @@ class Pagina {
                           
                             
                         ' . "\n";
-                }
+                    die($msg);
+                }*/
             }
+              //echo '<script type="text/javascript">';
+              //echo '$(\'#validacao\').html(\'<div style="background-color: blue;"> oi </div>\')';
+              //echo '$(\'#validacao\').html(\'.$alert.')';
+              //echo '</script>';
+                //echo '<script type="text/javascript"> var div_feedback = document.getElementById("validacao");';
+                //echo 'div_feedback.innerHTML ="'.$alert.'";</script>';
+                echo $alert;
             //echo 'alert(\''.$msg.'\');';
-            echo '</script>';
+            
         }
         //return $script;
     }
@@ -236,14 +306,20 @@ class Pagina {
         return htmlentities($strValor,ENT_QUOTES);
     }
     
-    public static function montar_topo_listar($titulo,$link,$novo) {
+    public static function montar_topo_listar($titulo =null,$link1 =null, $novo1,$link2,$novo2) {
         echo '<div class="topo_listar">
                 <div class="row">
-                    <div class="col-md-9"><h3>'.$titulo.'</h3></div>
+                    <div class="col-md-6"><h3>'.$titulo.'</h3></div>
                     <div class="col-md-3">';
-                      if(Sessao::getInstance()->verificar_permissao($link)){ //só aparece o botão de cadastro para alguns perfis
+                      if(Sessao::getInstance()->verificar_permissao($link1)){ //só aparece o botão de cadastro para alguns perfis
                           echo '<a class="btn btn-primary " 
-                            href="' . Sessao::getInstance()->assinar_link('controlador.php?action='.$link). '">'.$novo.'</a> ';
+                            href="' . Sessao::getInstance()->assinar_link('controlador.php?action='.$link1). '">'.$novo1.'</a> ';
+                      }
+                    echo '</div>
+                    <div class="col-md-3">';
+                      if(Sessao::getInstance()->verificar_permissao($link2)){ //só aparece o botão de cadastro para alguns perfis
+                          echo '<a class="btn btn-primary " 
+                            href="' . Sessao::getInstance()->assinar_link('controlador.php?action='.$link2). '">'.$novo2.'</a> ';
                       }
                     echo '</div>
                 </div>

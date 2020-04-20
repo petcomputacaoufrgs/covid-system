@@ -111,10 +111,11 @@ class Sessao {
     }
 
     public function logoff() {
-        die("logooff");
+                
         session_destroy();
-
-        //header('Location: controlador.php?action=listar_perfilPaciente');
+        
+        
+        
     }
 
     public function validar() {
@@ -126,24 +127,28 @@ class Sessao {
         foreach ($_GET as $strChave => $strValor) {
             if (($strChave != 'action' && substr($strChave, 0, 2) != 'id' && $strChave != 'hash') || ($strChave == 'action' && !preg_match('/^[a-zA-Z0-9_]+/', $strValor)) || (substr($strChave, 0, 2) == 'id' && !is_numeric($strValor)) || ($strChave == 'hash' && (strlen($strValor) != 64 || !ctype_alnum($strValor)))
             ) {
-                die('url inválida:' . $strChave . "=" . $strValor);
-                //85748cf8e123a961cf78802e7f62ad65cf73fe3b11d01f66e05d4a735676b50f
+                //die('url inválida:' . $strChave . "=" . $strValor);
+                header('Location: controlador.php?action=login');
+                die();
             }
         }
 
         if (!$this->verificar_link()) {
             $this->logoff();
-            die('hash inválida');
+            header('Location: controlador.php?action=login');
+            die();
         }
 
         if (!$this->verificar_permissao($_GET['action'])) {
-
-            die("acesso negado");
+            throw new Exception("Acesso negado");
+            die();
         }
     }
 
     public function getIdUsuario() {
-        return $_SESSION['COVID19']['ID_USUARIO'];
+      
+           return $_SESSION['COVID19']['ID_USUARIO'];
+      
     }
 
     public function getMatricula() {

@@ -4,16 +4,16 @@
  *********************************************/
 
 require_once __DIR__ . '/../Excecao/Excecao.php';
-/* require_once __DIR__ . '/TuboBD.php'; */
+require_once __DIR__ . '/TuboBD.php'; 
 
-class TubosRN{
+class TuboRN{
 
 
     private function validarTuboOriginal(Tubo $tubo, Excecao $objExcecao){
         $boolTuboOriginal = $tubo->getTuboOriginal();
 
         if($boolTuboOriginal == null){
-            $objExcecao->adicionar_validacao('A originalidade do tubo precisa ser informada', 'tuboOriginal');
+            $objExcecao->adicionar_validacao('A originalidade do tubo precisa ser informada', 'idTuboOriginal');
         }
 
         return $tubo->setTuboOriginal($boolTuboOriginal);

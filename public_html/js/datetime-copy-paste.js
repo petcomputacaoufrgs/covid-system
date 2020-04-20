@@ -1,9 +1,24 @@
-const ctrlKey = 17,
-        cmdKey = 91,
-        vKey = 86,
-        cKey = 67;
+const dateType = 'date',
+		dateTimeType = 'datetime-local';
+
+const ctrlKey = 'Control',
+        cmdKey = 'Meta',
+        vKey = 'v',
+        cKey = 'c';
         
 let ctrlDown = false;
+
+function canReadClipboard() {
+	return Boolean(navigator && navigator.clipboard && navigator.clipboard.readText);
+}
+
+function canWriteClipboard() {
+	return Boolean(navigator && navigator.clipboard && navigator.clipboard.writeText);
+}
+
+function isControl(key) {
+	return (key === ctrlKey || key === cmdKey)
+}
 
 function convertDateToDatetimeFormat(dateList) {
 	//Formato aaaa-mm-ddThh:mm
@@ -21,10 +36,9 @@ function isValidDate(dateText) {
 }
 
 function onPaste(e, el, type) {
-	if (ctrlDown && e.keyCode == vKey) {
+	if (ctrlDown && e.key == vKey) {
     	navigator.clipboard.readText().then(text => {
-        		const dateText = text.trim();
-                console.log(dateText);
+        		const dateText = text.trim().substring(0,10);
                 if (isValidDate(dateText)) {
                 	let dateList = dateText.split("/");
                 
@@ -37,16 +51,16 @@ function onPaste(e, el, type) {
                     }
 
                     if (dateList[2].length !== 4) {
-                        dateList[2].substring(0,4);
+                         dateList[2] = dateList[2].substring(0,4);
                     }
 
                     if (dateList.length >= 3) {
                         let date;
 
-                        if (type === 'datetime') {
+                        if (type === dateTimeType) {
                             date = 	 
                                 convertDateToDatetimeFormat(dateList);
-                        } else if (type === 'date') {
+                        } else if (type === dateType) {
                             date = 
                                 convertDateToDateFormat(dateList);
                         }
@@ -58,33 +72,33 @@ function onPaste(e, el, type) {
                 }
             })
             ctrlDown = false;
-        } else if (e.keyCode == ctrlKey) {
+        } else if (isControl(e.key)) {
             ctrlDown = true;
         }
 }
 
 function onCopy(e, el, type) {
-	if (ctrlDown && e.keyCode == cKey) {
+	if (ctrlDown && e.key == cKey) {
     	let text, textList;
         let inputText = $(el).val();
         
-        if(type === 'datetime') {
+        if(type === dateTimeType) {
             //Formato aaaa-mm-ddThh:mm
         	textList = inputText.replace('T', '-')
             					.replace(':', '-')
                                 .split('-');
             
-            text = textList[1] + '/' + 
-            		textList[2] + '/' + 
+            text = textList[2] + '/' + 
+            		textList[1] + '/' + 
                     textList[0] + ', ' +
                     textList[3] + ':' +
                     textList[4]
                     
-        } else if (type === 'date') {
+        } else if (type === dateType) {
         	//Formato aaaa-mm-dd
             textList = inputText.split('-');
-                  text = textList[1] + '/' + 
-            		textList[2] + '/' + 
+                  text = textList[2] + '/' + 
+            		textList[1] + '/' + 
                     textList[0]
         }
         
@@ -93,7 +107,7 @@ function onCopy(e, el, type) {
         }
     	
        	ctrlDown = false;
-    } else if (e.keyCode == ctrlKey) {
+    } else if (isControl(e.key)) {
         ctrlDown = true;
     }
 }
@@ -107,13 +121,28 @@ function createCopyEvent(el, type) {
 }
 
 $(document).ready(function() {   
-    let dateInputs = document.querySelectorAll('[type="datetime-local"]');
-        
-    dateInputs.forEach(el => createPasteEvent(el, 'datetime'));
-    dateInputs.forEach(el => createCopyEvent(el, 'datetime')); 
+    let dateInputs = document.querySelectorAll('[type="'+dateTimeType+'"]');
     
-    dateInputs = document.querySelectorAll('[type="date"]');
+    const canRead = canReadClipboard();
+    const canWrite = canWriteClipboard();
     
-    dateInputs.forEach(el => createPasteEvent(el, 'date'));
-    dateInputs.forEach(el => createCopyEvent(el, 'date'));
+    if (canRead) {
+    	dateInputs.forEach(el => createPasteEvent(el, dateTimeType));
+    }
+    
+    if (canWrite) {
+        dateInputs.forEach(el => createCopyEvent(el, dateTimeType)); 
+    }    
+    
+    dateInputs = document.querySelectorAll('[type="'+dateType+'"]');
+    type = 'date'
+    
+    if (canRead) {
+    	dateInputs.forEach(el => createPasteEvent(el, dateType));
+    }
+    
+    if (canWrite) {
+        dateInputs.forEach(el => createCopyEvent(el, dateType));
+    }  
+    
 });

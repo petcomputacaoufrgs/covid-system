@@ -11,13 +11,14 @@ require_once '../classes/Usuario/UsuarioRN.php';
 require_once '../utils/Utils.php';
 require_once '../utils/Alert.php';
 
-$utils = new Utils();
-$objPagina = new Pagina();
-$objUsuario = new Usuario();
-$objUsuarioRN = new UsuarioRN();
-$alert = '';
 
 try {
+    Sessao::getInstance()->validar();
+    $utils = new Utils();
+    $objUsuario = new Usuario();
+    $objUsuarioRN = new UsuarioRN();
+    $alert = '';
+    
     switch ($_GET['action']) {
         case 'cadastrar_usuario':
             if (isset($_POST['salvar_usuario'])) {
@@ -27,9 +28,9 @@ try {
                 $arr_usuarios = $objUsuarioRN->validar_cadastro($objUsuario);
                 if (empty($arr_usuarios)) {
                     $objUsuarioRN->cadastrar($objUsuario);
-                    $alert = Alert::alert_success_cadastrar();
+                    $alert = Alert::alert_success("O usuário foi CADASTRADO com sucesso");
                 } else {
-                    $alert = Alert::alert_error_cadastrar_editar();
+                    $alert = Alert::alert_danger("O usuário não foi CADASTRADO");
                 }
             } else {
                 $objUsuario->setIdUsuario('');
@@ -51,9 +52,9 @@ try {
                 $arr_usuarios = $objUsuarioRN->validar_cadastro($objUsuario); // não permitir que ao editar o usuário acabe mudando para um que já existe
                 if (empty($arr_usuarios)) {
                      $objUsuarioRN->alterar($objUsuario);
-                    $alert = Alert::alert_success_editar();
+                    $alert = Alert::alert_success_editar("O Usuário foi ALTERADO com sucesso");
                 } else {
-                    $alert = Alert::alert_error_cadastrar_editar();
+                    $alert = Alert::alert_danger("O Usuário não foi ALTERADO");
                 }
               
             }
@@ -63,15 +64,18 @@ try {
         default : die('Ação [' . $_GET['action'] . '] não reconhecida pelo controlador em cadastro_usuario.php');
     }
 } catch (Exception $ex) {
-    $objPagina->processar_excecao($ex);
+    Pagina::getInstance()->processar_excecao($ex);
 }
-?>
 
-<?php Pagina::abrir_head("Cadastrar Usuário"); ?>
-<link rel="stylesheet" type="text/css" href="css/precadastros.css">
-<?php Pagina::fechar_head(); ?>
-<?php $objPagina->montar_menu_topo(); ?>
-<?= $alert ?>
+Pagina::abrir_head("Cadastrar Usuário");
+Pagina::getInstance()->adicionar_css("precadastros");
+Pagina::getInstance()->adicionar_javascript("usuario");
+Pagina::getInstance()->fechar_head();
+Pagina::getInstance()->montar_menu_topo();
+
+echo  $alert;
+
+?>
 
 <div class="conteudo">
     <form method="POST">
@@ -95,12 +99,10 @@ try {
     </form>
 </div>
 
-<script src="js/usuario.js"></script>
-<script src="js/fadeOut.js"></script>
 
 <?php
-$objPagina->mostrar_excecoes();
-$objPagina->fechar_corpo();
-?>
+Pagina::getInstance()->mostrar_excecoes();
+Pagina::getInstance()->fechar_corpo();
+
 
 

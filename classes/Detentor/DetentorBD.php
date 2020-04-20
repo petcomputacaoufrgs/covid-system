@@ -66,7 +66,7 @@ class DetentorBD{
                 $WHERE = ' where '.$WHERE;
             } 
         
-            //echo $SELECT.$WHERE;
+            //echo $SELECT.$WHERE;$WHERE
 
             $arr = $objBanco->consultarSQL($SELECT.$WHERE,$arrayBind);
             
