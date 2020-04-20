@@ -76,12 +76,41 @@ class PacienteBD {
 
     public function listar(Paciente $objPaciente, Banco $objBanco) {
         try {
-
+            
+            //print_r($objPaciente);
+            
             $SELECT = "SELECT * FROM tb_paciente";
+            
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
 
+            if ($objPaciente->getIdPaciente() != null) {
+                $WHERE .= $AND . " idPaciente = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objPaciente->getIdPaciente());
+            }
+            
+            if ($objPaciente->getCPF() != null) {
+                $WHERE .= $AND . " CPF = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPaciente->getCPF());
+            }
+            
+            if ($objPaciente->getRG() != null) {
+                $WHERE .= $AND . " RG = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPaciente->getRG());
+            }
+            
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
 
-            $arr = $objBanco->consultarSQL($SELECT);
+            //echo $SELECT.$WHERE;$WHERE
 
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
+     
             $array_paciente = array();
             foreach ($arr as $reg) {
                 $paciente = new Paciente();

@@ -51,6 +51,7 @@ try {
     $erro = '';
     $editar = false;
     $SUS = false;
+    
 
     /* ETNIA */
     $objEtnia = new Etnia();

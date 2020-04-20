@@ -60,8 +60,8 @@ class InfosTuboRN{
 
     private function validarDataHora(InfosTubo $infosTubo, Excecao $objExcecao){
         $dthr = trim($infosTubo->getDataHora());
-        echo $infosTubo->getDataHora();
-        echo strlen($infosTubo->getDataHora());
+        //echo $infosTubo->getDataHora();
+        //echo strlen($infosTubo->getDataHora());
         if (strlen($infosTubo->getDataHora()) == 0) {
             $objExcecao->adicionar_validacao('Informar a data e hora.','idDataHora');
         }else{
@@ -121,7 +121,6 @@ class InfosTuboRN{
             $objBanco->fecharConexao();
             
         }catch (Throwable $e){
-            die($e);
             throw new Excecao('Erro no cadastramento das informacoes do tubo.', $e);
         }
     }

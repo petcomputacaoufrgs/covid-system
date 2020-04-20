@@ -58,10 +58,27 @@ class TuboBD{
          try{
       
             $SELECT = "SELECT * FROM tb_tubo";
+            
+            
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($objTubo->getIdAmostra_fk() != null) {
+                $WHERE .= $AND . " idAmostra_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objTubo->getIdAmostra_fk());
+            }
+            
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            //echo $SELECT.$WHERE;$WHERE
+
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
 
 
-            $arr = $objBanco->consultarSQL($SELECT);
- 
             $array_tubos = array();
             foreach ($arr as $reg){
                 $objTubo = new Tubo();
@@ -90,15 +107,19 @@ class TuboBD{
             $arrayBind[] = array('i',$objTubo->getIdTubo());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
-
-            $objTubo = new Tubo();
-            $objTubo->setIdTubo($arr[0]['idTubo']);
-            $objTubo->setIdTubo_fk($arr[0]['idTubo_fk']);
-            $objTubo->setIdAmostra_fk($arr[0]['idAmostra_fk']);
-            $objTubo->setTuboOriginal($arr[0]['tuboOriginal']);
             
+            $objTuboaux = new Tubo();
+            
+            if($arr != null){
+                $objTuboaux->setIdTubo($arr[0]['idTubo']);
+                $objTuboaux->setIdTubo_fk($arr[0]['idTubo_fk']);
+                $objTuboaux->setIdAmostra_fk($arr[0]['idAmostra_fk']);
+                $objTuboaux->setTuboOriginal($arr[0]['tuboOriginal']);
+                return $objTuboaux;
+            }
+            return null;
 
-            return $objTubo;
+            
         } catch (Exception $ex) {
        
             throw new Excecao("Erro consultando o tubo no BD.",$ex);

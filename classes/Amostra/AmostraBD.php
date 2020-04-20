@@ -146,6 +146,12 @@ class AmostraBD{
                 $AND = ' and ';
                 $arrayBind[] = array('i', $objAmostra->getIdPerfilPaciente_fk());
             }
+            
+            if ($objAmostra->getIdPaciente_fk() != null) {
+                $WHERE .= $AND . " idPaciente_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objAmostra->getIdPaciente_fk());
+            }
 
             
 
@@ -204,7 +210,8 @@ class AmostraBD{
             $arrayBind[] = array('i',$objAmostra->getIdAmostra());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
-
+            
+            if($arr != null){
             $objAmostra = new Amostra();
             $objAmostra->setIdAmostra($arr[0]['idAmostra']);
             $objAmostra->setIdPaciente_fk($arr[0]['idPaciente_fk']);
@@ -224,8 +231,10 @@ class AmostraBD{
             $objAmostra->setObsHoraColeta($arr[0]['obsHoraColeta']);
             $objAmostra->setObsLugarOrigem($arr[0]['obsLugarOrigem']);
             $objAmostra->setObsMotivo($arr[0]['obsMotivo']);
-
             return $objAmostra;
+            }
+            return null;
+            
         } catch (Exception $ex) {
        
             throw new Excecao("Erro consultando a amostra no BD.",$ex);

@@ -67,16 +67,27 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
     
     <body>
         
-      
+         <div class="conjunto_itens">
+          <div class="row">
         <?php 
             // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
             if(Sessao::getInstance()->verificar_permissao('cadastrar_amostra')){ 
                   echo '<div class="col-md-2">
-                          <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra').'">CADASTRO AMOSTRA</a>'
+                          <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra').'">CADASTRO AMOSTRA</a>'
                           . '</div>';
             } 
-      ?>
+        ?>
         
+        <?php 
+            // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+            if(Sessao::getInstance()->verificar_permissao('gerar_estatisticas')){ 
+                  echo '<div class="col-md-2">
+                          <a target="_blank" class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=gerar_estatisticas').'">ESTATÍSTICAS </a>'
+                          . '</div>';
+            } 
+        ?>
+          </div>
+         </div>
         
         <div class="conjunto_itens">
           <div class="row">

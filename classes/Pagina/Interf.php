@@ -39,7 +39,7 @@ class Interf {
         $select_municipios .= '</select>';
     }
 
-    function montar_select_niveis_prioridade(&$select_nivelPrioridade, $objNivelPrioridade, $objNivelPrioridadeRN, &$objAmostra, $disabled, $onchange) {
+     function montar_select_niveis_prioridade(&$select_nivelPrioridade, $objNivelPrioridade, $objNivelPrioridadeRN, &$objAmostra, $disabled, $onchange) {
         /* TIPOS AMOSTRA */
 
 

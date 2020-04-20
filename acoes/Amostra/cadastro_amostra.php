@@ -57,19 +57,6 @@ try {
     date_default_timezone_set('America/Sao_Paulo');
     $_SESSION['DATA_LOGIN'] = date('d/m/Y  H:i:s');
 
-    /* ETNIA */
-    $objEtnia = new Etnia();
-    $objEtniaRN = new EtniaRN();
-
-    /* CÓDIGO GAL */
-    $objCodigoGAL = new CodigoGAL();
-    $objCodigoGAL_RN = new CodigoGAL_RN();
-
-
-    /* SEXO PACIENTE */
-    $objSexoPaciente = new Sexo();
-    $objSexoPacienteRN = new SexoRN();
-
     /* USUÁRIO */
     $objUsuario = new Usuario();
     $objUsuario->setMatricula(Sessao::getInstance()->getMatricula());
@@ -195,7 +182,7 @@ try {
 
                 $objAmostra->setIdEstado_fk(43); //ESTADO DO RS
                 $objAmostra->setIdLugarOrigem_fk($_POST['sel_cidades']);
-                $objAmostra->setIdNivelPrioridade_fk(1);
+                $objAmostra->setIdNivelPrioridade_fk(null);
 
                 $objAmostra->setMotivoExame($_POST['txtMotivo']);
                 $objAmostra->setObsCEP($_POST['txtObsCEPAmostra']);
@@ -280,115 +267,145 @@ try {
             break;
 
         case 'editar_amostra':
-            $disabled = ' disabled ';
+            $perfil_erro = false; $data_erro = false; $situacao_erro = false;
             if (!isset($_POST['salvar_amostra'])) { //enquanto não enviou o formulário com as alterações
                 $objAmostra->setIdAmostra($_GET['idAmostra']);
                 $objAmostra = $objAmostraRN->consultar($objAmostra);
-                montar_select_aceitaRecusada($select_a_r_g, $objAmostra);
-
-                $objPaciente->setIdPaciente($objAmostra->getIdPaciente_fk());
-                $objPaciente = $objPacienteRN->consultar($objPaciente);
-
-                if ($objPaciente->getRG() == null) {
-                    $objPaciente->setRG('');
+                Interf::getInstance()->montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, $disabled, $onchange);
+                
+                Interf::getInstance()->montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, $disabled, $onchange);
+                
+                if($objAmostra->getIdEstado_fk() != null){
+                    $objEstadoOrigem->setCod_estado($objAmostra->getIdEstado_fk());
+                    $objEstadoOrigem = $objEstadoOrigemRN->consultar($objEstadoOrigem);
+                    Interf::getInstance()->montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra, $disabled, $onchange); //por default RS
                 }
 
-                if ($objPaciente->getIdSexo_fk() != 0) {
-                    $objSexoPaciente->setIdSexo($objPaciente->getIdSexo_fk());
-                    $objSexoPaciente = $objSexoPacienteRN->consultar($objSexoPaciente);
-                    montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente);
+                if($objAmostra->getIdLugarOrigem_fk() != null){
+                    $objLugarOrigem->setIdLugarOrigem($objAmostra->getIdLugarOrigem_fk());
+                    $objLugarOrigemRN->consultar($objLugarOrigem);
+                    Interf::getInstance()->montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra,$disabled, $onchange);
                 }
-
-                $objPerfilPaciente->setIdPerfilPaciente($objPaciente->getIdPerfilPaciente_fk());
-                $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
-                montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objPaciente, $disabled);
-
-                if ($objAmostra->getIdCodGAL_fk() != null) {
-                    $objCodigoGAL->setIdCodigoGAL($objAmostra->getIdCodGAL_fk());
-                    $objCodigoGAL->setIdPaciente_fk($objPaciente->setIdPaciente());
-                    $objCodigoGAL = $objCodigoGAL_RN->consultar($objCodigoGAL);
-                }
-
-                $objEstadoOrigem->setCod_estado($objAmostra->getIdEstado_fk());
-                $objEstadoOrigem = $objEstadoOrigemRN->consultar($objEstadoOrigem);
-                montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra); //por default RS
-
-                $objLugarOrigem->setIdLugarOrigem($objAmostra->getIdLugarOrigem_fk());
-                $objLugarOrigemRN->consultar($objLugarOrigem);
-                montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra);
             }
 
             if (isset($_POST['salvar_amostra'])) {
-                echo "aqui";
+                
                 //Parte da coleta
                 $objAmostra->setIdAmostra($_GET['idAmostra']);
 
-                $objAmostra = $objAmostraRN->consultar($objAmostra);
-                $objAmostra->setDataHoraColeta($_POST['dtColeta']);
-                $objAmostra->setAceita_recusa($_POST['sel_a_r_g']);
-                if ($_POST['sel_a_r_g'] == 'a') {
-                    $objAmostra->setStatusAmostra('Aguardando Preparação');
-                } else if ($_POST['sel_a_r_g'] == 'r') {
-                    $objAmostra->setStatusAmostra('Descartada');
+                
+                if ($_POST['dtColeta'] == null) {
+                    $alert .= Alert::alert_danger("Informe a data de coleta da amostra");
+                    $data_erro = true;
+                }else{
+                    $objAmostra->setDataColeta($_POST['dtColeta']);
                 }
+                
+                if ($_POST['sel_a_r_g'] == null) {
+                    $alert .= Alert::alert_danger("Informe a situação da amostra (aceita/recusada/a caminho)");
+                    $situacao_erro = true;
+                }
+                if (isset($_POST['sel_a_r_g'])) {
+                    $objAmostra->set_a_r_g($_POST['sel_a_r_g']);
+                    Interf::getInstance()->montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, $disabled, $onchange);
+                }
+
+
+                if ($_POST['sel_perfil'] == null) {
+                    $alert .= Alert::alert_danger("Informe o perfil da amostra");
+                    $perfil_erro = true;
+                }
+
+                if (isset($_POST['sel_perfil'])) {
+                    $objPerfilPaciente->setIdPerfilPaciente($_POST['sel_perfil']);
+                    $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
+                    $objAmostra->setIdPerfilPaciente_fk($_POST['sel_perfil']);
+                    Interf::getInstance()->montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, $disabled, $onchange);
+                }
+                
+                if (isset($_POST['timeColeta']) && $_POST['timeColeta'] != null) {
+                    $objAmostra->setHoraColeta($_POST['timeColeta']);
+                } else {
+                    $objAmostra->setHoraColeta(null);
+                }
+
                 $objAmostra->setObservacoes($_POST['txtAreaObs']);
                 $objAmostra->setIdEstado_fk(43); //ESTADO DO RS
                 $objAmostra->setIdLugarOrigem_fk($_POST['sel_cidades']);
-                $objAmostra->setIdNivelPrioridade_fk(1); //NIVEL DE PRIORIDADE
+                $objAmostra->setIdNivelPrioridade_fk(null); //NIVEL DE PRIORIDADE
+                
+                $objAmostra->setMotivoExame($_POST['txtMotivo']);
+                $objAmostra->setObsCEP($_POST['txtObsCEPAmostra']);
+                $objAmostra->setObsHoraColeta($_POST['txtObsHoraColeta']);
+                $objAmostra->setObsLugarOrigem($_POST['txtObsLugarOrigem']);
+                $objAmostra->setObsMotivo($_POST['txtObsMotivo']);
+                
+                /*
+                 * consegue o perfil do paciente, para pegar o caractere específico
+                 */
+                $objPerfilPaciente->setIdPerfilPaciente($objAmostra->getIdPerfilPaciente_fk());
+                $arr_perfil = $objPerfilPacienteRN->listar($objPerfilPaciente);
+                $objAmostra->setCodigoAmostra($arr_perfil[0]->getCaractere() . $objAmostra->getIdAmostra());
+                
+                if (!$data_erro && !$perfil_erro && !$situacao_erro) {
+                    $objAmostraRN->alterar($objAmostra);
+                    $alert .= Alert::alert_success("Amostra ALTERADA com sucesso");
+                    
+                    /*
+                     * consegue o perfil do paciente, para pegar o caractere específico
+                     */
+                    
+                    if($objAmostra->get_a_r_g() == 'a' || $objAmostra->get_a_r_g() == 'r'){
+                        /*
+                         * Recém está criando a amostra então o tubo não veio de nenhum outro
+                         */
+                        $objTubo->setIdAmostra_fk($_GET['idAmostra']); //pega o tubo original da amostra
+                        $array_tubos = $objTuboRN->listar($objTubo);
+                        
+                        if(empty($array_tubos)){
+                            $objTubo->setIdAmostra_fk($_GET['idAmostra']);
+                            $objTubo->setIdTubo_fk(null);
+                            $objTubo->setTuboOriginal('s');
+                            $objTuboRN->cadastrar($objTubo);
+                            $objInfosTubo->setIdTubo_fk($objTubo->getIdTubo());
+                        }else{
+                        
+                            foreach ($array_tubos as $t){
+                                if($t->getTuboOriginal() == 's'){
+                                    $indiceTubo = $t->getIdTubo();
+                                }
+                            }
 
-                if (isset($_POST['txtCodGAL'])) {
-                    $objCodigoGAL->setCodigo($_POST['txtCodGAL']);
-                    $objCodigoGAL->getIdPaciente_fk($objAmostra->getIdPaciente_fk());
-                    $objCodigoGAL_RN->alterar($objCodigoGAL);
-                    $objAmostra->setIdCodGAL_fk($objCodigoGAL->getIdCodigoGAL());
+                            $objInfosTubo->setIdTubo_fk($indiceTubo);
+                        }
+                        $objInfosTubo->setEtapa("recepção - finalizada");
+                        if($objAmostra->get_a_r_g() == 'a'){
+                            $objInfosTubo->setStatusTubo(" Aguardando preparação ");
+                        }else if ($objAmostra->get_a_r_g() == 'r'){
+                            $objInfosTubo->setStatusTubo(" Descartado ");
+                        }
+                        
+                        $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
+                        $objInfosTubo->setReteste('n');
+                        $objInfosTubo->setVolume(null);
+                        $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getMatricula());
+                        $objInfosTuboRN->cadastrar($objInfosTubo);
+                        $alert .= Alert::alert_success("Informações do tubo foram ATUALIZADAS com sucesso");
+                        
+                    }
+                    
+                    
+                }else if($data_erro || $perfil_erro || $situacao_erro){
+                    $alert .= Alert::alert_danger("Amostra não pode ser ALTERADA");
                 }
+                
+                
+                
+                
 
-
-                $objAmostraRN->alterar($objAmostra);
-                //print_r($objAmostra);
-
-
-                $objPaciente->setIdPaciente($objAmostra->getIdPaciente_fk());
-                $objPaciente = $objPacienteRN->consultar($objPaciente);
-                $objPaciente->setCPF($_POST['txtCPF']);
-                $objPaciente->setNome($_POST['txtNome']);
-                $objPaciente->setDataNascimento($_POST['dtDataNascimento']);
-
-
-                //RG
-                if (isset($_POST['txtRG'])) {
-                    echo $_POST['txtRG'];
-                    $objPaciente->setRG($_POST['txtRG']);
-                    $objPaciente->setObsRG('');
-                } else if (isset($_POST['txtObsRG'])) {
-                    $objPaciente->setObsRG($_POST['txtObsRG']);
-                } else if (!isset($_POST['txtRG']) && $_POST['txtRG'] = null && !isset($_POST['txtObsRG']) && $_POST['txtObsRG'] == null) {
-                    echo "aqui";
-                    $objPaciente->setObsRG('Desconhecido');
-                }
-
-                //SEXO
-                if (isset($_POST['sel_sexo'])) {
-                    $objPaciente->setIdSexo_fk($_POST['sel_sexo']);
-                } else if ($_POST['sel_sexo'] == 0) {
-                    $objPaciente->setObsSexo('Desconhecido');
-                }
-
-                //NOME MÃE
-                if (isset($_POST['txtNomeMae'])) {
-                    $objPaciente->setNomeMae($_POST['txtNomeMae']);
-                } else if (isset($_POST['txtNomeMae'])) {
-                    $objPaciente->setObsNomeMae($_POST['txtObsNomeMae']);
-                } else if (!isset($_POST['txtNomeMae']) && !isset($_POST['txtObsNomeMae'])) {
-                    $objPaciente->setObsNomeMae('Desconhecido');
-                }
-                //print_r($objPaciente);
-                //die("aqui");
-                $objPacienteRN->alterar($objPaciente);
-
-                montar_select_aceitaRecusada($select_a_r_g, $objAmostra);
-                montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra); //por default RS
-                montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra);
+                               
+                Interf::getInstance()->montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, $disabled, $onchange);
+                Interf::getInstance()->montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, $disabled, $onchange);
                 $alert = Alert::alert_success_editar();
 
 
@@ -413,8 +430,6 @@ Pagina::getInstance()->montar_menu_topo();
 echo $alert .
  Pagina::montar_topo_listar('CADASTRAR AMOSTRA', 'NOVA AMOSTRA', 'cadastrar_amostra', 'listar_amostra', 'LISTAR AMOSTRAS');
 ?>
-
-
 
 
 <div class="conteudo_grande">

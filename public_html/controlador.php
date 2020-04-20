@@ -25,6 +25,15 @@ switch ($_GET['action']):
         header('Location: controlador.php?action=login');
         break;
     
+    /* ESTATÍSTICAS */
+    case 'gerar_estatisticas':
+        require_once '../acoes/Estatisticas/gerar_estatisticas.php';
+        break;
+    case 'mostrar_estatisticas':
+        require_once '../acoes/Estatisticas/gerarPDF.php';
+        break;
+    
+    
     
     case 'cadastrar_amostra_localArmazenamento':
         require_once 'telas_prototipos/cadastro_amostra_localArmazenamento.php';
@@ -272,18 +281,20 @@ switch ($_GET['action']):
     /* AMOSTRA */
     case 'cadastrar_amostra':
     case 'editar_amostra':
-        //require_once '../acoes/CadastroAmostra/CadastroAmostra.php';
-        require_once '../acoes/Amostra/cadastro_amostra.php';
+        require_once '../acoes/CadastroAmostra/CadastroAmostra.php';
+        //require_once '../acoes/Amostra/cadastro_amostra.php';
         break;
     
     case 'listar_amostra':
-        //require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
         require_once '../acoes/Amostra/listar_amostra.php';
+        //require_once '../acoes/Amostra/listar_amostra.php';
         break;
     
     case 'remover_amostra':
-        require_once '../acoes/Amostra/remover_amostra.php';
+        require_once '../acoes/CadastroAmostra/remover_amostra.php';
         break;
+    
+    
     
     
     /* AMOSTRA + TIPO + LOCAL */

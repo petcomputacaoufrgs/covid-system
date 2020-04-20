@@ -7,8 +7,7 @@ class InfosTuboBD{
 
     public function cadastrar(InfosTubo $objInfosTubo, Banco $objBanco) {
         try{
-            // $objInfosTubo->getInfosTubo();
-            
+           
             $INSERT = 'INSERT INTO tb_infostubo ('
                     . 'idUsuario_fk,'
                     . 'idLocalArmazenamento_fk,'
@@ -34,7 +33,7 @@ class InfosTuboBD{
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objInfosTubo->setIdInfosTubo($objBanco->obterUltimoID());
-            echo $objInfosTubo->getIdInfosTubo();
+            //echo $objInfosTubo->getIdInfosTubo();
            
         } catch (Exception $ex) {
             throw new Excecao("Erro cadastrando a amostra no BD.",$ex);
@@ -82,8 +81,31 @@ class InfosTuboBD{
       
             $SELECT = "SELECT * FROM tb_infostubo";
 
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
 
-            $arr = $objBanco->consultarSQL($SELECT);
+            if ($objInfosTubo->getIdTubo_fk() != null) {
+                $WHERE .= $AND . " idTubo_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objInfosTubo->getIdTubo_fk());
+            }
+            
+            if ($objInfosTubo->getStatusTubo() != null) {
+                $WHERE .= $AND . " statusTubo = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objInfosTubo->getStatusTubo());
+            }
+            
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            //echo $SELECT.$WHERE;$WHERE
+
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
+            
+       
  
             $array_paciente = array();
             foreach ($arr as $reg){

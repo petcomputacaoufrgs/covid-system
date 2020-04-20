@@ -155,8 +155,8 @@ try {
                     }
                 }
                 
-                echo "igual";
-                die("asda");
+                //echo "igual";
+                //die("asda");
                 $objMarca->setIdMarca($objEquipamento->getIdMarca_fk());
                 $objMarca->setMarca($_POST['txtMarca']);
                 $objMarca->setIndex_marca(strtoupper($utils->tirarAcentos($_POST['txtMarca'])));

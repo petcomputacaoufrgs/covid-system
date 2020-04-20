@@ -106,7 +106,6 @@ class CodigoGAL_RN{
             $objBanco->abrirConexao(); 
             $objExcecao->lancar_validacoes();
             $objCodigoGAL_BD = new CodigoGAL_BD();
-            
             $arr = $objCodigoGAL_BD->listar($codGAL,$objBanco);
             
             $objBanco->fecharConexao();

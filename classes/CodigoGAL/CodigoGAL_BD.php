@@ -46,7 +46,7 @@ class CodigoGAL_BD {
     public function listar(CodigoGAL $objCodigoGAL, Banco $objBanco) {
         try {
 
-            // print_r($objCodigoGAL);
+            //print_r($objCodigoGAL);
             // DIE("DIE LISTA");
             $SELECT = "SELECT * FROM tb_codgal";
 
@@ -72,10 +72,11 @@ class CodigoGAL_BD {
             }
 
             //echo $SELECT.$WHERE;$WHERE
-
+            
             $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
 
-
+            //print_r($arr);
+            //die();
             $array_marca = array();
             foreach ($arr as $reg) {
                 $objCodigoGAL = new CodigoGAL();

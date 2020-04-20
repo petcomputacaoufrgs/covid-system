@@ -91,11 +91,11 @@ class PacienteRN {
     private function validarRG(Paciente $paciente, Excecao $objExcecao) {
         $strRG = trim($paciente->getRG());
 
-        if (strlen($strRG) > 0) {
+        /*if (strlen($strRG) > 0) {
             if (strlen($strRG) != 10) {
                 $objExcecao->adicionar_validacao('O RG do paciente não possui 10 caracteres.', 'idRG');
             }
-        }
+        }*/
 
         return $paciente->setRG($strRG);
     }
