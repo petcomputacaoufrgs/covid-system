@@ -123,7 +123,16 @@ class AmostraRN{
         try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            
+            if($amostra->getPaciente() != null){
+                $objPacienteRN = new PacienteRN();
+                $objPaciente = $objPacienteRN->cadastrar($amostra->getPaciente());
+                $amostra->setIdPaciente_fk($objPaciente->getIdPaciente());
+                
+                //$objPaciente->getobjCodGAL()->
+            }
             
             $this->validarObservacoes($amostra,$objExcecao);
             $this->validar_a_r_g($amostra,$objExcecao);
@@ -139,9 +148,21 @@ class AmostraRN{
             $objAmostraBD = new AmostraBD();
             $objAmostraBD->cadastrar($amostra,$objBanco);
             
+             if($amostra->getTubo() != null){
+                $objTubo = $amostra->getTubo();
+                $objTubo->setIdAmostra_fk($amostra->getIdAmostra()); 
+                $objTuboRN = new TuboRN();
+                $amostra->setTubo($objTuboRN->cadastrar($objTubo));
+               
+            }
+            
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             
         } catch (Throwable $e) {
+          
+            $objBanco->cancelarTransacao();
+       
             throw new Excecao('Erro cadastrando amostra.', $e);
         }
     }

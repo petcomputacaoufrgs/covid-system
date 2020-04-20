@@ -22,11 +22,21 @@ class Amostra{
     private $obsCEP;
     private $CEP;
     private $motivoExame;
+    private $objPaciente;
     
     function __construct() {
         
     }
     
+    function getObjPaciente() {
+        return $this->objPaciente;
+    }
+
+    function setObjPaciente($objPaciente) {
+        $this->objPaciente = $objPaciente;
+    }
+
+        
     function getIdPaciente_fk() {
         return $this->idPaciente_fk;
     }

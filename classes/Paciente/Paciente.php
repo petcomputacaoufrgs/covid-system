@@ -24,10 +24,22 @@ class Paciente{
     private $cadastroPendente;
     private $obsCodGAL;
     
+    private $objCodGAL;
+    
     
     function __construct() {
         
     }
+    
+    function getObjCodGAL() {
+        return $this->objCodGAL;
+    }
+
+    function setObjCodGAL($objCodGAL) {
+        $this->objCodGAL = $objCodGAL;
+    }
+
+        
     function getIdPaciente() {
         return $this->idPaciente;
     }

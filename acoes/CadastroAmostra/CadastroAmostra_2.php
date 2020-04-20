@@ -170,32 +170,13 @@ try {
     switch ($_GET['action']) {
         case 'cadastrar_amostra':
 
-            $objCodigoGAL->setCodigo('1234567890123456');
-            //print_r($objCodigoGAL);
-            
-            $objPaciente->setNome("Nome teste ");
-            $objPaciente->setObjCodGAL($objCodigoGAL);
-            
-            //print_r($objPaciente);
-            $objPacienteRN->cadastrar($objPaciente);
-            
-            
-            //die();
-                        
-            
-            /*$paciente = array();
+            $paciente = array();
             if (isset($_GET['idPaciente'])) {
-                
                 $_SESSION['DATA_LOGIN'] = date("Y-m-d H:i:s");
                 $alert .= Alert::alert_success("Um paciente foi encontrado");
                 $objPaciente->setIdPaciente($_GET['idPaciente']);
                 $objPaciente = $objPacienteRN->consultar($objPaciente);
-                
-                if($objCodigoGAL->getIdPaciente_fk() != null){
-                    $objCodigoGAL->setIdPaciente_fk($objPaciente->getIdPaciente());
-                    $objCodigoGAL = $objCodigoGAL_RN->listar($objCodigoGAL);
-                }
-                
+                //print_r($objPaciente);
                 Interf::getInstance()->montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, $disabled, $onchange);
                 Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, $disabled, $onchange);
 
@@ -525,9 +506,6 @@ try {
                 } else {
                     $objPaciente->setCadastroPendente('n');
                 }
-                
-                
-                
 
 
                 if (isset($_GET['idPaciente']) && !$erro) {
@@ -599,9 +577,6 @@ try {
                     $alert .= Alert::alert_danger("O paciente não foi CADASTRADO com sucesso");
                 }
 
-                
-                
-                
                 if ($pacienteCadastrado) {
                     //Parte da coleta
 
@@ -665,7 +640,9 @@ try {
                         $alert .= Alert::alert_success("Amostra CADASTRADA com sucesso");
                         $amostraCadastrada = true;
 
-                       
+                        /*
+                         * consegue o perfil do paciente, para pegar o caractere específico
+                         */
                         $objPerfilPaciente->setIdPerfilPaciente($objAmostra->getIdPerfilPaciente_fk());
                         $arr_perfil = $objPerfilPacienteRN->listar($objPerfilPaciente);
 
@@ -673,7 +650,9 @@ try {
                         $objAmostraRN->alterar($objAmostra);
 
                         if ($objAmostra->get_a_r_g() == 'a' || $objAmostra->get_a_r_g() == 'r') {
-                          
+                            /*
+                             * Recém está criando a amostra então o tubo não veio de nenhum outro
+                             */
                             $objTubo->setIdAmostra_fk($objAmostra->getIdAmostra());
                             $objTubo->setIdTubo_fk(null);
                             $objTubo->setTuboOriginal('s');
@@ -734,10 +713,10 @@ try {
             }
             
             
-            //if (isset($_POST['editar_cadastro'])) {
-              //  echo 'controlador.php?action=editar_amostra&idPaciente='. $objPaciente->getIdPaciente().'&idAmostra='. $objAmostra->getIdAmostra();
-              //  die();
-              //  Header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_amostra&idPaciente='. $objPaciente->getIdPaciente().'&idAmostra='. $objAmostra->getIdAmostra()));
+            /*if (isset($_POST['editar_cadastro'])) {
+                echo 'controlador.php?action=editar_amostra&idPaciente='. $objPaciente->getIdPaciente().'&idAmostra='. $objAmostra->getIdAmostra();
+                die();
+                Header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_amostra&idPaciente='. $objPaciente->getIdPaciente().'&idAmostra='. $objAmostra->getIdAmostra()));
             }*/
 
 
@@ -1159,7 +1138,6 @@ try {
     }
 } catch (Throwable $ex) {
     Pagina::getInstance()->processar_excecao($ex);
-    
 }
 
 Pagina::abrir_head("Cadastrar Amostra");
@@ -1183,11 +1161,10 @@ Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
 //			DIE("INT80");
 Pagina::montar_topo_listar('CADASTRAR AMOSTRA', 'cadastrar_amostra', 'NOVA AMOSTRA', 'listar_amostra', 'LISTAR AMOSTRAS');
-Pagina::getInstance()->mostrar_excecoes();
-
 
 echo $popUp;
 echo $alert;
+
 
 
 if (!isset($_GET['idPaciente']) && $_GET['action'] != 'editar_paciente' && $_GET['action'] != 'editar_amostra') {
@@ -1848,6 +1825,6 @@ if (isset($_GET['idPaciente']) || $cadastrarNovo) {
 <?php } ?>
 
 <?php
-
+Pagina::getInstance()->mostrar_excecoes();
 Pagina::getInstance()->fechar_corpo();
 

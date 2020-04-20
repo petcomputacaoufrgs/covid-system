@@ -6,6 +6,7 @@
 require_once __DIR__ . '/../Sessao/Sessao.php';
 require_once __DIR__ . '/../Log/Log.php';
 require_once __DIR__ . '/../Log/LogRN.php';
+require_once '../utils/Alert.php';
 
 class Pagina {
 
@@ -129,9 +130,7 @@ class Pagina {
                   
 
           </header>';
-    }
-
-    
+    } 
 
     public static function abrir_head($titulo) {
         echo '<html>
@@ -251,19 +250,29 @@ class Pagina {
     public function mostrar_excecoes() {
         //print_r($this->array_validacoes);
         // $script = '';
+        
         if (count($this->array_validacoes)) {
-
-            echo '<script>';
+            //print_r($this->array_validacoes);
+            //ECHO count($this->array_validacoes);
+            $alert = '';
+            //echo $this->array_validacoes[0][0];
+            //$alert = Alert::alert_danger($this->array_validacoes[0][0]);
+            
+            //echo $alert;
+            
+           
             $msg = '';
             $campo = '';
-
+            
             foreach ($this->array_validacoes as $validacao) {
                 /* if($msg != ''){
                   $msg .= "\n";
                   } */
                 $msg .= $validacao[0];
+                $alert .= Alert::alert_msg($validacao[0],$validacao[2]);
+                             
 
-                if ($validacao[1] != null) {
+                /*if ($validacao[1] != null) {
 
                     echo 'var campo = document.getElementById("' . $validacao[1] . '");
                           
@@ -276,10 +285,18 @@ class Pagina {
                           
                             
                         ' . "\n";
-                }
+                    die($msg);
+                }*/
             }
+              //echo '<script type="text/javascript">';
+              //echo '$(\'#validacao\').html(\'<div style="background-color: blue;"> oi </div>\')';
+              //echo '$(\'#validacao\').html(\'.$alert.')';
+              //echo '</script>';
+                //echo '<script type="text/javascript"> var div_feedback = document.getElementById("validacao");';
+                //echo 'div_feedback.innerHTML ="'.$alert.'";</script>';
+                echo $alert;
             //echo 'alert(\''.$msg.'\');';
-            echo '</script>';
+            
         }
         //return $script;
     }

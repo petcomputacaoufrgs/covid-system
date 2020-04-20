@@ -369,39 +369,59 @@ class PacienteRN {
     }
 
     public function cadastrar(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
 
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
+            
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objPacienteBD = new PacienteBD();
-
+            
             $this->validarCEP($paciente, $objExcecao);
+            
             $this->validarEndereco($paciente, $objExcecao);
             $this->validarCPF($paciente, $objExcecao);
+            
             //$this->validarDataNascimento($paciente,$objExcecao); 
             $this->validarNome($paciente, $objExcecao);
             $this->validarNomeMae($paciente, $objExcecao);
             $this->validarObsNomeMae($paciente, $objExcecao);
+            
             $this->validarObsRG($paciente, $objExcecao);
             $this->validarObsCPF($paciente, $objExcecao);
             //$this->validarPassaporte($paciente,$objExcecao);
+            
             $this->validarObsCEP($paciente, $objExcecao);
             $this->validarObsPassaporte($paciente, $objExcecao);
             $this->validarObsEndereco($paciente, $objExcecao);
             $this->validarRG($paciente, $objExcecao);
-
+            
             /* VALIDAR CENÁRIO 7 e 8 */
-            $this->validarCenario_7_8($paciente, $objExcecao);
-
-
+            //$this->validarCenario_7_8($paciente, $objExcecao);
+            
+            
             $objExcecao->lancar_validacoes();
+            
             $objPacienteBD->cadastrar($paciente, $objBanco);
+            
+            if($paciente->getObjCodGAL() != null){
+              
+                $objCodGAL = $paciente->getObjCodGAL();    
+                $objCodGAL->setIdPaciente_fk($paciente->getIdPaciente()); 
+            
+                $objCodGALRN = new CodigoGAL_RN();
+                $objCodGALRN->cadastrar($objCodGAL);
+               
+            }
+            
 
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
+            return $paciente;
            
         } catch (Throwable $e) {
-            //die($e);
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando o paciente.', $e);
         }
     }

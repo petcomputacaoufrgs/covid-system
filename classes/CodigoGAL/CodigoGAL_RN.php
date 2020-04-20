@@ -13,10 +13,9 @@ class CodigoGAL_RN{
 
     private function validarCodGAL(CodigoGAL $codGAL,Excecao $objExcecao){
         $strCodGAL = trim($codGAL->getCodigo());
-        
-        
-        if (strlen($strCodGAL) > 15) {
-            $objExcecao->adicionar_validacao('O código GAL possui mais de 15 caracteres.','idCodGAL');
+               
+        if (strlen($strCodGAL) > 20) {
+            $objExcecao->adicionar_validacao('O código GAL possui mais de 15 caracteres','idCodGAL','alert-danger');           
         }
         
         
@@ -24,24 +23,30 @@ class CodigoGAL_RN{
     }
          
     public function cadastrar(CodigoGAL $codGAL) {
+        $objBanco = new Banco();
         try {
             
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao(); 
-            $arr = false;
+            
+            $objBanco->abrirTransacao(); 
+           
             /* VALIDAÇÕES */
             $this->validarCodGAL($codGAL,$objExcecao);  
             
             $objExcecao->lancar_validacoes();
+            
+            
             $objCodigoGAL_BD = new CodigoGAL_BD();
             $objCodigoGAL_BD->cadastrar($codGAL,$objBanco);
-            if($codGAL->getIdCodigoGAL() != null){
-                $arr = true;
-            }
+            
+            //print_r($codGAL);
+                        
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $arr;
+            return $codGAL;
         } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando o código GAL.', $e);
         }
     }
@@ -61,7 +66,7 @@ class CodigoGAL_RN{
             $objCodigoGAL_BD->alterar($codGAL,$objBanco);
             
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             throw new Excecao('Erro alterando o código GAL.', $e);
         }
     }
@@ -77,7 +82,7 @@ class CodigoGAL_RN{
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
  
             throw new Excecao('Erro consultando o código GAL.',$e);
         }
@@ -94,7 +99,7 @@ class CodigoGAL_RN{
             $objBanco->fecharConexao();
             return $arr;
 
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             throw new Excecao('Erro removendo o código GAL.', $e);
         }
     }
@@ -110,7 +115,7 @@ class CodigoGAL_RN{
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             throw new Excecao('Erro listando o código GAL.',$e);
         }
     }
@@ -126,7 +131,7 @@ class CodigoGAL_RN{
             $arr = $objCodigoGAL_BD->pesquisar($campoBD,$valor_usuario,$objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             throw new Excecao('Erro pesquisando o código GAL.', $e);
         }
     }
@@ -142,7 +147,7 @@ class CodigoGAL_RN{
             $arr = $objCodigoGAL_BD->validar_cadastro($codGAL,$objBanco);
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             throw new Excecao('Erro validando cadastron do código GAL.', $e);
         }
     }
@@ -160,7 +165,7 @@ class CodigoGAL_RN{
             
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             throw new Excecao('Erro listando o código GAL.',$e);
         }
     }

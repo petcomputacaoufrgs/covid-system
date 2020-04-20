@@ -9,16 +9,20 @@ class CodigoGAL_BD {
 
     public function cadastrar(CodigoGAL $objCodigoGAL, Banco $objBanco) {
         try {
-                       
+           
             $INSERT = 'INSERT INTO tb_codgal (codigo,idPaciente_fk) VALUES (?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i', $objCodigoGAL->getCodigo());
             $arrayBind[] = array('i', $objCodigoGAL->getIdPaciente_fk());
 
+            //echo $INSERT;
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objCodigoGAL->setIdCodigoGAL($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+            
+            
+        } catch (Throwable $ex) {
+            DIE($ex);
             throw new Excecao("Erro cadastrando o código GAL no BD.", $ex);
         }
     }
@@ -38,7 +42,7 @@ class CodigoGAL_BD {
             $arrayBind[] = array('i', $objCodigoGAL->getIdCodigoGAL());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro alterando o código GAL  no BD.", $ex);
         }
     }
@@ -88,7 +92,7 @@ class CodigoGAL_BD {
                 $array_marca[] = $objCodigoGAL;
             }
             return $array_marca;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando o código GAL  no BD.", $ex);
         }
     }
@@ -110,7 +114,7 @@ class CodigoGAL_BD {
             $paciente->setIdPaciente_fk($arr[0]['idPaciente_fk']);
 
             return $paciente;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
 
             throw new Excecao("Erro consultando o código GAL  no BD.", $ex);
         }
@@ -124,7 +128,7 @@ class CodigoGAL_BD {
             $arrayBind = array();
             $arrayBind[] = array('i', $objCodigoGAL->getIdCodigoGAL());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo o código GAL  no BD.", $ex);
         }
     }
@@ -154,7 +158,7 @@ class CodigoGAL_BD {
                 }
             }
             return $array_marca;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando o código GAL  no BD.", $ex);
         }
     }
