@@ -8,24 +8,32 @@ require_once __DIR__ . '/CadastroAmostraBD.php';
 
 class CadastroAmostraRN{
    
-    
-      
-     
-
     public function cadastrar(CadastroAmostra $cadastroAmostra) {
+        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            //print_r($cadastroAmostra);
+            
+            if($cadastroAmostra->getObjAmostra() != null){
+                
+                $objAmostraRN = new AmostraRN();
+                $objAmostra = $objAmostraRN->cadastrar($cadastroAmostra->getObjAmostra());
+                $cadastroAmostra->setIdAmostra_fk($objAmostra->getIdAmostra());                
+            }
             
            
             $objExcecao->lancar_validacoes();
             $objCadastroAmostraBD = new CadastroAmostraBD();
             $objCadastroAmostraBD->cadastrar($cadastroAmostra,$objBanco);
             
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             
+            return $cadastroAmostra;
         } catch (Exception $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando amostra.', $e);
         }
     }

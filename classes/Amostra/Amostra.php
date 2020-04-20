@@ -22,12 +22,23 @@ class Amostra{
     private $obsCEP;
     private $CEP;
     private $motivoExame;
+    
     private $objPaciente;
+    private $objTubo;
     
     function __construct() {
         
     }
     
+    function getObjTubo() {
+        return $this->objTubo;
+    }
+
+    function setObjTubo($objTubo) {
+        $this->objTubo = $objTubo;
+    }
+
+        
     function getObjPaciente() {
         return $this->objPaciente;
     }

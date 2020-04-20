@@ -5,12 +5,23 @@ class Tubo{
     private $idTubo_fk;
     private $idAmostra_fk;
     private $tuboOriginal;
+    
+    private $objInfosTubo;
 
     
     function __construct() {
         
     }
     
+    function getObjInfosTubo() {
+        return $this->objInfosTubo;
+    }
+
+    function setObjInfosTubo($objInfosTubo) {
+        $this->objInfosTubo = $objInfosTubo;
+    }
+
+        
     function getIdTubo() {
         return $this->idTubo;
     }

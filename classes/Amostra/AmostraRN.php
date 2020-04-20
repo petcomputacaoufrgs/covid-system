@@ -15,7 +15,7 @@ class AmostraRN{
        
         
         if (strlen($strObservacoes) > 300) {
-            $objExcecao->adicionar_validacao('A observação possui mais de 300 caracteres.','idObsAmostra');
+            $objExcecao->adicionar_validacao('A observação possui mais de 300 caracteres.','idObsAmostra','alert-danger');
         }
        
         $objAmostra->setObservacoes($strObservacoes);
@@ -26,7 +26,7 @@ class AmostraRN{
         $strDataColeta = trim($objAmostra->getDataColeta());
        
         if ($strDataColeta == '') {
-            $objExcecao->adicionar_validacao('Informar a data da coleta.','idDtColeta');
+            $objExcecao->adicionar_validacao('Informar a data da coleta','idDtColeta','alert-danger');
         }
         
         //validar para que não se coloque datas futuras a atual
@@ -38,7 +38,7 @@ class AmostraRN{
        
         
         if ($strARG == '') {
-            $objExcecao->adicionar_validacao('Informar se a amostra é aceita, recusada ou está a caminho.','idARG');
+            $objExcecao->adicionar_validacao('Informe se a amostra é aceita, recusada ou está a caminho','idARG','alert-danger');
         }
        
         $objAmostra->set_a_r_g($strARG);
@@ -51,7 +51,7 @@ class AmostraRN{
        
         
         if (strlen($strObsMotivo) > 300) {
-            $objExcecao->adicionar_validacao('As observações de motivo possui mais que 300 caracteres.','idObsMotivo');
+            $objExcecao->adicionar_validacao('As observações de motivo possui mais que 300 caracteres','idObsMotivo','alert-danger');
         }
        
         $objAmostra->setObsMotivo($strObsMotivo);
@@ -63,7 +63,7 @@ class AmostraRN{
        
         
         if (strlen($strObsCep) > 300) {
-            $objExcecao->adicionar_validacao('As observações de CEP possui mais que 300 caracteres.','idObsCEPAmostra');
+            $objExcecao->adicionar_validacao('As observações de CEP possui mais que 300 caracteres','idObsCEPAmostra','alert-danger');
         }
        
         $objAmostra->setObsCEP($strObsCep);
@@ -75,7 +75,7 @@ class AmostraRN{
        
         
         if (strlen($strObsHrColeta) > 300) {
-            $objExcecao->adicionar_validacao('As observações da hora da coleta possui mais que 300 caracteres.','idObsHoraColeta');
+            $objExcecao->adicionar_validacao('As observações da hora da coleta possui mais que 300 caracteres','idObsHoraColeta','alert-danger');
         }
        
         $objAmostra->setObsHoraColeta($strObsHrColeta);
@@ -87,7 +87,7 @@ class AmostraRN{
        
         
         if (strlen($strObsLugarOrigem) > 300) {
-            $objExcecao->adicionar_validacao('As observações do lugar de origem da coleta possui mais que 300 caracteres.','idObsLugarOrigem');
+            $objExcecao->adicionar_validacao('As observações do lugar de origem da coleta possui mais que 300 caracteres','idObsLugarOrigem','alert-danger');
         }
        
         $objAmostra->setObsLugarOrigem($strObsLugarOrigem);
@@ -99,7 +99,7 @@ class AmostraRN{
        
         
         if (strlen($strMotivo) > 100) {
-            $objExcecao->adicionar_validacao('O motivo do exame possui mais que 100 caracteres.','idMotivo');
+            $objExcecao->adicionar_validacao('O motivo do exame possui mais que 100 caracteres','idMotivo','alert-danger');
         }
        
         $objAmostra->setMotivoExame($strMotivo);
@@ -111,27 +111,36 @@ class AmostraRN{
        
         
         if (strlen($strCEP) > 8) {
-            $objExcecao->adicionar_validacao('O CEP do exame possui mais que 8 caracteres.','idCEPAmostra');
+            $objExcecao->adicionar_validacao('O CEP do exame possui mais que 8 caracteres','idCEPAmostra','alert-danger');
         }
        
         $objAmostra->setCEP($strCEP);
 
     }
     
+    private function validarPerfilAmostra(Amostra $objAmostra, Excecao $objExcecao) {
+        
+        if ($objAmostra->getIdPerfilPaciente_fk() == 0) {
+            $objExcecao->adicionar_validacao('Informe o perfil da amostra','idPerfilAmostra','alert-danger');
+        }
+       
+    }
+    
 
     public function cadastrar(Amostra $amostra) {
+        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
             
-            if($amostra->getPaciente() != null){
+            //print_r($amostra->getObjPaciente());
+            if($amostra->getObjPaciente() != null){
                 $objPacienteRN = new PacienteRN();
-                $objPaciente = $objPacienteRN->cadastrar($amostra->getPaciente());
+                $objPaciente = $objPacienteRN->cadastrar($amostra->getObjPaciente());
                 $amostra->setIdPaciente_fk($objPaciente->getIdPaciente());
                 
-                //$objPaciente->getobjCodGAL()->
+                              
             }
             
             $this->validarObservacoes($amostra,$objExcecao);
@@ -143,26 +152,40 @@ class AmostraRN{
             $this->validarObsMotivo($amostra, $objExcecao);
             $this->validarMotivo($amostra, $objExcecao);
             $this->validarCEP($amostra, $objExcecao);
+            $this->validarPerfilAmostra($amostra, $objExcecao);
             
             $objExcecao->lancar_validacoes();
             $objAmostraBD = new AmostraBD();
             $objAmostraBD->cadastrar($amostra,$objBanco);
             
-             if($amostra->getTubo() != null){
-                $objTubo = $amostra->getTubo();
-                $objTubo->setIdAmostra_fk($amostra->getIdAmostra()); 
-                $objTuboRN = new TuboRN();
-                $amostra->setTubo($objTuboRN->cadastrar($objTubo));
+            $objPerfilPaciente = new PerfilPaciente();
+            $objPerfilPacienteRN = new PerfilPacienteRN();
+            $objPerfilPaciente->setIdPerfilPaciente($amostra->getIdPerfilPaciente_fk());
+            $arr_perfil = $objPerfilPacienteRN->listar($objPerfilPaciente);
+            $amostra->setCodigoAmostra($arr_perfil[0]->getCaractere() . $amostra->getIdAmostra());
+            $objAmostraAuxRN = new AmostraRN();
+            $objAmostraAuxRN->alterar($amostra);
+            
+            if($amostra->getObjTubo() != null){
+                if($amostra->get_a_r_g() != 'g'){
+                    
+                    $objTubo = $amostra->getObjTubo();
+                    $objTubo->setIdAmostra_fk($amostra->getIdAmostra()); 
+                    $objTuboRN = new TuboRN();
+                    $amostra->setObjTubo($objTuboRN->cadastrar($objTubo));
+                 
+                }
                
             }
-            
+            //print_r($objTubo);
+            //print_r($amostra);
+            //die("rn 40");
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            
+            return $amostra;
+                   
         } catch (Throwable $e) {
-          
             $objBanco->cancelarTransacao();
-       
             throw new Excecao('Erro cadastrando amostra.', $e);
         }
     }
