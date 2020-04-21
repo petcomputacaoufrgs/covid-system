@@ -135,29 +135,43 @@ try {
                             }
                             $objInfosTubo->setIdTubo_fk($t->getIdTubo());
                             $objInfosTubo->setStatusTubo("Aguardando preparação");
-                            print_r($objInfosTubo);
                             $arr_infosTubo[] = $objInfosTuboRN->listar($objInfosTubo); //todos os infos tubo em que o status é "Aguardando preparação"
+
                         }
                     }
-                    print_r($arr_infosTubo);
-                    die("10");
+
 
                     foreach ($arr_infosTubo as $info) {
-                        foreach ($info as $i) {
-                            print_r($i);
-                            $html .= '
-                                <div class="conteudo_grande preparo" style="margin-top: -5px;">
-                                <form method="post">
-                                    <div class="input-group mb-3 ">
-                                          <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                              <input type="checkbox" name="checkbox" aria-label="Checkbox for following text input">
-                                            </div>
-                                          </div>
-                                          <input type="text" disabled class="form-control" value="Amostra ' . $item->getCodigoAmostra() . '">
-                                        </div>
-                                  </form>
-                                  </div>';
+                        if ($info != null) {
+                            foreach ($info as $i) {
+                                if ($i != null){
+                                    print_r($i);
+                                    echo $i->getIdTubo_fk();
+                                    $objTubo->setObjInfosTubo($info);
+
+                                    $objTubo->setIdTubo_fk($i->getIdTubo_fk());
+                                    //$objTubo = $objTuboRN->listar($objTubo);
+                                    //print_r($objTubo);
+                                    /*
+                                    $objAmostra->setIdAmostra($objTubo->getIdAmostra_fk());
+                                    $objAmostra = $objAmostraRN->consultar($objAmostra);
+                                    print_r($objAmostra);
+                                    die("1");
+                                    /*$html .= '
+                                        <div class="conteudo_grande preparo" style="margin-top: -5px;">
+                                        <form method="post">
+                                            <div class="input-group mb-3 ">
+                                                  <div class="input-group-prepend">
+                                                    <div class="input-group-text">
+                                                      <input type="checkbox" name="checkbox" aria-label="Checkbox for following text input">
+                                                    </div>
+                                                  </div>
+                                                  <input type="text" disabled class="form-control" value="Amostra ' . $objAmostra->getCodigoAmostra() . '">
+                                                </div>
+                                          </form>
+                                          </div>';*/
+                                }
+                            }
                         }
                     }
                 }
@@ -169,7 +183,7 @@ try {
 
 
                 //print_r($arr_amostras_resultado);
-                print_r($arr_infosTubo);
+                //print_r($arr_infosTubo);
 
 
             }
