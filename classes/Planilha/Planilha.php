@@ -13,7 +13,7 @@ class Planilha {
         $reader = new Xls();
         $reader->setReadDataOnly(true);
         $reader->setLoadSheetsOnly(["Results"]);
-        $spreadsheet = $reader->load($filename);
+        $spreadsheet = $reader->load("../../planilhas/" . $filename);
     
         $resultadoRN = new ResultadoPCRRN();
     

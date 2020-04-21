@@ -14,12 +14,13 @@ class ResultadoPCRRN
     }
 
     public function printObjeto(ResultadoPCR $obj) {
-        echo "Well ->" . $obj->getWell() . "\n";
-        echo "Sample Name ->" . $obj->getSampleName() . "\n";
-        echo "Target Name ->" . $obj->getTargetName() . "\n";
-        echo "Task ->" . $obj->getTask() . "\n";
-        echo "Reporter ->" . $obj->getReporter() . "\n";
-        echo "Quencer ->" . $obj->getQuencher() . "\n";
-        echo "Ct ->" . $obj->getCt() . "\n";
+        echo "<br>";
+        echo "Well ->" . $obj->getWell() . "<br>";
+        echo "Sample Name ->" . $obj->getSampleName() . "<br>";
+        echo "Target Name ->" . $obj->getTargetName() . "<br>";
+        echo "Task ->" . $obj->getTask() . "<br>";
+        echo "Reporter ->" . $obj->getReporter() . "<br>";
+        echo "Quencer ->" . $obj->getQuencher() . "<br>";
+        echo "Ct ->" . $obj->getCt() . "<br>";
     }
 }
