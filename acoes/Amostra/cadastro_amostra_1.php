@@ -287,7 +287,7 @@ try {
 
 
                 $objAmostraRN->alterar($objAmostra);
-                print_r($objAmostra);
+                //print_r($objAmostra);
 
 
                 $objPaciente->setIdPaciente($objAmostra->getIdPaciente_fk());

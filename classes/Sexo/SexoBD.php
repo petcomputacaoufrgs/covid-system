@@ -4,8 +4,8 @@
  */
 
 require_once __DIR__ . '/../Banco/Banco.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Excecao/NaoEncontrado.php';
+require_once __DIR__ .'/../../classes/Excecao/Excecao.php';
+require_once __DIR__ .'/../../classes/Excecao/NaoEncontrado.php';
 
 class SexoBD{
 

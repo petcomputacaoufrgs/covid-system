@@ -139,7 +139,8 @@ function montar_select_recurso(&$select_recurso, $objRecursoRN, &$objRecurso, &$
     $selected = '';
     $arr_recursos = $objRecursoRN->listar($objRecurso);
 
-    $select_recurso = '<select  class="form-control selectpicker" multiple data-live-search="true"   name="sel_recursos[]">'
+    $select_recurso = '<select  class="form-control selectpicker" 
+multiple data-live-search="true"   name="sel_recursos[]">'
             . '<option value="0" ></option>';
 
     foreach ($arr_recursos as $recurso) {
@@ -168,7 +169,8 @@ function montar_select_perfil(&$select_perfilUsu, $objPerfilUsuarioRN, &$objPerf
     if (isset($_GET['idPerfilUsuario'])) {
         $disabled = ' disabled ';
     }
-    $select_perfilUsu = '<select ' . $disabled . '  class="form-control selectpicker"  data-live-search="true"   name="sel_perfil">'
+    $select_perfilUsu = '<select ' . $disabled . '  class="form-control selectpicker"  
+    data-live-search="true"   name="sel_perfil">'
             . '<option value="0" ></option>';
 
     foreach ($arr_perfis as $pu) {

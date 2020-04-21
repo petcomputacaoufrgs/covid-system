@@ -206,6 +206,7 @@ class AmostraBD{
 
             $SELECT = 'SELECT *  FROM tb_amostra WHERE idAmostra = ?';
 
+
             $arrayBind = array();
             $arrayBind[] = array('i',$objAmostra->getIdAmostra());
 
@@ -255,8 +256,89 @@ class AmostraBD{
             throw new Excecao("Erro removendo a amostra no BD.",$ex);
         }
     }
-    
-    
 
-    
+
+    public function filtro_menor_data(Amostra $objAmostra, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT * FROM tb_amostra ";
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($objAmostra->getCodigoAmostra() != null) {
+                $WHERE .= $AND . " codigoAmostra = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objAmostra->getCodigoAmostra());
+            }
+
+            if ($objAmostra->get_a_r_g() != null) {
+                $WHERE .= $AND . " a_r_g = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objAmostra->get_a_r_g());
+            }
+
+            if ($objAmostra->getIdPerfilPaciente_fk() != null) {
+                $WHERE .= $AND . " idPerfilPaciente_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objAmostra->getIdPerfilPaciente_fk());
+            }
+
+            if ($objAmostra->getIdPaciente_fk() != null) {
+                $WHERE .= $AND . " idPaciente_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objAmostra->getIdPaciente_fk());
+            }
+
+
+
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            $ORDERBY =' order by dataColeta';
+            //echo $SELECT.$WHERE;$WHERE
+
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE.$ORDERBY, $arrayBind);
+
+            if(count($arr) > 0) {
+                $array_paciente = array();
+                foreach ($arr as $reg) {
+                    $objAmostra = new Amostra();
+                    $objAmostra->setIdAmostra($reg['idAmostra']);
+                    $objAmostra->setIdPaciente_fk($reg['idPaciente_fk']);
+                    $objAmostra->setIdCodGAL_fk($reg['idCodGAL_fk']);
+                    $objAmostra->setIdNivelPrioridade_fk($reg['idNivelPrioridade_fk']);
+                    $objAmostra->setIdPerfilPaciente_fk($reg['idPerfilPaciente_fk']);
+                    $objAmostra->setIdEstado_fk($reg['cod_estado_fk']);
+                    $objAmostra->setIdLugarOrigem_fk($reg['cod_municipio_fk']);
+                    $objAmostra->setObservacoes($reg['observacoes']);
+                    $objAmostra->setDataColeta($reg['dataColeta']);
+                    $objAmostra->set_a_r_g($reg['a_r_g']);
+                    $objAmostra->setHoraColeta($reg['horaColeta']);
+                    $objAmostra->setMotivoExame($reg['motivo']);
+                    $objAmostra->setCEP($reg['CEP']);
+                    $objAmostra->setCodigoAmostra($reg['codigoAmostra']);
+                    $objAmostra->setObsCEP($reg['obsCEPAmostra']);
+                    $objAmostra->setObsHoraColeta($reg['obsHoraColeta']);
+                    $objAmostra->setObsLugarOrigem($reg['obsLugarOrigem']);
+                    $objAmostra->setObsMotivo($reg['obsMotivo']);
+
+
+                    $array_paciente[] = $objAmostra;
+
+                }
+                return $array_paciente;
+            }
+            return null;
+        } catch (Exception $ex) {
+            throw new Excecao("Erro listando a amostra no BD.",$ex);
+        }
+
+    }
+
+
+
+
 }

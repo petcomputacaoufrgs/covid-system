@@ -126,14 +126,14 @@ class CapelaRN{
     }
 
      public function bloquear_registro(Capela $capela) {
+         $objBanco = new Banco();
         try {
             $objCapelaBD = new CapelaBD();
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             
             $objBanco->abrirConexao(); 
             $objBanco->abrirTransacao();
-            $objBanco->confirmarTransacao();
+
             //sleep(5);
             $arr = $objCapelaBD->bloquear_registro($capela,$objBanco);
             if(empty($arr)){
@@ -148,15 +148,16 @@ class CapelaRN{
             
             $capelaRN = NEW CapelaRN();
             $capelaRN->alterar($objCapela);
-            
-            $objBanco->cancelarTransacao();
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
         } catch (Exception $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro bloqueando a capela.',$e);
         }
     }
-    
+
     
     public function validar_cadastro(Capela $capela) {
         try {

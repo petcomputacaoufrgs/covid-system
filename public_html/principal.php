@@ -86,6 +86,15 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                           . '</div>';
             } 
         ?>
+
+        <?php
+        // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+        if(Sessao::getInstance()->verificar_permissao('montar_preparo_extracao')){
+            echo '<div class="col-md-2">
+                          <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao').'">MONTAR PREPARO/EXTRAÇÃO </a>'
+                . '</div>';
+        }
+        ?>
           </div>
          </div>
         

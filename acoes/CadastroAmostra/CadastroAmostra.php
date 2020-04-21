@@ -1,4 +1,3 @@
-
 <?php
 /*
  *  Author: Carine Bertagnolli Bathaglini
@@ -7,56 +6,56 @@
 
 session_start();
 
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Pagina/Interf.php';
-require_once '../classes/Excecao/Excecao.php';
+require_once __DIR__.'/../../classes/Sessao/Sessao.php';
+require_once __DIR__.'/../../classes/Pagina/Pagina.php';
+require_once __DIR__.'/../../classes/Pagina/Interf.php';
+require_once __DIR__.'/../../classes/Excecao/Excecao.php';
 
-require_once '../classes/Usuario/Usuario.php';
-require_once '../classes/Usuario/UsuarioRN.php';
+require_once __DIR__.'/../../classes/Usuario/Usuario.php';
+require_once __DIR__.'/../../classes/Usuario/UsuarioRN.php';
 
-require_once '../classes/Paciente/Paciente.php';
-require_once '../classes/Paciente/PacienteRN.php';
+require_once __DIR__.'/../../classes/Paciente/Paciente.php';
+require_once __DIR__.'/../../classes/Paciente/PacienteRN.php';
 
-require_once '../classes/Sexo/Sexo.php';
-require_once '../classes/Sexo/SexoRN.php';
+require_once __DIR__.'/../../classes/Sexo/Sexo.php';
+require_once __DIR__.'/../../classes/Sexo/SexoRN.php';
 
-require_once '../classes/Amostra/Amostra.php';
-require_once '../classes/Amostra/AmostraRN.php';
+require_once __DIR__.'/../../classes/Amostra/Amostra.php';
+require_once __DIR__.'/../../classes/Amostra/AmostraRN.php';
 
-require_once '../classes/EstadoOrigem/EstadoOrigem.php';
-require_once '../classes/EstadoOrigem/EstadoOrigemRN.php';
+require_once __DIR__.'/../../classes/EstadoOrigem/EstadoOrigem.php';
+require_once __DIR__.'/../../classes/EstadoOrigem/EstadoOrigemRN.php';
 
-require_once '../classes/LugarOrigem/LugarOrigem.php';
-require_once '../classes/LugarOrigem/LugarOrigemRN.php';
+require_once __DIR__.'/../../classes/LugarOrigem/LugarOrigem.php';
+require_once __DIR__.'/../../classes/LugarOrigem/LugarOrigemRN.php';
 
-require_once '../classes/CodigoGAL/CodigoGAL.php';
-require_once '../classes/CodigoGAL/CodigoGAL_RN.php';
+require_once __DIR__.'/../../classes/CodigoGAL/CodigoGAL.php';
+require_once __DIR__.'/../../classes/CodigoGAL/CodigoGAL_RN.php';
 
-require_once '../classes/NivelPrioridade/NivelPrioridade.php';
-require_once '../classes/NivelPrioridade/NivelPrioridadeRN.php';
+require_once __DIR__.'/../../classes/NivelPrioridade/NivelPrioridade.php';
+require_once __DIR__.'/../../classes/NivelPrioridade/NivelPrioridadeRN.php';
 
-require_once '../classes/CadastroAmostra/CadastroAmostra.php';
-require_once '../classes/CadastroAmostra/CadastroAmostraRN.php';
+require_once __DIR__.'/../../classes/CadastroAmostra/CadastroAmostra.php';
+require_once __DIR__.'/../../classes/CadastroAmostra/CadastroAmostraRN.php';
 
-require_once '../utils/Utils.php';
-require_once '../utils/Alert.php';
+require_once __DIR__.'/../../utils/Utils.php';
+require_once __DIR__.'/../../utils/Alert.php';
 
-require_once '../classes/Tubo/Tubo.php';
-require_once '../classes/Tubo/TuboRN.php';
+require_once __DIR__.'/../../classes/Tubo/Tubo.php';
+require_once __DIR__.'/../../classes/Tubo/TuboRN.php';
 
-require_once '../classes/InfosTubo/InfosTubo.php';
-require_once '../classes/InfosTubo/InfosTuboRN.php';
+require_once __DIR__.'/../../classes/InfosTubo/InfosTubo.php';
+require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
 
-require_once '../classes/Etnia/Etnia.php';
-require_once '../classes/Etnia/EtniaRN.php';
+require_once __DIR__.'/../../classes/Etnia/Etnia.php';
+require_once __DIR__.'/../../classes/Etnia/EtniaRN.php';
 
-require_once '../classes/PerfilPaciente/PerfilPaciente.php';
-require_once '../classes/PerfilPaciente/PerfilPacienteRN.php';
+require_once __DIR__.'/../../classes/PerfilPaciente/PerfilPaciente.php';
+require_once __DIR__.'/../../classes/PerfilPaciente/PerfilPacienteRN.php';
 
 try {
     date_default_timezone_set('America/Sao_Paulo');
-
+    $_SESSION['DATA_LOGIN'] = date("Y-m-d H:i:s");
 
     Sessao::getInstance()->validar();
     $utils = new Utils();
@@ -120,10 +119,10 @@ try {
     $objCadastroAmostraRN = new CadastroAmostraRN();
 
     $alert = '';
-
+    $salvou_tudo = 'n';
     $selected_cpf = '';
     $invalid = '';
-
+    $aparecer = false;
     $popUp = '';
     $selected_rg = '';
     $onchange = '';
@@ -149,6 +148,7 @@ try {
     $select_municipios = '';
     $select_amostras = '';
     $select_nivelPrioridade = '';
+    $select_nivelPrioridade = '';
     $select_codsGAL = '';
     $select_perfis = '';
     $select_a_r_g = '';
@@ -171,7 +171,8 @@ try {
 
     switch ($_GET['action']) {
         case 'cadastrar_amostra':
-
+            $BOTAO_CANCELAR = 'on';
+            $BOTAO_SALVAR = 'on';
 
             if (!isset($_POST['salvar_cadastro'])) {
 
@@ -309,8 +310,7 @@ try {
 
             if (isset($_POST['salvar_cadastro'])) {
 
-                $_SESSION['DATA_LOGIN'] = date("Y-m-d H:i:s");
-
+                $_SESSION['DATA_SAIDA'] = date("Y-m-d H:i:s");
                 $objPaciente->setCEP($_POST['txtCEP']);
                 $objPaciente->setNomeMae($_POST['txtNomeMae']);
                 $objPaciente->setEndereco($_POST['txtEndereco']);
@@ -320,13 +320,14 @@ try {
                 $objPaciente->setObsCodGAL($_POST['txtObsCodGAL']);
                 $objPaciente->setObsEndereco($_POST['txtObsEndereco']);
                 $objPaciente->setObsRG($_POST['txtObsRG']);
+                $objPaciente->setObsCartaoSUS($_POST['txtObsCartaoSUS']);
+                $objPaciente->setCartaoSUS($_POST['txtCartaoSUS']);
 
 
                 if (isset($_POST['txtCodGAL']) && $_POST['txtCodGAL'] != null) {
                     $objCodigoGAL->setCodigo($_POST['txtCodGAL']);
                     $objPaciente->setObjCodGAL($objCodigoGAL);
                 }
-
 
 
                 if (isset($_POST['sel_etnias']) && $_POST['sel_etnias'] != '') {
@@ -391,11 +392,14 @@ try {
                  * INFOS TUBO 
                  */
 
-                $objInfosTubo->setEtapa("recepção - finalizada");
+
                 if ($objAmostra->get_a_r_g() == 'a') {
+                    $objInfosTubo->setEtapa("recepção - finalizada");
                     $objInfosTubo->setStatusTubo(" Aguardando preparação ");
                 } else if ($objAmostra->get_a_r_g() == 'r') {
+                    $objInfosTubo->setEtapa('emitir laudo - descarte na recepção');
                     $objInfosTubo->setStatusTubo(" Descartado ");
+                    $alert.= Alert::alert_primary('Amostra descartada! Emitir laudo');
                 }
                 $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
                 $objInfosTubo->setReteste('n');
@@ -427,11 +431,19 @@ try {
                  * CADASTRO AMOSTRA
                  */
 
+                //DIE();
                 $objCadastroAmostra->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
-                $objCadastroAmostra->setDataHoraInicio($_SESSION['DATA_LOGIN']);
-                $objCadastroAmostra->setDataHoraFim(date('Y-m-d H:i:s'));
+                $objCadastroAmostra->setDataHoraInicio($_POST['dtHoraLoginInicio']);
+                $objCadastroAmostra->setDataHoraFim($_SESSION['DATA_SAIDA']);
                 if ($objCadastroAmostraRN->cadastrar($objCadastroAmostra) != null) {
                     $disabled = ' disabled ';
+                    $aparecer = true;
+                    if($objPaciente->getCadastroPendente() == 's'){
+                        $checked = ' checked ';
+                    }
+                    $salvou_tudo = 's';
+                    $BOTAO_CANCELAR = 'off';
+                    $BOTAO_SALVAR = 'off';
                     $alert .= Alert::alert_success("Paciente CADASTRADO com sucesso");
                     $alert .= Alert::alert_success("Amostra CADASTRADA com sucesso");
                 } else {
@@ -456,10 +468,15 @@ try {
 
         case 'editar_amostra':
 
+            $BOTAO_CANCELAR = 'off';
+
             if (!isset($_POST['salvar_cadastro'])) {
                 $objPaciente->setIdPaciente($_GET['idPaciente']);
                 $objPaciente = $objPacienteRN->consultar($objPaciente);
 
+                if($objPaciente->getCadastroPendente() == 's'){
+                    $checked = ' checked ';
+                }
                 $objCodigoGAL->setIdPaciente_fk($_GET['idPaciente']);
                 $arr = $objCodigoGAL_RN->listar($objCodigoGAL);
                 if (count($arr) > 1) {
@@ -482,8 +499,10 @@ try {
 
             if (isset($_POST['salvar_cadastro'])) {
                 $_SESSION['DATA_LOGIN'] = date("Y-m-d H:i:s");
-                
+
+
                 $objPaciente->setIdPaciente($_GET['idPaciente']);
+                $objPaciente = $objPacienteRN->consultar($objPaciente); //tudo que não for setado, fica com o valor anterior
                 $objPaciente->setCEP($_POST['txtCEP']);
                 $objPaciente->setNomeMae($_POST['txtNomeMae']);
                 $objPaciente->setEndereco($_POST['txtEndereco']);
@@ -493,6 +512,8 @@ try {
                 $objPaciente->setObsCodGAL($_POST['txtObsCodGAL']);
                 $objPaciente->setObsEndereco($_POST['txtObsEndereco']);
                 $objPaciente->setObsRG($_POST['txtObsRG']);
+                $objPaciente->setObsCartaoSUS($_POST['txtObsCartaoSUS']);
+                $objPaciente->setCartaoSUS($_POST['txtCartaoSUS']);
 
 
                 if (isset($_POST['txtCodGAL']) && $_POST['txtCodGAL'] != null) {
@@ -528,6 +549,8 @@ try {
                     $objPaciente->setCadastroPendente('n');
                 }
 
+                $objAmostra->setIdAmostra($_GET['idAmostra']);
+                $objAmostra = $objAmostraRN->consultar($objAmostra);
                 $objAmostra->setDataColeta($_POST['dtColeta']);
 
                 if (isset($_POST['timeColeta']) && $_POST['timeColeta'] != null) {
@@ -547,7 +570,7 @@ try {
                 }
 
 
-                $objAmostra->setIdAmostra($_GET['idAmostra']);
+
                 $objAmostra->setObservacoes($_POST['txtAreaObs']);
                 $objAmostra->setIdEstado_fk(43); //ESTADO DO RS
                 $objAmostra->setIdLugarOrigem_fk($_POST['sel_cidades']);
@@ -565,6 +588,11 @@ try {
                 
                 $objPacienteRN->alterar($objPaciente);
                 $objAmostraRN->alterar($objAmostra);
+
+                if($objPaciente->getCadastroPendente() == 's'){
+                    $checked = ' checked ';
+                }
+
                 /*
                  * TUBO 
                  */
@@ -604,7 +632,7 @@ try {
                     $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getMatricula());
                 }
 
-
+                $alert .= Alert::alert_success("Dados ALTERADOS com sucesso");
 
             
 
@@ -621,6 +649,7 @@ try {
         default : die('Ação [' . $_GET['action'] . '] não reconhecida pelo controlador em CadastroAmostra.php');
     }
 } catch (Throwable $ex) {
+    $aparecer = true;
     Pagina::getInstance()->processar_excecao($ex);
 }
 
@@ -629,7 +658,7 @@ Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::getInstance()->adicionar_javascript("amostra");
 Pagina::getInstance()->adicionar_javascript("paciente");
 ?>
-<script type="text/javascript">
+<!--<script type="text/javascript">
     function validar() {
         Alert("validar");
         if (document.getElementById('idNome').value == '') {
@@ -639,7 +668,7 @@ Pagina::getInstance()->adicionar_javascript("paciente");
         return true;
     }
 
-</script>
+</script> -->
 <?php
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
@@ -651,10 +680,10 @@ Pagina::getInstance()->mostrar_excecoes();
 echo $popUp;
 echo $alert;
 
-
-if (!isset($_GET['idPaciente']) && $_GET['action'] != 'editar_paciente' && $_GET['action'] != 'editar_amostra') {
-    echo
-    '<div class="conteudo_grande" ' . $salvou . '>
+if($salvou_tudo == 'n') {
+    if (!isset($_GET['idPaciente']) && $_GET['action'] != 'editar_paciente' && $_GET['action'] != 'editar_amostra') {
+        echo
+            '<div class="conteudo_grande" ' . $salvou . '>
         <form method="POST">
             <div class="row"> 
                 <div class="col-md-12">
@@ -672,14 +701,14 @@ if (!isset($_GET['idPaciente']) && $_GET['action'] != 'editar_paciente' && $_GET
 
         </form>   
     </div>';
-    if (isset($_POST['sel_opcoesCadastro']) && $_POST['sel_opcoesCadastro'] != '' && $_POST['sel_opcoesCadastro'] != null) {
-        echo '<div class="conteudo_grande" style="margin-top:-20px;">
+        if (isset($_POST['sel_opcoesCadastro']) && $_POST['sel_opcoesCadastro'] != '' && $_POST['sel_opcoesCadastro'] != null) {
+            echo '<div class="conteudo_grande" style="margin-top:-20px;">
                     <form method="POST">
                         <div class="form-row"> 
                             <div class="col-md-10">';
 
-        if ($_POST['sel_opcoesCadastro'] == 'CPF') {
-            echo '
+            if ($_POST['sel_opcoesCadastro'] == 'CPF') {
+                echo '
                                  <label for="label_cpf">Digite o CPF:</label>
                                  <input type="number" class="form-control" id="idCPF" placeholder="" 
                                            onblur="valida_cpf()" name="txtProcuraCPF"  value="' . Pagina::formatar_html($objPaciente->getCPF()) . '">
@@ -688,8 +717,8 @@ if (!isset($_GET['idPaciente']) && $_GET['action'] != 'editar_paciente' && $_GET
                             <div class="col-md-2"><button class="btn btn-primary" 
                             style="width: 100%; height: 55%;margin:0px;margin-top:30px;" type="submit" 
                             name="procurar_paciente_CPF">Procurar</button></div>';
-        } else if ($_POST['sel_opcoesCadastro'] == 'codGal') {
-            echo '               <label for="label_codGAL">Digite o código GAL:</label>
+            } else if ($_POST['sel_opcoesCadastro'] == 'codGal') {
+                echo '               <label for="label_codGAL">Digite o código GAL:</label>
                                  <input type="text" class="form-control" id="idCodGAL" placeholder="" 
                                            onblur="" name="txtProcuraCodGAL"  value="' . Pagina::formatar_html($objCodigoGAL->getCodigo()) . '">
                                     <div id ="feedback_codGal"></div>
@@ -697,8 +726,8 @@ if (!isset($_GET['idPaciente']) && $_GET['action'] != 'editar_paciente' && $_GET
                             <div class="col-md-2"><button class="btn btn-primary" 
                             style="width: 100%; height: 55%;margin:0px;margin-top:30px;" type="submit" 
                             name="procurar_paciente_codGAL">Procurar</button></div>';
-        } else if ($_POST['sel_opcoesCadastro'] == 'RG') {
-            echo '
+            } else if ($_POST['sel_opcoesCadastro'] == 'RG') {
+                echo '
                                  <label for="label_rg">Digite o RG:</label>
                                  <input type="number" class="form-control" id="idRG" placeholder="" 
                                            onblur="" name="txtProcuraRG"  value="' . Pagina::formatar_html($objPaciente->getRG()) . '">
@@ -707,8 +736,8 @@ if (!isset($_GET['idPaciente']) && $_GET['action'] != 'editar_paciente' && $_GET
                             <div class="col-md-2"><button class="btn btn-primary" 
                             style="width: 100%; height: 55%;margin:0px;margin-top:30px;" type="submit" 
                             name="procurar_paciente_RG">Procurar</button></div>';
-        } else if ($_POST['sel_opcoesCadastro'] == 'passaporte') {
-            echo '
+            } else if ($_POST['sel_opcoesCadastro'] == 'passaporte') {
+                echo '
                 <label for="label_passaporte">Digite o passaporte:</label>
                 <input type="text" class="form-control" id="idPassaporte" placeholder="" 
                                            onblur="" name="txtProcuraPassaporte"  value="' . Pagina::formatar_html($objPaciente->getPassaporte()) . '">
@@ -717,21 +746,26 @@ if (!isset($_GET['idPaciente']) && $_GET['action'] != 'editar_paciente' && $_GET
                             <div class="col-md-2"><button class="btn btn-primary" 
                             style="width: 100%; height: 55%;margin:0px;margin-top:30px;" type="submit" 
                             name="procurar_paciente_passaporte">Procurar</button></div>';
-        }
+            }
 
-        echo '          </div>
+            echo '          </div>
                     </form>   
                 </div>';
+        }
     }
 }
 
 if ($cadastrarNovo)
     echo '<small ' . $salvou . ' style="width:50%; margin-left:7%; color:red;">Informe o paciente desde o início ou procure por outro documento</small>';
-if (isset($_GET['idPaciente']) || $cadastrarNovo) {
+if (isset($_GET['idPaciente']) || $cadastrarNovo || $aparecer) {
     ?>
 
     <div class="conteudo_grande">
         <form method="POST" onsubmit="validar()" >
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="idDataHoraLogin" hidden style="text-align: center;"
+                       name="dtHoraLoginInicio" required value="<?= $_SESSION['DATA_LOGIN'] ?>">
+            </div>
 
             <?php
             if ($select_amostras != null) {
@@ -941,7 +975,7 @@ if (isset($_GET['idPaciente']) || $cadastrarNovo) {
             <div class="form-row">
 
                 <!-- getDadosEnderecoPorCEP(this.value) -->
-                <div class="col-md-4 mb-4">
+                <div class="col-md-3 mb-4">
                     <label for="CEP" >CEP:</label> 
                     <input type="text" class="form-control " id="idCEP" placeholder=""  <?= $disabled ?>
                            onblur="validaCEP()" name="txtCEP" value="<?= $objPaciente->getCEP() ?>">
@@ -979,7 +1013,7 @@ if (isset($_GET['idPaciente']) || $cadastrarNovo) {
                     </div>
 
                 </div>
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label for="label_endereco">Digite o Endereço:</label>
                     <input type="text" class="form-control " id="idEndereco" placeholder="Endereço" <?= $disabled ?>
                            onblur="validaEndereco()" name="txtEndereco" value="<?= $objPaciente->getEndereco() ?>">
@@ -1020,12 +1054,12 @@ if (isset($_GET['idPaciente']) || $cadastrarNovo) {
 
                 <!--<?php // if ($SUS && $objCodigoGAL->getCodigo() != null) {              ?>-->
 
-                <?php if ($select_codsGAL == null) { ?>
-                    <div class="col-md-4 mb-3">
+
+                    <div class="col-md-3 mb-3">
                         <label for="label_codGal">Digite o código Gal:</label>
                         <input type="text" class="form-control" id="idCodGAL" <?= $disabled ?>
-                               placeholder="000 0000 0000 0000" data-mask="000 0000 0000 0000" 
-                               onblur="validaCodGAL()" name="txtCodGAL" value="<?= $objCodigoGAL->getCodigo() ?>">
+                               placeholder="" data-mask=""
+                               onblur="validaCODGAL()" name="txtCodGAL" value="<?= $objCodigoGAL->getCodigo() ?>">
                         <div id ="feedback_codGal"></div>
                         <div class="desaparecer_aparecer" id="id_desaparecer_aparecerCodGAL" style="display:none" >
 
@@ -1058,23 +1092,52 @@ if (isset($_GET['idPaciente']) || $cadastrarNovo) {
                                 </div> 
                             </div>
                         </div>
-
-
-
                     </div>
-                    <?php
-                } else {
-                    echo '  
-                       <div class="col-md-3 mb-4">
-                            <label for="codsGAL" >Códigos GAL:</label>' .
-                    $select_codsGAL .
-                    '</div>';
-                }
-                ?>
+
+                        <div class="col-md-3 mb-3">
+                            <label for="label_codGal">Digite o cartão SUS:</label>
+                            <input type="text" class="form-control" id="idCartaoSUS" <?= $disabled ?>
+                                   placeholder="" data-mask=""
+                                   onblur="validaCartaoSUS()" name="txtCartaoSUS" value="<?= $objPaciente->getCartaoSUS() ?>">
+                            <div id ="feedback_cartaoSUS"></div>
+                            <div class="desaparecer_aparecer" id="id_desaparecer_aparecerCartaoSUS" style="display:none" >
+
+                                <div class="form-row align-items-center" >
+                                    <div class="col-auto my-1">
+                                        <div class="custom-control custom-radio mb-3">
+                                            <input onclick="val_radio_obsCartaoSUS()"  name="obsCartaoSUS"
+                                                   type="radio"  class="custom-control-input"
+                                                   id="ValidationSUS2" name="radio-stacked" >
+                                            <label class="custom-control-label" for="ValidationSUS2">Desconhecido</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-auto my-1">
+                                        <div class="custom-control custom-radio mb-3">
+                                            <input onchange="val_radio_obsCartaoSUS()"  name="obsCartaoSUS"
+                                                   type="radio" class="custom-control-input"
+                                                   id="ValidationSUS3" name="radio-stacked" >
+                                            <label class="custom-control-label" for="ValidationSUS3">Outro</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-auto my-1">
+                                        <div class="custom-control  mb-3">
+
+                                            <input style="height: 35px; maCodGALin-left: -25px;maCodGALin-top: -5px;" readonly
+                                                   type="text" class="form-control" id="idObsCartaoSUS" placeholder="motivo"
+                                                   onblur="validaObsCartaoSUS()" name="txtObsCartaoSUS" value="<?= $objPaciente->getObsCartaoSUS() ?>">
+                                            <div id ="feedback_obsCodGAL"></div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
 
-            </div>  
+            </div>
 
 
 
@@ -1201,7 +1264,7 @@ if (isset($_GET['idPaciente']) || $cadastrarNovo) {
 
                 <div class="col-md-2">
                     <label for="labelCEP">CEP:</label>
-                    <input type="text" class="form-control" id="idCEPAmostra" placeholder="00000-000 " <?= $disabled ?>
+                    <input type="text" class="form-control" id="idCEPAmostra" placeholder="" <?= $disabled ?>
                            onblur="validaCEPAmostra()" name="txtCEP"  
                            value="<?= $objAmostra->getCEP() ?>"> 
                     <div id ="feedback_cepAmostra"></div>
@@ -1277,26 +1340,21 @@ if (isset($_GET['idPaciente']) || $cadastrarNovo) {
             </div>
 
 
-            <?php if (!$sumir) { ?> 
-                <div class="form-row">
+            <?php if ($BOTAO_SALVAR == 'on') {
+                    if($BOTAO_CANCELAR == 'off'){ $style=  'style="width:50%;margin-left:80%;"';}
+                    else { $style=  'style="width: 50%;margin-left:45%;"';}
+               echo '<div class="form-row">
                     <div class="col-md-6" >
-                        <button class="btn btn-primary" style="width: 50%;margin-left:45%;" type="submit" name="salvar_cadastro">Salvar</button>
-                    </div>
-
-                    <div class="col-md-6" >
+                        <button class="btn btn-primary" '.$style.' type="submit" name="salvar_cadastro">Salvar</button>
+                    </div>';
+            }
+                    if($BOTAO_CANCELAR == 'on'){
+                    echo '<div class="col-md-6" >
                         <button type="button" class="btn btn-primary" data-toggle="modal" style="width: 50%;margin-left:0%;" data-target="#exampleModalCenter" > Cancelar</button>
                     </div>
+                </div>';
+                } ?>
 
-                </div>
-            <?php } else { ?>
-                <!--    <div class="form-row">
-                        <div class="col-md-6" >
-                            <button class="btn btn-primary" style="width: 50%;margin-left:45%;" type="submit" name="editar_cadastro">Editar</button>
-                        </div>
-                    </div> -->
-
-
-            <?php } ?>
 
         </form>
         <!--<?php
