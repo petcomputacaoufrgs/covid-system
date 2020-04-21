@@ -49,6 +49,8 @@ class Sessao {
                     $objExcecao = new Excecao();
                     $objExcecao->adicionar_validacao("Usuário não encontrado.");
                     die("Usuário não encontrado.");
+                    //header('Location: controlador.php?action=usuario_naoEncontrado');
+                    //die();
                 }
 
 

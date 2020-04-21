@@ -96,6 +96,12 @@ class InfosTuboBD{
                 $AND = ' and ';
                 $arrayBind[] = array('s', $objInfosTubo->getStatusTubo());
             }
+
+             if ($objInfosTubo->getReteste() != null) {
+                 $WHERE .= $AND . " reteste = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('s', $objInfosTubo->getReteste());
+             }
             
             if ($WHERE != '') {
                 $WHERE = ' where ' . $WHERE;

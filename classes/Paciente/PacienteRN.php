@@ -109,6 +109,10 @@ class PacienteRN {
     private function validarRG(Paciente $paciente, Excecao $objExcecao) {
         $strRG = trim($paciente->getRG());
 
+        if(strlen($strRG) > 10){
+            $objExcecao->adicionar_validacao('O RG já possui mais de 10 caracteres', null, 'alert-danger');
+        }
+
         if (strlen($strRG) > 0) {
             $objPacienteAux = new Paciente();
             $objPacienteAuxRN = new PacienteRN();
@@ -156,6 +160,30 @@ class PacienteRN {
         }
 
         return $paciente->setObsCEP($strObsCEP);
+    }
+
+    private function validarObsCartaoSUS(Paciente $paciente, Excecao $objExcecao) {
+        $strObsCartaoSUS = trim($paciente->getObsCartaoSUS());
+
+        if (strlen($strObsCartaoSUS) > 300) {
+            $objExcecao->adicionar_validacao('As observações do cartão do SUS do paciente possui mais que 300 caracteres.',  null, 'alert-danger');
+        }
+
+        if ($strObsCartaoSUS == '' && $paciente->getCartaoSUS() == '') {
+            return $paciente->setObsCartaoSUS('Desconhecido');
+        }
+
+        return $paciente->setObsCartaoSUS($strObsCartaoSUS);
+    }
+
+    private function validarCartaoSUS(Paciente $paciente, Excecao $objExcecao) {
+        $strCartaoSUS = trim($paciente->getCartaoSUS());
+
+        if (strlen($strCartaoSUS) > 15) {
+            $objExcecao->adicionar_validacao('O cartão do SUS do paciente possui mais que 15 caracteres.',  null, 'alert-danger');
+        }
+
+        return $paciente->setCartaoSUS($strCartaoSUS);
     }
 
     private function validarObsEndereco(Paciente $paciente, Excecao $objExcecao) {
@@ -232,8 +260,8 @@ class PacienteRN {
     private function validarPassaporte(Paciente $paciente, Excecao $objExcecao) {
         $strPassaporte = trim($paciente->getPassaporte());
 
-        if (strlen($strPassaporte) > 300) {
-            $objExcecao->adicionar_validacao('O passaporte do paciente possui mais que 300 caracteres.', 'idPassaporte');
+        if (strlen($strPassaporte) > 15) {
+            $objExcecao->adicionar_validacao('O passaporte do paciente possui mais que 15 caracteres.', 'idPassaporte');
         }
         
         if(strlen($strPassaporte) > 0){
@@ -357,6 +385,7 @@ class PacienteRN {
                 $paciente->getIdSexo_fk() == $idSexo &&
                 $paciente->getEndereco() == '' &&
                 $paciente->getCEP() == '' &&
+                $paciente->getCartaoSUS() == '' &&
                 $paciente->getNomeMae() == '' &&
                 $paciente->getDataNascimento() == '' &&
                 $idGAL == null) || $paciente->getIdEtnia_fk() == $idEtnia) {
@@ -365,6 +394,7 @@ class PacienteRN {
             $paciente->setObsCEP('Desconhecido');
             $paciente->setObsCPF('Desconhecido');
             $paciente->setObsEndereco('Desconhecido');
+            $paciente->setObsCartaoSUS('Desconhecido');
             $paciente->setObsPassaporte('Desconhecido');
             $paciente->setObsNomeMae('Desconhecido');
             $paciente->setObsCodGAL('Desconhecido');
@@ -464,6 +494,7 @@ class PacienteRN {
                 $paciente->getPassaporte() == '' &&
                 $paciente->getIdSexo_fk() == $idSexo &&
                 $paciente->getEndereco() == '' &&
+                $paciente->getCartaoSUS() == '' &&
                 $paciente->getCEP() == '' &&
                 $paciente->getNomeMae() == '' &&
                 $paciente->getDataNascimento() == '' &&
@@ -472,6 +503,7 @@ class PacienteRN {
             $paciente->setObsRG('Desconhecido');
             $paciente->setObsCEP('Desconhecido');
             $paciente->setObsCPF('Desconhecido');
+            $paciente->setObsCartaoSUS('Desconhecido');
             $paciente->setObsEndereco('Desconhecido');
             $paciente->setObsPassaporte('Desconhecido');
             $paciente->setObsNomeMae('Desconhecido');
@@ -500,11 +532,13 @@ class PacienteRN {
             $this->validarCPF($paciente, $objExcecao);
             //$this->validarDataNascimento($paciente,$objExcecao); 
             $this->validarNome($paciente, $objExcecao);
+            $this->validarObsCartaoSUS($paciente, $objExcecao);
+            $this->validarCartaoSUS($paciente, $objExcecao);
             $this->validarNomeMae($paciente, $objExcecao);
             $this->validarObsNomeMae($paciente, $objExcecao);
             $this->validarObsRG($paciente, $objExcecao);
             $this->validarObsCPF($paciente, $objExcecao);
-            //$this->validarPassaporte($paciente,$objExcecao);
+            $this->validarPassaporte($paciente,$objExcecao);
             $this->validarObsCEP($paciente, $objExcecao);
             $this->validarObsPassaporte($paciente, $objExcecao);
             $this->validarObsEndereco($paciente, $objExcecao);
@@ -551,10 +585,13 @@ class PacienteRN {
             $this->validarCPF($paciente, $objExcecao);
             //$this->validarDataNascimento($paciente,$objExcecao); 
             $this->validarNome($paciente, $objExcecao);
+            $this->validarObsCartaoSUS($paciente, $objExcecao);
+            $this->validarCartaoSUS($paciente, $objExcecao);
             $this->validarNomeMae($paciente, $objExcecao);
             $this->validarObsNomeMae($paciente, $objExcecao);
             $this->validarObsRG($paciente, $objExcecao);
-            //$this->validarPassaporte($paciente,$objExcecao);
+            $this->validarObsCPF($paciente, $objExcecao);
+            $this->validarPassaporte($paciente,$objExcecao);
             $this->validarObsCEP($paciente, $objExcecao);
             $this->validarObsPassaporte($paciente, $objExcecao);
             $this->validarObsEndereco($paciente, $objExcecao);

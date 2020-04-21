@@ -3,6 +3,7 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
+error_reporting(E_ALL & ~E_NOTICE);
 require_once __DIR__ . '/../classes/Sessao/Sessao.php';
 
 
@@ -11,7 +12,11 @@ switch ($_GET['action']):
     case 'principal':
         require_once 'principal.php';
         break;
-    
+
+    case 'usuario_naoEncontrado':
+        require_once '../acoes/PaginaUserNotFound.php';
+        break;
+
     case 'login':
         require_once 'index.php';
         break;
@@ -32,7 +37,11 @@ switch ($_GET['action']):
     case 'mostrar_estatisticas':
         require_once '../acoes/Estatisticas/gerarPDF.php';
         break;
-    
+
+     /* ETAPA 2 */
+    case 'montar_preparo_extracao':
+        require_once '../acoes/PreparoExtracao/preparo_extracao.php';
+        break;
     
     
     case 'cadastrar_amostra_localArmazenamento':

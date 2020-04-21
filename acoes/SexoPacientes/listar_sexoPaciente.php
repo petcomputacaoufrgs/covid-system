@@ -3,11 +3,11 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 session_start();
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Sexo/Sexo.php';
-require_once '../classes/Sexo/SexoRN.php';
+require_once __DIR__.'/../../classes/Sessao/Sessao.php';
+require_once __DIR__.'/../../classes/Pagina/Pagina.php';
+require_once __DIR__.'/../../classes/Excecao/Excecao.php';
+require_once __DIR__.'/../../classes/Sexo/Sexo.php';
+require_once __DIR__.'/../../classes/Sexo/SexoRN.php';
 
 $objSexo = new Sexo();
 $objSexoRN = new SexoRN();
@@ -36,7 +36,7 @@ Pagina::getInstance()->montar_menu_topo();
 
 echo '
     <div class="conteudo_listar">'.
-       Pagina::montar_topo_listar('LISTAR SEXO DOS PACIENTES', 'cadastrar_sexoPaciente', 'NOVO SEXO DE PACIENTE').
+       Pagina::montar_topo_listar('LISTAR SEXO DOS PACIENTES', NULL,NULL,'cadastrar_sexoPaciente', 'NOVO SEXO DE PACIENTE').
         '<div class="conteudo_tabela"><table class="table table-hover">
             <table class="table table-hover">
               <thead>

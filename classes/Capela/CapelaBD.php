@@ -18,7 +18,7 @@ class CapelaBD{
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objCapela->setIdCapela($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando a capela paciente no BD.",$ex);
         }
         
@@ -40,7 +40,7 @@ class CapelaBD{
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
 
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro alterando a capela no BD.",$ex);
         }
        
@@ -64,7 +64,7 @@ class CapelaBD{
                 $array_capelas[] = $objCapela;
             }
             return $array_capelas;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando a capela no BD.",$ex);
         }
        
@@ -87,7 +87,7 @@ class CapelaBD{
             $capela->setStatusCapela($arr[0]['statusCapela']);
 
             return $capela;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
        
             throw new Excecao("Erro consultando a capela no BD.",$ex);
         }
@@ -103,7 +103,7 @@ class CapelaBD{
             $arrayBind[] = array('i',$objCapela->getIdCapela());
             $objBanco->executarSQL($DELETE, $arrayBind);
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo a capela no BD.",$ex);
         }
     }
@@ -134,13 +134,14 @@ class CapelaBD{
             return $arr_capelas;
 
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
        
             throw new Excecao("Erro bloqueando a capela no BD.",$ex);
         }
 
     }
-    
+
+
     public function validar_cadastro(Capela $objCapela, Banco $objBanco) {
 
         try{
@@ -166,7 +167,7 @@ class CapelaBD{
             }
              return $arr_capelas;
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro validando cadastro no BD.",$ex);
         }
     }
