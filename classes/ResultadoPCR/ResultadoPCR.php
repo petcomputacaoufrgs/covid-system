@@ -7,7 +7,7 @@ class ResultadoPCR {
     private $task;
     private $reporter;
     private $quencher;
-    private $ctMean;
+    private $ct;
 
     /**
      * Resultado constructor.
@@ -116,17 +116,17 @@ class ResultadoPCR {
     /**
      * @return mixed
      */
-    public function getCtMean()
+    public function getCt()
     {
-        return $this->ctMean;
+        return $this->ct;
     }
 
     /**
-     * @param mixed $ctMean
+     * @param mixed $ct
      */
-    public function setCtMean($ctMean)
+    public function setCt($ct)
     {
-        $this->ctMean = $ctMean;
+        $this->ct = $ct;
     }
 
 

@@ -27,10 +27,10 @@ class Planilha {
             $task = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(4,$linha)->getValue();
             $reporter = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(5,$linha)->getValue();
             $quencer = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(6,$linha)->getValue();
-            $ctMean = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(11,$linha)->getValue();
+            $ct = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(10,$linha)->getValue();
     
             //cria tupla de valores
-            $valores = [$well, $sampleName, $targetName, $task, $reporter, $quencer, $ctMean];
+            $valores = [$well, $sampleName, $targetName, $task, $reporter, $quencer, $ct];
             
             //Cria o objeto para armazenar o resultado de APENAS UMA amostra
             $objetoResultado = new ResultadoPCR();
