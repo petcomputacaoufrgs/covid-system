@@ -83,6 +83,17 @@ class InfosTuboRN{
             
             if(!$res_data){
                 $objExcecao->adicionar_validacao('Informar a data valida.','idDataHora');
+            }else{
+                $hoje = explode(date("Y/m/d"));
+                $h_ano = $hoje[0];
+                $h_mes = $hoje[1];
+                $h_dia = $hoje[2];
+
+                if(($h_ano < $ano) || 
+                (($h_ano == $ano) && ($h_mes < $mes)) || 
+                (($h_ano == $ano) && ($h_mes == $mes) && ($h_dia < $dia))){
+                    $objExcecao->adicionar_validacao('Informar a data valida.','idDataHora');
+                }
             }
         }
         
