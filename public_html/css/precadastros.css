@@ -8,20 +8,25 @@
 
 .topo_listar{
     width:100%;
-    padding-right: 1.5%;
-    padding-left: 1.5%;
-    padding-top: 10px;
-    padding-bottom: 5px;
+    margin-bottom: 15px;
+    /*padding-right: 1.5%;
+    padding-left: 1.5%;*/
+    
     background-color: #3a5261;
     color: #fff;
 }
-
+.topo_listar h3{
+    padding-top: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+}
 .topo_listar .btn-primary{
-    
+    padding-top: 15px;
     text-align: center;
     border-radius: 0px;
+    height: 100%;
+    width: 100%;
     background-color: #3a5261;
-    margin-right: 50px;
     color: #fff;
     
 }
@@ -121,5 +126,60 @@ td,th{
 }
 
 .form-row{
+    /*margin-top: 10px;*/
     margin-bottom: 10px;
+}
+
+
+.formulario{
+    margin-top: 50px;
+}
+
+#alert_id{
+    margin-top: -10px;
+}
+
+.modal-footer a{
+    text-decoration: none;
+    color: white;
+}
+
+
+.btn-outline-add{
+    background-color:#3a5261;
+    color:white;
+}
+
+.btn-outline-add:hover{
+    background-color:#ddd;
+    color:#3a5261;
+}
+
+
+.form-inline{
+    width: 100%;
+    /*background-color: #7abaff;*/
+}
+
+
+
+
+
+.conteudo_tabela a{
+    color: black;
+}
+.td_a{
+    background-color: rgba(255,255,255,0.6);
+    /*border: 0.5px solid black;*/
+    color: white;
+}
+
+.td_a:hover{
+    background-color: #ddd;
+    color: black;
+    transition: .5s;
+}
+
+.fa-edit,.fa-trash-alt{
+    color: black;
 }

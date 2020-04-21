@@ -90,7 +90,7 @@ class Rel_usuario_perfilUsuario_BD{
 
         try{
 
-            $SELECT = 'SELECT id_rel_usuario_perfilUsuario,idPerfilUsuario_fk,idUsuario_fk FROM tb_rel_usuario_perfilUsuario WHERE id_rel_usuario_perfilUsuario = ?';
+            $SELECT = 'SELECT id_rel_usuario_perfilUsuario,idPerfilUsuario_fk,idUsuario_fk FROM tb_rel_usuario_perfilusuario WHERE id_rel_usuario_perfilUsuario = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getId_rel_usuario_perfilUsuario());
@@ -131,7 +131,7 @@ class Rel_usuario_perfilUsuario_BD{
 
         try{
 
-            $SELECT = 'SELECT * FROM tb_rel_usuario_perfilUsuario WHERE idPerfilUsuario_fk = ? AND idUsuario_fk = ?';
+            $SELECT = 'SELECT * FROM tb_rel_usuario_perfilusuario WHERE idPerfilUsuario_fk = ? AND idUsuario_fk = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdPerfilUsuario_fk());

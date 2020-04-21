@@ -7,6 +7,19 @@ class CadastroAmostra{
     private $dataHoraInicio;
     private $dataHoraFim;
     
+    private $objAmostra;
+    
+    
+    
+    function getObjAmostra() {
+        return $this->objAmostra;
+    }
+
+    function setObjAmostra($objAmostra) {
+        $this->objAmostra = $objAmostra;
+    }
+
+        
     function getIdCadastroAmostra() {
         return $this->idCadastroAmostra;
     }

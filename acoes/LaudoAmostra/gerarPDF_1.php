@@ -1,7 +1,8 @@
 <?php
-session_start();
-require_once '../classes/Sessao/Sessao.php';
-require 'C:\Users\Carine\vendor\autoload.php';
+//session_start();
+require_once '../../vendor/autoload.php';
+//require_once '../classes/Sessao/Sessao.php';
+
 //$mpdf = new \Mpdf\Mpdf();
 
 // Define a default page using all default values except "L" for Landscape orientation

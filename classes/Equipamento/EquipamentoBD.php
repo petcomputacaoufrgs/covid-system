@@ -78,7 +78,6 @@ class EquipamentoBD{
 
             $arr = $objBanco->consultarSQL($SELECT.$WHERE,$arrayBind);
 
-            $arr = $objBanco->consultarSQL($SELECT);
 
             $array_equipamento = array();
             foreach ($arr as $reg){
