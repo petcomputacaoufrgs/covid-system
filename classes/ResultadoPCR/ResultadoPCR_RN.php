@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../Excecao/Excecao.php';
 require_once __DIR__ . '/ResultadoPCR_BD.php';
 
-class ResultadoPCRRN
+class ResultadoPCR_RN
 {
     public function configuraObjeto(ResultadoPCR $objResultado, $arrayLinha) {
         $objResultado->setWell($arrayLinha[0]);

@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../ResultadoPCR/ResultadoPCR.php';
-require_once __DIR__ . '/../ResultadoPCR/ResultadoPCRRN.php';
+require_once __DIR__ . '/../ResultadoPCR/ResultadoPCR_RN.php';
 
 use \PhpOffice\PhpSpreadsheet\Reader\Xls;
 
@@ -15,7 +15,7 @@ class Planilha {
         $reader->setLoadSheetsOnly(["Results"]);
         $spreadsheet = $reader->load("../../planilhas/" . $filename);
     
-        $resultadoRN = new ResultadoPCRRN();
+        $resultadoRN = new ResultadoPCR_RN();
     
         $linha = 9;
         while ($spreadsheet->getActiveSheet()->getCellByColumnAndRow(1,$linha)->getValue() != null) {
