@@ -336,6 +336,27 @@ class Interf {
                     . '">' . Pagina::formatar_html($perfil->getPerfil()) . '</option>';
         }
     }
+
+    function montar_select_cadastroPendente(&$select_cadastroPendente,  $objPacienteRN,&$objPaciente, $disabled, $onchange) {
+        /* CADASTRO PENDENTE DO PACIENTE */
+
+        $select_cadastroPendente = ' <select id="idCadastroPendente" ' . $disabled . $onchange .
+            'class="form-control" name="sel_CadastroPendente" onblur="">
+                        <option value="">Selecione</option>';
+
+            $selectedn = '';     $selecteds='';
+            if($objPaciente->getCadastroPendente() == 's'){
+                $selecteds = ' selected ';
+            }
+            if($objPaciente->getCadastroPendente() == 'n'){
+                $selectedn = ' selected ';
+            }
+
+            $select_cadastroPendente .= '<option ' . $selecteds . ' value="s">Sim</option>';
+            $select_cadastroPendente .= '<option ' . $selectedn . ' value="n">Não</option>';
+
+        $select_cadastroPendente .= '</select>';
+    }
     
     /*
      * SELECTS MÚLTIPLOS

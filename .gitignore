@@ -1,3 +1,5 @@
 /vendor
 /.php_cs.cache
 /nbproject/private/
+/config.php
+/classes/Configuracao.php
