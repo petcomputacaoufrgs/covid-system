@@ -1,5 +1,5 @@
 <?php
-$dbopts = parse_url(getenv('DATABASE_URL'));
+$dbopts = parse_url(getenv('JAWSDB_MARIA_URL'));
 $config = array(
     'versao' => '1.0.0',
     'producao' => false,
