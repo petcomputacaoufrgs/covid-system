@@ -68,7 +68,7 @@ class Interf {
         //$objAmostraAux = new Amostra(); 
         //$objAmostraAux->setIdAmostra($objAmostra->getIdAmostra());
         $arr_amostras = $objAmostraRN->listar($objAmostra);
-        print_r($arr_amostras);
+        //print_r($arr_amostras);
 
         $select_amostras = '<select class="form-control selectpicker"' . $onchange
                 . 'id="select-country idSel_amostras"'
@@ -336,7 +336,57 @@ class Interf {
                     . '">' . Pagina::formatar_html($perfil->getPerfil()) . '</option>';
         }
     }
+
+    function montar_select_cadastroPendente(&$select_cadastroPendente,  $objPacienteRN,&$objPaciente, $disabled, $onchange) {
+        /* CADASTRO PENDENTE DO PACIENTE */
+
+        $select_cadastroPendente = ' <select id="idCadastroPendente" ' . $disabled . $onchange .
+            'class="form-control" name="sel_CadastroPendente" onblur="">
+                        <option value="">Selecione</option>';
+
+            $selectedn = '';     $selecteds='';
+            if($objPaciente->getCadastroPendente() == 's'){
+                $selecteds = ' selected ';
+            }
+            if($objPaciente->getCadastroPendente() == 'n'){
+                $selectedn = ' selected ';
+            }
+
+            $select_cadastroPendente .= '<option ' . $selecteds . ' value="s">Sim</option>';
+            $select_cadastroPendente .= '<option ' . $selectedn . ' value="n">Não</option>';
+
+        $select_cadastroPendente .= '</select>';
+    }
     
-    
+    /*
+     * SELECTS MÚLTIPLOS
+     */
+
+    function montar_select_perfisMultiplos(&$select_perfis,&$perfisSelecionados, &$objPerfilPaciente, $objPerfilPacienteRN, $disabled, $onchange) {
+
+        /* SELECIONAR VÁRIOS PERFIS DE USUÁRIO */
+        $selected = '';
+        $arr_perfis = $objPerfilPacienteRN->listar($objPerfilPaciente);
+
+        $select_perfis = '<select '.$disabled.'  class="form-control selectpicker" '.$onchange.'
+            multiple data-live-search="true"   name="sel_perfis[]">'
+            . '<option value="0" ></option>';
+
+        foreach ($arr_perfis as $perfil) {
+            $selected = ' ';
+            if ($perfisSelecionados != '') {
+                $rec = explode(";", $perfisSelecionados);
+                foreach ($rec as $r) {
+                    if ($perfil->getIdPerfilPaciente() == $r) {
+                        $selected = ' selected ';
+                    }
+                }
+                $select_perfis .= '<option ' . $selected . '  value="' . $perfil->getIdPerfilPaciente() . '">' . $perfil->getPerfil() . '</option>';
+            } else {
+                $select_perfis .= '<option  value="' . $perfil->getIdPerfilPaciente() . '">' . $perfil->getPerfil() .'</option>';
+            }
+        }
+        $select_perfis .= '</select>';
+    }
     
 }

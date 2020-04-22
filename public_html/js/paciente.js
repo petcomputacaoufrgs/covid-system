@@ -85,10 +85,10 @@ function validaCODGAL(){
             div_feedback.classList.remove("valid-feedback");
         div_feedback.classList.add("invalid-feedback");
       
-       div_feedback.innerHTML = " Digite o código GAL com 15 caracteres. ";
+       div_feedback.innerHTML = " Digite o código GAL com até 20 caracteres. ";
     }
     
-    if(strTipo.value.length >= 0 && strTipo.value.length  <= 15 ){
+    if(strTipo.value.length >= 0 && strTipo.value.length  <= 20 ){
          strTipo.classList.add("is-valid");
         if(strTipo.classList.contains("is-invalid")) strTipo.classList.remove("is-invalid");
         if(div_feedback.classList.contains("invalid-feedback"))
@@ -97,6 +97,33 @@ function validaCODGAL(){
         div_feedback.innerHTML = " Tudo certo. ";
     }
     
+}
+
+
+function validaCartaoSUS(){
+
+    var strTipo = document.getElementById("idCartaoSUS");
+    var div_feedback = document.getElementById("feedback_cartaoSUS");
+
+    if( strTipo.value.length > 15 ){ // não digitou nada
+        strTipo.classList.add("is-invalid");
+        if(strTipo.classList.contains("is-valid")) strTipo.classList.remove("is-valid");
+        if(div_feedback.classList.contains("valid-feedback"))
+            div_feedback.classList.remove("valid-feedback");
+        div_feedback.classList.add("invalid-feedback");
+
+        div_feedback.innerHTML = " Digite o cartão SUS com até 15 caracteres. ";
+    }
+
+    if(strTipo.value.length >= 0 && strTipo.value.length  <= 15 ){
+        strTipo.classList.add("is-valid");
+        if(strTipo.classList.contains("is-invalid")) strTipo.classList.remove("is-invalid");
+        if(div_feedback.classList.contains("invalid-feedback"))
+            div_feedback.classList.remove("invalid-feedback");
+        div_feedback.classList.add("valid-feedback");
+        div_feedback.innerHTML = " Tudo certo. ";
+    }
+
 }
 
 /*
@@ -549,3 +576,26 @@ function val() {
                                        }
 
                                    }
+
+function val_radio_obsCartaoSUS() {
+
+    var radios = document.getElementsByName('obsCartaoSUS');
+    //var input_outro = document.getElementById('idObsNomeMae');
+    for (var i = 0, length = radios.length; i < length; i++) {
+        if (radios[0].checked) {
+            // do whatever you want with the checked radio
+            //alert("desconhecido");
+            document.getElementById('idObsCartaoSUS').readOnly = true;
+            // only one radio can be logically checked, don't check the rest
+            break;
+        }
+        if (radios[1].checked) {
+            // do whatever you want with the checked radio
+            //alert("outro");
+            document.getElementById('idObsCartaoSUS').readOnly = false;
+            // only one radio can be logically checked, don't check the rest
+            break;
+        }
+    }
+
+}

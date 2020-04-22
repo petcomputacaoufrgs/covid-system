@@ -6,7 +6,7 @@
 require_once __DIR__ . '/../Sessao/Sessao.php';
 require_once __DIR__ . '/../Log/Log.php';
 require_once __DIR__ . '/../Log/LogRN.php';
-require_once '../utils/Alert.php';
+require_once __DIR__ .'/../../utils/Alert.php';
 
 class Pagina {
 
@@ -86,10 +86,10 @@ class Pagina {
                 </button>
                 <div class="collapse navbar-collapse text-center" id="navbarsExample11">
                     <ul class="navbar-nav">
-                       <!-- <li class="nav-item active">
-                            <a class="nav-link" href="#">Cadastro Amostra</a>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra').'">Cadastro Amostra</a>
                         </li>
-                        <li class="nav-item">
+                        <!--<li class="nav-item">
                             <a class="nav-link" href="#">Preparo e Armazenamento</a>
                         </li>
                         <li class="nav-item">
