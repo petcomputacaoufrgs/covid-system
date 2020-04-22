@@ -2,4 +2,5 @@
 /.php_cs.cache
 /nbproject/private/
 /config.php
-/Configuracao.php
+classes/Configuracao.php
+
