@@ -234,9 +234,6 @@ try {
             }
 
 
-
-
-
         }
 
         if ($array_colunas[$_GET['idColunaSelecionada']] == 'SITUAÇÃO AMOSTRA') {
@@ -314,105 +311,105 @@ try {
 
     }
 
+   // if($array_colunas[$_GET['idColunaSelecionada']] != 'CADASTRO PENDENTE') {
+        if (empty($arrAmostras_pesquisa) || $retornou_certo) {
 
-    if (empty($arrAmostras_pesquisa) || $retornou_certo) {
+            $objAmostraAux = new Amostra();
+            $objAmostraAuxRN = new AmostraRN();
 
-        $objAmostraAux = new Amostra();
-        $objAmostraAuxRN = new AmostraRN();
-        if (!$retornou_certo) {
-            $arrAmostras = $objAmostraAuxRN->listar($objAmostraAux);
-        } else {
-            $arrAmostras = $arrAmostras_pesquisa;
-        }
-        $itens = '';
-
-        foreach ($arrAmostras as $r) {
-
-            $objPaciente->setIdPaciente($r->getIdPaciente_fk());
-            $objPaciente = $objPacienteRN->consultar($objPaciente);
-
-            if ($r->get_a_r_g() == 'r') {
-                $result = 'Recusada';
-                $style = ' style="background-color:rgba(255, 0, 0, 0.2);" ';
-            } else if ($r->get_a_r_g() == 'a') {
-                $result = 'Aceita';
-                $style = ' style="background-color:rgba(0, 255, 0, 0.2);" ';
-            } else if ($r->get_a_r_g() == 'g') {
-                $result = 'Aguardando chegada';
-                $style = ' style="background-color:rgba(255, 255, 0, 0.2);" ';
+            if (!$retornou_certo) {
+                $arrAmostras = $objAmostraAuxRN->listar($objAmostraAux);
+            } else {
+                $arrAmostras = $arrAmostras_pesquisa;
             }
+            $itens = '';
+
+            foreach ($arrAmostras as $r) {
+
+                $objPaciente->setIdPaciente($r->getIdPaciente_fk());
+                $objPaciente = $objPacienteRN->consultar($objPaciente);
+
+                if ($r->get_a_r_g() == 'r') {
+                    $result = 'Recusada';
+                    $style = ' style="background-color:rgba(255, 0, 0, 0.2);" ';
+                } else if ($r->get_a_r_g() == 'a') {
+                    $result = 'Aceita';
+                    $style = ' style="background-color:rgba(0, 255, 0, 0.2);" ';
+                } else if ($r->get_a_r_g() == 'g') {
+                    $result = 'Aguardando chegada';
+                    $style = ' style="background-color:rgba(255, 255, 0, 0.2);" ';
+                }
 
 
-            $objPerfilPaciente->setIdPerfilPaciente($r->getIdPerfilPaciente_fk());
-            $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
+                $objPerfilPaciente->setIdPerfilPaciente($r->getIdPerfilPaciente_fk());
+                $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
 
 
-            if ($r->getDataColeta() != null) {
-                $strData = explode("-", $r->getDataColeta());
+                if ($r->getDataColeta() != null) {
+                    $strData = explode("-", $r->getDataColeta());
 
-                $ano = $strData[0];
-                $mes = $strData[1];
-                $dia = $strData[2];
+                    $ano = $strData[0];
+                    $mes = $strData[1];
+                    $dia = $strData[2];
 
-                $data = $dia . "/" . $mes . "/" . $ano;
+                    $data = $dia . "/" . $mes . "/" . $ano;
 
-            }
+                }
 
-            $objTubo = new Tubo();
-            $objInfosTubo = new InfosTubo();
+                $objTubo = new Tubo();
+                $objInfosTubo = new InfosTubo();
 
-            $etapa = '';
-            $infosTuboAux = new InfosTubo();
-            if ($r->get_a_r_g() != 'g') { //aguardando não tem tubo ainda
-                $objTubo->setIdAmostra_fk($r->getIdAmostra()); //pega o tubo original da amostra
-                $array_tubos = $objTuboRN->listar($objTubo);
-                $indiceTubo = -1;
-                foreach ($array_tubos as $t) {
-                    if ($t->getTuboOriginal() == 's') {
-                        $indiceTubo = $t->getIdTubo();
+                $etapa = '';
+                $infosTuboAux = new InfosTubo();
+                if ($r->get_a_r_g() != 'g') { //aguardando não tem tubo ainda
+                    $objTubo->setIdAmostra_fk($r->getIdAmostra()); //pega o tubo original da amostra
+                    $array_tubos = $objTuboRN->listar($objTubo);
+                    $indiceTubo = -1;
+                    foreach ($array_tubos as $t) {
+                        if ($t->getTuboOriginal() == 's') {
+                            $indiceTubo = $t->getIdTubo();
+                        }
+                    }
+
+                    $objInfosTubo->setIdTubo_fk($indiceTubo);
+                    $arr_infosTubo = $objInfosTuboRN->listar($objInfosTubo);
+
+                    $tam = count($arr_infosTubo);
+                    if ($tam > 0) {
+                        $etapa = $arr_infosTubo[$tam - 1]->getStatusTubo();
                     }
                 }
 
-                $objInfosTubo->setIdTubo_fk($indiceTubo);
-                $arr_infosTubo = $objInfosTuboRN->listar($objInfosTubo);
-
-                $tam = count($arr_infosTubo);
-                if ($tam > 0) {
-                    $etapa = $arr_infosTubo[$tam - 1]->getStatusTubo();
+                if ($objPaciente->getCadastroPendente() == 's') {
+                    $cadastroPendente = 'sim';
+                } else if ($objPaciente->getCadastroPendente() == 'n') {
+                    $cadastroPendente = 'não';
                 }
-            }
 
-            if ($objPaciente->getCadastroPendente() == 's') {
-                $cadastroPendente = 'sim';
-            } else if ($objPaciente->getCadastroPendente() == 'n') {
-                $cadastroPendente = 'não';
-            }
-
-            $html .= '<tr' . $style . '>
+                $html .= '<tr' . $style . '>
                     <th scope="row">' . Pagina::formatar_html($r->getCodigoAmostra()) . '</th>
                             <td>' . Pagina::formatar_html($result) . '</td>
                             <td>' . Pagina::formatar_html($data) . '</td>'
-                //<td>' . Pagina::formatar_html($etapa) . '</td>
-                . '<td>' . Pagina::formatar_html($objPerfilPaciente->getPerfil()) . '</td>
+                    //<td>' . Pagina::formatar_html($etapa) . '</td>
+                    . '<td>' . Pagina::formatar_html($objPerfilPaciente->getPerfil()) . '</td>
                  <td>' . Pagina::formatar_html($cadastroPendente) . '</td>
                             
                         <td class="td_a">';
 
-            if (Sessao::getInstance()->verificar_permissao('editar_amostra')) {
-                $html .= '<a href="' .
-                    Sessao::getInstance()->assinar_link('controlador.php?action=editar_amostra&idAmostra=' . Pagina::formatar_html($r->getIdAmostra()) . '&idPaciente=' . Pagina::formatar_html($r->getIdPaciente_fk())) . '"><i class="fas fa-edit"></i></a>';
+                if (Sessao::getInstance()->verificar_permissao('editar_amostra')) {
+                    $html .= '<a href="' .
+                        Sessao::getInstance()->assinar_link('controlador.php?action=editar_amostra&idAmostra=' . Pagina::formatar_html($r->getIdAmostra()) . '&idPaciente=' . Pagina::formatar_html($r->getIdPaciente_fk())) . '"><i class="fas fa-edit"></i></a>';
+                }
+                $html .= '</td><td class="td_a">';
+                if (Sessao::getInstance()->verificar_permissao('remover_amostra')) {
+                    $html .= '<a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_amostra&idAmostra=' . Pagina::formatar_html($r->getIdAmostra()) . '&idPaciente=' . Pagina::formatar_html($r->getIdPaciente_fk())) . '"><i class="fas fa-trash-alt"></i></a>';
+                }
+                $html .= '</td></tr>';
+
             }
-            $html .= '</td><td class="td_a">';
-            if (Sessao::getInstance()->verificar_permissao('remover_amostra')) {
-                $html .= '<a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_amostra&idAmostra=' . Pagina::formatar_html($r->getIdAmostra()) . '&idPaciente=' . Pagina::formatar_html($r->getIdPaciente_fk())) . '"><i class="fas fa-trash-alt"></i></a>';
-            }
-            $html .= '</td></tr>';
 
         }
-
-    }
-
-
+    //}
 
 } catch (Exception $ex) {
     Pagina::getInstance()->processar_excecao($ex);
