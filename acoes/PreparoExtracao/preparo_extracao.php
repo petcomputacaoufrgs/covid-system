@@ -184,7 +184,6 @@ try {
                                           <input type="text" disabled class="form-control" value="Amostra ' . $objAmostra->getCodigoAmostra() . '">
                                     </div>';
                                 $qnt++;
-
                             }
                         }
                         $titulo = '<div class="conteudo_grande preparo" style="margin-top: -10px;margin-bottom: 0px;">

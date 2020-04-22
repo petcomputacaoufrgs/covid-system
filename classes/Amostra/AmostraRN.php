@@ -26,7 +26,6 @@ class AmostraRN{
     
     private function validarDataColeta(Amostra $objAmostra, Excecao $objExcecao) {
 
-
         if($objAmostra->getDataColeta() == null){
             $objExcecao->adicionar_validacao('Informar a data da coleta', 'idDtColeta', 'alert-danger');
         }else {
