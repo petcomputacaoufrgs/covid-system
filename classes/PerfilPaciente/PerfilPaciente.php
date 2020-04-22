@@ -8,11 +8,21 @@ class PerfilPaciente{
     private $idPerfilPaciente;
     private $perfil;
     private $index_perfil;
+    private $caractere;
     
     function __construct() {
         
     }
     
+    function getCaractere() {
+        return $this->caractere;
+    }
+
+    function setCaractere($caractere) {
+        $this->caractere = $caractere;
+    }
+
+        
     function getIdPerfilPaciente() {
         return $this->idPerfilPaciente;
     }

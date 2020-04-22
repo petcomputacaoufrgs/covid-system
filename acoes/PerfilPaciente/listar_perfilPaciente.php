@@ -44,7 +44,7 @@ Pagina::getInstance()->montar_menu_topo();
 
 echo '
     <div class="conteudo_listar">'.
-       Pagina::montar_topo_listar('LISTAR PERFIS DOS PACIENTES', 'cadastrar_perfilPaciente', 'NOVO PERFIL DE PACIENTE').
+       Pagina::montar_topo_listar('LISTAR PERFIS DOS PACIENTES',null,null, 'cadastrar_perfilPaciente', 'NOVO PERFIL DE PACIENTE').
         '<div class="conteudo_tabela">
             <table class="table table-hover">
                 <thead>

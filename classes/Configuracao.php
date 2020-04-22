@@ -11,9 +11,13 @@ class Configuracao{
     }
     
     private function getArray(){
-        require __DIR__ . '/../config.php';
+         require __DIR__ . '/../config.php';
         return $config;
+    
     }
+    
+    
+    
     public function getValor($strChave){
         $arr = $this->getArray();
         if(!isset($arr[$strChave])){

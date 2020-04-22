@@ -10,7 +10,7 @@ class Rel_usuario_perfilUsuario_BD{
     public function cadastrar(Rel_usuario_perfilUsuario $objRel_usuario_perfilUsuario, Banco $objBanco) {
         try{
            
-            $INSERT = 'INSERT INTO tb_rel_usuario_perfilUsuario (idPerfilUsuario_fk,idUsuario_fk) VALUES (?,?)';
+            $INSERT = 'INSERT INTO tb_rel_usuario_perfilusuario (idPerfilUsuario_fk,idUsuario_fk) VALUES (?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdPerfilUsuario_fk());
@@ -27,7 +27,7 @@ class Rel_usuario_perfilUsuario_BD{
     
     public function alterar(Rel_usuario_perfilUsuario $objRel_usuario_perfilUsuario, Banco $objBanco) {
         try{
-            $UPDATE = 'UPDATE tb_rel_usuario_perfilUsuario SET '
+            $UPDATE = 'UPDATE tb_rel_usuario_perfilusuario SET '
                     . ' idPerfilUsuario_fk = ?,'
                     . ' idUsuario_fk = ?'
                 . '  where id_rel_usuario_perfilUsuario = ?';
@@ -50,7 +50,7 @@ class Rel_usuario_perfilUsuario_BD{
      public function listar(Rel_usuario_perfilUsuario $objRel_usuario_perfilUsuario, Banco $objBanco) {
          try{
       
-            $SELECT = "SELECT * FROM tb_rel_usuario_perfilUsuario";
+            $SELECT = "SELECT * FROM tb_rel_usuario_perfilusuario";
 
             $WHERE = '';
             $AND = '';
@@ -90,7 +90,7 @@ class Rel_usuario_perfilUsuario_BD{
 
         try{
 
-            $SELECT = 'SELECT id_rel_usuario_perfilUsuario,idPerfilUsuario_fk,idUsuario_fk FROM tb_rel_usuario_perfilUsuario WHERE id_rel_usuario_perfilUsuario = ?';
+            $SELECT = 'SELECT id_rel_usuario_perfilUsuario,idPerfilUsuario_fk,idUsuario_fk FROM tb_rel_usuario_perfilusuario WHERE id_rel_usuario_perfilUsuario = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getId_rel_usuario_perfilUsuario());
@@ -114,7 +114,7 @@ class Rel_usuario_perfilUsuario_BD{
 
         try{
             
-            $DELETE = 'DELETE FROM tb_rel_usuario_perfilUsuario WHERE idUsuario_fk = ? AND idPerfilUsuario_fk = ?';  
+            $DELETE = 'DELETE FROM tb_rel_usuario_perfilusuario WHERE idUsuario_fk = ? AND idPerfilUsuario_fk = ?';  
             $arrayBind = array();
             $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdUsuario_fk());
             $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdPerfilUsuario_fk());
@@ -131,7 +131,7 @@ class Rel_usuario_perfilUsuario_BD{
 
         try{
 
-            $SELECT = 'SELECT * FROM tb_rel_usuario_perfilUsuario WHERE idPerfilUsuario_fk = ? AND idUsuario_fk = ?';
+            $SELECT = 'SELECT * FROM tb_rel_usuario_perfilusuario WHERE idPerfilUsuario_fk = ? AND idUsuario_fk = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objRel_usuario_perfilUsuario->getIdPerfilUsuario_fk());

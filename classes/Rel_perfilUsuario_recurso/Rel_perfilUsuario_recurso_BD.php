@@ -10,7 +10,7 @@ class Rel_perfilUsuario_recurso_BD{
     public function cadastrar(Rel_perfilUsuario_recurso $objRel_perfilUsuario_recurso, Banco $objBanco) {
         try{
            
-            $INSERT = 'INSERT INTO tb_rel_perfilUsuario_recurso (idPerfilUsuario_fk,idRecurso_fk) VALUES (?,?)';
+            $INSERT = 'INSERT INTO tb_rel_perfilusuario_recurso (idPerfilUsuario_fk,idRecurso_fk) VALUES (?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objRel_perfilUsuario_recurso->getIdPerfilUsuario_fk());
@@ -27,7 +27,7 @@ class Rel_perfilUsuario_recurso_BD{
     
     public function alterar(Rel_perfilUsuario_recurso $objRel_perfilUsuario_recurso, Banco $objBanco) {
         try{
-            $UPDATE = 'UPDATE tb_rel_perfilUsuario_recurso SET '
+            $UPDATE = 'UPDATE tb_rel_perfilusuario_recurso SET '
                     . ' idPerfilUsuario_fk = ?,'
                     . ' idRecurso_fk = ?'
                 . '  where id_rel_perfilUsuario_recurso = ?';
@@ -50,7 +50,7 @@ class Rel_perfilUsuario_recurso_BD{
      public function listar(Rel_perfilUsuario_recurso $objRel_perfilUsuario_recurso, Banco $objBanco) {
          try{
       
-            $SELECT = "SELECT * FROM tb_rel_perfilUsuario_recurso";
+            $SELECT = "SELECT * FROM tb_rel_perfilusuario_recurso";
 
 
             $arr = $objBanco->consultarSQL($SELECT);
@@ -74,7 +74,7 @@ class Rel_perfilUsuario_recurso_BD{
     public function listar_recursos(Rel_perfilUsuario_recurso $objRel_perfilUsuario_recurso, Banco $objBanco) {
          try{
       
-            $SELECT = "SELECT DISTINCT * FROM tb_rel_perfilUsuario_recurso WHERE idPerfilUsuario_fk = ?";
+            $SELECT = "SELECT DISTINCT * FROM tb_rel_perfilusuario_recurso WHERE idPerfilUsuario_fk = ?";
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objRel_perfilUsuario_recurso->getIdPerfilUsuario_fk());
@@ -100,7 +100,7 @@ class Rel_perfilUsuario_recurso_BD{
 
         try{
 
-            $SELECT = 'SELECT id_rel_perfilUsuario_recurso,idPerfilUsuario_fk,idRecurso_fk FROM tb_rel_perfilUsuario_recurso WHERE id_rel_perfilUsuario_recurso = ?';
+            $SELECT = 'SELECT id_rel_perfilUsuario_recurso,idPerfilUsuario_fk,idRecurso_fk FROM tb_rel_perfilusuario_recurso WHERE id_rel_perfilUsuario_recurso = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objRel_perfilUsuario_recurso->getId_rel_usuario_perfilUsuario());
@@ -124,7 +124,7 @@ class Rel_perfilUsuario_recurso_BD{
 
         try{
             
-            $DELETE = 'DELETE FROM tb_rel_perfilUsuario_recurso WHERE idPerfilUsuario_fk = ?  AND idRecurso_fk = ?';  
+            $DELETE = 'DELETE FROM tb_rel_perfilusuario_recurso WHERE idPerfilUsuario_fk = ?  AND idRecurso_fk = ?';  
             $arrayBind = array();
             $arrayBind[] = array('i',$objRel_perfilUsuario_recurso->getIdPerfilUsuario_fk());
             $arrayBind[] = array('i',$objRel_perfilUsuario_recurso->getIdRecurso_fk());
@@ -142,7 +142,7 @@ class Rel_perfilUsuario_recurso_BD{
 
         try{
 
-            $SELECT = 'SELECT * FROM tb_rel_perfilUsuario_recurso WHERE idPerfilUsuario_fk = ? AND idRecurso_fk = ?';
+            $SELECT = 'SELECT * FROM tb_rel_perfilusuario_recurso WHERE idPerfilUsuario_fk = ? AND idRecurso_fk = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objRel_perfilUsuario_recurso->getIdPerfilUsuario_fk());

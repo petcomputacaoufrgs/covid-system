@@ -14,7 +14,7 @@ $objUsuario->setIdUsuario(Sessao::getInstance()->getIdUsuario());
 $objUsuario = $objUsuarioRN->consultar($objUsuario);
 
 
-Pagina::getInstance()->abrir_head("Login - Processo de tratamento de amostras para diagnóstico de COVID-19"); 
+Pagina::getInstance()->abrir_head("Processo de tratamento de amostras para diagnóstico de COVID-19"); 
 Pagina::getInstance()->adicionar_css("precadastros"); ?>
       	
 <style>
@@ -67,26 +67,47 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
     
     <body>
         
-         <?php 
-                    // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-                    if(Sessao::getInstance()->verificar_permissao('cadastrar_amostra')){ 
-                          echo '<div class="col-md-2">
-                                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra').'">CADASTRO AMOSTRA</a>'
-                                  . '</div>';
-                    } 
-              ?>
+         <div class="conjunto_itens">
+          <div class="row">
+        <?php 
+            // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+            if(Sessao::getInstance()->verificar_permissao('cadastrar_amostra')){ 
+                  echo '<div class="col-md-2">
+                          <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra').'">CADASTRO AMOSTRA</a>'
+                          . '</div>';
+            } 
+        ?>
         
+        <?php 
+            // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+            if(Sessao::getInstance()->verificar_permissao('gerar_estatisticas')){ 
+                  echo '<div class="col-md-2">
+                          <a target="_blank" class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=gerar_estatisticas').'">ESTATÍSTICAS </a>'
+                          . '</div>';
+            } 
+        ?>
+
+        <?php
+        // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+        if(Sessao::getInstance()->verificar_permissao('montar_preparo_extracao')){
+            echo '<div class="col-md-2">
+                          <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao').'">MONTAR PREPARO/EXTRAÇÃO </a>'
+                . '</div>';
+        }
+        ?>
+          </div>
+         </div>
         
         <div class="conjunto_itens">
           <div class="row">
               
               <?php 
                     // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-                    /*if(Sessao::getInstance()->verificar_permissao('listar_amostra')){ 
+                    if(Sessao::getInstance()->verificar_permissao('listar_amostra')){ 
                           echo '<div class="col-md-2">
                                   <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_amostra').'">AMOSTRA</a>'
                                   . '</div>';
-                    } */
+                    } 
               ?>
               
               <?php 
@@ -230,6 +251,15 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                     if(Sessao::getInstance()->verificar_permissao('listar_perfilUsuario')){ 
                           echo '<div class="col-md-2">
                                   <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_perfilUsuario').'">PERFIL USUÁRIO</a>'
+                                  . '</div>';
+                    } 
+              ?>
+              
+              
+              <?php 
+                    if(Sessao::getInstance()->verificar_permissao('listar_etnia')){ 
+                          echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_etnia').'">ETNIA</a>'
                                   . '</div>';
                     } 
               ?>

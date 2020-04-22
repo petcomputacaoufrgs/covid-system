@@ -149,4 +149,3 @@ class Rel_perfilUsuario_recurso_RN{
 
 }
 
-?>

@@ -14,7 +14,7 @@ $objRecursoRN = new RecursoRN();
 $html = '';
 
 try{
-    
+    Sessao::getInstance()->validar();
     $arrRecursos = $objRecursoRN->listar($objRecurso);
     foreach ($arrRecursos as $r){   
         $html.='<tr>
@@ -38,7 +38,7 @@ Pagina::getInstance()->montar_menu_topo();
 
 echo '
     <div class="conteudo_listar">'.
-       Pagina::montar_topo_listar('LISTAR RECURSOS', 'cadastrar_recurso', 'NOVO RECURSO').
+       Pagina::montar_topo_listar('LISTAR RECURSOS',null,null, 'cadastrar_recurso', 'NOVO RECURSO').
         '<div class="conteudo_tabela"><table class="table table-hover">
             <table class="table table-hover">
                 <thead>

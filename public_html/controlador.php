@@ -3,14 +3,44 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
+error_reporting(E_ALL & ~E_NOTICE);
+require_once __DIR__ . '/../classes/Sessao/Sessao.php';
+
+
 
 switch ($_GET['action']):
     case 'principal':
         require_once 'principal.php';
         break;
-    
+
+    case 'usuario_naoEncontrado':
+        require_once '../acoes/PaginaUserNotFound.php';
+        break;
+
     case 'login':
         require_once 'index.php';
+        break;
+    
+     case 'erro':
+        require_once '../acoes/PaginaErro.php';
+        break;
+    
+    case 'sair':
+        Sessao::getInstance()->logoff();
+        header('Location: controlador.php?action=login');
+        break;
+    
+    /* ESTATÍSTICAS */
+    case 'gerar_estatisticas':
+        require_once '../acoes/Estatisticas/gerar_estatisticas.php';
+        break;
+    case 'mostrar_estatisticas':
+        require_once '../acoes/Estatisticas/gerarPDF.php';
+        break;
+
+     /* ETAPA 2 */
+    case 'montar_preparo_extracao':
+        require_once '../acoes/PreparoExtracao/preparo_extracao.php';
         break;
     
     
@@ -261,15 +291,19 @@ switch ($_GET['action']):
     case 'cadastrar_amostra':
     case 'editar_amostra':
         require_once '../acoes/CadastroAmostra/CadastroAmostra.php';
+        //require_once '../acoes/Amostra/cadastro_amostra.php';
         break;
     
     case 'listar_amostra':
         require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
+        //require_once '../acoes/Amostra/listar_amostra.php';
         break;
     
     case 'remover_amostra':
-        require_once '../acoes/Amostra/remover_amostra.php';
+        require_once '../acoes/CadastroAmostra/remover_amostra.php';
         break;
+    
+    
     
     
     /* AMOSTRA + TIPO + LOCAL */
@@ -343,6 +377,20 @@ switch ($_GET['action']):
     
     case 'remover_usuario_perfilUsuario':
         require_once '../acoes/UsuarioPerfil/remover_usuarioPerfil.php';
+        break;
+    
+     /* ETNIA  */
+    case 'cadastrar_etnia':
+    case 'editar_etnia':
+        require_once '../acoes/Etnia/cadastro_etnia.php';
+        break;
+    
+    case 'listar_etnia':
+        require_once '../acoes/Etnia/listar_etnia.php';
+        break;
+    
+    case 'remover_etnia':
+        require_once '../acoes/Etnia/remover_etnia.php';
         break;
     
     default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador geral.');

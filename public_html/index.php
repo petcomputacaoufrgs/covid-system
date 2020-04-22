@@ -4,19 +4,20 @@ require_once '../classes/Pagina/Pagina.php';
 require_once '../classes/Sessao/Sessao.php';
 
 //Sessao::getInstance()->logar('00274715','12345678');
-    if(isset($_POST['login-submit'])){
-        Sessao::getInstance()->logar($_POST['cartaoufrgs'],$_POST['pwd']);
-    }
-    
-    session_destroy();
+if(isset($_POST['login-submit'], $_POST['cartaoufrgs'], $_POST['pwd'])){
+    Sessao::getInstance()->logar($_POST['cartaoufrgs'],$_POST['pwd']);
+}
+
+session_destroy();
 ?>
 
 <?php
 
     Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico de COVID-19");
     Pagina::getInstance()->adicionar_css("style");
-    //Pagina::getInstance()->adicionar_javascript();?>
-<img src="img/header.png" class="HeaderImg">
+    //Pagina::getInstance()->adicionar_javascript();
+    ?>
+    <img src="img/header.png" class="HeaderImg">
     </head>
     <BODY>
    

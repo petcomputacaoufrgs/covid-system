@@ -21,7 +21,7 @@ require_once '../classes/Rel_perfilUsuario_recurso/Rel_perfilUsuario_recurso_RN.
 $html = '';
 
 try{
-    
+    Sessao::getInstance()->validar();
     /* RECURSO */
     $objRecurso = new Recurso();
     $objRecursoRN = new RecursoRN();
@@ -96,7 +96,7 @@ Pagina::getInstance()->montar_menu_topo();
 
 echo '
     <div class="conteudo_listar">'.
-       Pagina::montar_topo_listar('LISTAR RELACIONAMENTO PERFIL USUÁRIO COM OS RECURSOS', 'cadastrar_rel_perfilUsuario_recurso', 'NOVO PERFIL USUÁRIO + RECURSO').
+       Pagina::montar_topo_listar('LISTAR RELACIONAMENTO PERFIL USUÁRIO COM OS RECURSOS', null,null,'cadastrar_rel_perfilUsuario_recurso', 'NOVO PERFIL USUÁRIO + RECURSO').
    '<div class="conteudo_tabela">
     <table class="table table-hover">
       <thead>

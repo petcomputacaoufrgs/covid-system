@@ -22,11 +22,13 @@ try{
         case 'cadastrar_perfilPaciente':
             if(isset($_POST['salvar_perfilPaciente'])){
                 $objPerfilPaciente->setPerfil($_POST['txtPerfilPaciente']);
+                
+                $objPerfilPaciente->setCaractere(strtoupper($utils->tirarAcentos($_POST['txtCaractere'])));  
                 $objPerfilPaciente->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilPaciente'])));  
                 if(empty($objPerfilPacienteRN->pesquisar_index($objPerfilPaciente))){
                    $objPerfilPacienteRN->cadastrar($objPerfilPaciente);
-                   $alert= Alert::alert_success_cadastrar();
-                }else {$alert= Alert::alert_error_cadastrar_editar();}
+                   $alert= Alert::alert_success("O perfil foi CADASTRADO com sucesso");
+                }else {$alert= Alert::alert_danger("O perfil não foi CADASTRADO");}
                 
             }else{
                 $objPerfilPaciente->setIdPerfilPaciente('');
@@ -43,11 +45,12 @@ try{
              if(isset($_POST['salvar_perfilPaciente'])){ //se enviou o formulário com as alterações
                 $objPerfilPaciente->setIdPerfilPaciente($_GET['idPerfilPaciente']);
                 $objPerfilPaciente->setPerfil($_POST['txtPerfilPaciente']);
+                $objPerfilPaciente->setCaractere(strtoupper($utils->tirarAcentos($_POST['txtCaractere'])));  
                 $objPerfilPaciente->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilPaciente'])));
                 if(empty($objPerfilPacienteRN->pesquisar_index($objPerfilPaciente))){
                     $objPerfilPacienteRN->alterar($objPerfilPaciente);
-                    $alert= Alert::alert_success_editar();
-                }else {$alert= Alert::alert_error_cadastrar_editar();}
+                     $alert= Alert::alert_success("O perfil foi ALTERADO com sucesso");
+                }else {$alert= Alert::alert_danger("O perfil não foi ALTERADO");}
                 
             }
             
@@ -68,16 +71,25 @@ Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
 
 echo $alert.
-     Pagina::montar_topo_listar('CADASTRAR PERFIL PACIENTE', 'listar_perfilPaciente', 'LISTAR PERFIL PACIENTE').
+     Pagina::montar_topo_listar('CADASTRAR PERFIL PACIENTE',null,null, 'listar_perfilPaciente', 'LISTAR PERFIL PACIENTE').
         '<DIV class="conteudo">
             <form method="POST">
                 <div class="form-row">
-                    <div class="col-md-12 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="label_perfilPaciente">Digite o perfil do paciente:</label>
                         <input type="text" class="form-control" id="idPerfilPaciente" placeholder="Perfil do paciente" 
                                onblur="validaPerfilPaciente()" name="txtPerfilPaciente" 
                                required value="'. Pagina::formatar_html($objPerfilPaciente->getPerfil()).'">
                         <div id ="feedback_perfilPaciente"></div>
+
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="label_perfilPaciente">Digite o caractere do perfil do paciente:</label>
+                        <input type="text" class="form-control" id="idCaracterePerfilPaciente" placeholder="Caractere" 
+                               onblur="validaCaractere()" name="txtCaractere" 
+                               required value="'. Pagina::formatar_html($objPerfilPaciente->getCaractere()).'">
+                        <div id ="feedback_caracterePerfilPaciente"></div>
 
                     </div>
                 </div>  

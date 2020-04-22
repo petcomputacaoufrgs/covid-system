@@ -25,6 +25,21 @@ class PerfilPacienteRN{
 
     }
     
+     private function validarCaractere(PerfilPaciente $perfilPaciente,Excecao $objExcecao){
+        $strCaractere = trim($perfilPaciente->getCaractere());
+        
+        if ($strCaractere == '') {
+            $objExcecao->adicionar_validacao('O caractere do perfil do paciente não foi informado','idCaractere');
+        }else{
+            if (strlen($strCaractere) > 1) {
+                $objExcecao->adicionar_validacao('O máximo é de 1 caractere.','idCaractere');
+            }
+        }
+        
+        return $perfilPaciente->setCaractere($strCaractere);
+
+    }
+    
     private function validarIndexPerfil(PerfilPaciente $perfilPaciente,Excecao $objExcecao){
         $strPerfilPacienteUPPER = trim($perfilPaciente->getIndex_perfil());
         
@@ -55,6 +70,7 @@ class PerfilPacienteRN{
             
             $this->validarPerfil($perfilPaciente,$objExcecao); 
             $this->validarIndexPerfil($perfilPaciente,$objExcecao);
+            $this->validarCaractere($perfilPaciente,$objExcecao);
             
             $objExcecao->lancar_validacoes();
             $objPerfilPacienteBD = new PerfilPacienteBD();
@@ -74,7 +90,9 @@ class PerfilPacienteRN{
             $objBanco->abrirConexao(); 
             $objPerfilPacienteBD = new PerfilPacienteBD();
             
-            $this->validarPerfil($perfilPaciente,$objExcecao);  
+            $this->validarPerfil($perfilPaciente,$objExcecao); 
+            $this->validarCaractere($perfilPaciente,$objExcecao);
+            
             if($this->validarIndexPerfil($perfilPaciente,$objExcecao)){
                 $objExcecao->lancar_validacoes();
                 $objPerfilPacienteBD->alterar($perfilPaciente,$objBanco);
@@ -158,4 +176,3 @@ class PerfilPacienteRN{
 
 }
 
-?>

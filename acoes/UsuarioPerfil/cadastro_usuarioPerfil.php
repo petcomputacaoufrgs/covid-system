@@ -68,9 +68,9 @@ try {
                             $arrUP = $objRel_usuario_perfilUsuario_RN->validar_cadastro($objRel_usuario_perfilUsuario);
                             if (empty($arrUP)) {
                                 $objRel_usuario_perfilUsuario_RN->cadastrar($objRel_usuario_perfilUsuario);
-                                $alert = Alert::getInstance()->getInstance()->alert_success_cadastrar();
+                                $alert = Alert::alert_success("Foi CADASTRADA a relação do usuário com o perfil");
                             } else {
-                                $alert = Alert::getInstance()->alert_error_cadastrar_editar();
+                                $alert = Alert::alert_danger("Não foi CADASTRADA a relação do usuário com o perfil");
                             }
                         }
                     }
@@ -130,9 +130,9 @@ try {
                         $arrUP = $objRel_usuario_perfilUsuario_RN->validar_cadastro($objRel_usuario_perfilUsuario);
                         if (empty($arrUP)) {
                             $objRel_usuario_perfilUsuario_RN->cadastrar($objRel_usuario_perfilUsuario);
-                            $alert .= Alert::getInstance()->alert_success_cadastrar();
+                            $alert .= Alert::alert_success("Foi ALTERADA a relação do usuário com o perfil");
                         } else {
-                            $alert .= Alert::getInstance()->alert_error_cadastrar_editar();  
+                            $alert .= Alert::alert_danger("Não foi ALTERADA a relação do usuário com o perfil");  
                         }
                         $perfis_selecionados .= $_POST['sel_perfil'][$i] . ";";
                     }
@@ -216,7 +216,7 @@ Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
 
 echo $alert.
-     Pagina::montar_topo_listar('CADASTRAR RELACIONAMENTO DO USUÁRIO COM O SEU PERFIL', 'listar_usuario_perfilUsuario',
+     Pagina::montar_topo_listar('CADASTRAR RELACIONAMENTO DO USUÁRIO COM O SEU PERFIL',null,null, 'listar_usuario_perfilUsuario',
              'USUÁRIO + PERFIL').
     '<div class="conteudo">
         <div class="formulario">

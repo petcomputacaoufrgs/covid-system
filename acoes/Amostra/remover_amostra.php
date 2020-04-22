@@ -10,9 +10,11 @@
     require_once '../classes/Amostra/AmostraRN.php';
     
        
-    $objAmostra = new Amostra();
-    $objAmostraRN = new AmostraRN();
+   
     try{
+        Sessao::getInstance()->validar();
+        $objAmostra = new Amostra();
+        $objAmostraRN = new AmostraRN();
         
         $objAmostra->setIdAmostra($_GET['idAmostra']);
         $objAmostraRN->remover($objAmostra);

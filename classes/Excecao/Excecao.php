@@ -30,8 +30,8 @@ class Excecao extends Exception {
         
     }
     
-    public function adicionar_validacao($texto, $campo = null){
-        $this->array_validacoes[] = array($texto, $campo);
+    public function adicionar_validacao($texto, $campo = null,$tipoAlert=null){
+        $this->array_validacoes[] = array($texto, $campo,$tipoAlert);
     }
     
     public function lancar_validacoes(){

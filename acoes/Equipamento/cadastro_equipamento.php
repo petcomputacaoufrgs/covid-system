@@ -142,9 +142,7 @@ try {
                 $objDetentor->setIndex_detentor(strtoupper($utils->tirarAcentos($_POST['txtDetentor'])));
                 if($objDetentorAux->getDetentor() != $_POST['txtDetentor'] &&
                    $objDetentorAux->getIndex_detentor() != strtoupper($utils->tirarAcentos($_POST['txtDetentor']))){
-                    echo "dif";
                     $arr_detentores = $objEquipamentoRN->listar($objEquipamento);
-                    print_r($arr_detentores);
                     if(count($arr_detentores) > 1){ //não é só ele quem tem essa empresa
 
                         $objDetentorRN->cadastrar($objDetentor);
@@ -153,11 +151,12 @@ try {
                         if(empty($arr_detentores)){
                             $objDetentorRN->alterar($objDetentor);
                             //$alert= Alert::getInstance()->alert_success_cadastrar();
-                        }else $objDetentor->setIdDetentor($arr_detentores[0]->getIdDetentor());
+                        }else {$objDetentor = $arr_detentores;}
                     }
                 }
-                echo "igual";
-                die("asda");
+                
+                //echo "igual";
+                //die("asda");
                 $objMarca->setIdMarca($objEquipamento->getIdMarca_fk());
                 $objMarca->setMarca($_POST['txtMarca']);
                 $objMarca->setIndex_marca(strtoupper($utils->tirarAcentos($_POST['txtMarca'])));
