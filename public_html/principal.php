@@ -105,7 +105,7 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                     // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
                     if(Sessao::getInstance()->verificar_permissao('listar_amostra')){ 
                           echo '<div class="col-md-2">
-                                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_amostra').'">AMOSTRA</a>'
+                                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_amostra').'">LISTAR AMOSTRA</a>'
                                   . '</div>';
                     } */
               ?>
