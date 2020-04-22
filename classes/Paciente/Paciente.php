@@ -25,6 +25,7 @@ class Paciente{
     private $cartaoSUS;
     private $cadastroPendente;
     private $obsCodGAL;
+    private $obsDataNascimento;
     
     private $objCodGAL;
     
@@ -32,6 +33,24 @@ class Paciente{
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObsDataNascimento()
+    {
+        return $this->obsDataNascimento;
+    }
+
+    /**
+     * @param mixed $obsDataNascimento
+     */
+    public function setObsDataNascimento($obsDataNascimento)
+    {
+        $this->obsDataNascimento = $obsDataNascimento;
+    }
+
+
 
     /**
      * @return mixed
@@ -44,7 +63,7 @@ class Paciente{
     /**
      * @param mixed $obsCartaoSUS
      */
-    public function setObsCartaoSUS($obsCartaoSUS): void
+    public function setObsCartaoSUS($obsCartaoSUS)
     {
         $this->obsCartaoSUS = $obsCartaoSUS;
     }
@@ -60,10 +79,12 @@ class Paciente{
     /**
      * @param mixed $cartaoSUS
      */
-    public function setCartaoSUS($cartaoSUS): void
+    public function setCartaoSUS($cartaoSUS)
     {
         $this->cartaoSUS = $cartaoSUS;
     }
+
+
 
 
     

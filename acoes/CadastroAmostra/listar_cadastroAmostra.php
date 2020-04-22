@@ -3,6 +3,8 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
+
+try {
 session_start();
 require_once __DIR__.'/../../classes/Sessao/Sessao.php';
 require_once __DIR__.'/../../classes/Pagina/Pagina.php';
@@ -25,7 +27,7 @@ require_once __DIR__.'/../../classes/Paciente/PacienteRN.php';
 require_once __DIR__.'/../../classes/InfosTubo/InfosTubo.php';
 require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
 
-try {
+
     Sessao::getInstance()->validar();
 
 
@@ -414,7 +416,8 @@ try {
 
 
 
-} catch (Exception $ex) {
+} catch (Throwable $ex) {
+    //die($ex);
     Pagina::getInstance()->processar_excecao($ex);
 }
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" host="portal.inf.ufrgs.br" id="da8abdc2-a772-42ed-9f69-efd4c4d23cb4" port="3128" nameFormat="DESCRIPTIVE" username="cbbathaglini" />
+    </configs>
+  </component>
+</project>

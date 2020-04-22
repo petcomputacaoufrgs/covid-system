@@ -9,11 +9,11 @@ class PacienteBD {
 
     public function cadastrar(Paciente $objPaciente, Banco $objBanco) {
         try {
-            
+
             $INSERT = 'INSERT INTO tb_paciente (idSexo_fk,idEtnia_fk,nome,nomeMae,dataNascimento,CPF,RG,'
                     . 'obsRG,obsNomeMae,CEP,endereco,obsEndereco,obsCEP,obsCPF,passaporte,obsPassaporte,cadastroPendente, obsCodGAL
-                        ,cartaoSUS,obsCartaoSUS) '
-                    . ' VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+                        ,cartaoSUS,obsCartaoSUS,obsDataNascimento) '
+                    . ' VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i', $objPaciente->getIdSexo_fk());
@@ -36,6 +36,7 @@ class PacienteBD {
             $arrayBind[] = array('s', $objPaciente->getObsCodGAL());
             $arrayBind[] = array('s', $objPaciente->getCartaoSUS());
             $arrayBind[] = array('s', $objPaciente->getObsCartaoSUS());
+            $arrayBind[] = array('s', $objPaciente->getObsDataNascimento());
 
 
             $objBanco->executarSQL($INSERT, $arrayBind);
@@ -49,7 +50,8 @@ class PacienteBD {
         try {
             $UPDATE = 'UPDATE tb_paciente SET idSexo_fk = ?,idEtnia_fk = ?, nome = ?, nomeMae = ?,dataNascimento = ?, CPF = ?,'
                     . ' RG = ?, obsRG = ?, obsNomeMae = ?, CEP = ?, endereco = ?, obsEndereco = ?, obsCEP = ?, obsCPF = ?,'
-                    . ' passaporte = ?,obsPassaporte = ?,cadastroPendente = ? , obsCodGAL = ? ,cartaoSUS= ?, obsCartaoSUS =? '
+                    . ' passaporte = ?,obsPassaporte = ?,cadastroPendente = ? , obsCodGAL = ? ,cartaoSUS= ?, 
+                        obsCartaoSUS =? ,obsDataNascimento =? '
                     . 'where idPaciente = ?';
             $arrayBind = array();
             $arrayBind[] = array('i', $objPaciente->getIdSexo_fk());
@@ -72,6 +74,7 @@ class PacienteBD {
             $arrayBind[] = array('s', $objPaciente->getObsCodGAL());
             $arrayBind[] = array('s', $objPaciente->getCartaoSUS());
             $arrayBind[] = array('s', $objPaciente->getObsCartaoSUS());
+            $arrayBind[] = array('s', $objPaciente->getObsDataNascimento());
 
             $arrayBind[] = array('i', $objPaciente->getIdPaciente());
 
@@ -154,6 +157,7 @@ class PacienteBD {
                 $paciente->setObsCodGAL($reg['obsCodGAL']);
                 $paciente->setCartaoSUS($reg['cartaoSUS']);
                 $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
+                $paciente->setObsDataNascimento($reg['obsDataNascimento']);
 
                 $array_paciente[] = $paciente;
             }
@@ -196,6 +200,7 @@ class PacienteBD {
             $paciente->setObsCodGAL($arr[0]['obsCodGAL']);
             $paciente->setCartaoSUS($arr[0]['cartaoSUS']);
             $paciente->setObsCartaoSUS($arr[0]['obsCartaoSUS']);
+            $paciente->setObsDataNascimento($arr[0]['obsDataNascimento']);
 
             return $paciente;
         } catch (Exception $ex) {
@@ -295,6 +300,7 @@ class PacienteBD {
                 $paciente->setObsCodGAL($reg['obsCodGAL']);
                 $paciente->setCartaoSUS($reg['cartaoSUS']);
                 $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
+                $paciente->setObsDataNascimento($reg['obsDataNascimento']);
 
 
                 $arr_pacientes[] = $paciente;
@@ -349,6 +355,7 @@ class PacienteBD {
                         $paciente->setObsCodGAL($reg['cadastroPendente']);
                         $paciente->setCartaoSUS($reg['cartaoSUS']);
                         $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
+                        $paciente->setObsDataNascimento($reg['obsDataNascimento']);
 
 
                         $arr_pacientes[] = $paciente;
@@ -403,6 +410,7 @@ class PacienteBD {
                         $paciente->setObsCodGAL($reg['obsCodGAL']);
                         $paciente->setCartaoSUS($reg['cartaoSUS']);
                         $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
+                        $paciente->setObsDataNascimento($reg['obsDataNascimento']);
 
 
                         $arr_pacientes[] = $paciente;
@@ -459,6 +467,7 @@ class PacienteBD {
                         $paciente->setObsCodGAL($reg['obsCodGAL']);
                         $paciente->setCartaoSUS($reg['cartaoSUS']);
                         $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
+                        $paciente->setObsDataNascimento($reg['obsDataNascimento']);
 
 
                         $arr_pacientes[] = $paciente;
@@ -514,6 +523,7 @@ class PacienteBD {
                         $paciente->setObsCodGAL($reg['obsCodGAL']);
                         $paciente->setCartaoSUS($reg['cartaoSUS']);
                         $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
+                        $paciente->setObsDataNascimento($reg['obsDataNascimento']);
 
 
                         $arr_pacientes[] = $paciente;

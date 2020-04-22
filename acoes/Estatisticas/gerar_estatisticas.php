@@ -1,12 +1,16 @@
 <?php
+
+try{
+    //die( 'Versão Atual do PHP: ' . phpversion());
+
 session_start();
 
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Pagina/Interf.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../Utils/Alert.php';
-require_once '../classes/Estatisticas/PDF_Estatisticas.php';
+require_once __DIR__.'/../../classes/Sessao/Sessao.php';
+require_once __DIR__.'/../../classes/Pagina/Pagina.php';
+require_once __DIR__.'/../../classes/Pagina/Interf.php';
+require_once __DIR__.'/../../classes/Excecao/Excecao.php';
+require_once __DIR__.'/../../utils/Alert.php';
+require_once __DIR__.'/../../classes/Estatisticas/PDF_Estatisticas.php';
 
 Sessao::getInstance()->validar();
 
@@ -24,7 +28,9 @@ if(isset($_POST['enviar'])){
     $alert .= Alert::alert_primary("Informe a data");
 
 }
-
+}catch (Throwable $e){
+    die($e);
+}
 
 Pagina::abrir_head("Gerar Estatísticas");
 Pagina::getInstance()->adicionar_css("precadastros");

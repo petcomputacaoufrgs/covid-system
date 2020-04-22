@@ -1,48 +1,48 @@
 <?php
+try {
+    session_start();
+    require_once '../vendor/autoload.php';
+    require_once '../classes/Sessao/Sessao.php';
 
-session_start();
-require_once '../vendor/autoload.php';
-require_once '../classes/Sessao/Sessao.php';
+    require_once '../classes/Amostra/Amostra.php';
+    require_once '../classes/Amostra/AmostraRN.php';
 
-require_once '../classes/Amostra/Amostra.php';
-require_once '../classes/Amostra/AmostraRN.php';
+    require_once '../classes/Usuario/Usuario.php';
+    require_once '../classes/Usuario/UsuarioRN.php';
 
-require_once '../classes/Usuario/Usuario.php';
-require_once '../classes/Usuario/UsuarioRN.php';
+    require_once '../classes/CadastroAmostra/CadastroAmostra.php';
+    require_once '../classes/CadastroAmostra/CadastroAmostraRN.php';
 
-require_once '../classes/CadastroAmostra/CadastroAmostra.php';
-require_once '../classes/CadastroAmostra/CadastroAmostraRN.php';
-
-require_once '../classes/PerfilPaciente/PerfilPaciente.php';
-require_once '../classes/PerfilPaciente/PerfilPacienteRN.php';
+    require_once '../classes/PerfilPaciente/PerfilPaciente.php';
+    require_once '../classes/PerfilPaciente/PerfilPacienteRN.php';
 
 
-if($_GET['idDia'] != null)  $DATA = $_GET['idDia'];
-else $DATA = date('d/m/Y');
+    if ($_GET['idDia'] != null) $DATA = $_GET['idDia'];
+    else $DATA = date('d/m/Y');
 
 
 //$mpdf = new \Mpdf\Mpdf();
 // Define a default page using all default values except "L" for Landscape orientation
 //$mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
 // Define a default page size/format by array - page will be 190mm wide x 236mm height
-$mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [190, 236]]);
+    $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [190, 236]]);
 
-$objCadastroAmostra = new CadastroAmostra();
-$objCadastroAmostraRN = new CadastroAmostraRN();
+    $objCadastroAmostra = new CadastroAmostra();
+    $objCadastroAmostraRN = new CadastroAmostraRN();
 
-$objUsuario = NEW Usuario();
-$objUsuarioRN = NEW UsuarioRN();
+    $objUsuario = new Usuario();
+    $objUsuarioRN = new UsuarioRN();
 
-/* PERFIL PACIENTE */
+    /* PERFIL PACIENTE */
     $objPerfilPaciente = new PerfilPaciente();
     $objPerfilPacienteRN = new PerfilPacienteRN();
 
-$arr_amostras = $objCadastroAmostraRN->consultarData($objCadastroAmostra, $DATA);
+    $arr_amostras = $objCadastroAmostraRN->consultarData($objCadastroAmostra, $DATA);
 //print_r($arr_amostras);
-$objAmostra = new Amostra();
-$objAmostraRN = new AmostraRN();
+    $objAmostra = new Amostra();
+    $objAmostraRN = new AmostraRN();
 //print_r($arr_amostras);
-$html = "   
+    $html = "   
             <table>
                            
                     <tr>
@@ -51,51 +51,52 @@ $html = "
                     </tr>
             </table>";
 
-$html .= " <table> 
+    $html .= " <table> 
               <tr><td></td></tr>
               <tr>
                    <td>Quantidade de amostras cadastradas: " . count($arr_amostras) . "</td>
               </tr>
                <tr><td><hr width=\"1\"  height=\"100\"></td></tr>";
-$qntAmostra = 1;
-foreach ($arr_amostras as $a) {
-    
-    $objAmostra->setIdAmostra($a->getIdAmostra_fk());
-    $objAmostra = $objAmostraRN->consultar($objAmostra);
-    
-    $result = '';
-    if ($objAmostra->get_a_r_g() == 'r') {
-        $result = 'Recusada';
-        $style = ' style="background-color:rgba(255, 0, 0, 0.2);" ';
-    } else if ($objAmostra->get_a_r_g() == 'a') {
-        $result = 'Aceita';
-        $style = ' style="background-color:rgba(0, 255, 0, 0.2);" ';
-    } else if ($objAmostra->get_a_r_g() == 'g') {
-        $result = 'Aguardando chegada';
-        $style = ' style="background-color:rgba(255, 255, 0, 0.2);" ';
-    }
+    $qntAmostra = 1;
+    foreach ($arr_amostras as $a) {
 
-    $objUsuario->setIdUsuario($a->getIdUsuario_fk());
-    $objUsuario = $objUsuarioRN->consultar($objUsuario);
-    
-    $objPerfilPaciente->setIdPerfilPaciente($objAmostra->getIdPerfilPaciente_fk());
-    $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
-    
-    
-    $html .= "<tr> <td style=\"background-color: #ddd;\">Amostra  " . $qntAmostra . " do dia</td></tr>"
+        $objAmostra->setIdAmostra($a->getIdAmostra_fk());
+        print_r($objAmostra);
+        $objAmostra = $objAmostraRN->consultar($objAmostra);
+
+        //die("10");
+        $result = '';
+        if ($objAmostra->get_a_r_g() == 'r') {
+            $result = 'Recusada';
+            $style = ' style="background-color:rgba(255, 0, 0, 0.2);" ';
+        } else if ($objAmostra->get_a_r_g() == 'a') {
+            $result = 'Aceita';
+            $style = ' style="background-color:rgba(0, 255, 0, 0.2);" ';
+        } else if ($objAmostra->get_a_r_g() == 'g') {
+            $result = 'Aguardando chegada';
+            $style = ' style="background-color:rgba(255, 255, 0, 0.2);" ';
+        }
+
+        $objUsuario->setIdUsuario($a->getIdUsuario_fk());
+        $objUsuario = $objUsuarioRN->consultar($objUsuario);
+
+        $objPerfilPaciente->setIdPerfilPaciente($objAmostra->getIdPerfilPaciente_fk());
+        $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
+
+
+        $html .= "<tr> <td style=\"background-color: #ddd;\">Amostra  " . $qntAmostra . " do dia</td></tr>"
             . "<tr> <td>Código amostra: " . $objAmostra->getCodigoAmostra() . "</td></tr>" .
-            "<tr><td".$style."> Situação da amostra: " . $result . "</td></tr>" .
+            "<tr><td" . $style . "> Situação da amostra: " . $result . "</td></tr>" .
             "<tr><td> Perfil da amostra: " . $objPerfilPaciente->getPerfil() . "</td></tr>" .
             "<tr><td> Amostra cadastrada pelo usuário: " . $objUsuario->getMatricula() . "</td></tr>" .
             "<tr><td><hr width=\"1\"  height=\"100\"></td></tr>";
-    
-    $qntAmostra++;
-}
-$html .= " </table>";
+
+        $qntAmostra++;
+    }
+    $html .= " </table>";
 
 
-
-$css = "
+    $css = "
 	body,html{
 		color:black;
 		font-size:12px;
@@ -110,18 +111,21 @@ $css = "
         }
 ";
 
-$DATAAUX = explode("/", $DATA);
+    $DATAAUX = explode("/", $DATA);
 
-$dia = $DATAAUX[0];
-$mes = $DATAAUX[1];
-$ano = $DATAAUX[2];
+    $dia = $DATAAUX[0];
+    $mes = $DATAAUX[1];
+    $ano = $DATAAUX[2];
 
-$output = 'estatisticas_'.$dia.'_'.$mes.'_'.$ano;
+    $output = 'estatisticas_' . $dia . '_' . $mes . '_' . $ano;
 //echo $output;
 
-$mpdf->WriteHTML($css, 1);
-$mpdf->WriteHTML($html);
-$mpdf->Output($output.'.pdf',I);
+    $mpdf->WriteHTML($css, 1);
+    $mpdf->WriteHTML($html);
+    $mpdf->Output($output . '.pdf', I);
+}catch(Throwable $e){
+    die($e);
+}
 ?>
 
 

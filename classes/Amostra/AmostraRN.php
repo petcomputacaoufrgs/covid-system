@@ -11,26 +11,40 @@ class AmostraRN{
     
       
     private function validarObservacoes(Amostra $objAmostra, Excecao $objExcecao) {
-        $strObservacoes = trim($objAmostra->getObservacoes());
-       
-        
-        if (strlen($strObservacoes) > 300) {
-            $objExcecao->adicionar_validacao('A observação possui mais de 300 caracteres.','idObsAmostra','alert-danger');
+        if($objAmostra->getObservacoes() != null) {
+            $strObservacoes = trim($objAmostra->getObservacoes());
+
+
+            if (strlen($strObservacoes) > 300) {
+                $objExcecao->adicionar_validacao('A observação possui mais de 300 caracteres.', 'idObsAmostra', 'alert-danger');
+            }
+
+            $objAmostra->setObservacoes($strObservacoes);
         }
-       
-        $objAmostra->setObservacoes($strObservacoes);
 
     }
     
     private function validarDataColeta(Amostra $objAmostra, Excecao $objExcecao) {
-        $strDataColeta = trim($objAmostra->getDataColeta());
-       
-        if ($strDataColeta == '') {
-            $objExcecao->adicionar_validacao('Informar a data da coleta','idDtColeta','alert-danger');
+
+
+        if($objAmostra->getDataColeta() == null){
+            $objExcecao->adicionar_validacao('Informar a data da coleta', 'idDtColeta', 'alert-danger');
+        }else {
+            $strDataColeta = trim($objAmostra->getDataColeta());
+            if ($strDataColeta == '') {
+                $objExcecao->adicionar_validacao('Informar a data da coleta', 'idDtColeta', 'alert-danger');
+            } else if (count($objAmostra->getDataColeta()) <= 11) {
+
+
+                //Utils::validarData($strDataColeta, $objExcecao);
+
+                //validar para que não se coloque datas futuras a atual
+                return $objAmostra->setDataColeta($strDataColeta);
+            } else {
+                $objExcecao->adicionar_validacao('Informar uma data válida da coleta', 'idDtColeta', 'alert-danger');
+            }
         }
-        
-        //validar para que não se coloque datas futuras a atual
-        $objAmostra->setDataColeta($strDataColeta);
+
     }
     
     private function validar_a_r_g(Amostra $objAmostra, Excecao $objExcecao) {
@@ -44,77 +58,90 @@ class AmostraRN{
         $objAmostra->set_a_r_g($strARG);
 
     }
-    
-    
+
     private function validarObsMotivo(Amostra $objAmostra, Excecao $objExcecao) {
-        $strObsMotivo = trim($objAmostra->getObsMotivo());
-       
-        
-        if (strlen($strObsMotivo) > 300) {
-            $objExcecao->adicionar_validacao('As observações de motivo possui mais que 300 caracteres','idObsMotivo','alert-danger');
+        if($objAmostra->getObsMotivo() != null) {
+            $strObsMotivo = trim($objAmostra->getObsMotivo());
+
+            if (strlen($strObsMotivo) > 300) {
+                $objExcecao->adicionar_validacao('As observações de motivo possui mais que 300 caracteres', 'idObsMotivo', 'alert-danger');
+            }
+
+            $objAmostra->setObsMotivo($strObsMotivo);
         }
-       
-        $objAmostra->setObsMotivo($strObsMotivo);
 
     }
-     
+
     private function validarObsCEP(Amostra $objAmostra, Excecao $objExcecao) {
-        $strObsCep = trim($objAmostra->getObsCEP());
-       
-        
-        if (strlen($strObsCep) > 300) {
-            $objExcecao->adicionar_validacao('As observações de CEP possui mais que 300 caracteres','idObsCEPAmostra','alert-danger');
+        if($objAmostra->getObsCEP() != null) {
+            $strObsCep = trim($objAmostra->getObsCEP());
+
+
+            if (strlen($strObsCep) > 300) {
+                $objExcecao->adicionar_validacao('As observações de CEP possui mais que 300 caracteres', 'idObsCEPAmostra', 'alert-danger');
+            }
+
+           return $objAmostra->setObsCEP($strObsCep);
         }
-       
-        $objAmostra->setObsCEP($strObsCep);
 
     }
     
     private function validarObsHoraColeta(Amostra $objAmostra, Excecao $objExcecao) {
-        $strObsHrColeta = trim($objAmostra->getObsHoraColeta());
-       
-        
-        if (strlen($strObsHrColeta) > 300) {
-            $objExcecao->adicionar_validacao('As observações da hora da coleta possui mais que 300 caracteres','idObsHoraColeta','alert-danger');
+        if($objAmostra->getObsHoraColeta() != null) {
+            $strObsHrColeta = trim($objAmostra->getObsHoraColeta());
+
+
+            if (strlen($strObsHrColeta) > 300) {
+                $objExcecao->adicionar_validacao('As observações da hora da coleta possui mais que 300 caracteres', 'idObsHoraColeta', 'alert-danger');
+            }
+
+            return $objAmostra->setObsHoraColeta($strObsHrColeta);
         }
-       
-        $objAmostra->setObsHoraColeta($strObsHrColeta);
 
     }
     
     private function validarObsLugarOrigem(Amostra $objAmostra, Excecao $objExcecao) {
-        $strObsLugarOrigem = trim($objAmostra->getObsLugarOrigem());
-       
-        
-        if (strlen($strObsLugarOrigem) > 300) {
-            $objExcecao->adicionar_validacao('As observações do lugar de origem da coleta possui mais que 300 caracteres','idObsLugarOrigem','alert-danger');
+        if($objAmostra->getObsLugarOrigem() != null) {
+            $strObsLugarOrigem = trim($objAmostra->getObsLugarOrigem());
+
+
+            if (strlen($strObsLugarOrigem) > 300) {
+                $objExcecao->adicionar_validacao('As observações do lugar de origem da coleta possui mais que 300 caracteres', 'idObsLugarOrigem', 'alert-danger');
+            }
+
+            $objAmostra->setObsLugarOrigem($strObsLugarOrigem);
         }
-       
-        $objAmostra->setObsLugarOrigem($strObsLugarOrigem);
 
     }
     
     private function validarMotivo(Amostra $objAmostra, Excecao $objExcecao) {
-        $strMotivo = trim($objAmostra->getMotivoExame());
-       
-        
-        if (strlen($strMotivo) > 100) {
-            $objExcecao->adicionar_validacao('O motivo do exame possui mais que 100 caracteres','idMotivo','alert-danger');
+        if($objAmostra->getMotivoExame() != null) {
+            $strMotivo = trim($objAmostra->getMotivoExame());
+
+
+            if (strlen($strMotivo) > 100) {
+                $objExcecao->adicionar_validacao('O motivo do exame possui mais que 100 caracteres', 'idMotivo', 'alert-danger');
+            }
+
+            $objAmostra->setMotivoExame($strMotivo);
         }
-       
-        $objAmostra->setMotivoExame($strMotivo);
 
     }
     
     private function validarCEP(Amostra $objAmostra, Excecao $objExcecao) {
-        $strCEP = trim($objAmostra->getCEP());
-       
-        
-        if (strlen($strCEP) > 8) {
-            $objExcecao->adicionar_validacao('O CEP do exame possui mais que 8 caracteres','idCEPAmostra','alert-danger');
+        if($objAmostra->getCEP() != null) {
+            $strCEP = trim($objAmostra->getCEP());
+
+
+            if (strlen($strCEP) > 8) {
+                $objExcecao->adicionar_validacao('O CEP do exame possui mais que 8 caracteres', 'idCEPAmostra', 'alert-danger');
+            }
+            if (strlen($strCEP) < 8) {
+                $objExcecao->adicionar_validacao('O CEP do exame menos que 8 caracteres', 'idCEPAmostra', 'alert-danger');
+            }
+
+            $objAmostra->setCEP($strCEP);
         }
-       
-        $objAmostra->setCEP($strCEP);
 
     }
     
@@ -125,6 +152,7 @@ class AmostraRN{
         }
        
     }
+
     private function validarPerfilCodGAL(Amostra $objAmostra, Excecao $objExcecao) {
         // print_r($objAmostra);
         if($objAmostra->getIdCodGAL_fk() != null){
@@ -142,7 +170,8 @@ class AmostraRN{
 
     private function validarPerfilCartaoSUS(Amostra $objAmostra, Excecao $objExcecao) {
         // print_r($objAmostra);
-        if($objAmostra->getObjPaciente() != null){
+
+        /*if($objAmostra->getObjPaciente() != null || $objAmostra->getIdCodGAL_fk() != null){
             if($objAmostra->getObjPaciente()->getCartaoSUS() != null){
                 $objPerfilPaciente = new PerfilPaciente();
                 $objPerfilPacienteRN = new PerfilPacienteRN();
@@ -153,7 +182,7 @@ class AmostraRN{
                     $objExcecao->adicionar_validacao('O perfil da amostra não permite que este paciente tenha um cartão SUS',null,'alert-danger');
                 }
             }
-        }
+        }*/
 
     }
 
@@ -177,6 +206,8 @@ class AmostraRN{
                 }
                               
             }
+
+
             $this->validarPerfilCodGAL($amostra,$objExcecao);
             $this->validarObservacoes($amostra,$objExcecao);
             $this->validar_a_r_g($amostra,$objExcecao);
@@ -236,8 +267,8 @@ class AmostraRN{
             $this->validarObservacoes($amostra,$objExcecao);
             $this->validar_a_r_g($amostra,$objExcecao);
             $this->validarDataColeta($amostra,$objExcecao);
-             $this->validarPerfilCartaoSUS($amostra, $objExcecao);
-             $this->validarPerfilCodGAL($amostra,$objExcecao);
+            $this->validarPerfilCartaoSUS($amostra, $objExcecao);
+            $this->validarPerfilCodGAL($amostra,$objExcecao);
             $this->validarObsCEP($amostra,$objExcecao);
             $this->validarObsHoraColeta($amostra,$objExcecao);
             $this->validarObsLugarOrigem($amostra, $objExcecao);
@@ -361,7 +392,7 @@ class AmostraRN{
         }
     }
 
-    public function filtro_menor_data(Amostra $amostra) {
+    public function filtro_menor_data(Amostra $amostra,$select) {
         $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
@@ -370,7 +401,7 @@ class AmostraRN{
             $objExcecao->lancar_validacoes();
 
             $objAmostraBD = new AmostraBD();
-            $arr =  $objAmostraBD->filtro_menor_data($amostra,$objBanco);
+            $arr =  $objAmostraBD->filtro_menor_data($amostra,$select,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
