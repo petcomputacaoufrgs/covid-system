@@ -34,7 +34,7 @@ function uploadFile() {
             $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
 
             if ($didUpload) {
-                echo "O arquivo " . basename($fileName) . " foi enviado com sucesso <br>";
+                echo "<h3>O arquivo " . basename($fileName) . " foi enviado com sucesso </h3>";
                 return $newFileName;
             } else {
                 echo "Houve um erro, por favor tente novamente ou contate o administrador.";
