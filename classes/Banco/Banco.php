@@ -35,7 +35,7 @@ class Banco {
                     //	mysqli_ssl_set ( self::$conn , null,null,null,null,null);
                     //self::$conn = mysqli_real_connect("db2.inf.ufrgs.br","covid19_rtpcr", "tu4ei%PeaEe?p2Oew3Gei", "covid19_rtpcr");
 
-                    mysqli_real_connect(self::$conn, $array_config['servidor'], $array_config['usuario'], $array_config['senha'], $array_config['nome'], null, null, MYSQLI_CLIENT_SSL);
+                    mysqli_real_connect(self::$conn, $array_config['servidor'], $array_config['usuario'], $array_config['senha'], $array_config['nome'], $array_config['porta'], null, MYSQLI_CLIENT_SSL);
                 } else {
 
                     self::$conn = mysqli_connect($array_config['servidor'], $array_config['usuario'], $array_config['senha'], $array_config['nome']);

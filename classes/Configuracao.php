@@ -3,7 +3,7 @@
 class Configuracao{
     private static $instance;
     
-    public static  function getInstance(){
+    public static function getInstance(){
         if(self::$instance == null){
             self::$instance= new Configuracao();
         }
@@ -15,9 +15,7 @@ class Configuracao{
         return $config;
     
     }
-    
-    
-    
+        
     public function getValor($strChave){
         $arr = $this->getArray();
         if(!isset($arr[$strChave])){
