@@ -2,7 +2,7 @@ Detalhamos abaixo instruções para instalação local do covid-system.
 
 Por conveniência, uma imagem de máquina virtual (VirtualBox) contendo uma instalação funcional do sistema (na versão de 22 de abril de 2020) pode ser encontrada no link
 
-    http://www.inf.ufrgs.br/~rma/Covid-22-abr-2020.ova
+http://www.inf.ufrgs.br/~rma/Covid-22-abr-2020.ova
 
 a mesma pode ser atualizada para a versão atual via GIT, conforme descrito abaixo.
 
