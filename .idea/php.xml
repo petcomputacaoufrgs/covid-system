@@ -61,6 +61,10 @@
       <path value="$PROJECT_DIR$/vendor/symfony/options-resolver" />
       <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
       <path value="$PROJECT_DIR$/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/vendor/fpdf/doc" />
+      <path value="$PROJECT_DIR$/vendor/fpdf/font" />
+      <path value="$PROJECT_DIR$/vendor/fpdf/makefont" />
+      <path value="$PROJECT_DIR$/vendor/fpdf/tutorial" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

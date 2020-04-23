@@ -9,6 +9,10 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/annotations" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/instantiator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/lexer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fpdf/doc" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fpdf/font" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fpdf/makefont" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fpdf/tutorial" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/friendsofphp/php-cs-fixer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/markbaker/complex" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/markbaker/matrix" />
