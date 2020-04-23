@@ -9,10 +9,17 @@ class Configuracao{
         }
         return self::$instance;
     }
-    
+
     private function getArray(){
-        require __DIR__ . '/../config.php';
-        return $config;
+        return array(
+            'versao' => '1.0.0',
+            'producao' => false,
+
+            'banco' => array('servidor' => 'localhost',
+                'nome' => 'amostras_covid19',
+                'usuario' => 'root',
+                'senha' => ''),
+        );
     }
     
     

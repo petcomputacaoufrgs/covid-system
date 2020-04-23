@@ -35,7 +35,7 @@ class AmostraRN{
             } else if (count($objAmostra->getDataColeta()) <= 11) {
 
 
-                //Utils::validarData($strDataColeta, $objExcecao);
+                Utils::validarData($strDataColeta, $objExcecao);
 
                 //validar para que não se coloque datas futuras a atual
                 return $objAmostra->setDataColeta($strDataColeta);
@@ -149,6 +149,33 @@ class AmostraRN{
         if ($objAmostra->getIdPerfilPaciente_fk() == 0) {
             $objExcecao->adicionar_validacao('Informe o perfil da amostra','idPerfilAmostra','alert-danger');
         }
+
+        // se o perfil é paciente sus, então o paciente tem que ter um código gal para esta amostra
+        if($objAmostra->getIdPerfilPaciente_fk() > 0 ){
+
+            $objPerfilPaciente = new PerfilPaciente();
+            $objPerfilPacienteRN = new PerfilPacienteRN();
+
+            $objPerfilPaciente->setIdPerfilPaciente($objAmostra->getIdPerfilPaciente_fk());
+            $perfil = $objPerfilPacienteRN->listar($objPerfilPaciente);
+
+            $objPaciente = new Paciente();
+            $objPacienteRN = new PacienteRN();
+            $objPaciente->setIdPaciente($objAmostra->getIdPaciente_fk());
+            $objPaciente = $objPacienteRN->consultar($objPaciente);
+
+            if($perfil[0]->getIndex_perfil() == 'PACIENTES SUS' && $objAmostra->getIdCodGAL_fk() == null){
+                $objExcecao->adicionar_validacao('O perfil da amostra exige que o paciente tenha um código GAL','idPerfilAmostra','alert-danger');
+            }
+
+            if($perfil[0]->getIndex_perfil() == 'PACIENTES SUS' && $objPaciente->getCartaoSUS() == null){
+                $objExcecao->adicionar_validacao('O perfil da amostra exige que o paciente tenha um cartão SUS','idPerfilAmostra','alert-danger');
+            }
+
+            //$objExcecao->adicionar_validacao('O perfil da amostra exige que o paciente tenha um código GAL','idPerfilAmostra','alert-danger');
+
+
+        }
        
     }
 
@@ -185,6 +212,29 @@ class AmostraRN{
 
     }
 
+    private function validarCamposDesconhecidos(Amostra $objAmostra, Excecao $objExcecao) {
+
+        if($objAmostra->getCEP() == null && $objAmostra->getObsCEP() == null){
+            $objAmostra->setObsCEP('Desconhecido');
+        }
+
+        if($objAmostra->getMotivoExame() == null && $objAmostra->getObsMotivo() == null){
+            $objAmostra->setObsMotivo('Desconhecido');
+        }
+
+        if($objAmostra->getHoraColeta() == null && $objAmostra->getHoraColeta() == null){
+            $objAmostra->setObsHoraColeta('Desconhecido');
+        }
+
+        if($objAmostra->getObsLugarOrigem() == null && $objAmostra->getIdLugarOrigem_fk() == null){
+            $objAmostra->setObsLugarOrigem('Desconhecido');
+        }
+
+    }
+
+
+
+
     public function cadastrar(Amostra $amostra) {
         $objBanco = new Banco();
         try {
@@ -199,6 +249,7 @@ class AmostraRN{
                 $amostra->setIdPaciente_fk($objPaciente->getIdPaciente());
 
                 if($objPaciente->getObjCodGAL() != null) {
+                    //print_r($objPaciente->getObjCodGAL());
                     if ($objPaciente->getObjCodGAL()->getIdCodigoGAL() != null) {
                         $amostra->setIdCodGAL_fk($objPaciente->getObjCodGAL()->getIdCodigoGAL());
                     }
@@ -219,6 +270,7 @@ class AmostraRN{
             $this->validarCEP($amostra, $objExcecao);
             $this->validarPerfilCartaoSUS($amostra, $objExcecao);
             $this->validarPerfilAmostra($amostra, $objExcecao);
+            $this->validarCamposDesconhecidos($amostra, $objExcecao);
             
             $objExcecao->lancar_validacoes();
             $objAmostraBD = new AmostraBD();

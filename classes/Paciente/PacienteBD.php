@@ -48,6 +48,7 @@ class PacienteBD {
 
     public function alterar(Paciente $objPaciente, Banco $objBanco) {
         try {
+            //print_r($objPaciente);
             $UPDATE = 'UPDATE tb_paciente SET idSexo_fk = ?,idEtnia_fk = ?, nome = ?, nomeMae = ?,dataNascimento = ?, CPF = ?,'
                     . ' RG = ?, obsRG = ?, obsNomeMae = ?, CEP = ?, endereco = ?, obsEndereco = ?, obsCEP = ?, obsCPF = ?,'
                     . ' passaporte = ?,obsPassaporte = ?,cadastroPendente = ? , obsCodGAL = ? ,cartaoSUS= ?, 

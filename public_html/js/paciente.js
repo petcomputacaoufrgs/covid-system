@@ -324,7 +324,7 @@ function validaPassaporte(){
         }
         if(strTipo.value.length > 15 ) div_feedback.innerHTML = " Digite o passaporte com até 15 caracteres. ";
     }
-    else if(strTipo.value.length > 0 && strTipo.value.length == 10 ){
+    else if(strTipo.value.length > 0 && strTipo.value.length <= 15 ){
         x.style.display = "none";
          strTipo.classList.add("is-valid");
         if(strTipo.classList.contains("is-invalid")) strTipo.classList.remove("is-invalid");
@@ -413,8 +413,9 @@ function validaNomeMae(){
     
 }
 
-function validaDataNascimento(){
-
+function validaDataNascimento() {
+    var strTipo = document.getElementById("idDataNascimento");
+    //var tipoAmostra = '<?=$objTipoAmostra->getTipo() ?>';
     var div_feedback = document.getElementById("feedback_dtNascimento");
     var x = document.getElementById("id_desaparecer_aparecerDataNascimento");
 
@@ -438,7 +439,6 @@ function validaDataNascimento(){
             //  document.getElementById('id_desaparecer_aparecer').style.display = 'none';
 
         }
-        if(strTipo.value.length == 0 ) div_feedback.innerHTML = " Informe a data de nascimento. ";
     }
     else if(strTipo.value.length > 0){
         x.style.display = "none";
@@ -449,9 +449,7 @@ function validaDataNascimento(){
         div_feedback.classList.add("valid-feedback");
         div_feedback.innerHTML = " Tudo certo. ";
     }
-    
 }
-
 
 
 
@@ -459,223 +457,19 @@ function validaDataNascimento(){
 
 
 function val() {
-                                       $('.selectpicker').change(function (e) {
-                                           //alert(e.target.value);
-                                           //document.getElementById("class1").innerHTML = e.target.value ;
-                                           window.location.href = "controlador.php?action=cadastrar_paciente&valuePerfilSelected=" + e.target.value;
-                                           /*$.post("cadastro_paciente.php", {perfilSelecionado:e.target.value},function(data){
-                                            alert("data sent and received: "+data);
-                                            });*/
+       $('.selectpicker').change(function (e) {
+           //alert(e.target.value);
+           //document.getElementById("class1").innerHTML = e.target.value ;
+           window.location.href = "controlador.php?action=cadastrar_paciente&valuePerfilSelected=" + e.target.value;
+           /*$.post("cadastro_paciente.php", {perfilSelecionado:e.target.value},function(data){
+            alert("data sent and received: "+data);
+            });*/
 
-                                       });
-                                   }
-
-                                   function val_sexo() {
-                                       $('.selectpicker').change(function (e) {
-                                           alert(e.target.value);
-                                           //document.getElementById("class1").innerHTML = e.target.value ;
-
-                                           /*$.post("cadastro_paciente.php", {perfilSelecionado:e.target.value},function(data){
-                                            alert("data sent and received: "+data);
-                                            });*/
-
-                                       });
-                                   }
-                                   function val_radio_obsNomeMae() {
-
-                                       var radios = document.getElementsByName('obs');
-                                       //var input_outro = document.getElementById('idObsNomeMae');
-                                       for (var i = 0, length = radios.length; i < length; i++) {
-                                           if (radios[0].checked) {
-                                               // do whatever you want with the checked radio
-                                               //alert("desconhecido");
-                                               document.getElementById('idObsNomeMae').readOnly = true;
-                                               // only one radio can be logically checked, don't check the rest
-                                               break;
-                                           }
-                                           if (radios[1].checked) {
-                                               // do whatever you want with the checked radio
-                                               //alert("outro");
-                                               document.getElementById('idObsNomeMae').readOnly = false;
-                                               // only one radio can be logically checked, don't check the rest
-                                               break;
-                                           }
-                                       }
-
-                                   }
-
-                                   function val_radio_obsCPF() {
-
-                                       var radios = document.getElementsByName('obsCPF');
-                                       //var input_outro = document.getElementById('idObsNomeMae');
-                                       for (var i = 0, length = radios.length; i < length; i++) {
-                                           if (radios[0].checked) {
-                                               // do whatever you want with the checked radio
-                                               //alert("desconhecido");
-                                               document.getElementById('idObsCPF').readOnly = true;
-                                               // only one radio can be logically checked, don't check the rest
-                                               break;
-                                           }
-                                           if (radios[1].checked) {
-                                               // do whatever you want with the checked radio
-                                               //alert("outro");
-                                               document.getElementById('idObsCPF').readOnly = false;
-                                               // only one radio can be logically checked, don't check the rest
-                                               break;
-                                           }
-                                       }
-
-                                   }
-
-                                   function val_radio_obsRG() {
-
-                                       var radios = document.getElementsByName('obsRG');
-                                       //var input_outro = document.getElementById('idObsNomeMae');
-                                       for (var i = 0, length = radios.length; i < length; i++) {
-                                           if (radios[0].checked) {
-                                               // do whatever you want with the checked radio
-                                               //alert("desconhecido");
-                                               document.getElementById('idObsRG').readOnly = true;
-                                               // only one radio can be logically checked, don't check the rest
-                                               break;
-                                           }
-                                           if (radios[1].checked) {
-                                               // do whatever you want with the checked radio
-                                               //alert("outro");
-                                               document.getElementById('idObsRG').readOnly = false;
-                                               // only one radio can be logically checked, don't check the rest
-                                               break;
-                                           }
-                                       }
-
-                                   }
+       });
+   }
 
 
-                                   function val_radio_obsEndereco() {
-
-                                       var radios = document.getElementsByName('obsEndereco');
-                                       //var input_outro = document.getElementById('idObsNomeMae');
-                                       for (var i = 0, length = radios.length; i < length; i++) {
-                                           if (radios[0].checked) {
-                                               document.getElementById('idObsEndereco').readOnly = true;
-                                               break;
-                                           }
-                                           if (radios[1].checked) {
-                                               document.getElementById('idObsEndereco').readOnly = false;
-                                               break;
-                                           }
-                                       }
-
-                                   }
                                    
                                    
-                                   function val_radio_obsPassaporte() {
 
-                                       var radios = document.getElementsByName('obsPassaporte');
-                                       //var input_outro = document.getElementById('idObsNomeMae');
-                                       for (var i = 0, length = radios.length; i < length; i++) {
-                                           if (radios[0].checked) {
-                                               document.getElementById('idObsPassaporte').readOnly = true;
-                                               break;
-                                           }
-                                           if (radios[1].checked) {
-                                               document.getElementById('idObsPassaporte').readOnly = false;
-                                               break;
-                                           }
-                                       }
-
-                                   }
                                    
-                                   function val_radio_obsCodGAL() {
-
-                                       var radios = document.getElementsByName('obsCodGAL');
-                                       //var input_outro = document.getElementById('idObsNomeMae');
-                                       for (var i = 0, length = radios.length; i < length; i++) {
-                                           if (radios[0].checked) {
-                                               // do whatever you want with the checked radio
-                                               //alert("desconhecido");
-                                               document.getElementById('idObsCodGAL').readOnly = true;
-                                               // only one radio can be logically checked, don't check the rest
-                                               break;
-                                           }
-                                           if (radios[1].checked) {
-                                               // do whatever you want with the checked radio
-                                               //alert("outro");
-                                               document.getElementById('idObsCodGAL').readOnly = false;
-                                               // only one radio can be logically checked, don't check the rest
-                                               break;
-                                           }
-                                       }
-
-                                   }
-
-function val_radio_obsCartaoSUS() {
-
-    var radios = document.getElementsByName('obsCartaoSUS');
-    //var input_outro = document.getElementById('idObsNomeMae');
-    for (var i = 0, length = radios.length; i < length; i++) {
-        if (radios[0].checked) {
-            // do whatever you want with the checked radio
-            //alert("desconhecido");
-            document.getElementById('idObsCartaoSUS').readOnly = true;
-            // only one radio can be logically checked, don't check the rest
-            break;
-        }
-        if (radios[1].checked) {
-            // do whatever you want with the checked radio
-            //alert("outro");
-            document.getElementById('idObsCartaoSUS').readOnly = false;
-            // only one radio can be logically checked, don't check the rest
-            break;
-        }
-    }
-
-}
-
-
-function val_radio_dtNascimento() {
-
-    var radios = document.getElementsByName('obsDataNascimento');
-    //var input_outro = document.getElementById('idObsNomeMae');
-    for (var i = 0, length = radios.length; i < length; i++) {
-        if (radios[0].checked) {
-            // do whatever you want with the checked radio
-            //alert("desconhecido");
-            document.getElementById('idObsDtNascimento').readOnly = true;
-            // only one radio can be logically checked, don't check the rest
-            break;
-        }
-        if (radios[1].checked) {
-            // do whatever you want with the checked radio
-            //alert("outro");
-            document.getElementById('idObsDtNascimento').readOnly = false;
-            // only one radio can be logically checked, don't check the rest
-            break;
-        }
-    }
-
-}
-
-
-function val_radio_obsCEPPaciente() {
-
-    var radios = document.getElementsByName('obsCEPPaciente');
-    //var input_outro = document.getElementById('idObsNomeMae');
-    for (var i = 0, length = radios.length; i < length; i++) {
-        if (radios[0].checked) {
-            // do whatever you want with the checked radio
-            //alert("desconhecido");
-            document.getElementById('idObsCEP').readOnly = true;
-            // only one radio can be logically checked, don't check the rest
-            break;
-        }
-        if (radios[1].checked) {
-            // do whatever you want with the checked radio
-            //alert("outro");
-            document.getElementById('idObsCEP').readOnly = false;
-            // only one radio can be logically checked, don't check the rest
-            break;
-        }
-    }
-
-}

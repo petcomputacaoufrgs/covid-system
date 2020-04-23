@@ -61,7 +61,7 @@ try {
     foreach ($arr_amostras as $a) {
 
         $objAmostra->setIdAmostra($a->getIdAmostra_fk());
-        print_r($objAmostra);
+        //print_r($objAmostra);
         $objAmostra = $objAmostraRN->consultar($objAmostra);
 
         //die("10");
@@ -84,7 +84,7 @@ try {
         $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
 
 
-        $html .= "<tr> <td style=\"background-color: #ddd;\">Amostra  " . $qntAmostra . " do dia</td></tr>"
+        $html .= "<tr> <td style=\"background-color: #ddd;\">".$qntAmostra."ª Amostra do dia</td></tr>"
             . "<tr> <td>Código amostra: " . $objAmostra->getCodigoAmostra() . "</td></tr>" .
             "<tr><td" . $style . "> Situação da amostra: " . $result . "</td></tr>" .
             "<tr><td> Perfil da amostra: " . $objPerfilPaciente->getPerfil() . "</td></tr>" .
