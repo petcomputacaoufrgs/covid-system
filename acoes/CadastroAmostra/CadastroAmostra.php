@@ -1422,16 +1422,16 @@ if ($aparecer || $cadastrarNovo){//(isset($_GET['idPaciente']) || $cadastrarNovo
 
 
             <?php if ($BOTAO_SALVAR == 'on') {
-                    if($BOTAO_CANCELAR == 'off'){ $style=  'style="width:50%;margin-right:25%;"';}
-                    else { $style=  'style="width: 50%;margin-left:25%;"';}
+                    if($BOTAO_CANCELAR == 'off'){ $col= " col-md-12 ";$style= 'margin-left:0px;style="width:100%;"';}
+                    else {$col="col-md-6"; $style=  'style="width: 100%;margin-left:0px;"';}
                echo '<div class="form-row">
-                    <div class="col-md-6" >
+                    <div class="'.$col.'" >
                         <button class="btn btn-primary" '.$style.' type="submit" name="salvar_cadastro">Salvar</button>
                     </div>';
             }
                     if($BOTAO_CANCELAR == 'on'){
                     echo '<div class="col-md-6" >
-                        <button type="button" class="btn btn-primary" data-toggle="modal" style="width: 50%;margin-left:0%;" data-target="#exampleModalCenter" > Cancelar</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" style="width: 100%;margin-left:0%;" data-target="#exampleModalCenter" > Cancelar</button>
                     </div>
                 </div>';
                 } ?>
