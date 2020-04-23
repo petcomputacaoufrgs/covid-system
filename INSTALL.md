@@ -1,6 +1,13 @@
 Detalhamos abaixo instruções para instalação local do covid-system.
 
-#1. Preparando o sistema operacional
+Por conveniência, uma imagem de máquina virtual (VirtualBox) contendo uma instalação funcional do sistema (na versão de 22 de abril de 2020) pode ser encontrada no link
+
+    http://www.inf.ufrgs.br/~rma/Covid-22-abr-2020.ova
+
+a mesma pode ser atualizada para a versão atual via GIT, conforme descrito abaixo.
+
+
+# 1. Preparando o sistema operacional
 
 O Covid-System é desenvolvido utilizando tecnologias LAMP:
 * Linux
@@ -14,17 +21,17 @@ No terminal, execute
 
     sudo apt install git geany apache2 libapache2-mod-php mariadb-server php-xml php-mysql composer phpunit
 
-O comando acima instala: servidor web (com módulo para rodar PHP), banco de dados MariaDB, ferramenta GIT, IDE Geany e demais bibliotecas para teste e desenvolvimento.
+O comando acima instala: servidor web (com módulo para rodar PHP), banco de dados MariaDB, ferramenta GIT e demais bibliotecas para teste e desenvolvimento (incluindo a IDE Geany).
 
 Nota:
-* Na sequencia, serão configurados o servidor Apache (web) e o SGBD MariaDB (banco de dados) na mesma máquina GNU/Linux. 
+* Na sequência, serão configurados o servidor Apache (web) e o SGBD MariaDB (banco de dados) na mesma máquina GNU/Linux. 
 * Na máquina virtual (previamente configurada seguindo essas instruções) definimos o seguinte usuário com status de administrador:
 
     User:     covid
     Password: covid
 
 
-#2. Baixando e instalando a versão estável do covid-system
+# 2. Baixando e instalando a versão estável do covid-system
 
 Na máquina virtual instalamos o sistema em '/var/'. Como nesta temos somente um usuário administrador, vamos dar permissão total para acesso a essa pasta (note que isso não é recomendado em instalações compartilhadas). 
 
@@ -48,7 +55,7 @@ O comando acima cria a pasta '/var/covid-system' contendo o código-fonte do cov
 
 
 
-#3. Preparando e povoando o SGBD (sistema gerenciador de banco de dados)
+# 3. Preparando e povoando o SGBD (sistema gerenciador de banco de dados)
 
 Após a etapa 1 temos o SGBD MariaDB instalado e rodando. Podemos interagir com ele através do aplicativo 'mysql'.
 
@@ -102,8 +109,8 @@ Por garantia, reinicie o SGBD e o servidor apache antes de testar a instalação
     sudo systemctl restart mariadb
 
 
-4. Testando o sistema:
-----------------------
+# 4. Testando o sistema:
+
 
 Se não houve nenhum erro em alguma etapa anterior, o sistema deve estar instalado e funcionando.
 
@@ -121,3 +128,13 @@ Para rodar os testes unitários automatizados do sistema, você pode executar:
 
     phpunit /var/covid-system/tests
 
+
+
+# 5. Atualizando o sistema para a versão atual
+
+Rode os seguintes comandos para atualizar o sistema para a versão atual (i.e. o código presente no branch 'master').
+
+    cd /var/covid-system
+    git pull
+
+Note: o comando acima atualiza somente o código-fonte da aplicação: nenhuma alteração no estado do banco de dados é realizada.
