@@ -19,28 +19,8 @@
         Sessao::getInstance()->validar();
         $objAmostra = new Amostra();
         $objAmostraRN = new AmostraRN();
-        
+
         $objAmostra->setIdAmostra($_GET['idAmostra']);
-        $objTubo = new Tubo();
-        $objTuboRN = new TuboRN();
-        $objTubo->setIdAmostra_fk($_GET['idAmostra']);
-        $arr_tubos = $objTuboRN->listar($objTubo);
-        if(count($arr_tubos) > 0) {
-
-            $objInfosTubo = new InfosTubo();
-            $objInfosTuboRN = new InfosTuboRN();
-
-            foreach ($arr_tubos as $tubo) {
-                $objInfosTubo->setIdTubo_fk($tubo->getIdTubo());
-                $arr_infosTubo = $objInfosTuboRN->listar($objInfosTubo);
-                $objTuboRN->remover($tubo);
-            }
-
-            foreach ($arr_infosTubo as $infoTubo) {
-                $objInfosTuboRN->remover($infoTubo);
-            }
-        }
-
         $objAmostraRN->remover($objAmostra);
 
         header('Location: '. Sessao::getInstance()->assinar_link('controlador.php?action=listar_amostra'));

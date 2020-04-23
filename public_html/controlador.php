@@ -45,19 +45,19 @@ switch ($_GET['action']):
     
     
     case 'cadastrar_amostra_localArmazenamento':
-        require_once 'telas_prototipos/cadastro_amostra_localArmazenamento.php';
+        require_once 'telas_prototipos_antigas/cadastro_amostra_localArmazenamento.php';
         break;
     case 'extrair_amostra':
-        require_once 'telas_prototipos/etapa_extracao.php';
+        require_once 'telas_prototipos_antigas/etapa_extracao.php';
         break;
     case 'exibir_laudo':
-        require_once 'telas_prototipos/etapa_laudo.php';
+        require_once 'telas_prototipos_antigas/etapa_laudo.php';
         break;
     case 'imprimir_laudo':
-        require_once 'telas_prototipos/impressao_laudo.php';
+        require_once 'telas_prototipos_antigas/impressao_laudo.php';
         break;
     case 'recepcionar_amostra':
-        require_once 'telas_prototipos/etapa_recepcaoAmostra.php';
+        require_once 'telas_prototipos_antigas/etapa_recepcaoAmostra.php';
         break;
     
     case 'cadastrar_tipoAmostra':
@@ -300,7 +300,7 @@ switch ($_GET['action']):
         break;
     
     case 'remover_amostra':
-        require_once '../acoes/CadastroAmostra/remover_amostra.php';
+        require_once '../acoes/CadastroAmostra/remover_cadastroAmostra.php';
         break;
     
     

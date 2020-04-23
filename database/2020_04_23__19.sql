@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.1
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: 20-Abr-2020 às 18:27
--- Versão do servidor: 10.1.33-MariaDB
--- PHP Version: 7.2.6
+-- Host: db2.inf.ufrgs.br
+-- Tempo de geração: 23-Abr-2020 às 14:39
+-- Versão do servidor: 10.3.17-MariaDB-0+deb10u1
+-- versão do PHP: 7.3.4-2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `amostras_covid19`
+-- Banco de dados: `covid19-teste`
 --
 
 -- --------------------------------------------------------
@@ -5670,95 +5670,169 @@ CREATE TABLE `tb_amostra` (
   `idNivelPrioridade_fk` int(10) UNSIGNED DEFAULT NULL,
   `cod_municipio_fk` bigint(20) DEFAULT NULL,
   `cod_estado_fk` int(10) UNSIGNED DEFAULT NULL,
-  `idPaciente_fk` int(10) UNSIGNED DEFAULT NULL,
+  `idPaciente_fk` int(10) UNSIGNED NOT NULL,
   `observacoes` varchar(300) DEFAULT NULL,
-  `dataColeta` date NOT NULL,
   `a_r_g` char(1) NOT NULL,
   `idPerfilPaciente_fk` int(10) UNSIGNED DEFAULT NULL,
+  `obsLugarOrigem` varchar(300) DEFAULT NULL,
+  `obsCEPAmostra` varchar(300) DEFAULT NULL,
+  `codigoAmostra` varchar(6) DEFAULT NULL,
+  `obsHoraColeta` varchar(300) DEFAULT NULL,
   `horaColeta` time DEFAULT NULL,
   `motivo` varchar(100) DEFAULT NULL,
-  `CEP` varchar(8) DEFAULT NULL,
-  `codigoAmostra` varchar(6) DEFAULT NULL,
   `obsMotivo` varchar(300) DEFAULT NULL,
-  `obsCEPAmostra` varchar(300) DEFAULT NULL,
-  `obsLugarOrigem` varchar(300) DEFAULT NULL,
-  `obsHoraColeta` varchar(300) DEFAULT NULL
+  `dataColeta` date NOT NULL,
+  `CEP` varchar(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Extraindo dados da tabela `tb_amostra`
 --
 
-INSERT INTO `tb_amostra` (`idAmostra`, `idCodGAL_fk`, `idNivelPrioridade_fk`, `cod_municipio_fk`, `cod_estado_fk`, `idPaciente_fk`, `observacoes`, `dataColeta`, `a_r_g`, `idPerfilPaciente_fk`, `horaColeta`, `motivo`, `CEP`, `codigoAmostra`, `obsMotivo`, `obsCEPAmostra`, `obsLugarOrigem`, `obsHoraColeta`) VALUES
-(19, NULL, 1, 0, 43, 2, '', '2020-04-03', 'g', 3, NULL, '', '', 'L19', '', '', '', 'nao quero'),
-(20, NULL, NULL, 0, 43, 3, '', '2020-04-03', 'r', 3, NULL, '', '', 'L20', '', '', '', 'nao quero'),
-(57, NULL, 1, 0, 43, NULL, '', '2020-04-06', 'a', 4, NULL, '', '', 'E57', '', '', '', ''),
-(58, NULL, 1, 0, 43, NULL, '', '2020-04-15', 'g', 3, NULL, '', '', 'L58', '', '', '', ''),
-(60, NULL, NULL, 0, 43, NULL, '', '2020-04-15', 'r', 1, NULL, '', '', 'S60', '', '', '', ''),
-(61, NULL, 1, 0, 43, NULL, '', '2020-04-09', 'r', 3, NULL, '', '', 'L61', '', '', '', ''),
-(62, NULL, NULL, 4300661, 43, NULL, '', '2020-04-15', 'g', 1, NULL, '', '', 'S62', '', '', '', ''),
-(66, NULL, NULL, 4314902, 43, NULL, '', '2020-04-01', 'a', 2, NULL, '', '', 'V66', '', '', '', ''),
-(67, NULL, NULL, 4314902, 43, 71, '', '2020-04-01', 'g', 2, NULL, '', '', 'V67', '', '', '', ''),
-(68, NULL, NULL, 4314902, 43, NULL, '', '2020-04-01', 'a', 2, NULL, '', '', 'V68', '', '', '', ''),
-(69, NULL, NULL, 0, 43, NULL, '', '2020-04-14', 'r', 2, NULL, '', '', 'V69', '', '', '', ''),
-(70, NULL, NULL, 0, 43, 1, '', '2020-04-08', 'a', 1, NULL, '', '', 'S70', '', '', '', ''),
-(74, NULL, NULL, 0, 43, 41, '', '2020-04-09', 'r', 1, NULL, '', '', 'S74', '', '', '', ''),
-(75, NULL, NULL, 4314902, 43, 71, '', '2020-04-01', 'g', 2, NULL, '', '', 'V75', '', '', '', ''),
-(76, NULL, NULL, 0, 43, 42, '', '2020-04-21', 'g', 1, NULL, '', '', 'S76', '', '', '', ''),
-(78, NULL, NULL, 0, 43, 73, '', '2020-04-15', 'a', 4, NULL, '', '', 'E78', '', '', '', ''),
-(79, NULL, NULL, 0, 43, 73, '', '2020-04-15', 'a', 4, NULL, '', '', 'E79', '', '', '', ''),
-(80, NULL, NULL, 0, 43, 73, '', '2020-04-15', 'a', 4, NULL, '', '', 'E80', '', '', '', ''),
-(81, NULL, NULL, 0, 43, 73, '', '2020-04-15', 'a', 4, NULL, '', '', 'E81', '', '', '', ''),
-(82, NULL, NULL, 0, 43, 73, '', '2020-04-15', 'a', 4, NULL, '', '', 'E82', '', '', '', ''),
-(83, NULL, NULL, 0, 43, 73, '', '2020-04-15', 'a', 4, NULL, '', '', 'E83', '', '', '', ''),
-(84, NULL, NULL, 0, 43, 73, '', '2020-04-15', 'a', 4, NULL, '', '', 'E84', '', '', '', ''),
-(85, NULL, NULL, 0, 43, 73, '', '2020-04-15', 'a', 4, NULL, '', '', 'E85', '', '', '', ''),
-(86, NULL, NULL, 0, 43, 73, '', '2020-04-15', 'a', 4, NULL, '', '', 'E86', '', '', '', ''),
-(87, NULL, NULL, 0, 43, 73, '', '2020-04-15', 'a', 4, NULL, '', '', 'E87', '', '', '', ''),
-(88, NULL, NULL, 0, 43, 76, '', '2020-04-22', 'g', 4, NULL, '', '', 'E88', '', '', '', ''),
-(89, NULL, NULL, 0, 43, 77, '', '2020-04-16', 'r', 3, NULL, '', '', 'L89', '', '', '', ''),
-(90, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V90', '', '', '', ''),
-(91, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V91', '', '', '', ''),
-(92, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V91', '', '', '', ''),
-(93, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V93', '', '', '', ''),
-(94, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V93', '', '', '', ''),
-(95, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V95', '', '', '', ''),
-(96, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V95', '', '', '', ''),
-(97, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V97', '', '', '', ''),
-(98, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V97', '', '', '', ''),
-(99, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V99', '', '', '', ''),
-(100, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V99', '', '', '', ''),
-(101, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V101', '', '', '', ''),
-(102, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V101', '', '', '', ''),
-(103, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V103', '', '', '', ''),
-(104, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V103', '', '', '', ''),
-(105, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V105', '', '', '', ''),
-(106, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V105', '', '', '', ''),
-(107, NULL, NULL, 0, 43, 79, '', '2020-04-06', 'g', 2, NULL, '', '', 'V107', '', '', '', ''),
-(109, NULL, NULL, 0, 43, 81, '', '2020-04-07', 'a', 3, NULL, '', '', 'L109', '', '', '', ''),
-(110, NULL, NULL, 0, 43, 81, '', '2020-04-07', 'a', 3, NULL, '', '', 'L110', '', '', '', ''),
-(111, NULL, NULL, 0, 43, 82, '', '2020-04-21', 'g', 5, NULL, '', '', 'O111', '', '', '', ''),
-(112, NULL, NULL, 0, 43, 82, '', '2020-04-21', 'g', 5, NULL, '', '', 'O112', '', '', '', ''),
-(113, NULL, NULL, 0, 43, 83, '', '2020-04-21', 'a', 4, NULL, '', '', 'E113', '', '', '', ''),
-(114, NULL, NULL, 0, 43, 83, '', '2020-04-21', 'a', 4, NULL, '', '', 'E113', '', '', '', ''),
-(115, NULL, NULL, 0, 43, 84, '', '2020-04-07', 'a', 5, NULL, '', '', 'O115', '', '', '', ''),
-(116, NULL, NULL, 0, 43, 85, '', '2020-04-14', 'r', 4, NULL, '', '', 'E116', '', '', '', ''),
-(117, NULL, NULL, 0, 43, 86, '', '2020-04-22', 'r', 4, NULL, '', '', 'E117', '', '', '', ''),
-(118, NULL, NULL, 0, 43, 87, '', '2020-04-15', 'r', 4, NULL, '', '', 'E118', '', '', '', ''),
-(119, NULL, NULL, 0, 43, 88, '', '2020-04-14', 'g', 4, NULL, '', '', 'E119', '', '', '', ''),
-(120, NULL, NULL, 0, 43, 89, '', '2020-04-14', 'g', 4, NULL, '', '', 'E120', '', '', '', ''),
-(121, NULL, NULL, 0, 43, 90, '', '2020-04-09', 'r', 4, NULL, '', '', 'E121', '', '', '', ''),
-(122, NULL, NULL, 0, 43, 91, '', '2020-04-14', 'a', 4, NULL, '', '', 'E122', '', '', '', ''),
-(123, NULL, NULL, 0, 43, 97, '', '2020-04-16', 'r', 5, NULL, '', '', 'O123', '', '', '', ''),
-(124, NULL, NULL, 0, 43, 98, '', '2020-04-20', 'a', 5, NULL, '', '', 'O124', '', '', '', ''),
-(125, NULL, NULL, 0, 43, 99, '', '2020-04-20', 'r', 5, NULL, '', '', 'O125', '', '', '', ''),
-(126, NULL, NULL, 0, 43, 99, '', '2020-04-20', 'r', 5, NULL, '', '', 'O126', '', '', '', ''),
-(127, NULL, NULL, 0, 43, 100, '', '2020-04-13', 'a', 5, NULL, '', '', 'O127', '', '', '', ''),
-(128, NULL, NULL, 0, 43, 101, '', '2020-04-14', 'g', 5, NULL, '', '', 'O128', '', '', '', ''),
-(129, NULL, NULL, 0, 43, 102, '', '2020-04-13', 'r', 5, NULL, '', '', 'O129', '', '', '', ''),
-(130, NULL, NULL, 0, 43, 103, '', '2020-04-13', 'r', 5, NULL, '', '', 'O130', '', '', '', ''),
-(131, NULL, NULL, 0, 43, 104, '', '2020-04-07', 'g', 5, NULL, '', '', 'O131', '', '', '', ''),
-(132, NULL, NULL, 0, 43, 105, '', '2020-04-08', 'a', 5, NULL, '', '', 'O132', '', '', '', '');
+INSERT INTO `tb_amostra` (`idAmostra`, `idCodGAL_fk`, `idNivelPrioridade_fk`, `cod_municipio_fk`, `cod_estado_fk`, `idPaciente_fk`, `observacoes`, `a_r_g`, `idPerfilPaciente_fk`, `obsLugarOrigem`, `obsCEPAmostra`, `codigoAmostra`, `obsHoraColeta`, `horaColeta`, `motivo`, `obsMotivo`, `dataColeta`, `CEP`) VALUES
+(46, 41, NULL, 4300406, 43, 63, '', 'r', 5, '', '', 'O46', '', '12:12:00', '', '', '2020-04-09', ''),
+(47, NULL, NULL, 4314902, 43, 64, '', 'a', 2, '', '', 'V47', '', '13:00:00', '', '', '2020-04-15', ''),
+(48, NULL, 1, 4314902, 43, 65, '', 'a', 2, NULL, NULL, 'V48', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(49, NULL, 1, 4314902, 43, 66, '', 'a', 2, NULL, NULL, 'V49', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(50, NULL, 1, 4314902, 43, 68, '', 'a', 2, NULL, NULL, 'V50', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(51, NULL, 1, 4314902, 43, 69, '', 'a', 2, NULL, NULL, 'V51', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(52, NULL, 1, 4314902, 43, 70, 'Na data de nascimento foi colocada a data de coleta de amostra, pois o nascimento não foi informado.', 'a', 2, NULL, NULL, 'V52', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(53, NULL, 1, 4314902, 43, 71, '', 'a', 2, NULL, NULL, 'V53', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(54, NULL, 1, 4314902, 43, 67, '', 'a', 2, NULL, NULL, 'V54', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(55, NULL, 1, 4314902, 43, 72, '', 'a', 2, NULL, NULL, 'V55', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(56, NULL, 1, 4314902, 43, 73, '', 'a', 2, NULL, NULL, 'V56', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(57, NULL, 1, 4314902, 43, 74, '', 'a', 2, NULL, NULL, 'V57', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(58, NULL, 1, 4314902, 43, 75, '', 'a', 2, NULL, NULL, 'V58', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(59, NULL, 1, 4314902, 43, 76, 'Sem data de nascimento', 'a', 2, NULL, NULL, 'V59', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(60, NULL, 1, 4314902, 43, 77, '', 'a', 2, NULL, NULL, 'V60', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(61, NULL, 1, 4314902, 43, 78, 'RG: Não informado', 'a', 2, NULL, NULL, 'V61', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(62, NULL, 1, 4314902, 43, 79, '', 'a', 2, NULL, NULL, 'V62', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(63, NULL, 1, 4314902, 43, 80, '', 'a', 2, NULL, NULL, 'V63', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(64, NULL, 1, 4314902, 43, 81, 'Todos os dados foram \"inventados\" para posterior edição, pois só foi informado o nome da pessoa.', 'a', 2, NULL, NULL, 'V64', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(65, NULL, 1, 4314902, 43, 81, 'Todos os dados foram inventados, pois não foram informados.', 'a', 2, NULL, NULL, 'V65', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(66, NULL, 1, 4314902, 43, 82, '', 'a', 2, NULL, NULL, 'V66', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(67, NULL, 1, 4314902, 43, 83, 'CPF foi incluído um zero ao final', 'a', 2, NULL, NULL, 'V67', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(68, NULL, 1, 4314902, 43, 84, '', 'a', 2, NULL, NULL, 'V68', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(69, NULL, 1, 4314902, 43, 85, '', 'a', 2, NULL, NULL, 'V69', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(70, NULL, 1, 4314902, 43, 86, '', 'a', 2, NULL, NULL, 'V70', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(71, NULL, 1, 4314902, 43, 87, '', 'a', 2, NULL, NULL, 'V71', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(72, NULL, 1, 4314902, 43, 88, '', 'a', 2, NULL, NULL, 'V72', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(73, NULL, 1, 4314902, 43, 89, '', 'a', 2, NULL, NULL, 'V73', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(74, NULL, 1, 4314902, 43, 90, 'Data nascimneto não informada', 'a', 2, NULL, NULL, 'V74', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(75, NULL, 1, 4314902, 43, 91, 'Zero adicional no CPF. RG não informado.', 'a', 2, NULL, NULL, 'V75', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(76, NULL, 1, 4314902, 43, 92, '', 'a', 2, NULL, NULL, 'V76', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(77, NULL, 1, 4314902, 43, 93, 'Data de nascimento não informado', 'a', 2, NULL, NULL, 'V77', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(78, NULL, 1, 4314902, 43, 94, '', 'a', 2, NULL, NULL, 'V78', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(79, NULL, 1, 4314902, 43, 95, 'RG inventado pois informou o passaporte V8944810\r\nData de nascimento não informada', 'a', 2, NULL, NULL, 'V79', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(80, NULL, 1, 4314902, 43, 96, '', 'a', 2, NULL, NULL, 'V80', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(81, NULL, 1, 4314902, 43, 97, '', 'a', 2, NULL, NULL, 'V81', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(82, NULL, 1, 4314902, 43, 98, 'CPF pode estar errado', 'a', 2, NULL, NULL, 'V82', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(83, NULL, 1, 4314902, 43, 100, '', 'a', 2, NULL, NULL, 'V83', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(84, NULL, 1, 4314902, 43, 101, '', 'a', 2, NULL, NULL, 'V84', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(85, NULL, 1, 4314902, 43, 102, 'Data de nascimento, CPF e RG não informados', 'a', 2, NULL, NULL, 'V85', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(86, NULL, 1, 4314902, 43, 103, '', 'a', 2, NULL, NULL, 'V86', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(87, NULL, 1, 4314902, 43, 99, 'zero adicional no CPF', 'a', 2, NULL, NULL, 'V87', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(88, NULL, 1, 4314902, 43, 104, '', 'a', 2, NULL, NULL, 'V88', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(89, NULL, 1, 4314902, 43, 105, '', 'a', 2, NULL, NULL, 'V89', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(90, NULL, 1, 4316907, 43, 106, 'CEP: 97.060-850\r\nRG: Não informado', 'a', 2, NULL, NULL, 'V90', NULL, '00:00:00', NULL, '', '2020-04-13', NULL),
+(91, NULL, 1, 4319901, 43, 107, 'Colocados três zeros.', 'a', 3, NULL, NULL, 'L91', NULL, '13:00:00', NULL, '', '2020-04-13', NULL),
+(92, NULL, 1, 4306106, 43, 108, 'GAL com três zeros no final. PROFISSIONAL DE SAÚDE SINTOMÁTICO. CEP não informado.', 'a', 3, NULL, NULL, 'L92', NULL, '00:00:00', NULL, '', '2020-04-13', NULL),
+(93, NULL, 1, 4300604, 43, 109, 'CEP: 94.824-030', 'a', 2, NULL, NULL, 'V93', NULL, '00:00:00', NULL, '', '2020-04-12', NULL),
+(94, NULL, 1, 4304630, 43, 111, 'GAL com três zeros no final.  PROFISSIONAL ENFERMEIRO DO HOSPITAL SANTA LUZIA. COREN 572023. CEP 95.555-000', 'a', 3, NULL, NULL, 'L94', NULL, '00:00:00', NULL, '', '2020-04-13', NULL),
+(95, NULL, 1, 4317400, 43, 112, '', 'a', 3, NULL, NULL, 'L95', NULL, '13:00:00', NULL, '', '2020-04-12', NULL),
+(96, NULL, 1, 4314902, 43, 113, 'GAL com três zeros no final. CEP 94.818-330', 'a', 3, NULL, NULL, 'L96', NULL, '00:00:00', NULL, '', '2020-04-11', NULL),
+(97, NULL, 1, 4316808, 43, 114, 'PROFISSIONAL DA SAÚDE\r\ngestante 3o. trimestre', 'a', 3, NULL, NULL, 'L97', NULL, '00:00:00', NULL, '', '2020-04-09', NULL),
+(98, 50, 1, 4322400, 43, 115, 'cep: 97.507-678\r\nCPF e RG não informados\r\nNúmero GAL com acréscimo de 000 no final', 'a', 3, NULL, NULL, 'L98', NULL, '00:00:00', NULL, '', '2020-04-10', NULL),
+(99, 51, 1, 4304200, 43, 116, 'cep: 96.930-000\r\nRG não informado', 'a', 3, NULL, NULL, 'L99', NULL, '00:00:00', NULL, '', '2020-04-13', NULL),
+(100, 52, 1, 4316907, 43, 117, 'Adicionados três zeros no fim do número Gal.', 'a', 3, NULL, NULL, 'L100', NULL, '13:00:00', NULL, '', '2020-04-13', NULL),
+(101, NULL, 1, 4313706, 43, 118, 'CEP 98.300-000\r\nRG não informado', 'a', 3, NULL, NULL, 'L101', NULL, '00:00:00', NULL, '', '2020-04-11', NULL),
+(102, 54, 1, 4307807, 43, 119, 'RG não informado.\r\nAdicionados três zeros no fim do número GAL.', 'a', 3, NULL, NULL, 'L102', NULL, '13:00:00', NULL, '', '2020-04-11', NULL),
+(103, NULL, 1, 4318002, 43, 120, 'Não informado nem CPF nem RG.\r\nAdicionados três zeros no fim do GAL.', 'a', 3, NULL, NULL, 'L103', NULL, '13:00:00', NULL, '', '2020-04-12', NULL),
+(104, 56, 1, 4313060, 43, 121, 'cep: 93.890-000\r\nRG não informado\r\nCódigo Gal com acréscimo de 000 no final\r\nSECRETARIA MUNICIPAL DE SAUDE DE SAPIRANGA', 'a', 3, NULL, NULL, 'L104', NULL, '00:00:00', NULL, '', '2020-04-13', NULL),
+(105, 57, 1, 4300604, 43, 122, 'Não informado RG.\r\nAdicionados três zeros no fim do número GAL.', 'a', 3, NULL, NULL, 'L105', NULL, '13:00:00', NULL, '', '2020-04-10', NULL),
+(106, 58, 1, 4317103, 43, 123, 'GAL com três zeros no final. Enf. responsável, Marcus Suarez. CEP não informado', 'a', 3, NULL, NULL, 'L106', NULL, '00:00:00', NULL, '', '2020-04-09', NULL),
+(107, NULL, 1, 4316808, 43, 124, 'CPF não informado \r\n PROFISSIONAL DE SAÚDE /ENFERMEIRA', 'a', 3, NULL, NULL, 'L107', NULL, '00:00:00', NULL, '', '2020-04-10', NULL),
+(108, 60, 1, 4314902, 43, 125, 'GAL com três zeros do final. CEP 91.750-141', 'a', 3, NULL, NULL, 'L108', NULL, '00:00:00', NULL, '', '2020-04-13', NULL),
+(109, 61, 1, 4314902, 43, 126, 'Cep: 90.160-130\r\nCPF e RG não informados\r\nGAL com acréscimo de 000 do final', 'a', 3, NULL, NULL, 'L109', NULL, '00:00:00', NULL, '', '2020-04-12', NULL),
+(110, 62, 1, 4320107, 43, 127, 'CPF e RG não informados', 'a', 3, NULL, NULL, 'L110', NULL, '00:00:00', NULL, '', '2020-04-12', NULL),
+(111, 63, 1, 4304630, 43, 128, 'CEP 95.555-000\r\n PROFISSIONAL DENTISTA DO MUNICIPIO DE CAPAO DA CANOA', 'a', 3, NULL, NULL, 'L111', NULL, '00:00:00', NULL, '', '2020-04-10', NULL),
+(112, 64, 1, 4321402, 43, 129, 'PROFISSIONAL SINTOMÁTICO (TÉCNICO DE ENFERMAGEM).\r\nFEBRE, DOR DE GARGANTA, FALTA DE APETITE.\r\nCEP 98.500-000', 'a', 3, NULL, NULL, 'L112', NULL, '00:00:00', NULL, '', '2020-04-10', NULL),
+(113, 65, 1, 4316808, 43, 130, 'RG não informado \r\nPROFISSIONAL DE SAÚDE', 'a', 3, NULL, NULL, 'L113', NULL, '00:00:00', NULL, '', '2020-04-13', NULL),
+(114, NULL, 1, 4314902, 43, 131, '', 'a', 2, NULL, NULL, 'V114', NULL, '15:00:00', NULL, '', '2020-04-15', NULL),
+(115, NULL, 1, 4314902, 43, 132, '71', 'a', 2, NULL, NULL, 'V115', NULL, '13:00:00', NULL, '', '2020-04-16', NULL),
+(116, NULL, 1, 4314902, 43, 133, 'Informações faltantes: nome mãe, data nascimento, CPF, RG, data e hora da coleta.', 'a', 2, NULL, NULL, 'V116', NULL, '12:00:00', NULL, '', '2020-04-16', NULL),
+(117, NULL, 1, 4314902, 43, 134, 'Número de Identificação: 63', 'a', 2, NULL, NULL, 'V117', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(118, NULL, 1, 4314902, 43, 131, 'número de identificação de amostra 48', 'a', 2, NULL, NULL, 'V118', NULL, '15:00:00', NULL, '', '2020-04-15', NULL),
+(119, NULL, 1, 4314902, 43, 135, 'número de identificação da amostra 03', 'a', 2, NULL, NULL, 'V119', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(120, NULL, 1, 4314902, 43, 136, 'Informações faltantes: nome da mãe, data de nascimento, CPF e RG.', 'a', 2, NULL, NULL, 'V120', NULL, '12:00:00', NULL, '', '2020-04-16', NULL),
+(121, NULL, 1, 4314902, 43, 137, '72', 'a', 2, NULL, NULL, 'V121', NULL, '13:00:00', NULL, '', '2020-04-16', NULL),
+(122, NULL, 1, 4314902, 43, 138, 'número de identificação de amostra 54\r\ndata de nascimento não informada', 'a', 2, NULL, NULL, 'V122', NULL, '13:02:00', NULL, '', '2020-04-16', NULL),
+(123, NULL, 1, 4314902, 43, 139, 'número de identificação da amostra 05\r\nCPF faltando um dígito, acrescente 0 no final', 'a', 2, NULL, NULL, 'V123', NULL, '15:00:00', NULL, '', '2020-04-15', NULL),
+(124, NULL, 1, 4314902, 43, 140, '74', 'a', 2, NULL, NULL, 'V124', NULL, '13:00:00', NULL, '', '2020-04-16', NULL),
+(125, NULL, 1, 4314902, 43, 141, 'Número de identificação: 51\r\nInseri um 0 na frente do CPF', 'a', 2, NULL, NULL, 'V125', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(126, NULL, 1, 4314902, 43, 142, 'Informações faltantes: nome da mãe, data de nascimento, CPF e RG.', 'a', 2, NULL, NULL, 'V126', NULL, '12:00:00', NULL, '', '2020-04-16', NULL),
+(127, NULL, 1, 4314902, 43, 143, 'Dados faltantes: nome da mãe; data de nascimento, CPF, RG, data e hora da coleta.', 'a', 2, NULL, NULL, 'V127', NULL, '12:00:00', NULL, '', '2020-04-16', NULL),
+(128, NULL, 1, 4314902, 43, 144, 'número de identificação da amostra 01', 'a', 2, NULL, NULL, 'V128', NULL, '15:00:00', NULL, '', '2020-04-15', NULL),
+(129, NULL, 1, 4314902, 43, 145, 'Informações faltantes: nome da mãe, data de nascimento, CPF e RG.', 'a', 2, NULL, NULL, 'V129', NULL, '00:00:00', NULL, '', '2020-04-16', NULL),
+(130, NULL, 1, 4314902, 43, 146, '75', 'a', 2, NULL, NULL, 'V130', NULL, '13:00:00', NULL, '', '2020-04-16', NULL),
+(131, NULL, 1, 4314902, 43, 147, 'Dados Faltantes: nome da mãe, data nascimento, data e hora da coleta.', 'a', 2, NULL, NULL, 'V131', NULL, '10:00:00', NULL, '', '2020-04-16', NULL),
+(132, NULL, 1, 4314902, 43, 148, 'número de identificação de amostra 42', 'a', 2, NULL, NULL, 'V132', NULL, '13:02:00', NULL, '', '2020-04-15', NULL),
+(133, NULL, 1, 4314902, 43, 149, 'Dados Faltantes: nome da mãe, data nascimento, CPF, RG, data e hora da coleta.', 'a', 2, NULL, NULL, 'V133', NULL, '15:00:00', NULL, '', '2020-04-14', NULL),
+(134, NULL, 1, 4314902, 43, 150, '84', 'a', 2, NULL, NULL, 'V134', NULL, '13:00:00', NULL, '', '2020-04-16', NULL),
+(135, 66, 1, 4304630, 43, 151, 'CPF não consta \r\nCNS 124552015130003\r\nColoquei 000 na frente do código GAL\r\nRaça: Parda', 'a', 3, NULL, NULL, 'L135', NULL, '13:00:00', NULL, '', '2020-04-10', NULL),
+(136, NULL, 1, 4314902, 43, 152, 'número de identificação de amostra 11', 'a', 2, NULL, NULL, 'V136', NULL, '13:05:00', NULL, '', '2020-04-15', NULL),
+(137, NULL, 1, 4314902, 43, 153, '76', 'a', 2, NULL, NULL, 'V137', NULL, '13:00:00', NULL, '', '2020-04-16', NULL),
+(138, NULL, 1, 4314902, 43, 154, 'Dados Faltantes: nome da mãe, data nascimento, CPF, RG, data e hora da coleta.', 'a', 2, NULL, NULL, 'V138', NULL, '13:00:00', NULL, '', '2020-04-14', NULL),
+(139, NULL, 1, 4314902, 43, 154, 'Dados Faltantes: nome da mãe, data nascimento, CPF, RG, data e hora da coleta.', 'a', 2, NULL, NULL, 'V139', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(140, NULL, 1, 4314902, 43, 155, '77', 'a', 2, NULL, NULL, 'V140', NULL, '13:00:00', NULL, '', '2020-04-06', NULL),
+(141, NULL, 1, 4314902, 43, 156, 'Dados Faltantes: nome da mãe, data nascimento, CPF, RG, data e hora da coleta.', 'a', 2, NULL, NULL, 'V141', NULL, '09:00:00', NULL, '', '2020-04-16', NULL),
+(142, 67, 1, 4316808, 43, 157, 'RG não consta\r\nRaça: Branca\r\nTRABALHA NA UPA, SETOR ADMINISTRATIVO.  CPF 01320809073\r\nColoquei 000 na frente do código GAL', 'a', 3, NULL, NULL, 'L142', NULL, '13:00:00', NULL, '', '2020-04-11', NULL),
+(143, NULL, 1, 4314902, 43, 158, '78', 'a', 2, NULL, NULL, 'V143', NULL, '13:00:00', NULL, '', '2020-04-16', NULL),
+(144, NULL, 1, 4314902, 43, 159, 'número de identificação da amostra 22', 'a', 2, NULL, NULL, 'V144', NULL, '15:00:00', NULL, '', '2020-04-05', NULL),
+(145, NULL, 1, 4314902, 43, 160, 'número de identificação de amostra 06', 'a', 2, NULL, NULL, 'V145', NULL, '13:06:00', NULL, '', '2020-04-15', NULL),
+(146, NULL, 1, 4314902, 43, 161, 'Dados Faltantes: nome da mãe, data nascimento, CPF, RG, data e hora da coleta.', 'a', 2, NULL, NULL, 'V146', NULL, '12:00:00', NULL, '', '2020-04-14', NULL),
+(147, NULL, 1, 4314902, 43, 161, 'Dados Faltantes: nome da mãe, data nascimento, CPF, RG, data e hora da coleta.', 'a', 2, NULL, NULL, 'V147', NULL, '12:00:00', NULL, '', '2020-04-12', NULL),
+(148, NULL, 1, 4314902, 43, 162, 'número de identificação da amostra 23', 'a', 2, NULL, NULL, 'V148', NULL, '15:00:00', NULL, '', '2020-04-15', NULL),
+(149, NULL, 1, 4314902, 43, 163, '79', 'a', 2, NULL, NULL, 'V149', NULL, '13:00:00', NULL, '', '2020-04-16', NULL),
+(150, 68, 1, 4316907, 43, 164, '', 'a', 3, NULL, NULL, 'L150', NULL, '13:00:00', NULL, '', '2020-04-13', NULL),
+(151, NULL, 1, 4314902, 43, 165, '80', 'a', 2, NULL, NULL, 'V151', NULL, '13:00:00', NULL, '', '2020-04-16', NULL),
+(152, NULL, 1, 4314902, 43, 166, 'RG não informado\r\nCPF com número a menos - incluído 0 ao final', 'a', 2, NULL, NULL, 'V152', NULL, '13:03:00', NULL, '', '2020-04-15', NULL),
+(153, 69, 1, 4321501, 43, 167, '', 'a', 3, NULL, NULL, 'L153', NULL, '13:00:00', NULL, '', '2020-04-13', NULL),
+(154, 70, 1, 4317400, 43, 168, 'sem RG', 'a', 3, NULL, NULL, 'L154', NULL, '12:00:00', NULL, '', '2020-04-12', NULL),
+(155, NULL, 1, 4314902, 43, 169, '81', 'a', 2, NULL, NULL, 'V155', NULL, '13:00:00', NULL, '', '2020-04-16', NULL),
+(156, NULL, 1, 4314902, 43, 170, 'Data de nascimento não informada\r\nCPF não informado\r\nRG não informado', 'a', 2, NULL, NULL, 'V156', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(157, NULL, 1, 4314902, 43, 171, '82', 'a', 2, NULL, NULL, 'V157', NULL, '13:00:00', NULL, '', '2020-04-16', NULL),
+(158, 71, 1, 4316907, 43, 172, 'Dados faltantes: nome da mãe, CPF, RG.\r\nData dos primeiros sintomas: 07/04/2020 -  paciente com suspeita de coronavirus.', 'a', 3, NULL, NULL, 'L158', NULL, '00:00:00', NULL, '', '2020-04-13', NULL),
+(159, NULL, 1, 0, 43, 173, 'Informações faltantes: RG e CPF\r\nCNS: 702900509434978\r\nRaça/cor: Branca\r\nCEP: 95.585-000', 'a', 1, NULL, NULL, 'S159', NULL, '00:00:00', NULL, '', '2020-04-11', NULL),
+(160, NULL, 1, 4314902, 43, 174, 'Data de nascimento não informada', 'a', 2, NULL, NULL, 'V160', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(161, NULL, 1, 4314902, 43, 175, '83', 'a', 2, NULL, NULL, 'V161', NULL, '13:00:00', NULL, '', '2020-04-16', NULL),
+(162, 72, 1, 4316907, 43, 176, 'paciente com suspeita de coronavirus \r\nCPF e RG não constam\r\ndata dos primeiros sintomas: 08/04/2020', 'a', 3, NULL, NULL, 'L162', NULL, '12:00:00', NULL, '', '2020-04-13', NULL),
+(163, NULL, 1, 4314902, 43, 177, '', 'a', 2, NULL, NULL, 'V163', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(164, NULL, 1, 4314902, 43, 178, '73- sem CPF e ID', 'a', 2, NULL, NULL, 'V164', NULL, '13:00:00', NULL, '', '2020-04-16', NULL),
+(165, 73, 1, 4323002, 43, 179, 'Dados faltantes: CPF, RG.\r\nPaciente suspeito COVID19', 'a', 3, NULL, NULL, 'L165', NULL, '00:00:00', NULL, '', '2020-04-01', NULL),
+(166, NULL, 1, 4314902, 43, 180, '', 'a', 2, NULL, NULL, 'V166', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(167, 74, 1, 4314902, 43, 181, 'paciente sem número de CPF e sem RG\r\nCEP 91.780-855\r\nEtnia preta', 'a', 3, NULL, NULL, NULL, NULL, '12:00:00', NULL, '', '2020-04-13', NULL),
+(168, 75, 1, 4318002, 43, 182, 'Raça/cor: branca\r\ndata dos primeiros sintomas: 10/04/2020\r\nCPF e RG não informados', 'a', 3, NULL, NULL, 'L168', NULL, '12:00:00', NULL, '', '2020-04-12', NULL),
+(169, 76, 1, 4306106, 43, 183, 'Informações faltantes: RG e CPF\r\nR. LUCIO DIAS, 471\r\nPROFISSIONAL DE SAÚDE SINTOMÁTICO.', 'a', 3, NULL, NULL, 'L169', NULL, '00:00:00', NULL, '', '2020-04-13', NULL),
+(170, NULL, 1, 4314902, 43, 184, '', 'a', 2, NULL, NULL, 'V170', NULL, '13:00:00', NULL, '', '2020-04-15', NULL),
+(171, 77, 1, 4316907, 43, 185, 'etnia: branca, cep, cpf, id não informados', 'a', 3, NULL, NULL, 'L171', NULL, '13:00:00', NULL, '', '2020-04-13', NULL),
+(172, 78, 1, 4317103, 43, 186, 'CPF e RG não constam\r\n enf. responsável, Iana Haas Garcia.', 'a', 3, NULL, NULL, 'L172', NULL, '12:00:00', NULL, '', '2020-04-09', NULL),
+(173, 80, 1, 4300604, 43, 187, 'sem etnia e cep', 'a', 3, NULL, NULL, 'L173', NULL, '13:00:00', NULL, '', '2020-04-13', NULL),
+(174, 82, 1, 4319604, 43, 189, 'branco Cep: 97.340-000 sem CPF e ID', 'a', 3, NULL, NULL, 'L174', NULL, '13:00:00', NULL, '', '2020-04-11', NULL),
+(175, 83, 1, 0, 43, 190, '', 'a', 3, NULL, NULL, 'L175', NULL, '13:00:00', NULL, '', '2020-04-09', NULL),
+(176, 85, 1, 4317103, 43, 190, 'sem CPF, RG, etnia, CEP', 'a', 3, NULL, NULL, 'L176', NULL, '13:00:00', NULL, '', '2020-04-09', NULL),
+(177, 90, 1, 4307807, 43, 188, '', 'a', 3, NULL, NULL, 'L177', NULL, '12:00:00', NULL, '', '2020-04-13', NULL),
+(185, 94, NULL, 4309209, 43, 213, 'CEP da coleta é o mesm oda residência.', 'g', 3, 'VIGILÂNCIA EM SAÚDE GRAVATAÍ', '', 'L185', '', '08:00:00', 'Síndrome Respitatória Aguda Grave Associada ao Coronavírus (SARS - CoV)', '', '2020-04-22', ''),
+(186, NULL, NULL, 4314902, 43, 195, 'Teste - Desconsiderar', 'g', 5, 'UBS-Vale', '', 'O186', '', NULL, 'Teste - Não considerar', '', '2020-04-21', ''),
+(187, 95, NULL, 4309209, 43, 214, 'Hora coleta não informada.', 'g', 3, 'VIGILANCIA EM SAUDE GRAVATAI', '', 'L187', '', '08:00:00', 'Suspeito COVID19', '', '2020-04-22', ''),
+(188, NULL, NULL, 4309209, 43, 215, 'Hora da coleta e CEP de Sobre a Coleta não informados.', 'a', 3, 'SISTEMA DE VIGILANCIA EM SAUDE', '', 'L188', '', '08:00:00', 'Investigação COVID19', '', '2020-04-16', ''),
+(189, 96, NULL, 4303103, 43, 217, 'Hora da coleta não informada.', 'a', 3, 'SISTEMA DE VIGILANCIA EM SAUDE', '', 'L189', '', '08:00:00', 'Investigação de COVID19', '', '2020-04-20', ''),
+(190, NULL, NULL, 4303103, 43, 215, 'Hora da coleta não informada.', 'a', 3, 'SISTEMA DE VIGILANCIA EM SAUDE', '', 'L190', '', '08:00:00', 'Investigação de COVID19', '', '2020-04-16', ''),
+(191, 97, NULL, 4309209, 43, 218, 'Hora de coleta não informada.', 'g', 3, 'VIGILANCIA EM SAUDE GRAVATAI', '', 'L191', '', '08:00:00', 'Investigação COVID19', '', '2020-04-22', ''),
+(192, 98, NULL, 4303103, 43, 219, '', 'a', 3, '', '', 'L192', '', '12:00:00', 'covid19 com sintomas, influenza e vírus respiratórios', '', '2020-04-22', ''),
+(193, 99, NULL, 4323002, 43, 220, '', 'g', 3, 'SISTEMA DE VIGILANCIA EM SAUDE VIAMAO', '', 'L193', '', '12:00:00', 'covid19 com sintomas, influenza e vírus respiratórios', '', '2020-04-22', ''),
+(194, 100, NULL, 4323002, 43, 221, '', 'g', 3, 'SISTEMA DE VIGILANCIA EM SAUDE VIAMAO', '', 'L194', '', '12:00:00', 'covid19 com sintomas, influenza e vírus respiratórios', '', '2020-04-22', ''),
+(195, 101, NULL, 4323002, 43, 222, '', 'a', 3, 'SISTEMA DE VIGILANCIA EM SAUDE VIAMAO', '', 'L195', '', '12:00:00', 'covid19 com sintomas, influenza e vírus respiratórios', '', '2020-04-22', '');
 
 -- --------------------------------------------------------
 
@@ -5780,26 +5854,155 @@ CREATE TABLE `tb_cadastroamostra` (
 --
 
 INSERT INTO `tb_cadastroamostra` (`idCadastroAmostra`, `idAmostra_fk`, `idLocalArmazenamento_fk`, `idUsuario_fk`, `dataCadastroInicio`, `dataCadastroFim`) VALUES
-(3, 104, NULL, 2, '2020-04-19 13:45:35', '2020-04-19 13:45:35'),
-(4, 106, NULL, 2, '2020-04-19 13:48:03', '2020-04-19 13:48:03'),
-(6, 110, NULL, 2, '2020-04-19 15:28:33', '2020-04-19 15:28:33'),
-(7, 112, NULL, 2, '2020-04-19 17:25:40', '2020-04-19 17:25:40'),
-(8, 114, NULL, 2, '2020-04-19 17:30:09', '2020-04-19 17:30:09'),
-(9, 115, NULL, 2, '2020-04-19 17:35:04', '2020-04-19 17:35:04'),
-(10, 116, NULL, 2, '2020-04-19 17:37:01', '2020-04-19 17:37:01'),
-(11, 117, NULL, 2, '2020-04-19 17:38:31', '2020-04-19 17:38:31'),
-(12, 118, NULL, 2, '2020-04-19 17:43:24', '2020-04-19 17:43:24'),
-(13, 119, NULL, 2, '2020-04-19 17:44:12', '2020-04-19 17:44:12'),
-(14, 120, NULL, 2, '2020-04-19 17:44:47', '2020-04-19 17:44:47'),
-(15, 121, NULL, 2, '2020-04-19 17:47:01', '2020-04-19 17:47:01'),
-(16, 122, NULL, 80, '2020-04-19 21:45:20', '2020-04-19 21:45:20'),
-(17, 126, NULL, 80, '2020-04-20 09:04:35', '2020-04-20 09:04:35'),
-(18, 127, NULL, 80, '2020-04-20 09:06:14', '2020-04-20 09:06:14'),
-(19, 128, NULL, 80, '2020-04-20 09:07:59', '2020-04-20 09:07:59'),
-(20, 129, NULL, 80, '2020-04-20 09:10:11', '2020-04-20 09:10:11'),
-(21, 130, NULL, 80, '2020-04-20 09:13:03', '2020-04-20 09:13:03'),
-(22, 131, NULL, 2, '2020-04-20 09:14:42', '2020-04-20 09:14:42'),
-(23, 132, NULL, 2, '2020-04-20 09:17:01', '2020-04-20 09:17:01');
+(38, 40, NULL, 2, '2020-04-15 22:21:47', '2020-04-15 22:23:59'),
+(39, 41, NULL, 9, '2020-04-16 07:26:56', '2020-04-16 07:27:57'),
+(40, 42, NULL, 9, '2020-04-16 07:51:40', '2020-04-16 07:56:26'),
+(41, 43, NULL, 2, '2020-04-16 08:18:46', '2020-04-16 08:19:09'),
+(42, 44, NULL, 2, '2020-04-16 08:42:19', '2020-04-16 08:42:54'),
+(43, 45, NULL, 2, '2020-04-16 08:46:36', '2020-04-16 08:47:06'),
+(44, 46, NULL, 2, '2020-04-16 08:48:46', '2020-04-16 08:49:29'),
+(45, 47, NULL, 77, '2020-04-16 10:13:57', '2020-04-16 10:19:33'),
+(46, 48, NULL, 85, '2020-04-16 10:13:56', '2020-04-16 10:21:07'),
+(47, 49, NULL, 86, '2020-04-16 10:15:55', '2020-04-16 10:22:28'),
+(48, 50, NULL, 77, '2020-04-16 10:22:11', '2020-04-16 10:23:29'),
+(49, 51, NULL, 85, '2020-04-16 10:21:07', '2020-04-16 10:23:43'),
+(50, 52, NULL, 77, '2020-04-16 10:23:53', '2020-04-16 10:26:08'),
+(51, 53, NULL, 86, '2020-04-16 10:23:36', '2020-04-16 10:26:49'),
+(52, 54, NULL, 83, '2020-04-16 10:25:46', '2020-04-16 10:26:57'),
+(53, 55, NULL, 85, '2020-04-16 10:25:00', '2020-04-16 10:27:00'),
+(54, 56, NULL, 77, '2020-04-16 10:26:30', '2020-04-16 10:27:50'),
+(55, 57, NULL, 77, '2020-04-16 10:28:28', '2020-04-16 10:29:44'),
+(56, 58, NULL, 83, '2020-04-16 10:28:48', '2020-04-16 10:30:52'),
+(57, 59, NULL, 85, '2020-04-16 10:28:28', '2020-04-16 10:30:59'),
+(58, 60, NULL, 77, '2020-04-16 10:30:03', '2020-04-16 10:31:00'),
+(59, 61, NULL, 86, '2020-04-16 10:28:34', '2020-04-16 10:31:39'),
+(60, 62, NULL, 86, '2020-04-16 10:32:20', '2020-04-16 10:33:27'),
+(61, 63, NULL, 77, '2020-04-16 10:33:36', '2020-04-16 10:34:33'),
+(62, 64, NULL, 77, '2020-04-16 10:34:56', '2020-04-16 10:37:13'),
+(63, 65, NULL, 77, '2020-04-16 10:37:13', '2020-04-16 10:38:06'),
+(64, 66, NULL, 86, '2020-04-16 10:34:07', '2020-04-16 10:38:30'),
+(65, 67, NULL, 83, '2020-04-16 10:37:22', '2020-04-16 10:38:58'),
+(66, 68, NULL, 77, '2020-04-16 10:39:22', '2020-04-16 10:40:28'),
+(67, 69, NULL, 86, '2020-04-16 10:39:11', '2020-04-16 10:40:54'),
+(68, 70, NULL, 83, '2020-04-16 10:39:35', '2020-04-16 10:41:08'),
+(69, 71, NULL, 77, '2020-04-16 10:40:48', '2020-04-16 10:42:15'),
+(70, 72, NULL, 86, '2020-04-16 10:41:24', '2020-04-16 10:43:48'),
+(71, 73, NULL, 83, '2020-04-16 10:42:19', '2020-04-16 10:43:51'),
+(72, 74, NULL, 83, '2020-04-16 10:44:21', '2020-04-16 10:46:15'),
+(73, 75, NULL, 80, '2020-04-16 10:43:52', '2020-04-16 10:46:23'),
+(74, 76, NULL, 80, '2020-04-16 10:46:23', '2020-04-16 10:48:07'),
+(75, 77, NULL, 86, '2020-04-16 10:46:21', '2020-04-16 10:49:33'),
+(76, 78, NULL, 80, '2020-04-16 10:48:07', '2020-04-16 10:50:19'),
+(77, 79, NULL, 83, '2020-04-16 10:46:46', '2020-04-16 10:50:44'),
+(78, 80, NULL, 80, '2020-04-16 10:50:19', '2020-04-16 10:51:55'),
+(79, 81, NULL, 86, '2020-04-16 10:50:11', '2020-04-16 10:52:09'),
+(80, 82, NULL, 83, '2020-04-16 10:51:22', '2020-04-16 10:53:30'),
+(81, 83, NULL, 83, '2020-04-16 10:54:07', '2020-04-16 10:55:24'),
+(82, 84, NULL, 86, '2020-04-16 10:54:00', '2020-04-16 10:55:41'),
+(83, 85, NULL, 80, '2020-04-16 10:54:41', '2020-04-16 10:56:31'),
+(84, 86, NULL, 83, '2020-04-16 10:55:59', '2020-04-16 10:57:41'),
+(85, 87, NULL, 80, '2020-04-16 10:57:53', '2020-04-16 10:59:42'),
+(86, 88, NULL, 83, '2020-04-16 10:58:20', '2020-04-16 10:59:47'),
+(87, 89, NULL, 83, '2020-04-16 11:00:33', '2020-04-16 11:01:56'),
+(88, 90, NULL, 86, '2020-04-16 11:18:52', '2020-04-16 11:21:39'),
+(89, 91, NULL, 77, '2020-04-16 11:03:04', '2020-04-16 11:22:37'),
+(90, 92, NULL, 80, '2020-04-16 11:04:08', '2020-04-16 11:23:40'),
+(91, 93, NULL, 86, '2020-04-16 11:22:24', '2020-04-16 11:24:53'),
+(92, 94, NULL, 80, '2020-04-16 11:24:12', '2020-04-16 11:28:35'),
+(93, 95, NULL, 77, '2020-04-16 11:31:17', '2020-04-16 11:33:29'),
+(94, 96, NULL, 80, '2020-04-16 11:30:40', '2020-04-16 11:36:38'),
+(95, 97, NULL, 83, '2020-04-16 11:34:25', '2020-04-16 11:39:11'),
+(96, 98, NULL, 86, '2020-04-16 11:32:28', '2020-04-16 11:39:13'),
+(97, 99, NULL, 86, '2020-04-16 11:40:50', '2020-04-16 11:43:57'),
+(98, 100, NULL, 77, '2020-04-16 11:41:31', '2020-04-16 11:44:55'),
+(99, 101, NULL, 83, '2020-04-16 11:40:35', '2020-04-16 11:46:42'),
+(100, 102, NULL, 77, '2020-04-16 11:45:59', '2020-04-16 11:48:07'),
+(101, 103, NULL, 77, '2020-04-16 11:48:50', '2020-04-16 11:51:14'),
+(102, 104, NULL, 86, '2020-04-16 11:46:57', '2020-04-16 11:54:07'),
+(103, 105, NULL, 77, '2020-04-16 11:51:56', '2020-04-16 11:54:40'),
+(104, 106, NULL, 80, '2020-04-16 11:50:28', '2020-04-16 11:55:47'),
+(105, 107, NULL, 83, '2020-04-16 11:50:25', '2020-04-16 11:56:26'),
+(106, 108, NULL, 80, '2020-04-16 11:55:47', '2020-04-16 11:58:41'),
+(107, 109, NULL, 86, '2020-04-16 11:57:24', '2020-04-16 12:03:08'),
+(108, 110, NULL, 83, '2020-04-16 12:03:01', '2020-04-16 12:06:28'),
+(109, 111, NULL, 83, '2020-04-16 12:16:06', '2020-04-16 12:18:30'),
+(110, 112, NULL, 83, '2020-04-16 12:19:35', '2020-04-16 12:21:45'),
+(111, 113, NULL, 83, '2020-04-16 12:22:46', '2020-04-16 12:24:51'),
+(112, 114, NULL, 84, '2020-04-16 12:41:32', '2020-04-16 12:45:42'),
+(113, 115, NULL, 78, '2020-04-16 12:41:35', '2020-04-16 12:46:22'),
+(114, 116, NULL, 75, '2020-04-16 12:42:44', '2020-04-16 12:46:44'),
+(115, 117, NULL, 76, '2020-04-16 12:41:31', '2020-04-16 12:46:57'),
+(116, 118, NULL, 84, '2020-04-16 12:45:41', '2020-04-16 12:47:03'),
+(117, 119, NULL, 85, '2020-04-16 12:43:53', '2020-04-16 12:48:01'),
+(118, 120, NULL, 76, '2020-04-16 12:42:29', '2020-04-16 12:48:58'),
+(119, 121, NULL, 78, '2020-04-16 12:50:07', '2020-04-16 12:51:08'),
+(120, 122, NULL, 85, '2020-04-16 12:49:18', '2020-04-16 12:52:55'),
+(121, 123, NULL, 84, '2020-04-16 12:51:08', '2020-04-16 12:53:00'),
+(122, 124, NULL, 78, '2020-04-16 12:52:09', '2020-04-16 12:53:50'),
+(123, 125, NULL, 76, '2020-04-16 12:52:56', '2020-04-16 12:54:07'),
+(124, 126, NULL, 76, '2020-04-16 12:51:04', '2020-04-16 12:54:16'),
+(125, 127, NULL, 75, '2020-04-16 12:52:46', '2020-04-16 12:54:24'),
+(126, 128, NULL, 84, '2020-04-16 13:12:44', '2020-04-16 13:14:37'),
+(127, 129, NULL, 76, '2020-04-16 13:12:44', '2020-04-16 13:15:28'),
+(128, 130, NULL, 78, '2020-04-16 13:13:44', '2020-04-16 13:16:05'),
+(129, 131, NULL, 75, '2020-04-16 13:13:56', '2020-04-16 13:16:09'),
+(130, 132, NULL, 85, '2020-04-16 13:15:03', '2020-04-16 13:18:05'),
+(131, 133, NULL, 75, '2020-04-16 13:17:20', '2020-04-16 13:19:25'),
+(132, 134, NULL, 78, '2020-04-16 13:17:33', '2020-04-16 13:19:34'),
+(133, 135, NULL, 76, '2020-04-16 13:14:33', '2020-04-16 13:19:55'),
+(134, 136, NULL, 85, '2020-04-16 13:19:22', '2020-04-16 13:20:51'),
+(135, 137, NULL, 78, '2020-04-16 13:20:18', '2020-04-16 13:21:31'),
+(136, 138, NULL, 75, '2020-04-16 13:20:22', '2020-04-16 13:21:40'),
+(137, 139, NULL, 75, '2020-04-16 13:21:40', '2020-04-16 13:22:04'),
+(138, 140, NULL, 78, '2020-04-16 13:22:18', '2020-04-16 13:23:46'),
+(139, 141, NULL, 75, '2020-04-16 13:22:58', '2020-04-16 13:24:05'),
+(140, 142, NULL, 76, '2020-04-16 13:20:43', '2020-04-16 13:24:14'),
+(141, 143, NULL, 78, '2020-04-16 13:24:34', '2020-04-16 13:25:47'),
+(142, 144, NULL, 84, '2020-04-16 13:24:53', '2020-04-16 13:26:25'),
+(143, 145, NULL, 85, '2020-04-16 13:24:35', '2020-04-16 13:26:38'),
+(144, 146, NULL, 75, '2020-04-16 13:24:56', '2020-04-16 13:27:14'),
+(145, 147, NULL, 75, '2020-04-16 13:27:14', '2020-04-16 13:27:44'),
+(146, 148, NULL, 84, '2020-04-16 13:27:56', '2020-04-16 13:29:21'),
+(147, 149, NULL, 78, '2020-04-16 13:28:36', '2020-04-16 13:29:50'),
+(148, 150, NULL, 76, '2020-04-16 13:28:14', '2020-04-16 13:30:41'),
+(149, 151, NULL, 78, '2020-04-16 13:30:40', '2020-04-16 13:31:47'),
+(150, 152, NULL, 85, '2020-04-16 13:30:59', '2020-04-16 13:32:43'),
+(151, 153, NULL, 76, '2020-04-16 13:32:17', '2020-04-16 13:34:44'),
+(152, 154, NULL, 84, '2020-04-16 13:32:00', '2020-04-16 13:36:41'),
+(153, 155, NULL, 78, '2020-04-16 13:36:50', '2020-04-16 13:37:23'),
+(154, 156, NULL, 76, '2020-04-16 13:36:15', '2020-04-16 13:38:04'),
+(155, 157, NULL, 78, '2020-04-16 13:38:14', '2020-04-16 13:39:20'),
+(156, 158, NULL, 75, '2020-04-16 13:32:01', '2020-04-16 13:39:38'),
+(157, 159, NULL, 76, '2020-04-16 13:32:20', '2020-04-16 13:40:28'),
+(158, 160, NULL, 76, '2020-04-16 13:39:43', '2020-04-16 13:41:12'),
+(159, 161, NULL, 78, '2020-04-16 13:40:14', '2020-04-16 13:41:18'),
+(160, 162, NULL, 85, '2020-04-16 13:41:58', '2020-04-16 13:43:22'),
+(161, 163, NULL, 76, '2020-04-16 13:42:07', '2020-04-16 13:43:27'),
+(162, 164, NULL, 78, '2020-04-16 13:42:11', '2020-04-16 13:43:50'),
+(163, 165, NULL, 75, '2020-04-16 13:40:39', '2020-04-16 13:47:48'),
+(164, 166, NULL, 76, '2020-04-16 13:47:18', '2020-04-16 13:47:56'),
+(165, 167, NULL, 84, '2020-04-16 13:44:34', '2020-04-16 13:48:16'),
+(166, 168, NULL, 85, '2020-04-16 13:46:17', '2020-04-16 13:49:04'),
+(167, 169, NULL, 76, '2020-04-16 13:45:12', '2020-04-16 13:49:28'),
+(168, 170, NULL, 76, '2020-04-16 13:48:53', '2020-04-16 13:50:05'),
+(169, 171, NULL, 78, '2020-04-16 13:51:10', '2020-04-16 13:52:22'),
+(170, 172, NULL, 85, '2020-04-16 13:50:02', '2020-04-16 13:53:52'),
+(171, 173, NULL, 78, '2020-04-16 13:53:48', '2020-04-16 13:55:34'),
+(172, 174, NULL, 78, '2020-04-16 13:56:30', '2020-04-16 13:58:25'),
+(173, 175, NULL, 78, '2020-04-16 13:59:22', '2020-04-16 14:00:49'),
+(174, 176, NULL, 78, '2020-04-16 14:00:49', '2020-04-16 14:02:03'),
+(175, 177, NULL, 85, '2020-04-16 14:17:08', '2020-04-16 14:17:30'),
+(181, 185, NULL, 77, '2020-04-22 09:33:34', '2020-04-22 09:36:08'),
+(182, 186, NULL, 15, '2020-04-22 09:41:19', '2020-04-22 09:41:53'),
+(183, 187, NULL, 77, '2020-04-22 11:59:46', '2020-04-22 12:05:26'),
+(184, 188, NULL, 77, '2020-04-22 12:10:22', '2020-04-22 12:14:46'),
+(185, 189, NULL, 77, '2020-04-22 12:17:20', '2020-04-22 12:19:57'),
+(186, 190, NULL, 77, '2020-04-22 12:21:26', '2020-04-22 12:23:14'),
+(187, 191, NULL, 77, '2020-04-22 12:31:18', '2020-04-22 12:35:18'),
+(188, 192, NULL, 84, '2020-04-22 14:04:31', '2020-04-22 14:12:50'),
+(189, 193, NULL, 84, '2020-04-22 14:49:47', '2020-04-22 14:55:05'),
+(190, 194, NULL, 84, '2020-04-22 14:56:51', '2020-04-22 15:00:54'),
+(191, 195, NULL, 84, '2020-04-22 15:04:02', '2020-04-22 15:08:35');
 
 -- --------------------------------------------------------
 
@@ -5840,27 +6043,105 @@ CREATE TABLE `tb_codgal` (
 --
 
 INSERT INTO `tb_codgal` (`idCodGAL`, `idPaciente_fk`, `codigo`) VALUES
-(1, 1, '123456789190'),
-(2, 2, '0'),
-(3, 2, '1234567890123456'),
-(4, 2, '123456789012323'),
-(5, 15, '0'),
-(6, 2, '12345678901234'),
-(7, 51, '8977899878999'),
-(8, 52, '897789987897'),
-(9, 72, '887654678909'),
-(10, 73, '999999999999778'),
-(11, 74, '999999999999998'),
-(12, 82, '123584930492433'),
-(13, 83, '1223433'),
-(14, 84, '1223433245'),
-(15, 85, '4545678'),
-(16, 86, '34412312'),
-(17, 87, '2121212'),
-(20, 226, '11234567890123000'),
-(21, 227, '11234567890123000'),
-(22, 228, '11234567890123000'),
-(23, 243, '1234567890123456');
+(1, 16, '548963214578532'),
+(2, 19, '245897623541256'),
+(3, 20, '245897623541256'),
+(4, 21, '245897623541256'),
+(5, 22, '458796523645896'),
+(6, 23, '458796523645896'),
+(7, 24, '458796523645896'),
+(8, 25, '458796523645896'),
+(9, 26, '458796523645896'),
+(10, 27, '458796523645896'),
+(11, 28, '458796523645897'),
+(12, 26, '458796523645894'),
+(13, 29, '458796523645812'),
+(14, 31, '458796321548637'),
+(15, 31, '458796321548637'),
+(16, 31, '458796321548637'),
+(17, 32, '458796321548632'),
+(18, 32, '458796321548632'),
+(19, 32, '458796321548632'),
+(20, 32, '458796321548632'),
+(21, 32, '458796321548632'),
+(22, 32, '458796321548632'),
+(23, 32, '458796321548632'),
+(24, 32, '458796321548632'),
+(25, 32, '458796321548632'),
+(26, 32, '458796321548632'),
+(27, 32, '458796321548632'),
+(28, 33, '14523654879652'),
+(29, 33, '14523654879652'),
+(30, 39, '125489632563256'),
+(31, 40, '125489632563257'),
+(32, 41, '125489632563259'),
+(33, 43, '125469856325698'),
+(34, 44, '125469856325698'),
+(35, 45, '125469856324587'),
+(36, 45, '125469856324587'),
+(37, 46, '14523654879622'),
+(38, 47, '125697436523698'),
+(39, 53, '478236152965489'),
+(40, 62, '768904563897598'),
+(41, 63, '123584930492433'),
+(42, 63, '123584930492433'),
+(43, 107, '124825050210018'),
+(44, 108, '206326829270005'),
+(45, 110, '0'),
+(46, 111, '212121212121212'),
+(47, 112, '700500178803154'),
+(48, 113, '200124000044000'),
+(49, 114, '201312000779000'),
+(50, 115, '201009000267000'),
+(51, 116, '201312000763000'),
+(52, 117, '200403000554000'),
+(53, 118, '201514000481000'),
+(54, 119, '201615000399000'),
+(55, 120, '201220000316000'),
+(56, 121, '200104002128000'),
+(57, 122, '200201000973000'),
+(58, 123, '201018000054000'),
+(59, 124, '201312000769000'),
+(60, 125, '200133000018000'),
+(61, 126, '200104002138000'),
+(62, 127, '201514000484000'),
+(63, 128, '201817000624000'),
+(64, 129, '201901000409000'),
+(65, 130, '201312000780000'),
+(66, 151, '201817000626'),
+(67, 157, '201312000770'),
+(68, 164, '200403000552'),
+(69, 167, '201817000631'),
+(70, 168, '200403000543'),
+(71, 172, '200403000563'),
+(72, 176, '200403000564'),
+(73, 179, '200124000043'),
+(74, 181, '200133000019'),
+(75, 182, '201220000315'),
+(76, 183, '200908000199'),
+(77, 185, '200403000561'),
+(78, 186, '201018000052'),
+(79, 186, '201018000052'),
+(80, 187, '200162000012'),
+(81, 188, '201615000407'),
+(82, 189, '200403000541'),
+(83, 190, '201018000053'),
+(84, 188, '201615000407'),
+(85, 190, '201018000053'),
+(86, 188, '201615000407'),
+(87, 188, '201615000407'),
+(88, 188, '201615000407'),
+(89, 188, '201615000407'),
+(90, 188, '201615000407'),
+(91, 192, '11111'),
+(94, 213, '200215000003'),
+(95, 214, '200215000004'),
+(96, 217, '200215000001'),
+(97, 218, '200215000005'),
+(98, 219, '200215000006'),
+(99, 220, '200215000007'),
+(100, 221, '200215000008'),
+(101, 222, '200215000009');
 
 -- --------------------------------------------------------
 
@@ -6040,56 +6321,15 @@ CREATE TABLE `tb_infostubo` (
 --
 
 INSERT INTO `tb_infostubo` (`idInfosTubo`, `idUsuario_fk`, `idLocalArmazenamento_fk`, `idTubo_fk`, `statusTubo`, `etapa`, `dataHora`, `reteste`, `volume`) VALUES
-(3, 274715, 0, 32, 'Aguardando preparação', 'recepção - finalizada', '2020-04-18 17:26:07', 'n', 0),
-(4, 274715, 0, 34, 'Descartado', 'recepção - finalizada', '2020-04-18 17:29:25', 'n', 0),
-(5, 274715, 0, 35, 'Descartado', 'recepção - finalizada', '2020-04-18 17:31:28', 'n', 0),
-(6, 274715, 0, 39, 'Aguardando preparação', 'recepção - finalizada', '2020-04-18 21:11:21', 'n', 0),
-(7, 274715, 0, 40, 'Aguardando preparação', 'recepção - finalizada', '2020-04-18 21:11:50', 'n', 0),
-(8, 274715, 0, 41, 'Aguardando preparação', 'recepção - finalizada', '2020-04-18 21:12:26', 'n', 0),
-(9, 274715, 0, 42, 'Aguardando preparação', 'recepção - finalizada', '2020-04-18 21:14:08', 'n', 0),
-(10, 274715, 0, 43, 'Aguardando preparação', 'recepção - finalizada', '2020-04-18 21:15:54', 'n', 0),
-(11, 274715, 0, 44, 'Aguardando preparação', 'recepção - finalizada', '2020-04-18 21:28:03', 'n', 0),
-(12, 274715, 0, 44, 'Descartado', 'recepção - finalizada', '2020-04-18 21:28:52', 'n', 0),
-(13, 274715, 0, 34, 'Descartado', 'recepção - finalizada', '2020-04-18 22:34:32', 'n', 0),
-(14, 274715, 0, 45, 'Aguardando preparação', 'recepção - finalizada', '2020-04-18 23:34:53', 'n', 0),
-(15, 274715, 0, 46, 'Descartado', 'recepção - finalizada', '2020-04-18 23:46:42', 'n', 0),
-(16, 274715, 0, 47, 'Descartado', 'recepção - finalizada', '2020-04-18 23:58:59', 'n', 0),
-(19, 274715, 0, 50, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 00:26:24', 'n', 0),
-(20, 274715, 0, 51, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 00:27:58', 'n', 0),
-(21, 274715, 0, 52, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 00:31:11', 'n', 0),
-(22, 274715, 0, 53, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 00:33:09', 'n', 0),
-(23, 274715, 0, 54, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 00:35:16', 'n', 0),
-(24, 274715, 0, 55, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 00:38:31', 'n', 0),
-(25, 274715, 0, 56, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 00:39:00', 'n', 0),
-(26, 274715, 0, 57, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 00:39:08', 'n', 0),
-(27, 274715, 0, 58, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 00:46:06', 'n', 0),
-(28, 274715, 0, 59, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 00:46:14', 'n', 0),
-(29, 274715, 0, 60, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 00:46:31', 'n', 0),
-(30, 274715, 0, 61, 'Descartado', 'recepção - finalizada', '2020-04-19 00:51:54', 'n', 0),
-(31, 274715, 0, 62, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 14:12:15', 'n', 0),
-(32, 274715, 0, 63, 'Descartado', 'recepção - finalizada', '2020-04-19 14:13:45', 'n', 0),
-(35, 274715, 0, 65, 'Descartado', 'recepção - finalizada', '2020-04-19 14:26:08', 'n', 0),
-(36, 274715, 0, 66, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 14:26:39', 'n', 0),
-(45, 274715, 0, 62, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 14:37:01', 'n', 0),
-(46, 274715, 0, 62, 'Descartado', 'recepção - finalizada', '2020-04-19 14:37:20', 'n', 0),
-(47, 274715, 0, 67, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 15:28:34', 'n', 0),
-(48, 274715, 0, 68, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 17:30:10', 'n', 0),
-(49, 274715, 0, 69, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 17:35:05', 'n', 0),
-(50, 274715, 0, 70, 'Descartado', 'recepção - finalizada', '2020-04-19 17:37:03', 'n', 0),
-(51, 274715, 0, 71, 'Descartado', 'recepção - finalizada', '2020-04-19 17:38:31', 'n', 0),
-(52, 274715, 0, 72, 'Descartado', 'recepção - finalizada', '2020-04-19 17:43:24', 'n', 0),
-(53, 274715, 0, 73, 'Descartado', 'recepção - finalizada', '2020-04-19 17:47:03', 'n', 0),
-(54, 0, 0, 74, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 21:45:21', 'n', 0),
-(55, 0, 0, 75, 'Descartado', 'recepção - finalizada', '2020-04-20 09:02:16', 'n', 0),
-(56, 0, 0, 76, 'Aguardando preparação', 'recepção - finalizada', '2020-04-20 09:03:17', 'n', 0),
-(57, 0, 0, 77, 'Descartado', 'recepção - finalizada', '2020-04-20 09:03:54', 'n', 0),
-(58, 0, 0, 78, 'Descartado', 'recepção - finalizada', '2020-04-20 09:04:35', 'n', 0),
-(59, 0, 0, 78, 'Descartado', 'recepção - finalizada', '2020-04-20 09:04:55', 'n', 0),
-(60, 0, 0, 79, 'Aguardando preparação', 'recepção - finalizada', '2020-04-20 09:06:14', 'n', 0),
-(61, 0, 0, 80, 'Descartado', 'recepção - finalizada', '2020-04-20 09:10:12', 'n', 0),
-(62, 0, 0, 80, 'Descartado', 'recepção - finalizada', '2020-04-20 09:11:16', 'n', 0),
-(63, 0, 0, 81, 'Descartado', 'recepção - finalizada', '2020-04-20 09:13:04', 'n', 0),
-(64, 274715, 0, 82, 'Aguardando preparação', 'recepção - finalizada', '2020-04-20 09:17:01', 'n', 0);
+(4, 0, 0, 3, 'Descartado', 'recepção - finalizada', '2020-04-19 22:57:33', 'n', 0),
+(5, 274715, 0, 4, 'Aguardando preparação', 'recepção - finalizada', '2020-04-19 23:53:57', 'n', 0),
+(6, 0, 0, 5, 'Aguardando preparação', 'recepção - finalizada', '2020-04-20 08:01:57', 'n', 0),
+(7, 274715, 0, 6, 'Descartado', 'emitir laudo - descarte na recepção', '2020-04-21 23:36:23', 'n', 0),
+(8, 96566, 0, 7, 'Aguardando preparação', 'recepção - finalizada', '2020-04-22 12:14:46', 'n', 0),
+(9, 96566, 0, 8, 'Aguardando preparação', 'recepção - finalizada', '2020-04-22 12:19:58', 'n', 0),
+(10, 96566, 0, 9, 'Aguardando preparação', 'recepção - finalizada', '2020-04-22 12:23:14', 'n', 0),
+(11, 23918, 0, 10, 'Aguardando preparação', 'recepção - finalizada', '2020-04-22 14:12:50', 'n', 0),
+(12, 23918, 0, 11, 'Aguardando preparação', 'recepção - finalizada', '2020-04-22 15:08:36', 'n', 0);
 
 -- --------------------------------------------------------
 
@@ -6132,55 +6372,27 @@ CREATE TABLE `tb_log` (
   `idUsuario` int(10) UNSIGNED NOT NULL,
   `texto` longtext NOT NULL,
   `dataHora` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Extraindo dados da tabela `tb_log`
 --
 
 INSERT INTO `tb_log` (`idLog`, `idUsuario`, `texto`, `dataHora`) VALUES
-(65, 2, 'Error: Call to a member function getIdPaciente() on null in C:\\xampp\\htdocs\\covid-system\\acoes\\Paciente\\cadastro_paciente.php:289\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(260): require_once()\n#1 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(260): require_once()\n#1 {main}', '2020-04-17 17:39:41'),
-(66, 2, 'Error: Call to a member function setRG() on null in C:\\xampp\\htdocs\\covid-system\\acoes\\Paciente\\cadastro_paciente.php:201\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(260): require_once()\n#1 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(260): require_once()\n#1 {main}', '2020-04-17 20:16:18'),
-(67, 2, 'Error: Call to a member function setRG() on null in C:\\xampp\\htdocs\\covid-system\\acoes\\Paciente\\cadastro_paciente.php:201\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(260): require_once()\n#1 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(260): require_once()\n#1 {main}', '2020-04-17 20:18:15'),
-(68, 2, 'Error: Call to a member function getIndex_etnia() on null in C:\\xampp\\htdocs\\covid-system\\classes\\Pagina\\Interf.php:201\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\Paciente\\cadastro_paciente.php(65): Interf->montar_select_etnias(\'<select class=\"...\', Object(Etnia), Object(EtniaRN), Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(260): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\Paciente\\cadastro_paciente.php(65): Interf->montar_select_etnias(\'<select class=\"...\', Object(Etnia), Object(EtniaRN), Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(260): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-17 21:27:28'),
-(69, 2, 'Error: Call to a member function adicionar_validacao() on null in C:\\xampp\\htdocs\\covid-system\\acoes\\Paciente\\cadastro_paciente.php:386\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(260): require_once()\n#1 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(260): require_once()\n#1 {main}', '2020-04-17 21:54:27'),
-(70, 2, 'Error: Call to undefined method Paciente::setPaciente() in C:\\xampp\\htdocs\\covid-system\\acoes\\Paciente\\cadastro_paciente.php:459\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(260): require_once()\n#1 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(260): require_once()\n#1 {main}', '2020-04-17 23:09:39'),
-(71, 2, 'Exception: Unknown column \'dataHoraColeta\' in \'field list\' in C:\\xampp\\htdocs\\covid-system\\classes\\Banco\\Banco.php:124\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraBD.php(118): Banco->consultarSql(\'SELECT idAmostr...\', Array)\n#1 C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraRN.php(99): AmostraBD->consultar(Object(Amostra), Object(Banco))\n#2 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\listar_cadastroAmostra.php(60): AmostraRN->consultar(Object(Amostra))\n#3 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(279): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#4 {main}\n\nNext Excecao: Erro consultando a amostra no BD. in C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraBD.php:135\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraRN.php(99): AmostraBD->consultar(Object(Amostra), Object(Banco))\n#1 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\listar_cadastroAmostra.php(60): AmostraRN->consultar(Object(Amostra))\n#2 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(279): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#3 {main}\n\nNext Exception: Erro consultando amostra. in C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraRN.php:104\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\listar_cadastroAmostra.php(60): AmostraRN->consultar(Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(279): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\listar_cadastroAmostra.php(60): AmostraRN->consultar(Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(279): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-18 00:08:51'),
-(72, 2, 'Exception: Unknown column \'dataHoraColeta\' in \'field list\' in C:\\xampp\\htdocs\\covid-system\\classes\\Banco\\Banco.php:124\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraBD.php(118): Banco->consultarSql(\'SELECT idAmostr...\', Array)\n#1 C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraRN.php(99): AmostraBD->consultar(Object(Amostra), Object(Banco))\n#2 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\listar_cadastroAmostra.php(60): AmostraRN->consultar(Object(Amostra))\n#3 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(279): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#4 {main}\n\nNext Excecao: Erro consultando a amostra no BD. in C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraBD.php:135\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraRN.php(99): AmostraBD->consultar(Object(Amostra), Object(Banco))\n#1 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\listar_cadastroAmostra.php(60): AmostraRN->consultar(Object(Amostra))\n#2 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(279): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#3 {main}\n\nNext Exception: Erro consultando amostra. in C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraRN.php:104\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\listar_cadastroAmostra.php(60): AmostraRN->consultar(Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(279): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\listar_cadastroAmostra.php(60): AmostraRN->consultar(Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(279): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-18 02:18:25'),
-(73, 2, 'ArgumentCountError: Too few arguments to function Interf::montar_select_etnias(), 4 passed in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php on line 118 and exactly 5 expected in C:\\xampp\\htdocs\\covid-system\\classes\\Pagina\\Interf.php:188\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(118): Interf->montar_select_etnias(\'\', Object(Etnia), Object(EtniaRN), Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(118): Interf->montar_select_etnias(\'\', Object(Etnia), Object(EtniaRN), Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-17 21:19:26'),
-(74, 2, 'ArgumentCountError: Too few arguments to function Interf::montar_select_etnias(), 4 passed in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php on line 118 and exactly 5 expected in C:\\xampp\\htdocs\\covid-system\\classes\\Pagina\\Interf.php:188\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(118): Interf->montar_select_etnias(\'\', Object(Etnia), Object(EtniaRN), Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(118): Interf->montar_select_etnias(\'\', Object(Etnia), Object(EtniaRN), Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-17 21:19:42'),
-(75, 2, 'ArgumentCountError: Too few arguments to function Interf::montar_select_etnias(), 4 passed in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php on line 118 and exactly 5 expected in C:\\xampp\\htdocs\\covid-system\\classes\\Pagina\\Interf.php:188\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(118): Interf->montar_select_etnias(\'\', Object(Etnia), Object(EtniaRN), Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(118): Interf->montar_select_etnias(\'\', Object(Etnia), Object(EtniaRN), Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-17 21:26:52'),
-(76, 2, 'ArgumentCountError: Too few arguments to function Interf::montar_select_etnias(), 4 passed in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php on line 118 and exactly 5 expected in C:\\xampp\\htdocs\\covid-system\\classes\\Pagina\\Interf.php:188\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(118): Interf->montar_select_etnias(\'\', Object(Etnia), Object(EtniaRN), Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(118): Interf->montar_select_etnias(\'\', Object(Etnia), Object(EtniaRN), Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-17 21:43:48'),
-(77, 2, 'ArgumentCountError: Too few arguments to function Interf::montar_select_etnias(), 4 passed in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php on line 118 and exactly 5 expected in C:\\xampp\\htdocs\\covid-system\\classes\\Pagina\\Interf.php:192\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(118): Interf->montar_select_etnias(\'\', Object(Etnia), Object(EtniaRN), Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(118): Interf->montar_select_etnias(\'\', Object(Etnia), Object(EtniaRN), Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-17 22:21:14'),
-(78, 2, 'ArgumentCountError: Too few arguments to function Interf::montar_select_etnias(), 4 passed in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php on line 118 and exactly 5 expected in C:\\xampp\\htdocs\\covid-system\\classes\\Pagina\\Interf.php:192\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(118): Interf->montar_select_etnias(\'\', Object(Etnia), Object(EtniaRN), Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(118): Interf->montar_select_etnias(\'\', Object(Etnia), Object(EtniaRN), Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-17 22:24:06'),
-(79, 2, 'Exception: Column count doesn\'t match value count at row 1 in C:\\xampp\\htdocs\\covid-system\\classes\\Banco\\Banco.php:80\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraBD.php(54): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraRN.php(140): AmostraBD->cadastrar(Object(Amostra), Object(Banco))\n#2 C:\\xampp\\htdocs\\covid-system\\acoes\\Amostra\\cadastro_amostra.php(184): AmostraRN->cadastrar(Object(Amostra))\n#3 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(276): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#4 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\Amostra\\cadastro_amostra.php(184): AmostraRN->cadastrar(Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(276): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-18 01:08:14'),
-(80, 2, 'Exception: Incorrect time value: \'\' for column \'horaColeta\' at row 1 in C:\\xampp\\htdocs\\covid-system\\classes\\Banco\\Banco.php:108\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraBD.php(54): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraRN.php(140): AmostraBD->cadastrar(Object(Amostra), Object(Banco))\n#2 C:\\xampp\\htdocs\\covid-system\\acoes\\Amostra\\cadastro_amostra.php(184): AmostraRN->cadastrar(Object(Amostra))\n#3 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(276): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#4 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\Amostra\\cadastro_amostra.php(184): AmostraRN->cadastrar(Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(276): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-18 01:10:14'),
-(81, 2, 'Exception: Column \'codigoAmostra\' cannot be null in C:\\xampp\\htdocs\\covid-system\\classes\\Banco\\Banco.php:108\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraBD.php(54): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraRN.php(140): AmostraBD->cadastrar(Object(Amostra), Object(Banco))\n#2 C:\\xampp\\htdocs\\covid-system\\acoes\\Amostra\\cadastro_amostra.php(186): AmostraRN->cadastrar(Object(Amostra))\n#3 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(276): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#4 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\Amostra\\cadastro_amostra.php(186): AmostraRN->cadastrar(Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(276): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-18 01:11:31'),
-(82, 2, 'ArgumentCountError: Too few arguments to function Interf::montar_select_sexo(), 5 passed in C:\\xampp\\htdocs\\covid-system\\acoes\\Paciente\\cadastro_paciente.php on line 67 and exactly 6 expected in C:\\xampp\\htdocs\\covid-system\\classes\\Pagina\\Interf.php:166\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\Paciente\\cadastro_paciente.php(67): Interf->montar_select_sexo(\'\', Object(Sexo), Object(SexoRN), Object(Paciente), \'\')\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(260): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\Paciente\\cadastro_paciente.php(67): Interf->montar_select_sexo(\'\', Object(Sexo), Object(SexoRN), Object(Paciente), \'\')\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(260): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-18 07:34:37'),
-(83, 2, 'Exception: Incorrect datetime value: \'18/04/2020  11:42:21\' for column \'dataHora\' at row 1 in C:\\xampp\\htdocs\\covid-system\\classes\\Banco\\Banco.php:108\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\classes\\InfosTubo\\InfosTuboBD.php(34): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 C:\\xampp\\htdocs\\covid-system\\classes\\InfosTubo\\InfosTuboRN.php(117): InfosTuboBD->cadastrar(Object(InfosTubo), Object(Banco))\n#2 C:\\xampp\\htdocs\\covid-system\\acoes\\Amostra\\cadastro_amostra.php(240): InfosTuboRN->cadastrar(Object(InfosTubo))\n#3 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(276): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#4 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\Amostra\\cadastro_amostra.php(240): InfosTuboRN->cadastrar(Object(InfosTubo))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(276): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-18 11:42:21'),
-(84, 2, 'Exception: Incorrect datetime value: \'18-04-2020  11:45:49\' for column \'dataHora\' at row 1 in C:\\xampp\\htdocs\\covid-system\\classes\\Banco\\Banco.php:108\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\classes\\InfosTubo\\InfosTuboBD.php(34): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 C:\\xampp\\htdocs\\covid-system\\classes\\InfosTubo\\InfosTuboRN.php(118): InfosTuboBD->cadastrar(Object(InfosTubo), Object(Banco))\n#2 C:\\xampp\\htdocs\\covid-system\\acoes\\Amostra\\cadastro_amostra.php(240): InfosTuboRN->cadastrar(Object(InfosTubo))\n#3 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(276): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#4 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\Amostra\\cadastro_amostra.php(240): InfosTuboRN->cadastrar(Object(InfosTubo))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(276): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-18 11:45:49'),
-(85, 2, 'Exception: Column \'idNivelPrioridade_fk\' cannot be null in C:\\xampp\\htdocs\\covid-system\\classes\\Banco\\Banco.php:108\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraBD.php(54): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 C:\\xampp\\htdocs\\covid-system\\classes\\Amostra\\AmostraRN.php(140): AmostraBD->cadastrar(Object(Amostra), Object(Banco))\n#2 C:\\xampp\\htdocs\\covid-system\\acoes\\Amostra\\cadastro_amostra.php(208): AmostraRN->cadastrar(Object(Amostra))\n#3 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(276): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#4 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\Amostra\\cadastro_amostra.php(208): AmostraRN->cadastrar(Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(276): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-18 20:53:38'),
-(86, 2, 'Error: Call to undefined method Paciente::setObsSexo() in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php:255\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once()\n#1 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once()\n#1 {main}', '2020-04-18 22:46:28'),
-(87, 2, 'Error: Call to undefined method Amostra::setDataHoraColeta() in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php:256\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once()\n#1 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once()\n#1 {main}', '2020-04-18 22:47:20'),
-(88, 2, 'Error: Call to undefined method Amostra::setAceita_recusa() in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php:258\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once()\n#1 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once()\n#1 {main}', '2020-04-18 22:48:16'),
-(89, 2, 'Error: Call to a member function setIdAmostra() on array in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php:673\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once()\n#1 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once()\n#1 {main}', '2020-04-18 23:20:34'),
-(90, 2, 'ArgumentCountError: Too few arguments to function Interf::montar_select_aceitaRecusadaAguarda(), 2 passed in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php on line 701 and exactly 4 expected in C:\\xampp\\htdocs\\covid-system\\classes\\Pagina\\Interf.php:67\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(701): Interf->montar_select_aceitaRecusadaAguarda(\' <select id=\"id...\', Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(701): Interf->montar_select_aceitaRecusadaAguarda(\' <select id=\"id...\', Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-18 23:34:53'),
-(91, 2, 'ArgumentCountError: Too few arguments to function Interf::montar_select_aceitaRecusadaAguarda(), 2 passed in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php on line 701 and exactly 4 expected in C:\\xampp\\htdocs\\covid-system\\classes\\Pagina\\Interf.php:67\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(701): Interf->montar_select_aceitaRecusadaAguarda(\' <select id=\"id...\', Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(701): Interf->montar_select_aceitaRecusadaAguarda(\' <select id=\"id...\', Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-18 23:34:55'),
-(92, 2, 'ArgumentCountError: Too few arguments to function Interf::montar_select_aceitaRecusadaAguarda(), 2 passed in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php on line 701 and exactly 4 expected in C:\\xampp\\htdocs\\covid-system\\classes\\Pagina\\Interf.php:67\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(701): Interf->montar_select_aceitaRecusadaAguarda(\' <select id=\"id...\', Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(701): Interf->montar_select_aceitaRecusadaAguarda(\' <select id=\"id...\', Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-18 23:35:18'),
-(93, 2, 'ArgumentCountError: Too few arguments to function Interf::montar_select_aceitaRecusadaAguarda(), 2 passed in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php on line 701 and exactly 4 expected in C:\\xampp\\htdocs\\covid-system\\classes\\Pagina\\Interf.php:67\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(701): Interf->montar_select_aceitaRecusadaAguarda(\' <select id=\"id...\', Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(701): Interf->montar_select_aceitaRecusadaAguarda(\' <select id=\"id...\', Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-18 23:35:32'),
-(94, 2, 'ArgumentCountError: Too few arguments to function Interf::montar_select_aceitaRecusadaAguarda(), 2 passed in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php on line 701 and exactly 4 expected in C:\\xampp\\htdocs\\covid-system\\classes\\Pagina\\Interf.php:67\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(701): Interf->montar_select_aceitaRecusadaAguarda(\' <select id=\"id...\', Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(701): Interf->montar_select_aceitaRecusadaAguarda(\' <select id=\"id...\', Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-18 23:36:17'),
-(95, 2, 'Exception: Column \'dataCadastroInicio\' cannot be null in C:\\xampp\\htdocs\\covid-system\\classes\\Banco\\Banco.php:108\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\classes\\CadastroAmostra\\CadastroAmostraBD.php(22): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 C:\\xampp\\htdocs\\covid-system\\classes\\CadastroAmostra\\CadastroAmostraRN.php(24): CadastroAmostraBD->cadastrar(Object(CadastroAmostra), Object(Banco))\n#2 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(709): CadastroAmostraRN->cadastrar(Object(CadastroAmostra))\n#3 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#4 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(709): CadastroAmostraRN->cadastrar(Object(CadastroAmostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-19 13:40:43'),
-(96, 2, 'Exception: Column \'dataCadastroInicio\' cannot be null in C:\\xampp\\htdocs\\covid-system\\classes\\Banco\\Banco.php:108\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\classes\\CadastroAmostra\\CadastroAmostraBD.php(22): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 C:\\xampp\\htdocs\\covid-system\\classes\\CadastroAmostra\\CadastroAmostraRN.php(24): CadastroAmostraBD->cadastrar(Object(CadastroAmostra), Object(Banco))\n#2 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(710): CadastroAmostraRN->cadastrar(Object(CadastroAmostra))\n#3 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#4 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(710): CadastroAmostraRN->cadastrar(Object(CadastroAmostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-19 13:41:40'),
-(97, 2, 'Exception: Column \'dataCadastroInicio\' cannot be null in C:\\xampp\\htdocs\\covid-system\\classes\\Banco\\Banco.php:108\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\classes\\CadastroAmostra\\CadastroAmostraBD.php(22): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 C:\\xampp\\htdocs\\covid-system\\classes\\CadastroAmostra\\CadastroAmostraRN.php(24): CadastroAmostraBD->cadastrar(Object(CadastroAmostra), Object(Banco))\n#2 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(710): CadastroAmostraRN->cadastrar(Object(CadastroAmostra))\n#3 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#4 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(710): CadastroAmostraRN->cadastrar(Object(CadastroAmostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-19 13:41:52'),
-(98, 2, 'ArgumentCountError: Too few arguments to function Interf::montar_select_aceitaRecusadaAguarda(), 2 passed in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php on line 753 and exactly 4 expected in C:\\xampp\\htdocs\\covid-system\\classes\\Pagina\\Interf.php:67\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(753): Interf->montar_select_aceitaRecusadaAguarda(\' <select id=\"id...\', Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(753): Interf->montar_select_aceitaRecusadaAguarda(\' <select id=\"id...\', Object(Amostra))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-19 13:50:13'),
-(99, 2, 'Error: Call to a member function setIdTubo_fk() on array in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php:960\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once()\n#1 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once()\n#1 {main}', '2020-04-19 14:21:53'),
-(100, 2, 'Error: Call to a member function setIdTubo_fk() on null in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php:960\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once()\n#1 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once()\n#1 {main}', '2020-04-19 14:22:17'),
-(101, 2, 'Error: Call to a member function setIdTubo_fk() on null in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php:960\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once()\n#1 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once()\n#1 {main}', '2020-04-19 14:23:12'),
-(102, 2, 'TypeError: Argument 1 passed to TuboRN::cadastrar() must be an instance of Tubo, null given, called in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php on line 961 and defined in C:\\xampp\\htdocs\\covid-system\\classes\\Tubo\\TuboRN.php:22\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(961): TuboRN->cadastrar(NULL)\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(961): TuboRN->cadastrar(NULL)\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(275): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-19 14:24:34'),
-(103, 2, 'Exception: Data too long for column \'RG\' at row 1 in C:\\xampp\\htdocs\\covid-system\\classes\\Banco\\Banco.php:108\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\classes\\Paciente\\PacienteBD.php(38): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 C:\\xampp\\htdocs\\covid-system\\classes\\Paciente\\PacienteRN.php(399): PacienteBD->cadastrar(Object(Paciente), Object(Banco))\n#2 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(534): PacienteRN->cadastrar(Object(Paciente))\n#3 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(284): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#4 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(534): PacienteRN->cadastrar(Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(284): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-19 17:24:57'),
-(104, 80, 'Exception: Data too long for column \'RG\' at row 1 in C:\\xampp\\htdocs\\covid-system\\classes\\Banco\\Banco.php:108\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\classes\\Paciente\\PacienteBD.php(38): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 C:\\xampp\\htdocs\\covid-system\\classes\\Paciente\\PacienteRN.php(399): PacienteBD->cadastrar(Object(Paciente), Object(Banco))\n#2 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(540): PacienteRN->cadastrar(Object(Paciente))\n#3 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(284): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#4 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php(540): PacienteRN->cadastrar(Object(Paciente))\n#1 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(284): require_once(\'C:\\\\xampp\\\\htdocs...\')\n#2 {main}', '2020-04-20 09:12:12'),
-(105, 2, 'Error: Call to undefined method Paciente::cadastrar() in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php:177\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(284): require_once()\n#1 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(284): require_once()\n#1 {main}', '2020-04-20 11:06:45'),
-(106, 2, 'Error: Call to undefined method Paciente::cadastrar() in C:\\xampp\\htdocs\\covid-system\\acoes\\CadastroAmostra\\CadastroAmostra.php:177\nStack trace:\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(284): require_once()\n#1 {main}\n#0 C:\\xampp\\htdocs\\covid-system\\public_html\\controlador.php(284): require_once()\n#1 {main}', '2020-04-20 11:06:51');
+(1, 2, 'Error: Call to a member function getIdPaciente() on null in /home/www/covid19_rtpcr/acoes/CadastroAmostra/listar_cadastroAmostra.php:31\nStack trace:\n#0 /home/www/covid19_rtpcr/public_html/controlador.php(279): require_once()\n#1 {main}\n#0 /home/www/covid19_rtpcr/public_html/controlador.php(279): require_once()\n#1 {main}', '2020-04-16 00:10:38'),
+(2, 2, 'Exception: Column \'statusAmostra\' cannot be null in /home/www/covid19_rtpcr/classes/Banco/Banco.php:108\nStack trace:\n#0 /home/www/covid19_rtpcr/classes/Amostra/AmostraBD.php(27): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 /home/www/covid19_rtpcr/classes/Amostra/AmostraRN.php(59): AmostraBD->cadastrar(Object(Amostra), Object(Banco))\n#2 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(223): AmostraRN->cadastrar(Object(Amostra))\n#3 /home/www/covid19_rtpcr/public_html/controlador.php(275): require_once(\'/home/www/covid...\')\n#4 {main}\n#0 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(223): AmostraRN->cadastrar(Object(Amostra))\n#1 /home/www/covid19_rtpcr/public_html/controlador.php(275): require_once(\'/home/www/covid...\')\n#2 {main}', '2020-04-16 08:16:04'),
+(3, 2, 'Exception: Table \'covid19_rtpcr.tb_perfilPaciente\' doesn\'t exist in /home/www/covid19_rtpcr/classes/Banco/Banco.php:124\nStack trace:\n#0 /home/www/covid19_rtpcr/classes/PerfilPaciente/PerfilPacienteBD.php(121): Banco->consultarSql(\'SELECT * from t...\', Array)\n#1 /home/www/covid19_rtpcr/classes/PerfilPaciente/PerfilPacienteRN.php(150): PerfilPacienteBD->pesquisar_index(Object(PerfilPaciente), Object(Banco))\n#2 /home/www/covid19_rtpcr/acoes/PerfilPaciente/cadastro_perfilPaciente.php(26): PerfilPacienteRN->pesquisar_index(Object(PerfilPaciente))\n#3 /home/www/covid19_rtpcr/public_html/controlador.php(75): require_once(\'/home/www/covid...\')\n#4 {main}\n#0 /home/www/covid19_rtpcr/acoes/PerfilPaciente/cadastro_perfilPaciente.php(26): PerfilPacienteRN->pesquisar_index(Object(PerfilPaciente))\n#1 /home/www/covid19_rtpcr/public_html/controlador.php(75): require_once(\'/home/www/covid...\')\n#2 {main}', '2020-04-16 08:37:27'),
+(4, 2, 'Error: Class \'CodigoGAL_BD\' not found in /home/www/covid19_rtpcr/classes/CodigoGAL/CodigoGAL_RN.php:37\nStack trace:\n#0 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(198): CodigoGAL_RN->cadastrar(Object(CodigoGAL))\n#1 /home/www/covid19_rtpcr/public_html/controlador.php(275): require_once(\'/home/www/covid...\')\n#2 {main}\n#0 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(198): CodigoGAL_RN->cadastrar(Object(CodigoGAL))\n#1 /home/www/covid19_rtpcr/public_html/controlador.php(275): require_once(\'/home/www/covid...\')\n#2 {main}', '2020-04-16 08:46:04'),
+(5, 83, 'TypeError: Argument 1 passed to PacienteBD::consultar() must be an instance of Paciente, array given, called in /home/www/covid19_rtpcr/classes/Paciente/PacienteRN.php on line 168 and defined in /home/www/covid19_rtpcr/classes/Paciente/PacienteBD.php:110\nStack trace:\n#0 /home/www/covid19_rtpcr/classes/Paciente/PacienteRN.php(168): PacienteBD->consultar(Array)\n#1 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(184): PacienteRN->cadastrar(Object(Paciente))\n#2 /home/www/covid19_rtpcr/public_html/controlador.php(275): require_once(\'/home/www/covid...\')\n#3 {main}\n#0 /home/www/covid19_rtpcr/classes/Paciente/PacienteRN.php(168): PacienteBD->consultar(Array)\n#1 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(184): PacienteRN->cadastrar(Object(Paciente))\n#2 /home/www/covid19_rtpcr/public_html/controlador.php(275): require_once(\'/home/www/covid...\')\n#3 {main}', '2020-04-16 10:25:18'),
+(6, 91, 'Exception: Unknown column \'CEP\' in \'field list\' in /home/www/covid19_rtpcr/classes/Banco/Banco.php:80\nStack trace:\n#0 /home/www/covid19_rtpcr/classes/Amostra/AmostraBD.php(54): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 /home/www/covid19_rtpcr/classes/Amostra/AmostraRN.php(140): AmostraBD->cadastrar(Object(Amostra), Object(Banco))\n#2 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(638): AmostraRN->cadastrar(Object(Amostra))\n#3 /home/www/covid19_rtpcr/public_html/controlador.php(284): require_once(\'/home/www/covid...\')\n#4 {main}\n#0 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(638): AmostraRN->cadastrar(Object(Amostra))\n#1 /home/www/covid19_rtpcr/public_html/controlador.php(284): require_once(\'/home/www/covid...\')\n#2 {main}', '2020-04-19 21:48:46'),
+(7, 91, 'Exception: Field \'statusAmostra\' doesn\'t have a default value in /home/www/covid19_rtpcr/classes/Banco/Banco.php:108\nStack trace:\n#0 /home/www/covid19_rtpcr/classes/Amostra/AmostraBD.php(54): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 /home/www/covid19_rtpcr/classes/Amostra/AmostraRN.php(140): AmostraBD->cadastrar(Object(Amostra), Object(Banco))\n#2 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(638): AmostraRN->cadastrar(Object(Amostra))\n#3 /home/www/covid19_rtpcr/public_html/controlador.php(284): require_once(\'/home/www/covid...\')\n#4 {main}\n#0 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(638): AmostraRN->cadastrar(Object(Amostra))\n#1 /home/www/covid19_rtpcr/public_html/controlador.php(284): require_once(\'/home/www/covid...\')\n#2 {main}', '2020-04-19 21:50:00'),
+(8, 91, 'Exception: Column \'idNivelPrioridade_fk\' cannot be null in /home/www/covid19_rtpcr/classes/Banco/Banco.php:108\nStack trace:\n#0 /home/www/covid19_rtpcr/classes/Amostra/AmostraBD.php(54): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 /home/www/covid19_rtpcr/classes/Amostra/AmostraRN.php(140): AmostraBD->cadastrar(Object(Amostra), Object(Banco))\n#2 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(638): AmostraRN->cadastrar(Object(Amostra))\n#3 /home/www/covid19_rtpcr/public_html/controlador.php(284): require_once(\'/home/www/covid...\')\n#4 {main}\n#0 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(638): AmostraRN->cadastrar(Object(Amostra))\n#1 /home/www/covid19_rtpcr/public_html/controlador.php(284): require_once(\'/home/www/covid...\')\n#2 {main}', '2020-04-19 21:50:56'),
+(9, 91, 'Exception: Field \'idTubo\' doesn\'t have a default value in /home/www/covid19_rtpcr/classes/Banco/Banco.php:108\nStack trace:\n#0 /home/www/covid19_rtpcr/classes/Tubo/TuboBD.php(24): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 /home/www/covid19_rtpcr/classes/Tubo/TuboRN.php(33): TuboBD->cadastrar(Object(Tubo), Object(Banco))\n#2 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(658): TuboRN->cadastrar(Object(Tubo))\n#3 /home/www/covid19_rtpcr/public_html/controlador.php(284): require_once(\'/home/www/covid...\')\n#4 {main}\n#0 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(658): TuboRN->cadastrar(Object(Tubo))\n#1 /home/www/covid19_rtpcr/public_html/controlador.php(284): require_once(\'/home/www/covid...\')\n#2 {main}', '2020-04-19 21:52:22'),
+(10, 91, 'Exception: Field \'idInfosTubo\' doesn\'t have a default value in /home/www/covid19_rtpcr/classes/Banco/Banco.php:108\nStack trace:\n#0 /home/www/covid19_rtpcr/classes/InfosTubo/InfosTuboBD.php(34): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 /home/www/covid19_rtpcr/classes/InfosTubo/InfosTuboRN.php(119): InfosTuboBD->cadastrar(Object(InfosTubo), Object(Banco))\n#2 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(672): InfosTuboRN->cadastrar(Object(InfosTubo))\n#3 /home/www/covid19_rtpcr/public_html/controlador.php(284): require_once(\'/home/www/covid...\')\n#4 {main}\n#0 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(672): InfosTuboRN->cadastrar(Object(InfosTubo))\n#1 /home/www/covid19_rtpcr/public_html/controlador.php(284): require_once(\'/home/www/covid...\')\n#2 {main}', '2020-04-19 21:56:47'),
+(11, 2, 'Exception: Data too long for column \'RG\' at row 1 in /home/www/covid19_rtpcr/classes/Banco/Banco.php:108\nStack trace:\n#0 /home/www/covid19_rtpcr/classes/Paciente/PacienteBD.php(38): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 /home/www/covid19_rtpcr/classes/Paciente/PacienteRN.php(399): PacienteBD->cadastrar(Object(Paciente), Object(Banco))\n#2 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(540): PacienteRN->cadastrar(Object(Paciente))\n#3 /home/www/covid19_rtpcr/public_html/controlador.php(284): require_once(\'/home/www/covid...\')\n#4 {main}\n#0 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(540): PacienteRN->cadastrar(Object(Paciente))\n#1 /home/www/covid19_rtpcr/public_html/controlador.php(284): require_once(\'/home/www/covid...\')\n#2 {main}', '2020-04-20 08:31:10'),
+(12, 2, 'Exception: Data too long for column \'RG\' at row 1 in /home/www/covid19_rtpcr/classes/Banco/Banco.php:108\nStack trace:\n#0 /home/www/covid19_rtpcr/classes/Paciente/PacienteBD.php(38): Banco->executarSql(\'INSERT INTO tb_...\', Array)\n#1 /home/www/covid19_rtpcr/classes/Paciente/PacienteRN.php(399): PacienteBD->cadastrar(Object(Paciente), Object(Banco))\n#2 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(540): PacienteRN->cadastrar(Object(Paciente))\n#3 /home/www/covid19_rtpcr/public_html/controlador.php(284): require_once(\'/home/www/covid...\')\n#4 {main}\n#0 /home/www/covid19_rtpcr/acoes/CadastroAmostra/CadastroAmostra.php(540): PacienteRN->cadastrar(Object(Paciente))\n#1 /home/www/covid19_rtpcr/public_html/controlador.php(284): require_once(\'/home/www/covid...\')\n#2 {main}', '2020-04-20 08:32:02'),
+(13, 2, 'TypeError: Return value of Paciente::setCartaoSUS() must be an instance of void, none returned in /home/www/covid19_rtpcr/classes/Paciente/Paciente.php:66\nStack trace:\n#0 /home/www/covid19_rtpcr/classes/Paciente/PacienteBD.php(197): Paciente->setCartaoSUS(NULL)\n#1 /home/www/covid19_rtpcr/classes/Paciente/PacienteRN.php(618): PacienteBD->consultar(Object(Paciente), Object(Banco))\n#2 /home/www/covid19_rtpcr/acoes/CadastroAmostra/listar_cadastroAmostra.php(334): PacienteRN->consultar(Object(Paciente))\n#3 /home/www/covid19_rtpcr/public_html/controlador.php(298): require_once(\'/home/www/covid...\')\n#4 {main}\n#0 /home/www/covid19_rtpcr/classes/Paciente/PacienteBD.php(197): Paciente->setCartaoSUS(NULL)\n#1 /home/www/covid19_rtpcr/classes/Paciente/PacienteRN.php(618): PacienteBD->consultar(Object(Paciente), Object(Banco))\n#2 /home/www/covid19_rtpcr/acoes/CadastroAmostra/listar_cadastroAmostra.php(334): PacienteRN->consultar(Object(Paciente))\n#3 /home/www/covid19_rtpcr/public_html/controlador.php(298): require_once(\'/home/www/covid...\')\n#4 {main}', '2020-04-21 23:17:26'),
+(14, 2, 'TypeError: Return value of Paciente::setCartaoSUS() must be an instance of void, none returned in /home/www/covid19_rtpcr/classes/Paciente/Paciente.php:66\nStack trace:\n#0 /home/www/covid19_rtpcr/classes/Paciente/PacienteBD.php(197): Paciente->setCartaoSUS(NULL)\n#1 /home/www/covid19_rtpcr/classes/Paciente/PacienteRN.php(618): PacienteBD->consultar(Object(Paciente), Object(Banco))\n#2 /home/www/covid19_rtpcr/acoes/CadastroAmostra/listar_cadastroAmostra.php(334): PacienteRN->consultar(Object(Paciente))\n#3 /home/www/covid19_rtpcr/public_html/controlador.php(298): require_once(\'/home/www/covid...\')\n#4 {main}\n#0 /home/www/covid19_rtpcr/classes/Paciente/PacienteBD.php(197): Paciente->setCartaoSUS(NULL)\n#1 /home/www/covid19_rtpcr/classes/Paciente/PacienteRN.php(618): PacienteBD->consultar(Object(Paciente), Object(Banco))\n#2 /home/www/covid19_rtpcr/acoes/CadastroAmostra/listar_cadastroAmostra.php(334): PacienteRN->consultar(Object(Paciente))\n#3 /home/www/covid19_rtpcr/public_html/controlador.php(298): require_once(\'/home/www/covid...\')\n#4 {main}', '2020-04-21 23:17:45');
 
 -- --------------------------------------------------------
 
@@ -6282,90 +6494,173 @@ INSERT INTO `tb_nivelprioridade` (`idNivelPrioridade`, `nivel`) VALUES
 
 CREATE TABLE `tb_paciente` (
   `idPaciente` int(10) UNSIGNED NOT NULL,
-  `idSexo_fk` int(10) UNSIGNED DEFAULT NULL,
-  `idEtnia_fk` int(11) DEFAULT NULL,
+  `idSexo_fk` int(10) UNSIGNED NOT NULL,
+  `idPerfilPaciente_fk` int(10) UNSIGNED DEFAULT NULL,
   `nome` varchar(130) NOT NULL,
   `nomeMae` varchar(130) DEFAULT NULL,
-  `CPF` varchar(11) DEFAULT NULL,
+  `CPF` varchar(11) NOT NULL,
   `RG` varchar(10) DEFAULT NULL,
   `CEP` varchar(8) DEFAULT NULL,
-  `endereco` varchar(150) DEFAULT NULL,
-  `passaporte` varchar(15) DEFAULT NULL,
   `obsRG` varchar(150) DEFAULT NULL,
   `dataNascimento` date DEFAULT NULL,
   `obsNomeMae` varchar(150) DEFAULT NULL,
+  `idEtnia_fk` int(10) UNSIGNED DEFAULT NULL,
+  `passaporte` varchar(15) DEFAULT NULL,
+  `endereco` varchar(150) DEFAULT NULL,
   `obsPassaporte` varchar(300) DEFAULT NULL,
   `obsCEP` varchar(300) DEFAULT NULL,
   `obsEndereco` varchar(300) DEFAULT NULL,
-  `obsCPF` varchar(300) DEFAULT NULL,
   `obsCodGAL` varchar(300) DEFAULT NULL,
-  `cadastroPendente` char(1) DEFAULT NULL
+  `cadastroPendente` char(1) DEFAULT NULL,
+  `obsCPF` varchar(300) DEFAULT NULL,
+  `cartaoSUS` varchar(15) DEFAULT NULL,
+  `obsCartaoSUS` varchar(300) DEFAULT NULL,
+  `obsDataNascimento` varchar(300) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Extraindo dados da tabela `tb_paciente`
 --
 
-INSERT INTO `tb_paciente` (`idPaciente`, `idSexo_fk`, `idEtnia_fk`, `nome`, `nomeMae`, `CPF`, `RG`, `CEP`, `endereco`, `passaporte`, `obsRG`, `dataNascimento`, `obsNomeMae`, `obsPassaporte`, `obsCEP`, `obsEndereco`, `obsCPF`, `obsCodGAL`, `cadastroPendente`) VALUES
-(1, 1, 5, 'Matheus', 'Fernanda', '12345678910', '2121990800', '', '', '', '', '2020-03-12', '', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, 'n'),
-(2, 6, 6, 'Ana', 'Mariana', '89723467893', '0000000000', '', 'Avenida Coronel Marcos', NULL, 'Outro motivo', NULL, '', 'Desconhecido', 'Desconhecido', 'NÃO SEI', 'Desconhecido', NULL, 'n'),
-(3, 6, 6, 'nome5', '', '76777865776', '', '', '', '', 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, 'n'),
-(40, 6, 6, 'NOME', '', '87667654565', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(41, 6, 6, 'Matheus', '', '88788788998', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(42, 6, 6, 'Ana', '', '33233222332', '656567', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(43, 6, 6, 'Marcelo', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 's'),
-(71, 6, 6, 'Carine', '', '', '2121873265', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(72, 6, 6, 'Paciente teste 1', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 's'),
-(73, 6, 6, 'paciente teste 3', '', '', '786789', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(74, 6, 6, 'paciente teste 2', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 's'),
-(75, 6, 6, 'nome teste 4', '', '', '', '', '', 'AU563421', 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(76, 6, 3, 'Ana Luiza', '', '', '8876678', '', '', NULL, '', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, 'n'),
-(77, 6, 6, 'Vinicius', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 's'),
-(78, 6, 6, 'Nome de teste 4', '', '98989787893', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(79, 6, 6, 'paciente teste 5', '', '43334532213', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(81, 6, 6, 'PAICNETE PARA TESTE', '', '89723467892', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(82, 6, 6, 'paciente teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 's'),
-(83, 6, 6, 'testando amostra', '', '', '123456', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(84, 6, 6, 'testando amostra 2', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(85, 6, 6, 'paciente teste 5', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 's'),
-(86, 6, 6, 'Miguel', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 's'),
-(87, 6, 6, 'ssss', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 's'),
-(88, 6, 6, 'RRRTRT', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 's'),
-(89, 6, 6, 'RRRTRT', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(90, 6, 6, 'TTTT', '', '', '8989', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(91, 6, 6, 'NOME', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 's'),
-(92, 6, 6, 'nome teste 7', '', '', '7777777', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(93, 6, 6, 'TESTE 8', '', '', '8888888', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(94, 6, 6, 'TESTE 9', '', '', '9999999999', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(95, 6, 6, 'TESTE 10', '', '', '12212121', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(96, 6, 6, 'teste 11', '', '', '10101010', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(97, 6, 6, 'teste 12', '', '', '44444', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(98, 6, 6, 'teste 14', '', '', '55555555', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(99, 6, 6, 'teste 15', '', '', '888888', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(100, 6, 6, 'nome teste', '', '', '151515', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(101, 6, 6, 'teste 9', '', '', '99999', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(102, 6, 6, 'nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(103, 6, 6, 'nome teste 19', '', '', '1777777777', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(104, 6, 6, 'teste', '', '', '123213231', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(105, 6, 6, 'adasda', '', '', '192121', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(106, 6, 6, 'teste', '', '', '1010101', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'n'),
-(107, NULL, NULL, 'Nome teste 11:06', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 's'),
-(108, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL),
-(111, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL),
-(121, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL),
-(122, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL),
-(123, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL),
-(124, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL),
-(125, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL),
-(126, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL),
-(127, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL),
-(128, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL),
-(129, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL),
-(130, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL),
-(131, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL),
-(133, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL),
-(228, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL),
-(243, NULL, NULL, 'Nome teste', '', '', '', '', '', NULL, 'Desconhecido', NULL, 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, NULL);
+INSERT INTO `tb_paciente` (`idPaciente`, `idSexo_fk`, `idPerfilPaciente_fk`, `nome`, `nomeMae`, `CPF`, `RG`, `CEP`, `obsRG`, `dataNascimento`, `obsNomeMae`, `idEtnia_fk`, `passaporte`, `endereco`, `obsPassaporte`, `obsCEP`, `obsEndereco`, `obsCodGAL`, `cadastroPendente`, `obsCPF`, `cartaoSUS`, `obsCartaoSUS`, `obsDataNascimento`) VALUES
+(64, 4, 2, 'Bruna Bellaver', 'Não informado', '00476771048', '5070119853', '', '', '1988-09-20', 'Não informado', 6, NULL, '', 'Desconhecido', 'Desconhecido', 'Desconhecido', NULL, 'n', '', NULL, NULL, NULL),
+(65, 1, 2, 'Joel Henrique Ellwanger', 'Não informado', '00604072040', '5098080012', NULL, '', '1988-11-29', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(66, 1, 2, 'Eduardo Zimmer', 'Não informado', '00488767040', '6063344031', NULL, '', '1984-12-07', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(67, 4, 2, 'Bruno Dutra Arbo', 'não informado', '01025283066', '6064125845', NULL, '', '1988-05-08', 'voluntário', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(68, 2, 2, 'Belisa dos Santos Parmeggiani', 'Não informado', '03107915025', '5101965654', NULL, '', '1992-11-08', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(69, 1, 2, 'José Antônio Fagundes Assumpção', 'Não informado', '01092519114', '', NULL, '', '1989-10-19', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(70, 2, 2, 'Andreza Martins', 'Não informado', '76295320082', '1056458019', NULL, '', '2020-04-15', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(71, 2, 2, 'Fernanda Valandro', 'Não informado', '01545456003', '6092077624', NULL, '', '1990-12-07', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(72, 1, 2, 'Leonardo da Silva Bittencourt', 'Não informado', '00091906008', '2078499854', NULL, '', '1980-10-08', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(73, 2, 2, 'Ana Paula Guedes Frazzon', 'Não informado', '62089951087', '2017080471', NULL, '', '1969-01-31', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(74, 2, 2, 'Aline Pericolo Sgiers', 'Não informado', '01466353023', '3105686772', NULL, '', '1989-12-06', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(75, 2, 2, 'Camila Pocharski Barbosa', 'não informado', '00356162028', '7076601711', NULL, '', '1983-07-06', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(76, 1, 2, 'Lisiane de Oliveira Porciúncula', 'Não informado', '69417571087', '5052333004', NULL, '', '2020-04-15', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(77, 2, 2, 'Ana Cristina Roginski', 'Não informado', '02469673070', '1105023764', NULL, '', '1995-05-03', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(78, 2, 2, 'Francieli Rohden', 'Não informado', '00598987983', '', NULL, '', '1981-07-30', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(79, 1, 2, 'Gabriel Guerreiro', 'Não informado', '03800565005', '1109463081', NULL, '', '1996-01-28', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(80, 2, 2, 'Ana Carolina Luciano Machado', 'Não informado', '44309989810', '4965571170', NULL, '', '2020-04-15', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(81, 2, 2, 'Amanda Pasinato Napp', 'Não informado', '12312312312', '1231231231', NULL, '', '2020-04-15', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(82, 1, 2, 'Gabriel Pinto Aires', 'Não informado', '04495636006', '4086282722', NULL, '', '1997-01-28', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(83, 2, 2, 'Carolina Saibro Girardi', 'não informado', '34468440740', '9088555158', NULL, '', '1994-05-05', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(84, 2, 2, 'Fernanda Kuckartz Vizuete', 'Não informado', '00769586040', '4073794762', NULL, '', '1983-02-20', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(85, 2, 2, 'Gabriela Merker Breyer', 'Não informado', '86379453091', '1111971411', NULL, '', '1995-12-03', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(86, 2, 2, 'Caroline Turchetto', 'não informado', '00703323040', '8087315969', NULL, '', '1984-11-16', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(87, 2, 2, 'Adriana Simon Coitinho', 'Não informado', '78508878087', '8050779613', NULL, '', '1975-09-26', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(88, 2, 2, 'Gertrudes Corção', 'Não informado', '54474779991', '4119791390', NULL, '', '1963-08-08', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(89, 1, 2, 'Claudio Antônio Severo Gonçalves', 'não informado', '52464920010', '2040260255', NULL, '', '1969-10-09', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(90, 2, 2, 'Chris Krebs Danilevicz', 'não informado', '50355988020', '1033273572', NULL, '', '2020-04-16', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(91, 4, 2, 'Lucas dos Santos da Silva', 'Não informado', '34672960250', '0000000000', NULL, '', '1996-05-16', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(92, 1, 2, 'Lucas Kich Grun', 'Não informado', '02573960048', '1078287263', NULL, '', '1989-10-10', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(93, 2, 2, 'Giovana Peroni Finger', 'Não informado', '63201798053', '9033314534', NULL, '', '2020-04-15', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(94, 1, 2, 'Maiara Callegaro Velho', 'Não informado', '03564603042', '3111691816', NULL, '', '1997-05-12', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(95, 1, 2, 'Crepin José Agani', 'não informado', '86856598053', '9876543210', NULL, '', '2020-04-16', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(96, 1, 2, 'Maikel Rosa de Oliveira', 'Não informado', '00212100041', '1067394625', NULL, '', '2020-04-15', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(97, 1, 2, 'Helier Balbinotti da Silveira', 'Não informado', '00795741065', '5078596698', NULL, '', '1985-08-30', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(98, 2, 2, 'Cristiane Matte', 'não informado', '98158694004', '6080013822', NULL, '', '1981-10-31', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(99, 4, 2, 'Marcela Proença Borba', 'Não informado', '17070690770', '5080911984', NULL, '', '1988-02-09', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(100, 2, 2, 'Daiane Acosta Falcão', 'não informado', '02050295273', '1065272088', NULL, '', '1989-07-08', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(101, 2, 2, 'Elisandra Ghisio', 'Não informado', '00266174043', '3079600635', NULL, '', '1983-03-10', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(102, 1, 2, 'Marcelo Lazzaron Lammers', 'Não informado', '12121212121', '1212121212', NULL, '', '2020-04-15', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(103, 2, 2, 'Daiani Machado de Vargas', 'não informado', '01515451038', '5087442397', NULL, '', '1986-04-15', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(104, 1, 2, 'Daniel Pens Gelain', 'não informado', '94288453020', '1047410061', NULL, '', '1978-03-14', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(105, 2, 2, 'Debora Guerini de Souza', 'não informado', '01182725007', '8086248559', NULL, '', '1986-02-16', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(106, 1, 2, 'EDUARDO GOMES', 'MARIA IVONIR GOMES', '02661893008', '0000000001', NULL, '', '1987-04-30', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(107, 1, 3, 'ADELGIDES TAVARES', 'LUIZA JOANA TAVARES', '00769102026', '1231231231', NULL, '', '1967-10-28', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(108, 2, 3, 'GIORDANA GABRIELLE GIACOBBO FRICK', 'ANEUSA GIACOBBO FRICK', '13131313131', '1313131313', NULL, '', '1989-05-23', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(109, 2, 2, 'ELISETE GERALDO', 'TEREZA DE JESUS GERALDO', '00663045045', '0000000002', NULL, '', '1962-12-30', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(110, 2, 3, 'BETINA RODRIGUES', 'LIDIA KARINA EICK RODRIGUES', '55556666888', '1212121212', NULL, '', '1993-01-23', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(111, 1, 3, 'GUILHERME LOPES DE LIMA', 'ANGELA LOPES DE LIMA', '01252425066', '8077263245', NULL, '', '2020-04-13', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(112, 2, 3, 'ALESSANDRA CORREA RANGEL', 'IOLANDA GARCIA FLORES', '00325971005', '1231231232', NULL, '', '1979-12-19', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(113, 1, 3, 'IRAI DE SOUZA NARCISO', 'JULIETA DE SOUZA NARCISO', '14141414141', '1414141414', NULL, '', '1950-12-28', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(114, 2, 3, 'BETINA RODRIGUES', 'LIDIA KARINA EICK RODRIGUES', '55556666666', '1212121212', NULL, '', '1993-01-23', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(115, 2, 3, 'EROEMA GONCALVES VERA', 'IRENE GONCALVES', '00000000001', '0000000003', NULL, '', '1942-03-30', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(116, 2, 3, 'EVELINE OSELIA FERREIRA SILVA', 'REJANE FERREIRA SILVA', '00656808047', '0000000004', NULL, '', '1983-08-01', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(117, 2, 3, 'ALVINA DONATO DA ROCHA', 'CANDIDA DONATO DA ROCHA', '95944320044', '1231231233', NULL, '', '1933-05-07', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(118, 2, 3, 'BRUNA SOARES NASCIMENTO', 'não informado', '02344628096', '0000000009', NULL, '', '1991-03-18', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(119, 2, 3, 'ANGELA BEATRIZ HOPPE SCHULTZ', 'FAUSTA GENESI BULSING HOPPE', '91784840068', '1231231234', NULL, '', '1977-02-22', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(120, 2, 3, 'ANTONIA DE SA JORNADA', 'ZOLETE DE SA JORNADA', '00000000012', '1231231235', NULL, '', '1957-03-23', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(121, 1, 3, 'FELIPE ROBERTO DA SILVA OLIVEIRA', 'JUCARA SOUZA DA SILVA', '04107243001', '0000000005', NULL, '', '1997-07-07', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(122, 2, 3, 'ARIANE ZORDAN VARGAS', 'MARINES ZORDAN', '01638731004', '1231231236', NULL, '', '1988-08-27', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(123, 1, 3, 'JHONATHAN WILLIAN DOS ANJOS', 'Não informado', '15151515151', '1515151515', NULL, '', '1994-07-31', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(124, 2, 3, 'CARINA SANTOS OLIVEIRA', 'MARIA HELENA DE SOUZA DOS SANTOS', '01320809073', '7777777777', NULL, '', '1985-08-04', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(125, 1, 3, 'JOAO CARLOS SIMAO DOS SANTOS', 'FERMINA SIMAO DOS SANTOS', '16161616161', '1616161616', NULL, '', '1995-12-25', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(126, 2, 3, 'FERNANDA DA SILVA GARCIA', 'BELONICE DA SILVA GARCIA', '00000000002', '0000000006', NULL, '', '1984-09-29', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(127, 1, 3, 'CLAUDEMIR JOSE PIOVESAN', 'ANZINHA MARIA BERNARDI PIOVESAN', '22222222333', '3333333333', NULL, '', '1965-07-09', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(128, 2, 3, 'DAIANA ROLIM KILPP', 'ELOISA KILPP', '03589370009', '9119352679', NULL, '', '1995-09-07', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(129, 2, 3, 'DANIELA MARQUES RODRIGUES DA SILVA', 'RUDINEI TERESINHA PUNTEL MARQUES', '03768647021', '7777777771', NULL, '', '1997-10-24', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(130, 1, 3, 'DENIS RICARDO HORBACH', 'IVETE MARIA HORBACH', '58599673068', '7777777772', NULL, '', '1973-08-16', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(131, 1, 2, 'Pedro Ozório Brum', 'Não informado', '83527503034', '1095798502', NULL, '', '1996-09-16', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(132, 2, 2, 'Heloisa Giacomelli Ribeiro', 'não informado', '00309803055', '5103569141', NULL, '', '1991-12-20', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(133, 1, 2, 'João Pedroso Apolinário', 'Não informado', '98390020021', '6081075068', NULL, '', '2000-01-01', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(134, 1, 2, 'Marcelo Lazzaron Lammers', 'Vera Lammers', '80375120025', '1075739167', NULL, '', '1982-02-06', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(135, 2, 2, 'Simone Borsatto', 'não informado', '88748766020', '1067698268', NULL, '', '1979-11-22', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(136, 2, 2, 'Ângela M. Souza de Oliveira', 'Não informado', '92732186734', '0157356458', NULL, '', '2020-01-01', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(137, 2, 2, 'Leticia Ferreira Pettenuzzo', 'nao informado', '92656927072', '5064255812', NULL, '', '1977-10-22', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(138, 2, 2, 'Simone Cristina Baggio Gnoatto', 'não informado', '95377654072', '1073057547', NULL, '', '2020-04-16', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(139, 4, 2, 'Priscila Ribeiro Jakonski', 'Não informado', '20965760080', '8100159279', NULL, '', '1988-07-28', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(140, 2, 2, 'Carolina Gomes Katz', 'nao informado', '14052346793', '0269832457', NULL, '', '1990-08-04', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(141, 1, 2, 'Marcelo Rigon Zimmer', 'Não informado', '01048086089', '7077599624', NULL, '', '1988-12-01', 'não sei', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(142, 1, 2, 'João Carlos Bernardes dos Reis', 'Não informado', '00111413000', '0011141300', NULL, '', '2020-01-01', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(143, 2, 2, 'Raquel Dias', 'Não informado', '98390020020', '6081075066', NULL, '', '2000-01-01', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(144, 1, 2, 'Rodrigo Nobre Pires', 'Não informado', '02705316358', '3052849938', NULL, '', '1987-02-27', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(145, 2, 2, 'Viviane Bolzan', 'Não informado', '00111413001', '0011141301', NULL, '', '2020-01-01', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(146, 1, 2, 'Guilhian Leipnitz', 'nao informado', '98106392015', '7063667898', NULL, '', '1981-10-05', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(147, 1, 2, 'Gustavo Lopes Deockhorn', 'Não informado', '98380150050', '6081075099', NULL, '', '2000-01-01', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(148, 2, 2, 'Simone Marcuzzo', 'não informado', '95377654072', '1073057547', NULL, '', '1979-01-19', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(149, 1, 2, 'Elvio Santiago da Silva Andrioli', 'Não informado', '98390020027', '6081075000', NULL, '', '2000-01-01', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(150, 2, 2, 'Roberta taufer Boff', 'nao informado', '01306041007', '7082374245', NULL, '', '1986-06-25', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(151, 1, 3, 'LEANDRO ANTUNES OSORIO', 'ROSINHA ANTUNES OSORIO', '00000000100', '1245520151', NULL, '', '1978-02-09', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(152, 2, 2, 'Tatiana Luft', 'não informado', '89637062068', '7054352443', NULL, '', '1977-12-03', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(153, 1, 2, 'Marcos Augusto da S Barros', 'nao informado', '51984738600', '1082071331', NULL, '', '1975-12-08', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(154, 4, 2, 'João Fernando Locatelli', 'Não informado', '98390020022', '6081075088', NULL, '', '2000-01-01', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(155, 2, 2, 'Evelin Fernanda de Souza', 'nao informado', '01951306007', '0000023567', NULL, '', '1989-02-03', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(156, 1, 2, 'Igor Camargo Fontana', 'Não informado', '98390020080', '6081075065', NULL, '', '2000-02-02', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(157, 2, 3, 'LIDIANE DOS SANTOS FERREIRA HENN', 'DILVANE MARIA DOS SANTOS FERREIRA', '01320809073', '0000000020', NULL, '', '1982-04-19', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(158, 1, 2, 'Luis Fernando Santos Taberra', 'nao informado', '43705820087', '0000000089', NULL, '', '1966-12-10', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(159, 2, 2, 'Raíssa Nunes dos Santos', 'Não informado', '02697182063', '8077105305', NULL, '', '1989-11-09', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(160, 2, 2, 'Tiela Trapp Grassotti', 'não informado', '02502728024', '7100489835', NULL, '', '1990-12-03', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(161, 1, 2, 'Edinilson de Oliveira', 'Não informado', '98390020055', '6081075055', NULL, '', '1999-01-01', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(162, 2, 2, 'Rosana Huff', 'Não informado', '03108908022', '1102410956', NULL, '', '1993-03-03', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(163, 1, 2, 'Gilberto Gonçalves', 'nao informado', '42634806000', '0000000789', NULL, '', '1960-07-26', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(164, 1, 3, 'LUIS ROBERTO SALDANHA', 'Não informado', '00000003000', '0000000030', NULL, '', '1967-02-09', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(165, 1, 2, 'Alexandre de Morales', 'nao informado', '64564592068', '9065546344', NULL, '', '1977-11-07', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(166, 4, 2, 'Yugo Lima Melo', 'não informado', '90349674760', '4564564566', NULL, '', '1990-06-28', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(167, 1, 3, 'LUIZ AUGUSTO CASSIANO', 'MARTA CONSUL CASSIANO', '00000000400', '7003029389', NULL, '', '1959-03-02', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(168, 2, 3, 'VALERIA DE FREITAS PUHL', 'SOARA MARIA MACHADO DE FREITAS', '01345617089', '0000000001', NULL, '', '1983-06-06', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(169, 4, 2, 'José Sergio Moraes', 'nao informado', '98348019049', '1081559955', NULL, '', '1979-09-26', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(170, 2, 2, 'Maria Luiza Saraiva Pereira', 'Não informado', '00000000500', '0000000060', NULL, '', '2001-01-01', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(171, 1, 2, 'Felipe B Almeida', 'nao informado', '02821910037', '1102766373', NULL, '', '1991-02-18', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(172, 1, 3, 'RICARDO FERREIRA DE SOUZA', 'Não informado', '98390020000', '6081075000', NULL, '', '1977-10-23', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(173, 1, 1, 'SERGIO CARDOSO DE QUADROS', 'MARIA ANTONIA CARDOSO DE QUADROS', '00111413002', '0011141302', NULL, '', '1968-01-02', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(174, 2, 2, 'Mariane da Cunha Jaeger', 'Não informado', '01833226062', '4095766673', NULL, '', '2001-01-01', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(175, 2, 2, 'Luana Freese', 'nao informado', '98390120020', '6081075068', NULL, '', '1982-04-16', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(176, 2, 3, 'MARIA DE MELLO BANDEIRA', 'não informado', '01010101010', '0000000000', NULL, '', '1943-11-02', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(177, 2, 2, 'Marilea Furtado Feira', 'Não informado', '01797367013', '8089653037', NULL, '', '1987-05-05', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(178, 1, 2, 'Andre Lucero', 'nao informado', '00000567890', '0000000088', NULL, '', '1990-01-01', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(179, 2, 3, 'SIMONE ESPINDOLA DA SILVA', 'DENISE ESPINDOLA DA SILVA', '98390020056', '6081075033', NULL, '', '1979-10-30', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(180, 4, 2, 'Marina Eichenberg Furasté', 'Não informado', '02604324075', '6096260648', NULL, '', '1989-04-11', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(181, 1, 3, 'VALDEMAR FLORES DA ROSA', 'MARIA ANALIA DA ROSA', '89309596030', '0000000000', NULL, '', '1954-05-31', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(182, 2, 3, 'MICHELE RODRIGUES PAZ', 'JUREMA ADOREMI RODRIGUES PAZ', '00100100100', '0010010011', NULL, '', '1985-05-07', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(183, 2, 3, 'TANIA ZANON RODRIGUES', 'ROSALINA ZANON RODRIGUES', '00111413003', '0011141303', NULL, '', '1983-07-10', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(184, 2, 2, 'Marister de Oliveira Castanho', 'Não informado', '80798063068', '8073507561', NULL, '', '1981-08-20', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(185, 4, 3, 'JORGE ANTONIO BANDEIRA MEDINA', 'MARIA LOURDES BANDEIRA MEDINA', '00000000025', '1081559922', NULL, '', '1944-12-27', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(186, 2, 3, 'PATRICIA GRAEFF', 'não informado', '00300300333', '0020020022', NULL, '', '1988-08-18', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(187, 1, 3, 'JORGE RICARDO PEREIRA DA SILVA', 'TEREZINHA PEREIRA DA SILVA', '52173860020', '6050483319', NULL, '', '1971-10-28', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(188, 2, 3, 'PATRICIA MARGARETE VOGEL', 'DULCE VOGEL', '68769563004', '0060060066', NULL, '', '1976-07-05', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(189, 1, 3, 'JOSE LAR FAGUNDES AIRES', 'ELOI FAGUNDES AIRES', '00000000254', '0000000087', NULL, '', '1957-04-11', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(190, 2, 3, 'KAREN ADRIANA SUAREZ SEVERO', 'nao informado', '92600000070', '0000000081', NULL, '', '1982-01-27', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(194, 4, NULL, 'Fulano', 'Mae', '04303145076', '1234567890', '', 'Desconhecido', '1999-02-21', '', 6, NULL, '', 'DesconheciASDSADAdo', 'Desconhecido', 'Desconhecido', NULL, 'n', 'WAEAEDA', NULL, NULL, NULL),
+(195, 4, NULL, 'JN', 'Mão de JN', '41582241015', '6019334264', '91501970', '', '1964-02-10', '', 6, '', 'Rua Coronel Leonardo Ribeiro 221', 'Desconhecido', '', '', '', 'n', '', '', 'Desconhecido', NULL),
+(213, 4, NULL, 'MOISES ELIONAI DE OLIVEIRA LOPES', 'ROSEMERI DE OLIVEIRA LOPES', '82345759020', '', '94100190', 'Não informado', '1982-10-22', '', 6, '', 'RIO DE JANEIRO 630 - Neopolis', 'Não informado', '', '', '', 'n', '', '', 'Desconhecido', NULL),
+(214, 1, NULL, 'DIEGO ELIAS DA SILVA', '', '', '', '00000000', 'Não informado', '1983-05-22', 'Desconhecido', 6, '', 'TV MACIEL - 75 - Parque Anjos', 'Desconhecido', '', '', '', 'n', 'não informado', '', 'Desconhecido', NULL),
+(215, 2, NULL, 'Debora Estela da Silveira', 'Madalena Fontanari da Silveira', '00010410023', '', '00000000', 'Desconhecido', '1977-05-14', '', 6, '', 'Rendeção 103-Vista Alegre', 'Desconhecido', '', '', '', 'n', '', '705009426788951', '', NULL),
+(217, 4, NULL, 'Marco Aurelio dos Santos', 'Beloni Maria Ferrugem dos Santos', '38362325020', '', '00000000', 'Desconhecido', '1960-01-22', '', 6, '', 'MANOEL CANDIDO DA ROSA-205-Morada do Bosque', 'Desconhecido', '', 'Desconhecido', '', 'n', '', '', 'Desconhecido', NULL),
+(218, 2, NULL, 'ITAINARA FERNANDA BARBOSA DE SOUZA POERSCHKE', '', '', '', '00000000', 'Desconhecido', '1991-11-15', 'Desconhecido', 6, '', 'Estr Vanius-490-Santa Cruz', 'Desconhecido', '', '', '', 'n', 'Desconhecido', '', 'Desconhecido', NULL),
+(219, 2, NULL, 'ANA LUCIA FALCAO ALVES', 'ELISABETH FALCAO ALVES', '00280502079', '', '', 'Desconhecido', '1982-08-16', '', 1, '', 'PINTO DA ROCHA, 15', 'Desconhecido', 'Desconhecido', '', '', 'n', '', '131336854560008', '', NULL),
+(220, 1, NULL, 'AVALDAREDO ILVIS SILVA', 'ALMERINDA XAVIER DA SILVA', '34596372004', '', '', 'Desconhecido', '1942-02-12', '', 6, '', 'Rua Ipiranga. 84. Vila Augusta, Viamão', 'Desconhecido', 'Desconhecido', '', '', 'n', '', '', 'Desconhecido', NULL),
+(221, 2, NULL, 'MARCIA MARTINS LOPEZ', 'ANGELA MARIA MARTINS LOPEZ', '00353284017', '', '', 'Desconhecido', '1984-04-08', '', 6, '', 'JARDIM IPE AMARELO, 210 casa 02. viamão', 'Desconhecido', 'Desconhecido', '', '', 'n', '', '', 'Desconhecido', NULL),
+(222, 2, NULL, 'GREYCE KELLI AVILA LENCINA', '', '02960861000', '', '', 'Desconhecido', '1992-12-13', 'Desconhecido', 6, '', 'RODOVIA RS 040 KM 26, 468', 'Desconhecido', 'Desconhecido', '', '', 'n', '', '', 'Desconhecido', NULL);
 
 -- --------------------------------------------------------
 
@@ -6740,21 +7035,33 @@ INSERT INTO `tb_rel_usuario_perfilusuario` (`id_rel_usuario_perfilUsuario`, `idP
 (89, 5, 72),
 (90, 5, 73),
 (91, 5, 74),
-(92, 4, 75),
-(93, 4, 76),
-(94, 4, 77),
-(95, 4, 78),
+(92, 5, 78),
+(93, 5, 75),
+(94, 5, 76),
+(95, 5, 77),
 (96, 5, 79),
-(97, 4, 80),
-(98, 4, 81),
-(99, 4, 82),
-(100, 4, 83),
-(101, 4, 84),
-(102, 4, 85),
-(103, 4, 86),
+(97, 5, 80),
+(98, 5, 81),
+(99, 5, 82),
+(100, 5, 83),
+(101, 5, 84),
+(102, 5, 85),
+(103, 5, 86),
 (104, 4, 87),
 (105, 4, 88),
-(106, 4, 89);
+(106, 4, 89),
+(107, 5, 90),
+(108, 4, 91),
+(109, 4, 92),
+(110, 4, 93),
+(111, 4, 94),
+(112, 4, 95),
+(113, 4, 96),
+(114, 4, 97),
+(115, 4, 98),
+(116, 4, 99),
+(117, 4, 100),
+(118, 5, 101);
 
 -- --------------------------------------------------------
 
@@ -6796,8 +7103,8 @@ CREATE TABLE `tb_sexo` (
 INSERT INTO `tb_sexo` (`idSexo`, `sexo`, `index_sexo`) VALUES
 (1, 'Masculino', 'MASCULINO'),
 (2, 'Feminino', 'FEMININO'),
-(5, 'Outro', 'OUTRO'),
-(6, 'Não informado', 'NAO INFORMADO');
+(3, 'Outro', 'OUTRO'),
+(4, 'Não informado', 'NAO INFORMADO');
 
 -- --------------------------------------------------------
 
@@ -6881,50 +7188,15 @@ CREATE TABLE `tb_tubo` (
 --
 
 INSERT INTO `tb_tubo` (`idTubo`, `idTubo_fk`, `idAmostra_fk`, `tuboOriginal`) VALUES
-(32, NULL, 57, 's'),
-(34, NULL, 60, 's'),
-(35, NULL, 61, 's'),
-(36, NULL, 63, 's'),
-(37, NULL, 64, 's'),
-(38, NULL, 65, 's'),
-(39, NULL, 66, 's'),
-(40, NULL, 67, 's'),
-(41, NULL, 68, 's'),
-(44, NULL, 69, 's'),
-(45, NULL, 70, 's'),
-(46, NULL, 73, 's'),
-(47, NULL, 74, 's'),
-(48, NULL, 75, 's'),
-(49, NULL, 76, 's'),
-(50, NULL, 77, 's'),
-(51, NULL, 78, 's'),
-(52, NULL, 79, 's'),
-(53, NULL, 80, 's'),
-(54, NULL, 81, 's'),
-(55, NULL, 82, 's'),
-(56, NULL, 83, 's'),
-(57, NULL, 84, 's'),
-(58, NULL, 85, 's'),
-(59, NULL, 86, 's'),
-(60, NULL, 87, 's'),
-(61, NULL, 89, 's'),
-(62, NULL, 20, 's'),
-(67, NULL, 109, 's'),
-(68, NULL, 113, 's'),
-(69, NULL, 115, 's'),
-(70, NULL, 116, 's'),
-(71, NULL, 117, 's'),
-(72, NULL, 118, 's'),
-(73, NULL, 121, 's'),
-(74, NULL, 122, 's'),
-(75, NULL, 123, 's'),
-(76, NULL, 124, 's'),
-(77, NULL, 125, 's'),
-(78, NULL, 126, 's'),
-(79, NULL, 127, 's'),
-(80, NULL, 129, 's'),
-(81, NULL, 130, 's'),
-(82, NULL, 132, 's');
+(3, NULL, 46, 's'),
+(4, NULL, 181, 's'),
+(5, NULL, 47, 's'),
+(6, NULL, 184, 's'),
+(7, NULL, 188, 's'),
+(8, NULL, 189, 's'),
+(9, NULL, 190, 's'),
+(10, NULL, 192, 's'),
+(11, NULL, 195, 's');
 
 -- --------------------------------------------------------
 
@@ -6944,6 +7216,9 @@ CREATE TABLE `tb_usuario` (
 
 INSERT INTO `tb_usuario` (`idUsuario`, `matricula`, `senha`) VALUES
 (2, '274715', '12345678'),
+(5, 'U01', 'U01'),
+(6, 'U02', 'U02'),
+(7, 'U03', 'U03'),
 (8, 'U04', 'U04'),
 (9, 'U05', 'U05'),
 (10, 'U06', 'U06'),
@@ -7011,41 +7286,53 @@ INSERT INTO `tb_usuario` (`idUsuario`, `matricula`, `senha`) VALUES
 (72, 'U68', 'U68'),
 (73, 'U69', 'U69'),
 (74, 'U70', 'U70'),
-(75, '303397', '12345678'),
-(76, 'NETTO', 'ANETTO'),
-(77, 'LEILA', 'ALEILA'),
-(78, 'ERIKA', 'AERIKA'),
-(79, 'MARCELO', 'PMARCELO'),
-(80, 'CARINE', 'ACARINE'),
-(81, 'AJORDI', 'AJORDI'),
-(82, 'AJOAO', 'AJOAO'),
-(83, 'ATHIAGO', 'ATHIAGO'),
-(84, 'ARICARDO', 'ARICARDO'),
-(85, 'AMAYRA', 'AMAYRA'),
-(86, 'AMARINA', 'AMARINA'),
-(87, 'ABRUNO', 'ABRUNO'),
-(88, 'ADERICK', 'ADERICK'),
-(89, 'AEDU', 'AEDU');
+(75, '00308824', 'C00308824'),
+(76, '00111413', 'C00111413'),
+(77, '00096566', 'C00096566'),
+(78, '00032317', 'C00032317'),
+(79, '00109965', 'C00109965'),
+(80, '00278599', 'C00278599'),
+(81, '00143612', 'C00143612'),
+(82, '00264193', 'C00264193'),
+(83, '00137561', 'C00137561'),
+(84, '00023918', 'C00023918'),
+(85, '00105017', 'C00105017'),
+(86, '00291041', 'C00291041'),
+(87, 'NETTO', 'ANETTO'),
+(88, 'LEILA', 'ALEILA'),
+(89, 'ERIKA', 'AERIKA'),
+(90, 'MARCELO', 'PMARCELO'),
+(91, 'ACARINE', 'ACARINE'),
+(92, 'AJORDI', 'AJORDI'),
+(93, 'AJOAO', 'AJOAO'),
+(94, 'ATHIAGO', 'ATHIAGO'),
+(95, 'ARICARDO', 'ARICARDO'),
+(96, 'AMAYRA', 'AMAYRA'),
+(97, 'AMARINA', 'AMARINA'),
+(98, 'ABRUNO', 'ABRUNO'),
+(99, 'ADERICK', 'ADERICK'),
+(100, 'AEDU', 'AEDU'),
+(101, '00009885', 'C00009885');
 
 --
--- Indexes for dumped tables
+-- Índices para tabelas despejadas
 --
 
 --
--- Indexes for table `tab_estado`
+-- Índices para tabela `tab_estado`
 --
 ALTER TABLE `tab_estado`
   ADD PRIMARY KEY (`cod_estado`);
 
 --
--- Indexes for table `tab_municipio`
+-- Índices para tabela `tab_municipio`
 --
 ALTER TABLE `tab_municipio`
   ADD PRIMARY KEY (`cod_municipio`),
   ADD KEY `fk_tab_municipio_tab_estado` (`cod_estado`);
 
 --
--- Indexes for table `tb_amostra`
+-- Índices para tabela `tb_amostra`
 --
 ALTER TABLE `tb_amostra`
   ADD PRIMARY KEY (`idAmostra`),
@@ -7057,7 +7344,7 @@ ALTER TABLE `tb_amostra`
   ADD KEY `fk_idPerfilPaciente` (`idPerfilPaciente_fk`);
 
 --
--- Indexes for table `tb_cadastroamostra`
+-- Índices para tabela `tb_cadastroamostra`
 --
 ALTER TABLE `tb_cadastroamostra`
   ADD PRIMARY KEY (`idCadastroAmostra`),
@@ -7066,38 +7353,38 @@ ALTER TABLE `tb_cadastroamostra`
   ADD KEY `tb_cadastroAmostra_FKIndex3` (`idAmostra_fk`);
 
 --
--- Indexes for table `tb_capela`
+-- Índices para tabela `tb_capela`
 --
 ALTER TABLE `tb_capela`
   ADD PRIMARY KEY (`idCapela`);
 
 --
--- Indexes for table `tb_codgal`
+-- Índices para tabela `tb_codgal`
 --
 ALTER TABLE `tb_codgal`
   ADD PRIMARY KEY (`idCodGAL`),
   ADD KEY `tb_codGAL_FKIndex1` (`idPaciente_fk`);
 
 --
--- Indexes for table `tb_dataimpressao`
+-- Índices para tabela `tb_dataimpressao`
 --
 ALTER TABLE `tb_dataimpressao`
   ADD PRIMARY KEY (`idDataImpressao`);
 
 --
--- Indexes for table `tb_detentor`
+-- Índices para tabela `tb_detentor`
 --
 ALTER TABLE `tb_detentor`
   ADD PRIMARY KEY (`idDetentor`);
 
 --
--- Indexes for table `tb_doenca`
+-- Índices para tabela `tb_doenca`
 --
 ALTER TABLE `tb_doenca`
   ADD PRIMARY KEY (`idDoenca`);
 
 --
--- Indexes for table `tb_equipamento`
+-- Índices para tabela `tb_equipamento`
 --
 ALTER TABLE `tb_equipamento`
   ADD PRIMARY KEY (`idEquipamento`),
@@ -7106,7 +7393,7 @@ ALTER TABLE `tb_equipamento`
   ADD KEY `fk_idModelo` (`idModelo_fk`);
 
 --
--- Indexes for table `tb_etiqueta`
+-- Índices para tabela `tb_etiqueta`
 --
 ALTER TABLE `tb_etiqueta`
   ADD PRIMARY KEY (`idEtiqueta`),
@@ -7115,13 +7402,7 @@ ALTER TABLE `tb_etiqueta`
   ADD KEY `tb_etiqueta_FKIndex3` (`idUsuario_fk`);
 
 --
--- Indexes for table `tb_etnia`
---
-ALTER TABLE `tb_etnia`
-  ADD PRIMARY KEY (`idEtnia`);
-
---
--- Indexes for table `tb_extracao`
+-- Índices para tabela `tb_extracao`
 --
 ALTER TABLE `tb_extracao`
   ADD PRIMARY KEY (`idExtracao`),
@@ -7129,16 +7410,13 @@ ALTER TABLE `tb_extracao`
   ADD KEY `tb_extracao_FKIndex2` (`idAmostra_fk`);
 
 --
--- Indexes for table `tb_infostubo`
+-- Índices para tabela `tb_infostubo`
 --
 ALTER TABLE `tb_infostubo`
-  ADD PRIMARY KEY (`idInfosTubo`),
-  ADD KEY `tb_infosTubo_FKIndex1` (`idTubo_fk`),
-  ADD KEY `tb_infosTubo_FKIndex2` (`idLocalArmazenamento_fk`),
-  ADD KEY `tb_infosTubo_FKIndex3` (`idUsuario_fk`);
+  ADD PRIMARY KEY (`idInfosTubo`);
 
 --
--- Indexes for table `tb_laudo`
+-- Índices para tabela `tb_laudo`
 --
 ALTER TABLE `tb_laudo`
   ADD PRIMARY KEY (`idLaudo`),
@@ -7146,7 +7424,7 @@ ALTER TABLE `tb_laudo`
   ADD KEY `tb_laudo_FKIndex3` (`idAmostra_fk`);
 
 --
--- Indexes for table `tb_localarmazenamento`
+-- Índices para tabela `tb_localarmazenamento`
 --
 ALTER TABLE `tb_localarmazenamento`
   ADD PRIMARY KEY (`idLocalArmazenamento`),
@@ -7154,64 +7432,64 @@ ALTER TABLE `tb_localarmazenamento`
   ADD KEY `fk_id_tempo_permanencia` (`idTempoPermanencia_fk`);
 
 --
--- Indexes for table `tb_log`
+-- Índices para tabela `tb_log`
 --
 ALTER TABLE `tb_log`
   ADD PRIMARY KEY (`idLog`),
   ADD KEY `tb_log_FKIndex1` (`idUsuario`);
 
 --
--- Indexes for table `tb_lugarorigem`
+-- Índices para tabela `tb_lugarorigem`
 --
 ALTER TABLE `tb_lugarorigem`
   ADD PRIMARY KEY (`idLugarOrigem`);
 
 --
--- Indexes for table `tb_marca`
+-- Índices para tabela `tb_marca`
 --
 ALTER TABLE `tb_marca`
   ADD PRIMARY KEY (`idMarca`);
 
 --
--- Indexes for table `tb_modelo`
+-- Índices para tabela `tb_modelo`
 --
 ALTER TABLE `tb_modelo`
   ADD PRIMARY KEY (`idModelo`);
 
 --
--- Indexes for table `tb_nivelprioridade`
+-- Índices para tabela `tb_nivelprioridade`
 --
 ALTER TABLE `tb_nivelprioridade`
   ADD PRIMARY KEY (`idNivelPrioridade`);
 
 --
--- Indexes for table `tb_paciente`
+-- Índices para tabela `tb_paciente`
 --
 ALTER TABLE `tb_paciente`
   ADD PRIMARY KEY (`idPaciente`),
-  ADD KEY `tb_paciente_FKIndex3` (`idSexo_fk`),
-  ADD KEY `fk_etnia` (`idEtnia_fk`);
+  ADD KEY `tb_paciente_FKIndex2` (`idPerfilPaciente_fk`),
+  ADD KEY `tb_paciente_FKIndex3` (`idSexo_fk`);
 
 --
--- Indexes for table `tb_perfilpaciente`
+-- Índices para tabela `tb_perfilpaciente`
 --
 ALTER TABLE `tb_perfilpaciente`
   ADD PRIMARY KEY (`idPerfilPaciente`);
 
 --
--- Indexes for table `tb_perfilusuario`
+-- Índices para tabela `tb_perfilusuario`
 --
 ALTER TABLE `tb_perfilusuario`
   ADD PRIMARY KEY (`idPerfilUsuario`);
 
 --
--- Indexes for table `tb_recurso`
+-- Índices para tabela `tb_recurso`
 --
 ALTER TABLE `tb_recurso`
   ADD PRIMARY KEY (`idRecurso`);
 
 --
--- Indexes for table `tb_rel_amostra_tipo_local`
+-- Índices para tabela `tb_rel_amostra_tipo_local`
 --
 ALTER TABLE `tb_rel_amostra_tipo_local`
   ADD PRIMARY KEY (`idAmostraTipoLocal`),
@@ -7220,7 +7498,7 @@ ALTER TABLE `tb_rel_amostra_tipo_local`
   ADD KEY `tb_rel_amostra_local_FKIndex3` (`idLocalArmazenamento`);
 
 --
--- Indexes for table `tb_rel_etiqueta_dataimpressao`
+-- Índices para tabela `tb_rel_etiqueta_dataimpressao`
 --
 ALTER TABLE `tb_rel_etiqueta_dataimpressao`
   ADD PRIMARY KEY (`idEtiqueta_fk`,`idDataImpressao_fk`),
@@ -7228,7 +7506,7 @@ ALTER TABLE `tb_rel_etiqueta_dataimpressao`
   ADD KEY `tb_rel_etiqueta_dataImpressao_FKIndex2` (`idDataImpressao_fk`);
 
 --
--- Indexes for table `tb_rel_perfilusuario_recurso`
+-- Índices para tabela `tb_rel_perfilusuario_recurso`
 --
 ALTER TABLE `tb_rel_perfilusuario_recurso`
   ADD PRIMARY KEY (`id_rel_perfilUsuario_recurso`,`idPerfilUsuario_fk`,`idRecurso_fk`),
@@ -7236,7 +7514,7 @@ ALTER TABLE `tb_rel_perfilusuario_recurso`
   ADD KEY `tb_rel_perfilUsuario_recurso_FKIndex2` (`idRecurso_fk`);
 
 --
--- Indexes for table `tb_rel_usuario_perfilusuario`
+-- Índices para tabela `tb_rel_usuario_perfilusuario`
 --
 ALTER TABLE `tb_rel_usuario_perfilusuario`
   ADD PRIMARY KEY (`id_rel_usuario_perfilUsuario`,`idPerfilUsuario_fk`,`idUsuario_fk`),
@@ -7244,7 +7522,7 @@ ALTER TABLE `tb_rel_usuario_perfilusuario`
   ADD KEY `tb_rel_usuario_perfilUsuario_FKIndex2` (`idPerfilUsuario_fk`);
 
 --
--- Indexes for table `tb_rtpcr`
+-- Índices para tabela `tb_rtpcr`
 --
 ALTER TABLE `tb_rtpcr`
   ADD PRIMARY KEY (`idRTPCR`),
@@ -7253,241 +7531,233 @@ ALTER TABLE `tb_rtpcr`
   ADD KEY `tb_RTPCR_FKIndex3` (`idUsuario_fk`);
 
 --
--- Indexes for table `tb_sexo`
+-- Índices para tabela `tb_sexo`
 --
 ALTER TABLE `tb_sexo`
   ADD PRIMARY KEY (`idSexo`);
 
 --
--- Indexes for table `tb_tempopermanencia`
+-- Índices para tabela `tb_tempopermanencia`
 --
 ALTER TABLE `tb_tempopermanencia`
   ADD PRIMARY KEY (`idTempoPermanencia`);
 
 --
--- Indexes for table `tb_tipoamostra`
+-- Índices para tabela `tb_tipoamostra`
 --
 ALTER TABLE `tb_tipoamostra`
   ADD PRIMARY KEY (`idTipoAmostra`);
 
 --
--- Indexes for table `tb_tipolocal`
+-- Índices para tabela `tb_tipolocal`
 --
 ALTER TABLE `tb_tipolocal`
   ADD PRIMARY KEY (`idTipoLocal`);
 
 --
--- Indexes for table `tb_tubo`
+-- Índices para tabela `tb_tubo`
 --
 ALTER TABLE `tb_tubo`
-  ADD PRIMARY KEY (`idTubo`),
-  ADD KEY `tb_tubos_FKIndex1` (`idAmostra_fk`),
-  ADD KEY `tb_tubos_FKIndex2` (`idTubo_fk`);
+  ADD PRIMARY KEY (`idTubo`);
 
 --
--- Indexes for table `tb_usuario`
+-- Índices para tabela `tb_usuario`
 --
 ALTER TABLE `tb_usuario`
   ADD PRIMARY KEY (`idUsuario`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de tabelas despejadas
 --
 
 --
--- AUTO_INCREMENT for table `tb_amostra`
+-- AUTO_INCREMENT de tabela `tb_amostra`
 --
 ALTER TABLE `tb_amostra`
-  MODIFY `idAmostra` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
+  MODIFY `idAmostra` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=196;
 
 --
--- AUTO_INCREMENT for table `tb_cadastroamostra`
+-- AUTO_INCREMENT de tabela `tb_cadastroamostra`
 --
 ALTER TABLE `tb_cadastroamostra`
-  MODIFY `idCadastroAmostra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `idCadastroAmostra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=192;
 
 --
--- AUTO_INCREMENT for table `tb_capela`
+-- AUTO_INCREMENT de tabela `tb_capela`
 --
 ALTER TABLE `tb_capela`
   MODIFY `idCapela` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `tb_codgal`
+-- AUTO_INCREMENT de tabela `tb_codgal`
 --
 ALTER TABLE `tb_codgal`
-  MODIFY `idCodGAL` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `idCodGAL` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
 
 --
--- AUTO_INCREMENT for table `tb_dataimpressao`
+-- AUTO_INCREMENT de tabela `tb_dataimpressao`
 --
 ALTER TABLE `tb_dataimpressao`
   MODIFY `idDataImpressao` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tb_detentor`
+-- AUTO_INCREMENT de tabela `tb_detentor`
 --
 ALTER TABLE `tb_detentor`
   MODIFY `idDetentor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT for table `tb_doenca`
+-- AUTO_INCREMENT de tabela `tb_doenca`
 --
 ALTER TABLE `tb_doenca`
   MODIFY `idDoenca` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT for table `tb_equipamento`
+-- AUTO_INCREMENT de tabela `tb_equipamento`
 --
 ALTER TABLE `tb_equipamento`
   MODIFY `idEquipamento` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
--- AUTO_INCREMENT for table `tb_etiqueta`
+-- AUTO_INCREMENT de tabela `tb_etiqueta`
 --
 ALTER TABLE `tb_etiqueta`
   MODIFY `idEtiqueta` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tb_etnia`
---
-ALTER TABLE `tb_etnia`
-  MODIFY `idEtnia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `tb_extracao`
+-- AUTO_INCREMENT de tabela `tb_extracao`
 --
 ALTER TABLE `tb_extracao`
   MODIFY `idExtracao` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tb_infostubo`
+-- AUTO_INCREMENT de tabela `tb_infostubo`
 --
 ALTER TABLE `tb_infostubo`
-  MODIFY `idInfosTubo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `idInfosTubo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `tb_laudo`
+-- AUTO_INCREMENT de tabela `tb_laudo`
 --
 ALTER TABLE `tb_laudo`
   MODIFY `idLaudo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tb_localarmazenamento`
+-- AUTO_INCREMENT de tabela `tb_localarmazenamento`
 --
 ALTER TABLE `tb_localarmazenamento`
   MODIFY `idLocalArmazenamento` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tb_log`
+-- AUTO_INCREMENT de tabela `tb_log`
 --
 ALTER TABLE `tb_log`
-  MODIFY `idLog` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+  MODIFY `idLog` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT for table `tb_lugarorigem`
+-- AUTO_INCREMENT de tabela `tb_lugarorigem`
 --
 ALTER TABLE `tb_lugarorigem`
   MODIFY `idLugarOrigem` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tb_marca`
+-- AUTO_INCREMENT de tabela `tb_marca`
 --
 ALTER TABLE `tb_marca`
   MODIFY `idMarca` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT for table `tb_modelo`
+-- AUTO_INCREMENT de tabela `tb_modelo`
 --
 ALTER TABLE `tb_modelo`
   MODIFY `idModelo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `tb_nivelprioridade`
+-- AUTO_INCREMENT de tabela `tb_nivelprioridade`
 --
 ALTER TABLE `tb_nivelprioridade`
   MODIFY `idNivelPrioridade` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
--- AUTO_INCREMENT for table `tb_paciente`
+-- AUTO_INCREMENT de tabela `tb_paciente`
 --
 ALTER TABLE `tb_paciente`
-  MODIFY `idPaciente` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=244;
+  MODIFY `idPaciente` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=223;
 
 --
--- AUTO_INCREMENT for table `tb_perfilpaciente`
+-- AUTO_INCREMENT de tabela `tb_perfilpaciente`
 --
 ALTER TABLE `tb_perfilpaciente`
-  MODIFY `idPerfilPaciente` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idPerfilPaciente` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `tb_perfilusuario`
+-- AUTO_INCREMENT de tabela `tb_perfilusuario`
 --
 ALTER TABLE `tb_perfilusuario`
   MODIFY `idPerfilUsuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `tb_recurso`
+-- AUTO_INCREMENT de tabela `tb_recurso`
 --
 ALTER TABLE `tb_recurso`
   MODIFY `idRecurso` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
--- AUTO_INCREMENT for table `tb_rel_perfilusuario_recurso`
+-- AUTO_INCREMENT de tabela `tb_rel_perfilusuario_recurso`
 --
 ALTER TABLE `tb_rel_perfilusuario_recurso`
   MODIFY `id_rel_perfilUsuario_recurso` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
 
 --
--- AUTO_INCREMENT for table `tb_rel_usuario_perfilusuario`
+-- AUTO_INCREMENT de tabela `tb_rel_usuario_perfilusuario`
 --
 ALTER TABLE `tb_rel_usuario_perfilusuario`
-  MODIFY `id_rel_usuario_perfilUsuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
+  MODIFY `id_rel_usuario_perfilUsuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
 
 --
--- AUTO_INCREMENT for table `tb_rtpcr`
+-- AUTO_INCREMENT de tabela `tb_rtpcr`
 --
 ALTER TABLE `tb_rtpcr`
   MODIFY `idRTPCR` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tb_sexo`
+-- AUTO_INCREMENT de tabela `tb_sexo`
 --
 ALTER TABLE `tb_sexo`
-  MODIFY `idSexo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idSexo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `tb_tempopermanencia`
+-- AUTO_INCREMENT de tabela `tb_tempopermanencia`
 --
 ALTER TABLE `tb_tempopermanencia`
   MODIFY `idTempoPermanencia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT for table `tb_tipoamostra`
+-- AUTO_INCREMENT de tabela `tb_tipoamostra`
 --
 ALTER TABLE `tb_tipoamostra`
   MODIFY `idTipoAmostra` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `tb_tipolocal`
+-- AUTO_INCREMENT de tabela `tb_tipolocal`
 --
 ALTER TABLE `tb_tipolocal`
   MODIFY `idTipoLocal` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT for table `tb_tubo`
+-- AUTO_INCREMENT de tabela `tb_tubo`
 --
 ALTER TABLE `tb_tubo`
-  MODIFY `idTubo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `idTubo` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
--- AUTO_INCREMENT for table `tb_usuario`
+-- AUTO_INCREMENT de tabela `tb_usuario`
 --
 ALTER TABLE `tb_usuario`
-  MODIFY `idUsuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
+  MODIFY `idUsuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 
 --
--- Constraints for dumped tables
+-- Restrições para despejos de tabelas
 --
 
 --
@@ -7515,12 +7785,6 @@ ALTER TABLE `tb_equipamento`
 --
 ALTER TABLE `tb_localarmazenamento`
   ADD CONSTRAINT `fk_id_tempo_permanencia` FOREIGN KEY (`idTempoPermanencia_fk`) REFERENCES `tb_tempopermanencia` (`idTempoPermanencia`);
-
---
--- Limitadores para a tabela `tb_paciente`
---
-ALTER TABLE `tb_paciente`
-  ADD CONSTRAINT `fk_etnia` FOREIGN KEY (`idEtnia_fk`) REFERENCES `tb_etnia` (`idEtnia`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

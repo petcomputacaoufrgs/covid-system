@@ -2,6 +2,20 @@
 <project version="4">
   <component name="PublishConfigData" serverName="http://localhost/covid-system/public_html/">
     <serverData>
+      <paths name="covid-teste">
+        <serverdata>
+          <mappings>
+            <mapping deploy="\" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="covid_rtpcr">
+        <serverdata>
+          <mappings>
+            <mapping deploy="\" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="http://localhost/covid-system/public_html/">
         <serverdata>
           <mappings>

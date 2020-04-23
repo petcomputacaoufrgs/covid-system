@@ -167,7 +167,7 @@ class Interf {
         $selected = '';
         $arr_estados = $objEstadoOrigemRN->listar($objEstadoOrigem);
 
-        $select_estados = '<select class="form-control selectpicker is-valid"  disabled ' . $onchange
+        $select_estados = '<select class="form-control selectpicker "  disabled ' . $onchange
                 . 'id="select-country idSel_estados"'
                 . ' data-live-search="true" name="sel_estados">'
                 . '<option data-tokens="" ></option>';
@@ -363,13 +363,13 @@ class Interf {
      */
 
     function montar_select_perfisMultiplos(&$select_perfis,&$perfisSelecionados, &$objPerfilPaciente, $objPerfilPacienteRN, $disabled, $onchange) {
-
         /* SELECIONAR VÁRIOS PERFIS DE USUÁRIO */
+
         $selected = '';
         $arr_perfis = $objPerfilPacienteRN->listar($objPerfilPaciente);
-
-        $select_perfis = '<select '.$disabled.'  class="form-control selectpicker" '.$onchange.'
-            multiple data-live-search="true"   name="sel_perfis[]">'
+        echo $disabled;
+        $select_perfis = '<select '.$disabled.' class="form-control selectpicker" onchange="'.$onchange.'" 
+            multiple data-live-search="true"        name="sel_perfis[]"  id="selectpicker"  >'
             . '<option value="0" ></option>';
 
         foreach ($arr_perfis as $perfil) {
