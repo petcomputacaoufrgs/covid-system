@@ -23,7 +23,7 @@ class RecursoRN{
             
         }
         
-        return $recurso->getNome($strNome);
+        return $recurso->setNome($strNome);
 
     }
     
