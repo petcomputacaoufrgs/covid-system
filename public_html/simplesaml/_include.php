@@ -96,8 +96,8 @@ class SimpleSAML_IncPrefixWarn {
 /* Set the $SIMPLESAML_INCPREFIX to a reference to the class. */
 $SIMPLESAML_INCPREFIX = new SimpleSAML_IncPrefixWarn();
 
+$configdir = dirname(dirname(dirname(__FILE__))) . '/simplesamlphp' . '/config';
 
-$configdir = dirname(dirname(__FILE__)) . '/config';
 if (!file_exists($configdir . '/config.php')) {
 	header('Content-Type: text/plain');
 	echo("You have not yet created the simpleSAMLphp configuration files.\n");
