@@ -366,6 +366,25 @@ class AmostraRN{
             $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
 
+
+            $objTubo = new Tubo();
+            $objTuboRN = new TuboRN();
+            $objTubo->setIdAmostra_fk($amostra->getIdAmostra());
+            $arr_tubos = $objTuboRN->listar($objTubo);
+
+            $objInfosTubo = new InfosTubo();
+            $objInfosTuboRN = new InfosTuboRN();
+
+            foreach ($arr_tubos as $tubo){
+                $objInfosTubo->setIdTubo_fk($tubo->getIdTubo());
+                $arr_infosTubo = $objInfosTuboRN->listar($objInfosTubo);
+                $objTuboRN->remover($tubo);
+            }
+
+            foreach ($arr_infosTubo as $infoTubo){
+                $objInfosTuboRN->remover($infoTubo);
+            }
+
             $objAmostraBD = new AmostraBD();
             $arr =  $objAmostraBD->remover($amostra,$objBanco);
 

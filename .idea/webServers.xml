@@ -5,8 +5,15 @@
       <webServer id="6bdedd5a-9503-4276-a15e-24fe117f0fa8" name="http://localhost/covid-system/public_html/" url="http://localhost/covid-system/public_html/">
         <fileTransfer mountedRoot="C:\xampp\htdocs\covid-system" accessType="MOUNT" port="0" />
       </webServer>
-      <webServer id="aa6040fc-336a-4d38-9913-df9d9169eba2" name="html.inf.ufrgs.br" url="https://www.inf.ufrgs.br/covid19_rtpcr/">
+      <webServer id="aa6040fc-336a-4d38-9913-df9d9169eba2" name="covid_rtpcr" url="https://www.inf.ufrgs.br/covid19_rtpcr/">
         <fileTransfer rootFolder="/home/www/covid19_rtpcr/" accessType="SFTP" host="html.inf.ufrgs.br" port="22" sshConfigId="da8abdc2-a772-42ed-9f69-efd4c4d23cb4" sshConfig="cbbathaglini@html.inf.ufrgs.br:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="844551de-7beb-44f3-99ce-99d584069109" name="covid-teste" url="https://www.inf.ufrgs.br/covid19-teste/">
+        <fileTransfer rootFolder="/home/www/covid19-teste/" accessType="SFTP" host="html.inf.ufrgs.br" port="22" sshConfigId="da8abdc2-a772-42ed-9f69-efd4c4d23cb4" sshConfig="cbbathaglini@html.inf.ufrgs.br:22 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

@@ -363,13 +363,13 @@ class Interf {
      */
 
     function montar_select_perfisMultiplos(&$select_perfis,&$perfisSelecionados, &$objPerfilPaciente, $objPerfilPacienteRN, $disabled, $onchange) {
-
         /* SELECIONAR VÁRIOS PERFIS DE USUÁRIO */
+
         $selected = '';
         $arr_perfis = $objPerfilPacienteRN->listar($objPerfilPaciente);
-
-        $select_perfis = '<select '.$disabled.'  class="form-control selectpicker" '.$onchange.'
-            multiple data-live-search="true"   name="sel_perfis[]">'
+        echo $disabled;
+        $select_perfis = '<select '.$disabled.' class="form-control selectpicker" onchange="'.$onchange.'" 
+            multiple data-live-search="true"        name="sel_perfis[]"  id="selectpicker"  >'
             . '<option value="0" ></option>';
 
         foreach ($arr_perfis as $perfil) {
