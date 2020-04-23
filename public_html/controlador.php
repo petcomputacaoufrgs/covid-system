@@ -295,7 +295,7 @@ switch ($_GET['action']):
         break;
     
     case 'listar_amostra':
-        require_once '../acoes/Amostra/listar_amostra.php';
+        require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
         //require_once '../acoes/Amostra/listar_amostra.php';
         break;
     

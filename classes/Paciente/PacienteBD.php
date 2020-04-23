@@ -115,7 +115,13 @@ class PacienteBD {
                 $AND = ' and ';
                 $arrayBind[] = array('s', $objPaciente->getCartaoSUS());
             }
-            
+
+            if ($objPaciente->getCadastroPendente() != null) {
+                $WHERE .= $AND . " cadastroPendente = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPaciente->getCadastroPendente());
+            }
+
             if ($WHERE != '') {
                 $WHERE = ' where ' . $WHERE;
             }
