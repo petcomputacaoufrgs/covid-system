@@ -2,7 +2,7 @@ Por conveniência, uma imagem de máquina virtual (VirtualBox) contendo um siste
 
 http://www.inf.ufrgs.br/~rma/Covid-22-abr-2020.ova
 
-a mesma foi preparada conforme descrito abaixo, e pode ser atualizada para a versão atual.
+A instalação da máquina virtual foi preparada conforme descrito abaixo, podendo ser atualizada para a versão atual do sistema.
 
 Detalhamos abaixo instruções para instalação local do covid-system em um sistema novo.
 
@@ -79,7 +79,7 @@ e, dentro do prompt, digite
 
 Após criar o usuário e database, o banco de dados pode ser povoado com o seguinte comando.
 
-    sudo mysql --database=amostras_covid19 --user 'covid' --password 'covid'  < /var/covid-system/db_XXXX.sql
+    sudo mysql --database=amostras_covid19 --user='covid' --password='covid'  < /var/covid-system/db_XXXX.sql
 
 Nota: no comando acima, o arquivo db_XXXX.sql corresponde ao 'dump' do banco de dados associado à data em questão. Esse arquivo se encontra dentro do diretório /var/covid-system.
 
@@ -136,4 +136,4 @@ Rode os seguintes comandos para atualizar o sistema para a versão atual (i.e. o
     cd /var/covid-system
     git pull
 
-Note: o comando acima atualiza somente o código-fonte da aplicação: nenhuma alteração no estado do banco de dados é realizada.
+Note que o comando acima atualiza somente o código-fonte da aplicação, sem afetar o estado do banco de dados.
