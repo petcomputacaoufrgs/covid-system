@@ -258,39 +258,24 @@ class AmostraBD{
     }
 
 
-    public function filtro_menor_data(Amostra $objAmostra, Banco $objBanco) {
+    public function filtro_menor_data(Amostra $objAmostra,$select, Banco $objBanco) {
         try{
+
 
             $SELECT = "SELECT * FROM tb_amostra ";
             $WHERE = '';
             $AND = '';
+            $OR = '';
             $arrayBind = array();
 
-            if ($objAmostra->getCodigoAmostra() != null) {
-                $WHERE .= $AND . " codigoAmostra = ?";
-                $AND = ' and ';
-                $arrayBind[] = array('s', $objAmostra->getCodigoAmostra());
+
+            foreach ($select as $s) {
+
+                    $WHERE .= $OR . " idPerfilPaciente_fk = ".$s;
+                    $OR = ' OR ';
+                    //$arrayBind[] = array('i', $s);
+
             }
-
-            if ($objAmostra->get_a_r_g() != null) {
-                $WHERE .= $AND . " a_r_g = ?";
-                $AND = ' and ';
-                $arrayBind[] = array('s', $objAmostra->get_a_r_g());
-            }
-
-            if ($objAmostra->getIdPerfilPaciente_fk() != null) {
-                $WHERE .= $AND . " idPerfilPaciente_fk = ?";
-                $AND = ' and ';
-                $arrayBind[] = array('i', $objAmostra->getIdPerfilPaciente_fk());
-            }
-
-            if ($objAmostra->getIdPaciente_fk() != null) {
-                $WHERE .= $AND . " idPaciente_fk = ?";
-                $AND = ' and ';
-                $arrayBind[] = array('i', $objAmostra->getIdPaciente_fk());
-            }
-
-
 
 
             if ($WHERE != '') {
@@ -298,10 +283,12 @@ class AmostraBD{
             }
 
             $ORDERBY =' order by dataColeta';
-            //echo $SELECT.$WHERE;$WHERE
+            //echo $SELECT.$WHERE.$ORDERBY;
+            //print_r($arrayBind);
 
             $arr = $objBanco->consultarSQL($SELECT . $WHERE.$ORDERBY, $arrayBind);
-
+            //print_r($arr);
+            // die();
             if(count($arr) > 0) {
                 $array_paciente = array();
                 foreach ($arr as $reg) {

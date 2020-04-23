@@ -167,7 +167,7 @@ class Interf {
         $selected = '';
         $arr_estados = $objEstadoOrigemRN->listar($objEstadoOrigem);
 
-        $select_estados = '<select class="form-control selectpicker is-valid"  disabled ' . $onchange
+        $select_estados = '<select class="form-control selectpicker "  disabled ' . $onchange
                 . 'id="select-country idSel_estados"'
                 . ' data-live-search="true" name="sel_estados">'
                 . '<option data-tokens="" ></option>';

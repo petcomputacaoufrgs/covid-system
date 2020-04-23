@@ -25,20 +25,18 @@
         $objTuboRN = new TuboRN();
         $objTubo->setIdAmostra_fk($_GET['idAmostra']);
         $arr_tubos = $objTuboRN->listar($objTubo);
-        if(count($arr_tubos) > 0) {
 
-            $objInfosTubo = new InfosTubo();
-            $objInfosTuboRN = new InfosTuboRN();
+        $objInfosTubo = new InfosTubo();
+        $objInfosTuboRN = new InfosTuboRN();
 
-            foreach ($arr_tubos as $tubo) {
-                $objInfosTubo->setIdTubo_fk($tubo->getIdTubo());
-                $arr_infosTubo = $objInfosTuboRN->listar($objInfosTubo);
-                $objTuboRN->remover($tubo);
-            }
+        foreach ($arr_tubos as $tubo){
+            $objInfosTubo->setIdTubo_fk($tubo->getIdTubo());
+            $arr_infosTubo = $objInfosTuboRN->listar($objInfosTubo);
+            $objTuboRN->remover($tubo);
+        }
 
-            foreach ($arr_infosTubo as $infoTubo) {
-                $objInfosTuboRN->remover($infoTubo);
-            }
+        foreach ($arr_infosTubo as $infoTubo){
+            $objInfosTuboRN->remover($infoTubo);
         }
 
         $objAmostraRN->remover($objAmostra);

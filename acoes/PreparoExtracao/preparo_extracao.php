@@ -93,112 +93,130 @@ try {
         $alert .= Alert::alert_primary('Em caso de prioridade por perfil, selecione os perfis na ordem da prioridade (o primeiro selecionado terá a MAIOR prioridade)');
 
         if (isset($_POST['enviar_perfil'])) { //se enviou o perfil e a prioridade
-
-            if ($_POST['sel_prioridade'] == 'dcol') {
-                $arr_amostras = $objAmostraRN->filtro_menor_data($objAmostra);
-            }
-
-            if (isset($_POST['sel_perfis']) && $_POST['sel_perfis'] != null) {
-                $perfisSelecionados = '';
-                for ($i = 0; $i < count($_POST['sel_perfis']); $i++) {
-                    $perfisSelecionados .= $_POST['sel_perfis'][$i] . ';';
-
-                    if ($_POST['sel_prioridade'] == 'dcol') {
-                        foreach ($arr_amostras as $amostra) {
-                            if ($amostra->getIdPerfilPaciente_fk() == $_POST['sel_perfis'][$i] &&
-                                $amostra->get_a_r_g() == 'a') {
-                                $arr_amostras_selecionadas[] = $amostra;
-                            }
-                        }
-                    } else {
-                        $objAmostra->setIdPerfilPaciente_fk($_POST['sel_perfis'][$i]);
-                        $objAmostra->set_a_r_g('a');
-                        $arr_amostras_selecionadas[] = $objAmostraRN->listar($objAmostra); //todas as amostras de um perfil X
-                    }
+            if($_POST['sel_prioridade'] != '') {
+                $selected_data = '';$selected_perfil =''; $selected_reteste = '';
+                if($_POST['sel_prioridade'] == 'dcol') $selected_data = ' selected ';
+                if($_POST['sel_prioridade'] == 'p') $selected_perfil = ' selected ';
+                if($_POST['sel_prioridade'] == 'r') $selected_reteste = ' selected ';
 
 
+                if ($_POST['sel_prioridade'] == 'dcol') {
+                    $arr_amostras = $objAmostraRN->filtro_menor_data($objAmostra, $_POST['sel_perfis']);
                 }
+                //print_r($arr_amostras);
 
-                if (count($arr_amostras_selecionadas) > 0) {
+                if (isset($_POST['sel_perfis']) && $_POST['sel_perfis'] != null) {
+                    $perfisSelecionados = '';
+                    for ($i = 0; $i < count($_POST['sel_perfis']); $i++) {
+                        $perfisSelecionados .= $_POST['sel_perfis'][$i] . ';';
 
-                    foreach ($arr_amostras_selecionadas as $a) { //todas as amostras com perfil X
-                        foreach ($a as $item) {
-                            $objTubo->setIdAmostra_fk($item->getIdAmostra());
-                            $arr_tubos[] = $objTuboRN->listar($objTubo);
-                        }
-                    }
-
-                    foreach ($arr_tubos as $tubo) {
-                        foreach ($tubo as $t) {
-                            if ($_POST['sel_prioridade'] == 'r') {
-                                $objInfosTubo->setReteste('s');
-                            }
-                            $objInfosTubo->setIdTubo_fk($t->getIdTubo());
-                            $objInfosTubo->setStatusTubo("Aguardando preparação");
-                            $arr_infosTubo[] = $objInfosTuboRN->listar($objInfosTubo); //todos os infos tubo em que o status é "Aguardando preparação"
-
-                        }
-                    }
-
-
-                    foreach ($arr_infosTubo as $info) {
-                        if ($info != null) {
-                            foreach ($info as $i) {
-                                if ($i != null){
-                                    print_r($i);
-                                    echo $i->getIdTubo_fk();
-                                    $objTubo->setObjInfosTubo($info);
-
-                                    $objTubo->setIdTubo_fk($i->getIdTubo_fk());
-                                    //$objTubo = $objTuboRN->listar($objTubo);
-                                    //print_r($objTubo);
-                                    /*
-                                    $objAmostra->setIdAmostra($objTubo->getIdAmostra_fk());
-                                    $objAmostra = $objAmostraRN->consultar($objAmostra);
-                                    print_r($objAmostra);
-                                    die("1");
-                                    /*$html .= '
-                                        <div class="conteudo_grande preparo" style="margin-top: -5px;">
-                                        <form method="post">
-                                            <div class="input-group mb-3 ">
-                                                  <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                      <input type="checkbox" name="checkbox" aria-label="Checkbox for following text input">
-                                                    </div>
-                                                  </div>
-                                                  <input type="text" disabled class="form-control" value="Amostra ' . $objAmostra->getCodigoAmostra() . '">
-                                                </div>
-                                          </form>
-                                          </div>';*/
+                        if ($_POST['sel_prioridade'] == 'dcol') {
+                            foreach ($arr_amostras as $amostra) {
+                                if ($amostra->get_a_r_g() == 'a') {
+                                    //$arr_amostras_selecionadas[] = $amostra;
+                                    $amostras[$amostra->getIdAmostra()] = $amostra;
                                 }
                             }
+                        } else {
+                            $objAmostra->setIdPerfilPaciente_fk($_POST['sel_perfis'][$i]);
+                            $objAmostra->set_a_r_g('a');
+                            $arr_amostras_selecionadas[$_POST['sel_perfis'][$i]] = $objAmostraRN->listar($objAmostra); //todas as amostras de um perfil X
                         }
                     }
+
+
+                    //print_r($arr_amostras_selecionadas);
+                    //die("10");
+                    if ($_POST['sel_prioridade'] != 'dcol') {
+                        foreach ($arr_amostras_selecionadas as $amostra) {
+                            foreach ($amostra as $a) {
+                                $amostras[$a->getIdAmostra()] = $a;
+                            }
+                        }
+                    }
+
+                    //print_r($amostras);
+                    //die("100");
+                    if (count($amostras) > 0) {
+                        foreach ($amostras as $a) {
+                            $objTubo->setIdAmostra_fk($a->getIdAmostra());
+                            if (count($objTuboRN->listar($objTubo)) > 0) {
+                                $arr_tubos[$a->getIdAmostra()] = $objTuboRN->listar($objTubo);
+                            }
+                        }
+
+                        foreach ($arr_tubos as $tubo) {
+                            foreach ($tubo as $t) {
+                                if ($_POST['sel_prioridade'] == 'r') {
+                                    $objInfosTubo->setReteste('s');
+                                }
+                                $objInfosTubo->setIdTubo_fk($t->getIdTubo());
+                                $objInfosTubo->setStatusTubo("Aguardando preparação");
+                                if (count($objInfosTuboRN->listar($objInfosTubo)) > 0) {
+                                    $arr_infosTubo[$t->getIdTubo()] = $objInfosTuboRN->listar($objInfosTubo); //todos os infos tubo em que o status é "Aguardando preparação"
+                                    //$idtubos[] = $t->getIdTubo();
+                                }
+
+                            }
+                        }
+
+                        $qnt = 0;
+                        foreach ($arr_infosTubo as $info) {
+                            foreach ($info as $i) {
+
+                                $objInfosTubo = $i;
+                                //echo $objInfosTubo->getIdTubo_fk();
+                                $objTubo->setIdTubo($objInfosTubo->getIdTubo_fk());
+                                $objTubo = $objTuboRN->consultar($objTubo);
+
+                                $objAmostra->setIdAmostra($objTubo->getIdAmostra_fk());
+                                $objAmostra = $objAmostraRN->consultar($objAmostra);
+
+
+                                $html .= '
+                           
+                                    <div class="input-group mb-3 " >
+                                          <div class="input-group-prepend">
+                                            <div class="input-group-text" >
+                                              <input type="checkbox" checked name="checkbox_' . $objAmostra->getIdAmostra() . '" aria-label="Checkbox for following text input">
+                                            </div>
+                                          </div>
+                                          <input type="text" disabled class="form-control" value="Amostra ' . $objAmostra->getCodigoAmostra() . '">
+                                    </div>';
+                                $qnt++;
+                            }
+                        }
+                        $titulo = '<div class="conteudo_grande preparo" style="margin-top: -10px;margin-bottom: 0px;">
+                                <h4 style="margin-left: 40px;">Quantidade de amostras: ' . $qnt . '</h4>
+                                <form method="post">';
+                        $html = $titulo . $html . '</form></div>';
+
+
+                    }
+
+                    //if(count($arr_infosTubo) == 0  && $_POST['sel_prioridade'] == 'r'){ $alert .= Alert::alert_warning("Nenhuma amostra encontrada com o filtro: RETESTE"); }
+                    if (count($arr_infosTubo) == 0 && $_POST['sel_prioridade'] == 'dcol') {
+                        $alert .= Alert::alert_warning("Nenhuma amostra encontrada com o filtro: DATA DE COLETA");
+                    }
+
+
+                    //print_r($arr_amostras_resultado);
+                    //print_r($arr_infosTubo);
+
+
                 }
 
-                //if(count($arr_infosTubo) == 0  && $_POST['sel_prioridade'] == 'r'){ $alert .= Alert::alert_warning("Nenhuma amostra encontrada com o filtro: RETESTE"); }
-                if (count($arr_infosTubo) == 0 && $_POST['sel_prioridade'] == 'dcol') {
-                    $alert .= Alert::alert_warning("Nenhuma amostra encontrada com o filtro: DATA DE COLETA");
+                Interf::getInstance()->montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, '', 'this.form.submit()');
+
+                if (isset($_POST['unlock_capela'])) {
+                    $objCapela->setIdCapela($_GET['idCapela']);
+                    $objCapela = $objCapelaRN->consultar($objCapela);
+                    $objCapela->setStatusCapela('LIBERADA');
+                    print_r($objCapela);
+                    $objCapelaRN->alterar($objCapela);
+                    $alert = Alert::alert_success("A capela foi liberada");
                 }
-
-
-                //print_r($arr_amostras_resultado);
-                //print_r($arr_infosTubo);
-
-
             }
-
-            Interf::getInstance()->montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, '', 'this.form.submit()');
-
-            if (isset($_POST['unlock_capela'])) {
-                $objCapela->setIdCapela($_GET['idCapela']);
-                $objCapela = $objCapelaRN->consultar($objCapela);
-                $objCapela->setStatusCapela('LIBERADA');
-                print_r($objCapela);
-                $objCapelaRN->alterar($objCapela);
-                $alert = Alert::alert_success("A capela foi liberada");
-            }
-
         }
     }
 
@@ -240,10 +258,10 @@ if ($capela_liberada == 's') {
                      <div class="col-md-12">
                         <label for="label_prioridade">Selecione uma prioridade </label>
                         <select id="idPrioridade"  class="form-control" name="sel_prioridade" onblur="">
-                            <option value="0">Selecione</option>
-                            <option value="r">Reteste</option>
-                            <option value="dcol">Data de coleta</option>
-                            <option value="p">Perfil de amostra</option>
+                            <option  value="0">Selecione</option>
+                            <option '.$selected_reteste.' value="r">Reteste</option>
+                            <option '.$selected_data.' value="dcol">Data de coleta</option>
+                            <option '.$selected_perfil.' value="p">Perfil de amostra</option>
                         </select>
                     </div>
                 </div>
@@ -254,7 +272,7 @@ if ($capela_liberada == 's') {
                 </div>
             </form>
         </div>';
-
+    echo $html;
 
     echo
     '<div class="conteudo_grande">
@@ -277,7 +295,7 @@ if ($capela_liberada == 's') {
             </form>
         </div>';
 
-    echo $html;
+
 
 
 

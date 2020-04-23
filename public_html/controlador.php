@@ -300,7 +300,7 @@ switch ($_GET['action']):
         break;
     
     case 'remover_amostra':
-        require_once '../acoes/CadastroAmostra/remover_amostra.php';
+        require_once '../acoes/CadastroAmostra/remover_cadastroAmostra.php';
         break;
     
     

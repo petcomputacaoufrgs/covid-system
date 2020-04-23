@@ -9,7 +9,7 @@ class Configuracao{
         }
         return self::$instance;
     }
-    
+
     private function getArray(){
          require __DIR__ . '/../config.php';
         return $config;
