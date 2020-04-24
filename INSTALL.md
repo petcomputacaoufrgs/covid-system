@@ -1,6 +1,6 @@
-Por conveniência, uma imagem de máquina virtual (VirtualBox) contendo um sistema GNU/Linux com o covid-system funcional (na versão de 22 de abril de 2020) pode ser encontrada no link
+Por conveniência, uma imagem de máquina virtual (VirtualBox) contendo um sistema GNU/Linux com o covid-system funcional (na versão de 24 de abril de 2020) pode ser encontrada no link
 
-http://www.inf.ufrgs.br/~rma/Covid-22-abr-2020.ova
+http://www.inf.ufrgs.br/~rma/Covid-24-abr-2020.ova
 
 A instalação da máquina virtual foi preparada conforme descrito abaixo, podendo ser atualizada para a versão atual do sistema.
 
@@ -20,7 +20,7 @@ No terminal, execute
 
     sudo apt install git geany apache2 libapache2-mod-php mariadb-server php-xml php-mysql composer phpunit
 
-O comando acima instala: servidor web (com módulo para rodar PHP), banco de dados MariaDB, ferramenta GIT e demais bibliotecas para teste e desenvolvimento (incluindo a IDE Geany).
+O comando acima instala: servidor web (com módulo para rodar PHP), banco de dados MariaDB, ferramenta GIT e demais bibliotecas para teste e desenvolvimento, incluindo a IDE Geany.
 
 Nota:
 * Na sequência, serão configurados o servidor Apache (web) e o SGBD MariaDB (banco de dados) na mesma máquina GNU/Linux. 
@@ -58,49 +58,44 @@ O comando acima cria a pasta '/var/covid-system' contendo o código-fonte do cov
 
 Após a etapa 1 temos o SGBD MariaDB instalado e rodando. Podemos interagir com ele através do aplicativo 'mysql'.
 
-É necessário agora criar no SGBD um banco de dados para o covid-system, assim como um usuário com permissões adequadas para acessá-lo. Na instalação da máquina virtual usamos:
+É necessário agora criar no SGBD um banco de dados para o covid-system. Na instalação da máquina virtual usamos:
 
     Database:     amostras_covid19
-    User(DB):     covid
-    Password(DB): covid
+    User(DB):     root
+    Password(DB): (sem password)
 
 
-Para criar database e usuário, acesse o prompt do SGBD com 
+Execute o seguinte comando para criar a base de dados:
 
-    sudo mysql
+    echo "CREATE DATABASE amostras_covid19; CREATE USER 'covid'@'localhost' IDENTIFIED BY 'covid'; GRANT ALL PRIVILEGES ON *.* TO 'covid'@'localhost'; FLUSH PRIVILEGES;" | sudo mysql 
 
-e, dentro do prompt, digite
 
-    CREATE DATABASE amostras_covid19;
-    CREATE USER 'covid'@'localhost' IDENTIFIED BY 'covid';
-    GRANT ALL PRIVILEGES ON *.* TO 'covid'@'localhost';
-    FLUSH PRIVILEGES;
-    QUIT;
+Dentro da pasta /var/covid-system/database/ há diversos diversos arquivos com nome no formato 'aaaa_mm_dd__hh.sql'. Esses arquivos são snapshots do conteúdo da base de dados de desenvolvimento. Todos esses arquivos devem ser incorporados à base de dados, em ordem, para reconstruir a última versão do esquema da mesma, através do seguinte comando:
 
-Após criar o usuário e database, o banco de dados pode ser povoado com o seguinte comando.
+    sudo mysql --database=amostras_covid19 --user='covid' --password='covid' < /var/covid-system/database/XXXX_XX_XX__XX.sql
 
-    sudo mysql --database=amostras_covid19 --user='covid' --password='covid'  < /var/covid-system/db_XXXX.sql
 
-Nota: no comando acima, o arquivo db_XXXX.sql corresponde ao 'dump' do banco de dados associado à data em questão. Esse arquivo se encontra dentro do diretório /var/covid-system.
+IMPORTANTE: As instruções acima referem-se à instalação de uma base de dados local para desenvolvimento e teste. Em ambiente de produção, questões de segurança de acesso à base de dados devem ser levadas em consideração, sendo recomendado criar um usuário com senha significativa para a base de dados, políticas de acesso e realização de backups frequentes (em particular antes de qualquer alteração na mesma).
 
-Após criar e povoar o banco de dados, deve-se informar ao sistema como o mesmo acessa o SGBD (através do arquivo config.php)
+Após criar e povoar o banco de dados, deve-se informar ao sistema como o mesmo acessa o SGBD, atualizando a função 'getArray' do arquivo 
 
-    cd /var/covid-system
-    cp config.php.default config.php
+    '/var/covid-system/classes/Configuração.php'. 
 
-Edite o arquivo config.php para conter as informações do SGBD, como abaixo:
+Edite o arquivo para conter as informações corretas de endereço de servidor, nome da base de dados, usuário e senha, conforme abaixo.
 
-    <?php
-    $config = array(
-      'versao' => '1.0.0',
-      'producao' => false,
-      'banco' => array(
-        'servidor' => 'localhost', 
-        'nome'     => 'amostras_covid19',
-        'usuario'  => 'covid',
-        'senha'    => 'covid'
-        ),
-    );
+    private function getArray(){
+        return array(
+            'versao' => '1.0.0',
+            'producao' => false,
+
+            'banco' => array(
+                'servidor' => 'localhost',
+                'nome'     => 'amostras_covid19',
+                'usuario'  => 'covid',
+                'senha'    => 'covid'),
+        );
+    }
+    
 
 Por garantia, reinicie o SGBD e o servidor apache antes de testar a instalação:
 
@@ -122,6 +117,8 @@ A tela de login deve aparecer. Utilize o seguinte usuário de teste:
     User:     U10 
     Password: U10
 
+Após o login, deve aparecer a tela de cadastro de amostra e consultas. Se algum erro ocorrer nessa etapa, como "Error loading character set utf8:", a aplicação PHP não está conseguindo conectar ao SGBD.
+
 
 Para rodar os testes unitários automatizados do sistema, você pode executar:
 
@@ -131,9 +128,20 @@ Para rodar os testes unitários automatizados do sistema, você pode executar:
 
 # 5. Atualizando o sistema para a versão atual
 
-Rode os seguintes comandos para atualizar o sistema para a versão atual (i.e. o código presente no branch 'master').
+
+* Aplicação: rode os seguintes comandos para atualizar o sistema para a versão atual (i.e. o código presente no branch 'master').
 
     cd /var/covid-system
     git pull
 
-Note que o comando acima atualiza somente o código-fonte da aplicação, sem afetar o estado do banco de dados.
+  Note que o comando acima atualiza somente o código-fonte da aplicação, sem afetar o estado do banco de dados.
+
+  Verifique também se a atualização não alterou as informações de acesso ao SGBD no arquivo /var/covid-system/classes/Configuracao.php
+
+
+* Banco de Dados: se houver arquivos aaaa_mm_dd__hh.sql em /var/covid-system/database/ posteriores à data da última atualização, os mesmo precisam ser incorporados ao banco de dados através do comando abaixo, para deixar o esquema de dados consistente com a última versão da aplicação. 
+
+    sudo mysql --database=amostras_covid19 --user='covid' --password='covid' < /var/covid-system/database/XXXX_XX_XX__XX.sql
+
+ 
+
