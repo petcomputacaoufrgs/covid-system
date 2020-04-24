@@ -61,8 +61,8 @@ Após a etapa 1 temos o SGBD MariaDB instalado e rodando. Podemos interagir com 
 É necessário agora criar no SGBD um banco de dados para o covid-system. Na instalação da máquina virtual usamos:
 
     Database:     amostras_covid19
-    User(DB):     root
-    Password(DB): (sem password)
+    User(DB):     covid
+    Password(DB): covid
 
 
 Execute o seguinte comando para criar a base de dados:
