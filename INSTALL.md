@@ -129,17 +129,17 @@ Para rodar os testes unitários automatizados do sistema, você pode executar:
 # 5. Atualizando o sistema para a versão atual
 
 
-* Aplicação: rode os seguintes comandos para atualizar o sistema para a versão atual (i.e. o código presente no branch 'master').
+*Aplicação:* rode os seguintes comandos para atualizar o sistema para a versão atual (i.e. o código presente no branch 'master').
 
     cd /var/covid-system
     git pull
 
-  Note que o comando acima atualiza somente o código-fonte da aplicação, sem afetar o estado do banco de dados.
+Note que o comando acima atualiza somente o código-fonte da aplicação, sem afetar o estado do banco de dados.
 
-  Verifique também se a atualização não alterou as informações de acesso ao SGBD no arquivo /var/covid-system/classes/Configuracao.php
+Verifique também se a atualização não alterou as informações de acesso ao SGBD no arquivo /var/covid-system/classes/Configuracao.php
 
 
-* Banco de Dados: se houver arquivos aaaa_mm_dd__hh.sql em /var/covid-system/database/ posteriores à data da última atualização, os mesmo precisam ser incorporados ao banco de dados através do comando abaixo, para deixar o esquema de dados consistente com a última versão da aplicação. 
+*Banco de Dados:* se houver arquivos aaaa_mm_dd__hh.sql em /var/covid-system/database/ posteriores à data da última atualização, os mesmo precisam ser incorporados ao banco de dados através do comando abaixo, para deixar o esquema de dados consistente com a última versão da aplicação. 
 
     sudo mysql --database=amostras_covid19 --user='covid' --password='covid' < /var/covid-system/database/XXXX_XX_XX__XX.sql
 
