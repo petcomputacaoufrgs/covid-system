@@ -78,7 +78,7 @@ class InfosTuboRN{
             
            
             /* Verifica se eh valida*/
-            $res_data = checkdate("/",$mes, $dia, $ano);
+            $res_data = checkdate($mes, $dia, $ano);
             
             
             if(!$res_data){
