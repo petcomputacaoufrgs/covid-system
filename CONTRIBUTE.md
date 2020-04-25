@@ -58,11 +58,11 @@ Todos os dados são armazenados no SGBD relacional. Em linhas gerais, a estrutur
 
   1. Desenvolva o sistema nesse branch, até ter uma versão estável do código. Adicione os arquivos alterados e crie um 'commit' com uma mensagem explicando as alterações. Ao final, faça um 'push' para enviar o seu branch para o servidor.
 
-        git add arquivoModificado1.php
-        git add arquivoModificado2.php
-        ...
-        git commit -m "implementei a novafeature"
-        git push
+          git add arquivoModificado1.php
+          git add arquivoModificado2.php
+          ...
+          git commit -m "implementei a novafeature"
+          git push
 
   1. No GitHub, selecione o seu branch e crie um *pull request* via interface. Um *pull request* é uma solicitação para o time principal da incorporação de um dado código ao branch master do projeto. Os *pull requests* serão avaliados pelos integrantes do time principal, e se tudo estiver OK eles farão o merge das suas alterações com o master. Se houver algum problema, será dada uma justificativa para a não-incorporação das alterações. 
 
