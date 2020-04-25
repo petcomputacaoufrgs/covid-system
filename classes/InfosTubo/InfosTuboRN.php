@@ -84,7 +84,7 @@ class InfosTuboRN{
             if(!$res_data){
                 $objExcecao->adicionar_validacao('Informar a data valida.','idDataHora');
             }else{
-                $hoje = explode(date("Y/m/d"));
+                $hoje = explode("/",date("Y/m/d"));
                 $h_ano = $hoje[0];
                 $h_mes = $hoje[1];
                 $h_dia = $hoje[2];
