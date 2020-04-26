@@ -130,6 +130,13 @@ $objPagina = new Pagina();
         padding: 10px;
     }
 
+    #cancel-confirm{
+        margin-top: 10px;
+        width: 100%;
+        height: auto;
+        display: flex;
+    }
+
     .table{
         width: 100%;
         border-spacing: 0;
@@ -161,6 +168,33 @@ $objPagina = new Pagina();
         text-align: center;
     }
 
+    .btn2{
+        border: none;
+        border-radius: 7px;
+        width: 220px;
+        height: 60px;
+        background-color: #445f6d;
+        font-weight: regular;
+        text-align: center;
+        color: white;
+        letter-spacing: 2px;
+        transition-duration: 0.2s;
+        cursor: pointer;
+        margin-left: 20%
+    }
+
+    .btn2:hover{
+        border: none;
+        border-radius: 7px;
+        width: 220px;
+        height: 60px;
+        font-weight: regular;
+        color: white;
+        letter-spacing: 2px;
+        display: inline-block;
+        background-color: #73a1b8;
+    }
+
 
 
 </style>
@@ -173,7 +207,6 @@ $objPagina = new Pagina();
     <title>Preparo e Inativação</title>
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
-
 
 <body>
     <header>
@@ -191,7 +224,7 @@ $objPagina = new Pagina();
                     <option value="Capela 2">Capela 2</option>
                     <option value="Capela 3">Capela 3</option>
                 </select>
-                <button type="submit" name="login-submit" class="btn">CONFIRMAR</button><br><br>
+                <button onclick="printTable('table-amostras')"type="submit" name="confirmar-capela" class="btn">CONFIRMAR</button><br><br>
             </div>
             <h1 id="title2">AMOSTRAS RELACIONADAS COM A CAPELA SELECIONADA<h1>
             <div id="secundario-amostras">
@@ -247,6 +280,22 @@ $objPagina = new Pagina();
                 </div>
             </div>
         </div>
+        <div id="cancel-confirm">
+            <button type="submit" name="cancelar-preparacao" class="btn2">CANCELAR</button><br><br>
+            <button type="submit" name="confirmar-preparacao" class="btn2">CONFIRMAR</button><br><br>
+        </div>
     </main>
+
+    
+  <script>
+    document.getElementById("secundario-amostras").style.display = "none";
+    document.getElementById("title2").style.display = "none";
+
+    function printTable(){
+        document.getElementById("secundario-amostras").style.display = "";
+        document.getElementById("title2").style.display = "";
+    }
+  </script>
+
 
 </body>
