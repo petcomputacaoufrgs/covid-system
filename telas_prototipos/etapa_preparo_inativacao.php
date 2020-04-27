@@ -194,7 +194,9 @@ $objPagina = new Pagina();
         display: inline-block;
         background-color: #73a1b8;
     }
-
+    .checkbox{
+        padding: 5%;
+    }
 
 
 </style>
@@ -234,45 +236,29 @@ $objPagina = new Pagina();
                             <thead>
                                 <tr class="listagem-titulo">
                                     <th scope="col">AMOSTRA</th>
-                                    <th scope="col">OBSERVAÇÃO</th>
+                                    <th scope="col">VOLUME (ml)</th>
                                     <th scope="col">PROBLEMA</th>
+                                    <th scope="col">OBSERVAÇÕES</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="listagem">
                                     <th scope="col">AMOSTRA 1</th>
-                                    <th scope="col"><input type="text" name="obs" class="txtbox" placeholder="Observações"></th>
-                                    <th scope="col"><input type="text" name="prob" class="txtbox" placeholder="Problemas"></th>
+                                    <th scope="col"><input type="number" id="amostra1Vol" name="vol" class="txtbox" placeholder="Volume (ml)"></th>
+                                    <th scope="col"><input type="checkbox" id="amostra1Prob" name="problema"></th>
+                                    <th scope="col"><input type="text" id="amostra1Obs" name="obs" placeholder="Observações"></th>
                                 </tr>
                                 <tr class="listagem">
                                     <th scope="col">AMOSTRA 2</th>
-                                    <th scope="col"><input type="text" name="obs" class="txtbox" placeholder="Observações"></th>
-                                    <th scope="col"><input type="text" name="prob" class="txtbox" placeholder="Problemas"></th>
+                                    <th scope="col"><input type="number" id="amostra2Vol" name="vol" class="txtbox" placeholder="Volume (ml)"></th>
+                                    <th scope="col"><input type="checkbox" id="amostra2Prob" name="problema"></th>
+                                    <th scope="col"><input type="text" id="amostra2Obs" name="obs" placeholder="Observações"></th>
                                 </tr>
                                 <tr class="listagem">
                                     <th scope="col">AMOSTRA 3</th>
-                                    <th scope="col"><input type="text" name="obs" class="txtbox" placeholder="Observações"></th>
-                                    <th scope="col"><input type="text" name="prob" class="txtbox" placeholder="Problemas"></th>
-                                </tr>
-                                <tr class="listagem">
-                                    <th scope="col">AMOSTRA 4</th>
-                                    <th scope="col"><input type="text" name="obs" class="txtbox" placeholder="Observações"></th>
-                                    <th scope="col"><input type="text" name="prob" class="txtbox" placeholder="Problemas"></th>
-                                </tr>
-                                <tr class="listagem">
-                                    <th scope="col">AMOSTRA 5</th>
-                                    <th scope="col"><input type="text" name="obs" class="txtbox" placeholder="Observações"></th>
-                                    <th scope="col"><input type="text" name="prob" class="txtbox" placeholder="Problemas"></th>
-                                </tr>
-                                <tr class="listagem">
-                                    <th scope="col">AMOSTRA 6</th>
-                                    <th scope="col"><input type="text" name="obs" class="txtbox" placeholder="Observações"></th>
-                                    <th scope="col"><input type="text" name="prob" class="txtbox" placeholder="Problemas"></th>
-                                </tr>
-                                <tr class="listagem">
-                                    <th scope="col">AMOSTRA 7</th>
-                                    <th scope="col"><input type="text" name="obs" class="txtbox" placeholder="Observações"></th>
-                                    <th scope="col"><input type="text" name="prob" class="txtbox" placeholder="Problemas"></th>
+                                    <th scope="col"><input type="number" id="amostra3Vol" name="vol" class="txtbox" placeholder="Volume (ml)"></th>
+                                    <th scope="col"><input type="checkbox" id="amostra3Prob" name="problema"></th>
+                                    <th scope="col"><input type="text" id="amostra3Obs" name="obs" placeholder="Observações"></th>
                                 </tr>
                             </tbody>
                         </table>
@@ -291,10 +277,53 @@ $objPagina = new Pagina();
     document.getElementById("secundario-amostras").style.display = "none";
     document.getElementById("title2").style.display = "none";
 
+    /*const obs1 = document.getElementById("obs1");
+    obs1.disabled = true;
+
+    const checkBox = document.querySelector("#problema1");
+    checkBox.addEventListener("change", (el) => {
+        if(checkBox.checked){
+            obs1.disabled = false;
+        }else{
+            obs1.disabled = true;
+        }
+    });
+
+        checkBox.dispatchEvent(new Event("change"));*/
+    
     function printTable(){
         document.getElementById("secundario-amostras").style.display = "";
         document.getElementById("title2").style.display = "";
     }
+
+     function createEventListener(nome){
+        var volId = nome + "Vol";
+        var probId = nome + "Prob";
+        var obsId = nome + "Obs";
+
+        const vol = document.querySelector("#" + volId);
+        const prob = document.querySelector("#" + probId);
+        const obs = document.querySelector("#" + obsId);
+
+        vol.disabled = true;
+        obs.disabled = true;
+
+        prob.addEventListener("change", (el) => {
+            if(prob.checked){
+                vol.disabled = false;
+                obs.disabled = false;
+            }else{
+                vol.disabled = true;
+                obs.disabled = true;
+            }
+        });
+        prob.dispatchEvent(new Event("change"));
+     }
+
+    createEventListener("amostra1");
+    createEventListener("amostra2");
+    createEventListener("amostra3");
+
   </script>
 
 
