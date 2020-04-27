@@ -6,7 +6,6 @@ class ResultadoPCR {
     private $targetName;
     private $task;
     private $reporter;
-    private $quencher;
     private $ct;
 
     /**
@@ -95,22 +94,6 @@ class ResultadoPCR {
     public function setReporter($reporter)
     {
         $this->reporter = $reporter;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getQuencher()
-    {
-        return $this->quencher;
-    }
-
-    /**
-     * @param mixed $quencher
-     */
-    public function setQuencher($quencher)
-    {
-        $this->quencher = $quencher;
     }
 
     /**

@@ -11,8 +11,7 @@ class ResultadoPCR_RN
         $objResultado->setTargetName($arrayLinha[2]);
         $objResultado->setTask($arrayLinha[3]);
         $objResultado->setReporter($arrayLinha[4]);
-        $objResultado->setQuencher($arrayLinha[5]);
-        $objResultado->setCt($arrayLinha[6]);
+        $objResultado->setCt($arrayLinha[5]);
     }
 
     public function printObjeto(ResultadoPCR $obj) {
@@ -22,7 +21,6 @@ class ResultadoPCR_RN
         echo "Target Name ->" . $obj->getTargetName() . "<br>";
         echo "Task ->" . $obj->getTask() . "<br>";
         echo "Reporter ->" . $obj->getReporter() . "<br>";
-        echo "Quencer ->" . $obj->getQuencher() . "<br>";
         echo "Ct ->" . $obj->getCt() . "<br>";
     }
 
