@@ -126,5 +126,5 @@ $pdf->Cell(26, 8, 'Observações: ' , 0, 0);
 $pdf->SetFont('Times', '', 12);
 $pdf->Cell(0, 8, $observacoes, 0, 1);
 
-$pdf->Output('D', $nome . date("d_m_Y", time()), true);
+$pdf->Output('D', $nome . date("d_m_Y", time()) . '.pdf', true);
 ?>
