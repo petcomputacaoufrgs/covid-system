@@ -1,5 +1,7 @@
 <?php
 require_once "../../classes/Planilha/Planilha.php";
+require_once __DIR__ . '/../../vendor/fpdf/fpdf.php';
+
 function uploadFile() {
     $currentDirectory = getcwd();
     $uploadDirectory = '../../../planilhas/';;
@@ -34,7 +36,7 @@ function uploadFile() {
             $didUpload = move_uploaded_file($fileTmpName, $uploadPath);
 
             if ($didUpload) {
-                echo "<h3>O arquivo " . basename($fileName) . " foi enviado com sucesso </h3>";
+                //echo "<h3>O arquivo " . basename($fileName) . " foi enviado com sucesso </h3>";
                 return $newFileName;
             } else {
                 echo "Houve um erro, por favor tente novamente ou contate o administrador.";

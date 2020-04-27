@@ -6,6 +6,9 @@ require_once __DIR__ . '/../ResultadoPCR/ResultadoPCR_RN.php';
 
 use \PhpOffice\PhpSpreadsheet\Reader\Xls;
 
+
+
+
 class Planilha {
     
     public function leituraXLS($filename) {
@@ -18,13 +21,21 @@ class Planilha {
         $resultadoRN = new ResultadoPCR_RN();
     
         $linha = 9;
+        $pdf = new FPDF();
+        $pdf->AliasNbPages();
+
         while ($spreadsheet->getActiveSheet()->getCellByColumnAndRow(1,$linha)->getValue() != null) {
-            
+            $pdf->AddPage();
+            $pdf->SetFont("Times", "", 12);
             //registra valores nas respectivas variaveis
             $well = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(1,$linha)->getValue();
+
             $sampleName = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(2,$linha)->getValue();
+
             $targetName = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(3,$linha)->getValue();
+
             $task = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(4,$linha)->getValue();
+
             $reporter = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(5,$linha)->getValue();
             $ct = $spreadsheet->getActiveSheet()->getCellByColumnAndRow(7,$linha)->getValue();
     
@@ -38,11 +49,15 @@ class Planilha {
     
             //debug propouse Only
             //Ao inves de print objeto, salva no  Banco de Dados
-            $resultadoRN->printObjeto($objetoResultado);
+
+
+            $resultadoRN->printObjeto($objetoResultado, $pdf);
+
             echo "\n";
     
             $linha++;
         }
+        $pdf->Output();
     }
 }
 
