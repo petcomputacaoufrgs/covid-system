@@ -15,14 +15,18 @@ class CadastroAmostraRN{
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
             //print_r($cadastroAmostra);
-            
+
             if($cadastroAmostra->getObjAmostra() != null){
-                
                 $objAmostraRN = new AmostraRN();
-                $objAmostra = $objAmostraRN->cadastrar($cadastroAmostra->getObjAmostra());
-                $cadastroAmostra->setIdAmostra_fk($objAmostra->getIdAmostra());                
+                if($cadastroAmostra->getObjAmostra()->getIdAmostra() == null) {
+                    $objAmostra = $objAmostraRN->cadastrar($cadastroAmostra->getObjAmostra());
+                }else{
+                    $objAmostra =$objAmostraRN->alterar($cadastroAmostra->getObjAmostra());
+
+                }
+                $cadastroAmostra->setIdAmostra_fk($objAmostra->getIdAmostra());
             }
-            
+
            
             $objExcecao->lancar_validacoes();
             $objCadastroAmostraBD = new CadastroAmostraBD();

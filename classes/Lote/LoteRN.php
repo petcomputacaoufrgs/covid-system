@@ -9,22 +9,40 @@ require_once __DIR__ . '/LoteBD.php';
 class LoteRN{
 
 
-    private function validarQntAmostrasTotal(Lote $lote,Excecao $objExcecao){
-        $strQntAmostrasTotal = trim($lote->getQntAmostrasTotal());
+    private function validarQntAmostrasDesejadas(Lote $lote,Excecao $objExcecao){
+        $strQntAmostrasDesejadas = trim($lote->getQntAmostrasDesejadas());
         
-        if ($strQntAmostrasTotal == '') {
-            $objExcecao->adicionar_validacao('O número da quantidade de amostras totais não foi informado','idQntAmostrasTotal');
+        if ($strQntAmostrasDesejadas == '') {
+            $objExcecao->adicionar_validacao('A quantidade de amostras desejadas não foi informado',null,'alert-danger');
         }
-        return $lote->setQntAmostrasTotal($strQntAmostrasTotal);
+
+        if($lote->getQntAmostrasDesejadas() != 8 && $lote->getQntAmostrasDesejadas() != 16){
+            if($lote->getQntAmostrasDesejadas() != 8) {$objExcecao->adicionar_validacao('A quantidade de amostras não é 8 ',null,'alert-danger'); }
+            if($lote->getQntAmostrasDesejadas() != 16){ $objExcecao->adicionar_validacao('A quantidade de amostras não é 16 ',null,'alert-danger'); }
+        }
+
+
+
+        return $lote->setQntAmostrasDesejadas($strQntAmostrasDesejadas);
     }
 
-    private function validarQntAmostrasLivres(Lote $lote,Excecao $objExcecao){
-        $strQntAmostrasLivres = trim($lote->getQntAmostrasLivres());
+    private function validarQntAmostrasAdquiridas(Lote $lote,Excecao $objExcecao){
+        $strQntAmostrasAdquiridas = trim($lote->getQntAmostrasAdquiridas());
         
-        if ($strQntAmostrasLivres == '') {
-            $objExcecao->adicionar_validacao('O número da quantidade de amostras livres não foi informado','idQntAmostrasLivres');
+        if ($strQntAmostrasAdquiridas == '') {
+            $objExcecao->adicionar_validacao('O número da quantidade de amostras adquiridas não foi informado',null,'alert-danger');
         }
-        return $lote->setQntAmostrasLivres($strQntAmostrasLivres);
+        return $lote->setQntAmostrasAdquiridas($strQntAmostrasAdquiridas);
+    }
+
+    private function validarStatusLote(Lote $lote,Excecao $objExcecao){
+        $strStatusLote = trim($lote->getStatusLote());
+
+        if ($strStatusLote == '') {
+            $objExcecao->adicionar_validacao('O status do lote não foi informado',null,'alert-danger');
+        }
+
+        return $lote->setStatusLote($strStatusLote);
     }
 
     public function cadastrar(Lote $lote){
@@ -34,12 +52,30 @@ class LoteRN{
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
 
-            $this->setQntAmostrasTotal($lote,$objExcecao);   
-            $this->setQntAmostrasLivres($lote,$objExcecao);   
+            $this->validarQntAmostrasDesejadas($lote,$objExcecao);
+            $this->validarQntAmostrasAdquiridas($lote,$objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objLoteBD = new LoteBD();
             $objLoteBD->cadastrar($lote,$objBanco);
+
+            if($lote->getObjsTubo() != null){
+                $objRelTuboLote = new Rel_tubo_lote();
+                $objRelTuboLoteRN = new Rel_tubo_lote_RN();
+                $objRelTuboLote->setIdLote_fk($lote->getIdLote());
+                $objRelTuboLote->setObjLote($lote);
+                foreach($lote->getObjsTubo() as $t){
+                    //foreach ($objTubo as $t){
+                        //print_r($t);
+                        $objRelTuboLote->setIdTubo_fk($t->getIdTubo());
+                        $objRelTuboLoteRN->cadastrar($objRelTuboLote);
+
+                    //}
+                    //$objRelTuboLote->setIdTubo_fk($obj->getIdTubo_fk());
+
+                }
+            }
+
 
             $objBanco->fecharConexao();
         }catch(Exception $e){
@@ -54,8 +90,8 @@ class LoteRN{
            $objBanco = new Banco();
            $objBanco->abrirConexao(); 
            
-           $this->setQntAmostrasTotal($lote,$objExcecao);   
-           $this->setQntAmostrasLivres($lote,$objExcecao);   
+           $this->validarQntAmostrasDesejadas($lote,$objExcecao);
+           $this->validarQntAmostrasAdquiridas($lote,$objExcecao);
                        
            $objExcecao->lancar_validacoes();
            $objLoteBD = new LoteBD();

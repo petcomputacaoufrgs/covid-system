@@ -12,13 +12,47 @@ class CodigoGAL_RN{
     
 
     private function validarCodGAL(CodigoGAL $codGAL,Excecao $objExcecao){
-        $strCodGAL = trim($codGAL->getCodigo());
-               
-        if (strlen($strCodGAL) > 20) {
+
+        $numCodGAL = $codGAL->getCodigo();
+
+        /*if (strlen($strCodGAL) <= 1) {
+            $objExcecao->adicionar_validacao('O código GAL informado é inválido','idCodGAL','alert-danger');
+        } */
+
+        if (strlen($numCodGAL) > 20) {
             $objExcecao->adicionar_validacao('O código GAL possui mais de 20 caracteres','idCodGAL','alert-danger');
         }
+
+        $objCodigoGALAux = new CodigoGAL();
+        $objCodigoGALRN = new CodigoGAL_RN();
+        $arr_codigos = $objCodigoGALRN->listar($objCodigoGALAux);
+
+        foreach ($arr_codigos as $codigo){
+            //echo $codigo->getCodigo().' == '. $codGAL->getCodigo()."\n";
+            if( $codigo->getCodigo() == $codGAL->getCodigo() &&
+                $codigo->getIdPaciente_fk() != $codGAL->getIdPaciente_fk()){
+                $objExcecao->adicionar_validacao('O código GAL já está associado a outro paciente','idCodGAL','alert-danger');
+                break;
+            }
+
+
+        }
                 
-        return $codGAL->setCodigo($strCodGAL);
+        return $codGAL->setCodigo($numCodGAL);
+    }
+
+
+    private function validaObsCodGAL(CodigoGAL $codGAL, Excecao $objExcecao) {
+        if($codGAL->getObsCodGAL() != null) {
+            $strObsCodGAL = trim($codGAL->getObsCodGAL());
+
+            if (strlen($strObsCodGAL) > 300) {
+                $objExcecao->adicionar_validacao('As observações do código GAL possui mais que 300 caracteres.', null, 'alert-danger');
+            }
+
+
+            return $codGAL->setObsCodGAL($strObsCodGAL);
+        }
     }
          
     public function cadastrar(CodigoGAL $codGAL) {
@@ -31,18 +65,17 @@ class CodigoGAL_RN{
             $objBanco->abrirTransacao(); 
            
             /* VALIDAÇÕES */
-            $this->validarCodGAL($codGAL,$objExcecao);  
-            
+            $this->validarCodGAL($codGAL,$objExcecao);
+            $this->validaObsCodGAL($codGAL,$objExcecao);
+
             $objExcecao->lancar_validacoes();
-            
-            
             $objCodigoGAL_BD = new CodigoGAL_BD();
-            $objCodigoGAL_BD->cadastrar($codGAL,$objBanco);
-            
-            //print_r($codGAL);
-                        
+            $objCodigoGAL_BD->cadastrar($codGAL, $objBanco);
+
+
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
+
             return $codGAL;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
@@ -58,7 +91,8 @@ class CodigoGAL_RN{
             $objBanco->abrirConexao(); 
             
             /* VALIDAÇÕES */
-            $this->validarCodGAL($codGAL,$objExcecao);  
+            $this->validarCodGAL($codGAL,$objExcecao);
+            $this->validaObsCodGAL($codGAL,$objExcecao);
             
             $objExcecao->lancar_validacoes();
             $objCodigoGAL_BD = new CodigoGAL_BD();

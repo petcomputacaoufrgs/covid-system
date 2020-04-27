@@ -270,10 +270,9 @@ class AmostraBD{
 
 
             foreach ($select as $s) {
-
-                    $WHERE .= $OR . " idPerfilPaciente_fk = ".$s;
+                    $WHERE .= $OR . " idPerfilPaciente_fk = ?";
                     $OR = ' OR ';
-                    //$arrayBind[] = array('i', $s);
+                    $arrayBind[] = array('i', $s->getIdPerfilPaciente());
 
             }
 

@@ -29,6 +29,7 @@ try{
                 
                 $objCapela->setNumero($_POST['numCapela']);
                 $objCapela->setStatusCapela('LIBERADA');
+                $objCapela->S('LIBERADA');
                 
                 if(empty($objCapelaRN->validar_Cadastro($objCapela))){
                     $objCapelaRN->cadastrar($objCapela);

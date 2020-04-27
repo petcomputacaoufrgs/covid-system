@@ -31,13 +31,18 @@ class TuboRN{
             $objExcecao->lancar_validacoes();
             $objTuboBD = new TuboBD();
             $objTuboBD->cadastrar($tubo,$objBanco);
-            
+
             if($tubo->getObjInfosTubo() != null){
-                $objInfosTubo = $tubo->getObjInfosTubo();
-                $objInfosTubo->setIdTubo_fk($tubo->getIdTubo()); 
                 $objInfosTuboRN = new InfosTuboRN();
-                $objInfosTuboRN->cadastrar($objInfosTubo);
-                               
+                if($tubo->getObjInfosTubo()->getIdInfosTubo() == null) { // info tubo é novo
+                    $objInfosTubo = $tubo->getObjInfosTubo();
+                    $objInfosTubo->setIdTubo_fk($tubo->getIdTubo());
+
+                    $objInfosTuboRN->cadastrar($objInfosTubo);
+                }else{
+                    $objInfosTuboRN->alterar($tubo->getObjInfosTubo());
+                }
+
             }
             
             $objBanco->confirmarTransacao();
@@ -60,6 +65,19 @@ class TuboRN{
             $objExcecao->lancar_validacoes();
             $objTuboBD = new TuboBD();
             $objTuboBD->alterar($tubo,$objBanco);
+
+            if($tubo->getObjInfosTubo() != null){
+                $objInfosTuboRN = new InfosTuboRN();
+                if($tubo->getObjInfosTubo()->getIdInfosTubo() == null) { // info tubo é novo
+                    $objInfosTubo = $tubo->getObjInfosTubo();
+                    $objInfosTubo->setIdTubo_fk($tubo->getIdTubo());
+
+                    $objInfosTuboRN->cadastrar($objInfosTubo);
+                }else{
+                    $objInfosTuboRN->alterar($tubo->getObjInfosTubo());
+                }
+
+            }
             
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
@@ -95,7 +113,15 @@ class TuboRN{
             $objExcecao = new Excecao();
             $objBanco->abrirConexao(); 
             $objBanco->abrirTransacao();
-            
+            $objInfosTubo = new InfosTubo();
+            $objInfosTuboRN = new InfosTuboRN();
+
+            $objInfosTubo->setIdTubo_fk($tubo->getIdTubo());
+            $arr_infos = $objInfosTuboRN->listar($objInfosTubo);
+            foreach ($arr_infos as $info){
+                $objInfosTuboRN->remover($info);
+            }
+
             $objExcecao->lancar_validacoes();
             $objTuboBD = new TuboBD();
             $arr =  $objTuboBD->remover($tubo,$objBanco);

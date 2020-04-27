@@ -34,10 +34,10 @@ class InfosTuboRN{
         $strStatusTubo = trim($infosTubo->getStatusTubo());
 
         if($strStatusTubo == ''){
-            $objExcecao->adicionar_validacao('O status do tubo nao foi informado.', 'idStatusTubo');
+            $objExcecao->adicionar_validacao('O status do tubo nao foi informado.', 'idStatusTubo', 'alert-danger');
         }else{
             if(strlen($strStatusTubo) > 100){
-                $objExcecao->adicionar_validacao('O status do tubo possui mais que 100 caracteres.','idStatusTubo');
+                $objExcecao->adicionar_validacao('O status do tubo possui mais que 100 caracteres.','idStatusTubo', 'alert-danger');
             }
         }
 
@@ -48,10 +48,10 @@ class InfosTuboRN{
         $strEtapa = trim($infosTubo->getEtapa());
 
         if($strEtapa == ''){
-            $objExcecao->adicionar_validacao('O nome da etapa nao foi informada.', 'idEtapa');
+            $objExcecao->adicionar_validacao('O nome da etapa nao foi informada.', 'idEtapa', 'alert-danger');
         }else{
             if(strlen($strEtapa) > 100){
-                $objExcecao->adicionar_validacao('O nome da etapa possui mais que 100 caracteres.','idEtapa');
+                $objExcecao->adicionar_validacao('O nome da etapa possui mais que 100 caracteres.','idEtapa', 'alert-danger');
             }
         }
 
@@ -63,27 +63,7 @@ class InfosTuboRN{
         //echo $infosTubo->getDataHora();
         //echo strlen($infosTubo->getDataHora());
         if (strlen($infosTubo->getDataHora()) == 0) {
-            $objExcecao->adicionar_validacao('Informar a data e hora.','idDataHora');
-        }else{
-            //echo $dthr;
-            
-            $strDataHora = explode(" ", "$dthr");
-            
-            $data = explode("-", "$strDataHora[0]");
-            $hora = explode(":", "$strDataHora[1]");
-
-            $ano = $data[0];
-            $mes = $data[1];
-            $dia = $data[2];
-            
-           
-            /* Verifica se eh valida*/
-            $res_data = checkdate($mes, $dia, $ano);
-            
-            
-            if(!$res_data){
-                $objExcecao->adicionar_validacao('Informar a data valida.','idDataHora');
-            }
+            $objExcecao->adicionar_validacao('Informar a data e hora.','idDataHora', 'alert-danger');
         }
         
         $infosTubo->setDataHora($dthr);
@@ -97,6 +77,26 @@ class InfosTuboRN{
         }*/
                            
         return $infosTubo->setVolume($strVolume);
+    }
+
+    private function validarDescarteNaEtapa(InfosTubo $infosTubo, Excecao $objExcecao){
+        $char_descarteNaEtapa = $infosTubo->getDescarteNaEtapa();
+
+        if(strlen($char_descarteNaEtapa) > 1){
+            $objExcecao->adicionar_validacao('O descarte na etapa possui mais que 1 caractere','idVolume', 'alert-danger');
+        }
+
+        return $infosTubo->setDescarteNaEtapa($char_descarteNaEtapa);
+    }
+
+    private function validarObservacoes(InfosTubo $infosTubo, Excecao $objExcecao){
+        $strObs = trim($infosTubo->getObservacoes());
+
+        if(strlen($strObs) > 150){
+            $objExcecao->adicionar_validacao('As observações em infos tubo possuem mais de 150 caracteres' ,'idVolume', 'alert-danger');
+        }
+
+        return $infosTubo->setObservacoes($strObs);
     }
 
     public function cadastrar(InfosTubo $infosTubo){
@@ -113,6 +113,8 @@ class InfosTuboRN{
             $this->validarEtapa($infosTubo, $objExcecao);
             $this->validarDataHora($infosTubo, $objExcecao);
             $this->validarVolume($infosTubo, $objExcecao);
+            $this->validarDescarteNaEtapa($infosTubo, $objExcecao);
+            $this->validarObservacoes($infosTubo, $objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objInfosTuboBD = new infosTuboBD();
@@ -138,6 +140,8 @@ class InfosTuboRN{
             $this->validarEtapa($infosTubo, $objExcecao);
             $this->validarDataHora($infosTubo, $objExcecao);
             $this->validarVolume($infosTubo, $objExcecao);
+            $this->validarDescarteNaEtapa($infosTubo, $objExcecao);
+            $this->validarObservacoes($infosTubo, $objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objInfosTuboBD = new infosTuboBD();
@@ -195,6 +199,22 @@ class InfosTuboRN{
             return $arr;
         }catch (Throwable $e){
             throw new Excecao('Erro na listagem das informacoes do tubo.', $e);
+        }
+    }
+
+    public function pegar_ultimo(InfosTubo $infosTubo){
+        try{
+            $objExcecao = new Excecao();
+            $objBanco = new Banco();
+            $objBanco->abrirConexao();
+            $objExcecao->lancar_validacoes();
+            $objInfosTuboBD = new infosTuboBD();
+            $arr = $objInfosTuboBD->pegar_ultimo($infosTubo,$objBanco);
+
+            $objBanco->fecharConexao();
+            return $arr;
+        }catch (Throwable $e){
+            throw new Excecao('Erro ao pegar o último dado das nformacoes do tubo.', $e);
         }
     }
 }

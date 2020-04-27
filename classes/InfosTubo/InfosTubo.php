@@ -10,10 +10,46 @@ class InfosTubo{
     private $dataHora;
     private $reteste; // fará o reteste ou nao (s/n)
     private $volume;
+    private $descarteNaEtapa;
+    private $observacoes;
 
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDescarteNaEtapa()
+    {
+        return $this->descarteNaEtapa;
+    }
+
+    /**
+     * @param mixed $descarteNaEtapa
+     */
+    public function setDescarteNaEtapa($descarteNaEtapa)
+    {
+        $this->descarteNaEtapa = $descarteNaEtapa;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getObservacoes()
+    {
+        return $this->observacoes;
+    }
+
+    /**
+     * @param mixed $observacoes
+     */
+    public function setObservacoes($observacoes)
+    {
+        $this->observacoes = $observacoes;
+    }
+
+
     
     function getIdUsuario_fk() {
         return $this->idUsuario_fk;

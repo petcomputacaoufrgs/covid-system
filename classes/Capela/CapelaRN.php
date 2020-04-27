@@ -14,10 +14,10 @@ class CapelaRN{
         $strStatus = trim($capela->getStatusCapela());
         
         if ($strStatus == '') {
-            $objExcecao->adicionar_validacao('O status da capela não foi informado','idStatusCapela');
+            $objExcecao->adicionar_validacao('O status da capela não foi informado','idStatusCapela', 'alert-danger');
         }else{
             if (strlen($strStatus) > 100) {
-                $objExcecao->adicionar_validacao('A status da capela possui mais que 100 caracteres.','idStatusCapela');
+                $objExcecao->adicionar_validacao('A status da capela possui mais que 100 caracteres.','idStatusCapela', 'alert-danger');
             }
         }
         
@@ -29,9 +29,19 @@ class CapelaRN{
         $strNumero = trim($capela->getNumero());
         
         if ($strNumero == '') {
-            $objExcecao->adicionar_validacao('O número da capela não foi informado','idNumeroCapela');
+            $objExcecao->adicionar_validacao('O número da capela não foi informado','idNumeroCapela', 'alert-danger');
         }
         return $capela->setNumero($strNumero);
+
+    }
+
+    private function validarNivelSeguranca(Capela $capela,Excecao $objExcecao){
+        $strNivelSeguranca = trim($capela->getNivelSeguranca());
+
+        if ($strNivelSeguranca == '') {
+            $objExcecao->adicionar_validacao('O nível de segurança da capela não foi informado','idNumeroCapela', 'alert-danger');
+        }
+        return $capela->setNivelSeguranca($strNivelSeguranca);
 
     }
 
@@ -43,8 +53,9 @@ class CapelaRN{
             $objBanco->abrirConexao(); 
             
             $this->validarNumero($capela,$objExcecao); 
-            $this->validarStatus($capela,$objExcecao); 
-            
+            $this->validarStatus($capela,$objExcecao);
+            $this->validarNivelSeguranca($capela,$objExcecao);
+
             $objExcecao->lancar_validacoes();
             $objCapelaBD = new CapelaBD();
             $objCapelaBD->cadastrar($capela,$objBanco);
@@ -63,7 +74,8 @@ class CapelaRN{
             $objBanco->abrirConexao(); 
             
             $this->validarNumero($capela,$objExcecao);   
-            $this->validarStatus($capela,$objExcecao);   
+            $this->validarStatus($capela,$objExcecao);
+             $this->validarNivelSeguranca($capela,$objExcecao);
                         
             $objExcecao->lancar_validacoes();
             $objCapelaBD = new CapelaBD();
@@ -145,6 +157,7 @@ class CapelaRN{
             $objCapela->setNumero($arr[0]->getNumero());
             $arr[0]->setStatusCapela('OCUPADA');
             $objCapela->setStatusCapela($arr[0]->getStatusCapela());
+            $objCapela->setNivelSeguranca($arr[0]->getNivelSeguranca());
             
             $capelaRN = NEW CapelaRN();
             $capelaRN->alterar($objCapela);

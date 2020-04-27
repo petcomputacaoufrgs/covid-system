@@ -9,11 +9,12 @@ class CapelaBD{
         try{
             //echo $objCapela->getCapela();
             //die("die");
-            $INSERT = 'INSERT INTO tb_capela (numero,statusCapela) VALUES (?,?)';
+            $INSERT = 'INSERT INTO tb_capela (numero,statusCapela,nivelSeguranca) VALUES (?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objCapela->getNumero());
             $arrayBind[] = array('s',$objCapela->getStatusCapela());
+            $arrayBind[] = array('s',$objCapela->getNivelSeguranca());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -29,13 +30,16 @@ class CapelaBD{
             
             $UPDATE = 'UPDATE tb_capela SET '
                     . ' numero = ?,'
-                    . ' statusCapela = ?'
+                    . ' statusCapela = ?,'
+                    . ' nivelSeguranca = ?'
                 . '  where idCapela = ?';
         
                 
             $arrayBind = array();
             $arrayBind[] = array('i',$objCapela->getNumero());
             $arrayBind[] = array('s',$objCapela->getStatusCapela());
+            $arrayBind[] = array('s',$objCapela->getNivelSeguranca());
+
             $arrayBind[] = array('i',$objCapela->getIdCapela());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
@@ -51,8 +55,34 @@ class CapelaBD{
       
             $SELECT = "SELECT * FROM tb_capela";
 
+             $WHERE = '';
+             $AND = '';
+             $arrayBind = array();
 
-            $arr = $objBanco->consultarSQL($SELECT);
+             if ($objCapela->getNumero() != null) {
+                 $WHERE .= $AND . " numero = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('s', $objCapela->getNumero());
+             }
+
+             if ($objCapela->getStatusCapela() != null) {
+                 $WHERE .= $AND . " statusCapela = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('s', $objCapela->getStatusCapela());
+             }
+
+             if ($objCapela->getNivelSeguranca() != null) {
+                 $WHERE .= $AND . " nivelSeguranca = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('s', $objCapela->getNivelSeguranca());
+             }
+
+             if ($WHERE != '') {
+                 $WHERE = ' where ' . $WHERE;
+             }
+
+
+             $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
 
             $array_capelas = array();
             foreach ($arr as $reg){
@@ -60,6 +90,7 @@ class CapelaBD{
                 $objCapela->setIdCapela($reg['idCapela']);
                 $objCapela->setNumero($reg['numero']);
                 $objCapela->setStatusCapela($reg['statusCapela']);
+                $objCapela->setNivelSeguranca($reg['nivelSeguranca']);
 
                 $array_capelas[] = $objCapela;
             }
@@ -74,7 +105,7 @@ class CapelaBD{
 
         try{
 
-            $SELECT = 'SELECT idCapela,numero,statusCapela FROM tb_capela WHERE idCapela = ?';
+            $SELECT = 'SELECT * FROM tb_capela WHERE idCapela = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objCapela->getIdCapela());
@@ -85,6 +116,7 @@ class CapelaBD{
             $capela->setIdCapela($arr[0]['idCapela']);
             $capela->setNumero($arr[0]['numero']);
             $capela->setStatusCapela($arr[0]['statusCapela']);
+            $capela->setNivelSeguranca($arr[0]['nivelSeguranca']);
 
             return $capela;
         } catch (Throwable $ex) {
@@ -112,12 +144,15 @@ class CapelaBD{
 
         try{
 
-            $SELECT = 'SELECT * FROM tb_capela  WHERE statusCapela = ? FOR UPDATE ';
+            $SELECT = 'SELECT * FROM tb_capela  WHERE statusCapela = ? AND nivelSeguranca = ? FOR UPDATE ';
 
                    
             $arrayBind = array();
-            $arrayBind[] = array('s','LIBERADA');    
+            $arrayBind[] = array('s','LIBERADA');
+            $arrayBind[] = array('s', $objCapela->getNivelSeguranca());
+
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
+
             
             if(empty($arr)){
                 return $arr;
@@ -129,6 +164,7 @@ class CapelaBD{
                 $capela->setIdCapela($reg['idCapela']);
                 $capela->setNumero($reg['numero']);
                 $capela->setStatusCapela($reg['statusCapela']);
+                $capela->setNivelSeguranca($reg['nivelSeguranca']);
                 $arr_capelas[] = $capela;
             }
             return $arr_capelas;

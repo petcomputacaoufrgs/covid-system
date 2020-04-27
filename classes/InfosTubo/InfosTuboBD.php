@@ -102,6 +102,12 @@ class InfosTuboBD{
                  $AND = ' and ';
                  $arrayBind[] = array('s', $objInfosTubo->getReteste());
              }
+
+             if ($objInfosTubo->getEtapa() != null) {
+                 $WHERE .= $AND . " etapa = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('s', $objInfosTubo->getEtapa());
+             }
             
             if ($WHERE != '') {
                 $WHERE = ' where ' . $WHERE;
@@ -179,6 +185,37 @@ class InfosTuboBD{
         } catch (Exception $ex) {
             throw new Excecao("Erro removendo a amostra no BD.",$ex);
         }
+    }
+
+
+    public function pegar_ultimo(InfosTubo $objInfosTubo, Banco $objBanco) {
+
+        try{
+
+            $SELECT = 'SELECT * from tb_infostubo where idTubo_fk = ? order by idInfosTubo DESC LIMIT 1;';
+
+            $arrayBind = array();
+            $arrayBind[] = array('i',$objInfosTubo->getIdTubo_fk());
+
+            $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
+
+            $objInfosTubo = new InfosTubo();
+            $objInfosTubo->setIdInfosTubo($arr[0]['idInfosTubo']);
+            $objInfosTubo->setIdUsuario_fk($arr[0]['idUsuario_fk']);
+            $objInfosTubo->setIdLocalArmazenamento_fk($arr[0]['idLocalArmazenamento_fk']);
+            $objInfosTubo->setIdTubo_fk($arr[0]['idTubo_fk']);
+            $objInfosTubo->setStatusTubo($arr[0]['statusTubo']);
+            $objInfosTubo->setEtapa($arr[0]['etapa']);
+            $objInfosTubo->setDataHora($arr[0]['dataHora']);
+            $objInfosTubo->setReteste($arr[0]['reteste']);
+            $objInfosTubo->setVolume($arr[0]['volume']);
+
+            return $objInfosTubo;
+        } catch (Exception $ex) {
+
+            throw new Excecao("Erro consultando a amostra no BD.",$ex);
+        }
+
     }
     
     

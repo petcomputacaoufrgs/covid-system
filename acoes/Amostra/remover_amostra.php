@@ -19,12 +19,25 @@
         Sessao::getInstance()->validar();
         $objAmostra = new Amostra();
         $objAmostraRN = new AmostraRN();
-        
         $objAmostra->setIdAmostra($_GET['idAmostra']);
+        $objAmostra = $objAmostraRN->consultar($objAmostra);
+
+        if($objAmostra->getIdCodGAL_fk() != null){
+            $objCodigoGAL = new CodigoGAL();
+            $objCodigoGALRN = new CodigoGALRN();
+            $objCodigoGAL->setIdCodigoGAL($objAmostra->getIdCodGAL_fk());
+
+            $objCodigoGALRN->remover($objCodigoGAL);
+        }
+
+
+
         $objTubo = new Tubo();
         $objTuboRN = new TuboRN();
         $objTubo->setIdAmostra_fk($_GET['idAmostra']);
         $arr_tubos = $objTuboRN->listar($objTubo);
+
+
         if(count($arr_tubos) > 0) {
 
             $objInfosTubo = new InfosTubo();

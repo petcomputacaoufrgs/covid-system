@@ -9,18 +9,19 @@ class CodigoGAL_BD {
 
     public function cadastrar(CodigoGAL $objCodigoGAL, Banco $objBanco) {
         try {
-           
-            $INSERT = 'INSERT INTO tb_codgal (codigo,idPaciente_fk) VALUES (?,?)';
+
+            $INSERT = 'INSERT INTO tb_codgal (codigo,idPaciente_fk,obsCodGAL) VALUES (?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i', $objCodigoGAL->getCodigo());
             $arrayBind[] = array('i', $objCodigoGAL->getIdPaciente_fk());
+            $arrayBind[] = array('s', $objCodigoGAL->getObsCodGAL());
 
             //echo $INSERT;
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objCodigoGAL->setIdCodigoGAL($objBanco->obterUltimoID());
             
-            
+            return $objCodigoGAL;
         } catch (Throwable $ex) {
             DIE($ex);
             throw new Excecao("Erro cadastrando o código GAL no BD.", $ex);
@@ -32,16 +33,21 @@ class CodigoGAL_BD {
 
             $UPDATE = 'UPDATE tb_codgal SET '
                     . ' codigo = ? ,'
-                    . ' idPaciente_fk = ?'
-                    . '  where idCodGAL = ?';
+                    . ' idPaciente_fk = ?,'
+                    . ' obsCodGAL = ?'
+                    . ' where idCodGAL = ?';
 
 
             $arrayBind = array();
             $arrayBind[] = array('i', $objCodigoGAL->getCodigo());
             $arrayBind[] = array('i', $objCodigoGAL->getIdPaciente_fk());
+            $arrayBind[] = array('s', $objCodigoGAL->getObsCodGAL());
+
             $arrayBind[] = array('i', $objCodigoGAL->getIdCodigoGAL());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
+            return $objCodigoGAL;
+
         } catch (Throwable $ex) {
             throw new Excecao("Erro alterando o código GAL  no BD.", $ex);
         }
@@ -87,6 +93,7 @@ class CodigoGAL_BD {
                 $objCodigoGAL->setIdCodigoGAL($reg['idCodGAL']);
                 $objCodigoGAL->setCodigo($reg['codigo']);
                 $objCodigoGAL->setIdPaciente_fk($reg['idPaciente_fk']);
+                $objCodigoGAL->setObsCodGAL($reg['obsCodGAL']);
 
 
                 $array_marca[] = $objCodigoGAL;
@@ -101,7 +108,7 @@ class CodigoGAL_BD {
 
         try {
 
-            $SELECT = 'SELECT idCodGAL ,codigo,idPaciente_fk FROM tb_codgal WHERE idCodGAL = ?';
+            $SELECT = 'SELECT * FROM tb_codgal WHERE idCodGAL = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i', $objCodigoGAL->getIdCodigoGAL());
@@ -112,6 +119,7 @@ class CodigoGAL_BD {
             $paciente->setIdCodigoGAL($arr[0]['idCodigoGAL']);
             $paciente->setCodigo($arr[0]['codigo']);
             $paciente->setIdPaciente_fk($arr[0]['idPaciente_fk']);
+            $paciente->setObsCodGAL($arr[0]['obsCodGAL']);
 
             return $paciente;
         } catch (Throwable $ex) {
@@ -143,7 +151,7 @@ class CodigoGAL_BD {
             $arr = $objBanco->consultarSQL($SELECT);
 
 
-            $array_marca = array();
+            $array = array();
             foreach ($arr as $reg) {
                 if($objCodigoGAL->getIdPaciente_fk() != $reg['idPaciente_fk']) {
                     if($reg['codigo'] == $objCodigoGAL->getCodigo()){
@@ -151,13 +159,14 @@ class CodigoGAL_BD {
                         $objCodigoGAL->setIdCodigoGAL($reg['idCodGAL']);
                         $objCodigoGAL->setCodigo($reg['codigo']);
                         $objCodigoGAL->setIdPaciente_fk($reg['idPaciente_fk']);
+                        $objCodigoGAL->setObsCodGAL($reg['obsCodGAL']);
 
 
-                        $array_marca[] = $objCodigoGAL;
+                        $array[] = $objCodigoGAL;
                     }
                 }
             }
-            return $array_marca;
+            return $array;
         } catch (Throwable $ex) {
             throw new Excecao("Erro listando o código GAL  no BD.", $ex);
         }

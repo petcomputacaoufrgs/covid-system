@@ -13,6 +13,10 @@ switch ($_GET['action']):
         require_once 'principal.php';
         break;
 
+    case 'montar_caixas':
+        require_once '../telas_prototipos_antigas/tabela_caixas.php';
+        break;
+
     case 'usuario_naoEncontrado':
         require_once '../acoes/PaginaUserNotFound.php';
         break;
@@ -29,6 +33,8 @@ switch ($_GET['action']):
         Sessao::getInstance()->logoff();
         header('Location: controlador.php?action=login');
         break;
+
+
     
     /* ESTATÍSTICAS */
     case 'gerar_estatisticas':
@@ -40,9 +46,11 @@ switch ($_GET['action']):
 
      /* ETAPA 2 */
     case 'montar_preparo_extracao':
-        require_once '../acoes/PreparoExtracao/preparo_extracao.php';
+        require_once '../acoes/PreparoExtracao/cadastrar_preparoLote.php';
         break;
-    
+    case 'realizar_preparo_inativacao':
+        require_once '../acoes/PreparoExtracao/preparoInativacao.php';
+        break;
     
     case 'cadastrar_amostra_localArmazenamento':
         require_once 'telas_prototipos_antigas/cadastro_amostra_localArmazenamento.php';

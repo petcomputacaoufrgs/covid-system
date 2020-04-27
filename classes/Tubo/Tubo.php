@@ -5,6 +5,7 @@ class Tubo{
     private $idTubo_fk;
     private $idAmostra_fk;
     private $tuboOriginal;
+    private $tipo;
     
     private $objInfosTubo;
 
@@ -20,6 +21,23 @@ class Tubo{
     function setObjInfosTubo($objInfosTubo) {
         $this->objInfosTubo = $objInfosTubo;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * @param mixed $tipo
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+    }
+
 
         
     function getIdTubo() {

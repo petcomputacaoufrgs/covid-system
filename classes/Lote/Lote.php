@@ -3,35 +3,74 @@
 class Lote{
 
     private $idLote;
-    private $qntAmostrasTotal;
-    private $qntAmostrasLivres;
+    private $qntAmostrasDesejadas;
+    private $qntAmostrasAdquiridas;
+    private $statusLote;
+    private $objsTubo;
+
 
     function __construct() {
         
     }
-    
+
+    /**
+     * @return mixed
+     */
+    public function getStatusLote()
+    {
+        return $this->statusLote;
+    }
+
+    /**
+     * @param mixed $statusLote
+     */
+    public function setStatusLote($statusLote)
+    {
+        $this->statusLote = $statusLote;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjsTubo()
+    {
+        return $this->objsTubo;
+    }
+
+    /**
+     * @param mixed $objsTubo
+     */
+    public function setObjsTubo($objsTubo)
+    {
+        $this->objsTubo = $objsTubo;
+    }
+
+
+
     function getIdLote() {
         return $this->idLote;
     }
 
-    function getQntAmostrasTotal() {
-        return $this->qntAmostrasTotal;
+    function getQntAmostrasDesejadas() {
+        return $this->qntAmostrasDesejadas;
     }
 
-    function getQntAmostrasLivres() {
-        return $this->qntAmostrasLivres;
+    function getQntAmostrasAdquiridas() {
+        return $this->qntAmostrasAdquiridas;
     }
 
     function setIdLote($idLote) {
         $this->idLote = $idLote;
     }
 
-    function setQntAmostrasTotal($qntAmostrasTotal) {
-        $this->qntAmostrasTotal = $qntAmostrasTotal;
+    function setQntAmostrasDesejadas($qntAmostrasDesejadas) {
+        $this->qntAmostrasDesejadas = $qntAmostrasDesejadas;
     }
 
-    function setQntAmostrasLivres($qntAmostrasLivres) {
-        $this->qntAmostrasLivres = $qntAmostrasLivres;
+    function setQntAmostrasAdquiridas($qntAmostrasAdquiridas) {
+        $this->qntAmostrasAdquiridas = $qntAmostrasAdquiridas;
     }
 
 

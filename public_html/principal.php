@@ -66,7 +66,8 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
 ?>        
     
     <body>
-        
+       // <a href="controlador.php?action=montar_caixas">montar caixas</a>
+
          <div class="conjunto_itens">
           <div class="row">
         <?php 
@@ -95,6 +96,14 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                 . '</div>';
         }
         ?>
+
+             <?php if(Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao')){
+              echo '<div class="col-md-2">
+                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao').'">REALIZAR PREPARO/INATIVAÇÃO </a>'
+                  . '</div>';
+              }
+              ?>
+
           </div>
          </div>
         

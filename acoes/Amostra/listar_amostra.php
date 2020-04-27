@@ -333,8 +333,8 @@ echo '  </form>
             </div> <!-- fim row -->
         </div> <!-- fim conteúdo -->';
 
-echo '<div class="conteudo_tabela">
-            <table class="table table-hover">
+echo '<div class="table-responsive conteudo_tabela ">
+            <table class="table ">
                 <thead>
                     <tr>
                         <th scope="col">CÓDIGO DA AMOSTRA</th>
