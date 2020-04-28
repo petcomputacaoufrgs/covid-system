@@ -6,7 +6,7 @@
 class Capela{
     private $idCapela;
     private $numero;
-    private $statusCapela; //liberada ou não
+    private $situacaoCapela; //liberada ou não
     private $nivelSeguranca;
     
     function __construct() {
@@ -48,12 +48,12 @@ class Capela{
     }
 
     
-    function getStatusCapela() {
-        return $this->statusCapela;
+    function getSituacaoCapela() {
+        return $this->situacaoCapela;
     }
 
-    function setStatusCapela($statusCapela) {
-        $this->statusCapela = $statusCapela;
+    function setSituacaoCapela($situacaoCapela) {
+        $this->situacaoCapela = $situacaoCapela;
     }
 
 

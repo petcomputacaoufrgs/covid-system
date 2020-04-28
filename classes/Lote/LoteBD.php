@@ -11,13 +11,13 @@ class LoteBD{
             $INSERT = 'INSERT INTO tb_lote (
                             qntAmostrasDesejadas,
                             qntAmostrasAdquiridas,
-                            statusLote
+                            situacaoLote
                             ) VALUES (?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objLote->getQntAmostrasDesejadas());
             $arrayBind[] = array('i',$objLote->getQntAmostrasAdquiridas());
-            $arrayBind[] = array('s',$objLote->getStatusLote());
+            $arrayBind[] = array('s',$objLote->getSituacaoLote());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -34,14 +34,14 @@ class LoteBD{
             $UPDATE = 'UPDATE tb_lote SET '
                 . ' qntAmostrasDesejadas = ?,'
                 . ' qntAmostrasAdquiridas = ?,'
-                . ' statusLote = ?'
+                . ' situacaoLote = ?'
                 . '  where idLote = ?';
 
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objLote->getQntAmostrasDesejadas());
             $arrayBind[] = array('i',$objLote->getQntAmostrasAdquiridas());
-            $arrayBind[] = array('s',$objLote->getStatusLote());
+            $arrayBind[] = array('s',$objLote->getSituacaoLote());
 
             $arrayBind[] = array('i',$objLote->getIdLote());
 
@@ -62,10 +62,10 @@ class LoteBD{
             $AND = '';
             $arrayBind = array();
 
-            if ($objLote->getStatusLote() != null) {
-                $WHERE .= $AND . " statusLote = ?";
+            if ($objLote->getSituacaoLote() != null) {
+                $WHERE .= $AND . " situacaoLote = ?";
                 $AND = ' and ';
-                $arrayBind[] = array('s', $objLote->getStatusLote());
+                $arrayBind[] = array('s', $objLote->getSituacaoLote());
             }
 
             if ($objLote->getQntAmostrasDesejadas()!= null) {
@@ -96,7 +96,7 @@ class LoteBD{
                 $objLote->setIdLote($reg['idLote']);
                 $objLote->setQntAmostrasDesejadas($reg['qntAmostrasDesejadas']);
                 $objLote->setQntAmostrasAdquiridas($reg['qntAmostrasAdquiridas']);
-                $objLote->setStatusLote($reg['statusLote']);
+                $objLote->setSituacaoLote($reg['situacaoLote']);
 
                 $array[] = $objLote;
             }
@@ -122,7 +122,7 @@ class LoteBD{
             $perfilUsu->setIdLote($arr[0]['idLote']);
             $perfilUsu->setQntAmostrasDesejadas($arr[0]['qntAmostrasDesejadas']);
             $perfilUsu->setQntAmostrasAdquiridas($arr[0]['qntAmostrasAdquiridas']);
-            $perfilUsu->setStatusLote($arr[0]['statusLote']);
+            $perfilUsu->setSituacaoLote($arr[0]['situacaoLote']);
 
             return $perfilUsu;
         } catch (Exception $ex) {

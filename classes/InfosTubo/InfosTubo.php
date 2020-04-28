@@ -5,17 +5,109 @@ class InfosTubo{
     private $idLocalArmazenamento_fk;
     private $idTubo_fk;
     private $idUsuario_fk;
+    private $idLote_fk;
     private $statusTubo;
     private $etapa;
+    private $etapaAnterior;
     private $dataHora;
     private $reteste; // fará o reteste ou nao (s/n)
     private $volume;
-    private $descarteNaEtapa;
     private $observacoes;
+    private $obsProblema;
+    private $situacaoTubo;
+    private $situacaoEtapa;
 
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEtapaAnterior()
+    {
+        return $this->etapaAnterior;
+    }
+
+    /**
+     * @param mixed $etapaAnterior
+     */
+    public function setEtapaAnterior($etapaAnterior)
+    {
+        $this->etapaAnterior = $etapaAnterior;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getIdLote_fk()
+    {
+        return $this->idLote_fk;
+    }
+
+    /**
+     * @param mixed $idLote_fk
+     */
+    public function setIdLote_fk($idLote_fk)
+    {
+        $this->idLote_fk = $idLote_fk;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getSituacaoTubo()
+    {
+        return $this->situacaoTubo;
+    }
+
+    /**
+     * @param mixed $situacaoTubo
+     */
+    public function setSituacaoTubo($situacaoTubo)
+    {
+        $this->situacaoTubo = $situacaoTubo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSituacaoEtapa()
+    {
+        return $this->situacaoEtapa;
+    }
+
+    /**
+     * @param mixed $situacaoEtapa
+     */
+    public function setSituacaoEtapa($situacaoEtapa)
+    {
+        $this->situacaoEtapa = $situacaoEtapa;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObsProblema()
+    {
+        return $this->obsProblema;
+    }
+
+    /**
+     * @param mixed $obsProblema
+     */
+    public function setObsProblema($obsProblema)
+    {
+        $this->obsProblema = $obsProblema;
+    }
+
+
 
     /**
      * @return mixed

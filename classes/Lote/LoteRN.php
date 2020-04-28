@@ -4,9 +4,95 @@
  ****************************************************/
 
 require_once __DIR__ . '/../Excecao/Excecao.php';
+require_once __DIR__ . '/../Situacao/Situacao.php';
+
 require_once __DIR__ . '/LoteBD.php';
 
 class LoteRN{
+
+    public static $TE_AGUARDANDO_PREPARACAO = 'R';
+    public static $TE_AGUARDANDO_EXTRACAO = 'X';
+    public static $TE_EM_PREPARACAO = 'P';
+    public static $TE_EM_EXTRACAO = 'E';
+    public static $TE_PREPARACAO_FINALIZADA = 'X';
+    public static $TE_EXTRACAO_FINALIZADA = 'Z';
+
+
+    public static function listarValoresTipoEstado(){
+        try {
+
+            $arrObjTECapela = array();
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TE_AGUARDANDO_PREPARACAO);
+            $objSituacao->setStrDescricao('Aguardando preparação');
+            $arrObjTECapela[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TE_AGUARDANDO_EXTRACAO);
+            $objSituacao->setStrDescricao('Aguardando para a extração');
+            $arrObjTECapela[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TE_EM_PREPARACAO);
+            $objSituacao->setStrDescricao('Em preparação');
+            $arrObjTECapela[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TE_EM_EXTRACAO);
+            $objSituacao->setStrDescricao('Em extração');
+            $arrObjTECapela[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TE_PREPARACAO_FINALIZADA);
+            $objSituacao->setStrDescricao('Preparação finalizada');
+            $arrObjTECapela[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TE_EXTRACAO_FINALIZADA);
+            $objSituacao->setStrDescricao('Extração finalizada');
+            $arrObjTECapela[] = $objSituacao;
+
+
+            return $arrObjTECapela;
+
+        }catch(Throwable $e){
+            throw new Excecao('Erro listando valores de Tipo estado da capela',$e);
+        }
+    }
+
+    public static function mostrarDescricaoTipo($strTipo){
+        //$objExcecao = new Excecao();
+
+        foreach (self::listarValoresTipoEstado() as $tipo){
+            if($tipo->getStrTipo() == $strTipo){
+                return $tipo->getStrDescricao();
+            }
+        }
+        return null;
+        //$objExcecao->adicionarValidacao('Não encontrou o tipo informadoo.','alert-danger');
+    }
+
+    private function validarStrTipoLote(Lote $lote,Excecao $objExcecao){
+
+        if ($lote->getSituacaoLote() == null){
+            $objExcecao->adicionarValidacao('Tipo não informado',null,'alert-danger');
+        }else{
+            $flag = false;
+            foreach (self::listarValoresTipoEstado() as $tipo){
+                if($tipo->getStrTipo() == $lote->getSituacaoLote()){
+                    $flag = true;
+                }
+            }
+
+            if(!$flag){
+                $objExcecao->adicionarValidacao('A situação do lote não foi encontrada',null,'alert-danger');
+            }
+        }
+
+    }
+
+
 
 
     private function validarQntAmostrasDesejadas(Lote $lote,Excecao $objExcecao){
@@ -35,14 +121,14 @@ class LoteRN{
         return $lote->setQntAmostrasAdquiridas($strQntAmostrasAdquiridas);
     }
 
-    private function validarStatusLote(Lote $lote,Excecao $objExcecao){
-        $strStatusLote = trim($lote->getStatusLote());
+    private function validarSituacaoLote(Lote $lote,Excecao $objExcecao){
+        $strStatusLote = trim($lote->getSituacaoLote());
 
         if ($strStatusLote == '') {
             $objExcecao->adicionar_validacao('O status do lote não foi informado',null,'alert-danger');
         }
 
-        return $lote->setStatusLote($strStatusLote);
+        return $lote->setSituacaoLote($strStatusLote);
     }
 
     public function cadastrar(Lote $lote){
@@ -52,8 +138,11 @@ class LoteRN{
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
 
+
+            $this->validarStrTipoLote($lote,$objExcecao);
             $this->validarQntAmostrasDesejadas($lote,$objExcecao);
             $this->validarQntAmostrasAdquiridas($lote,$objExcecao);
+            $this->validarSituacaoLote($lote,$objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objLoteBD = new LoteBD();
@@ -88,11 +177,13 @@ class LoteRN{
             
            $objExcecao = new Excecao();
            $objBanco = new Banco();
-           $objBanco->abrirConexao(); 
-           
+           $objBanco->abrirConexao();
+
+            $this->validarStrTipoLote($lote,$objExcecao);
            $this->validarQntAmostrasDesejadas($lote,$objExcecao);
            $this->validarQntAmostrasAdquiridas($lote,$objExcecao);
-                       
+           $this->validarSituacaoLote($lote,$objExcecao);
+
            $objExcecao->lancar_validacoes();
            $objLoteBD = new LoteBD();
            $objLoteBD->alterar($lote,$objBanco);

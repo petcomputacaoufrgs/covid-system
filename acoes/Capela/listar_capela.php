@@ -3,30 +3,37 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 session_start();
+
+try{
 require_once '../classes/Sessao/Sessao.php';
 require_once '../classes/Pagina/Pagina.php';
 require_once '../classes/Excecao/Excecao.php';
+
 require_once '../classes/Capela/Capela.php';
 require_once '../classes/Capela/CapelaRN.php';
 
+
+Sessao::getInstance()->validar();
 $objCapela = new Capela();
 $objCapelaRN = new CapelaRN();
 $html = '';
 
-try{
+
     
     $arrCapelas = $objCapelaRN->listar($objCapela);
-    foreach ($arrCapelas as $m){  
-         if ($m->getStatusCapela() == 'OCUPADA') {
+    foreach ($arrCapelas as $m){
+
+         if ($m->getSituacaoCapela() == CapelaRN::$TE_OCUPADA) {
             $style = ' style="background-color:rgba(255, 0, 0, 0.2);" ';
-        } else if ($m->getStatusCapela() == 'LIBERADA') {
+        } else if ($m->getSituacaoCapela() == CapelaRN::$TE_LIBERADA) {
             $style = ' style="background-color:rgba(0, 255, 0, 0.2);" ';
         }
-        
+
         $html.='<tr '.$style.'>
                     <th scope="row">'.Pagina::formatar_html($m->getIdCapela()).'</th>
                         <td>'.Pagina::formatar_html($m->getNumero()).'</td>
-                        <td>'.Pagina::formatar_html($m->getStatusCapela()).'</td>
+                        <td>'.Pagina::formatar_html($objCapelaRN->mostrarDescricaoTipo($m->getSituacaoCapela())).'</td>
+                        <td>'.Pagina::formatar_html($m->getNivelSeguranca()).'</td>
                 <td>';
                if(Sessao::getInstance()->verificar_permissao('editar_capela')){
                    $html .= '<a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_capela&idCapela='.Pagina::formatar_html($m->getIdCapela())).'">Editar</a>';
@@ -50,7 +57,7 @@ Pagina::getInstance()->montar_menu_topo();
 echo '
     
     <div class="conteudo_listar">'.
-       Pagina::montar_topo_listar('LISTAR CAPELAS', 'cadastrar_capela', 'NOVA CAPELA').
+       Pagina::montar_topo_listar('LISTAR CAPELAS', null,null,'cadastrar_capela', 'NOVA CAPELA').
         
         '<div class="conteudo_tabela">
             <table class="table table-hover">
@@ -58,7 +65,8 @@ echo '
                 <tr>
                   <th scope="col">#ID</th>
                   <th scope="col">NÚMERO</th>
-                  <th scope="col">STATUS</th>
+                  <th scope="col">SITUAÇÃO</th>
+                  <th scope="col">NÍVEL SEGURANÇA</th>
                   <th scope="col"></th>
                   <th scope="col"></th>
                 </tr>

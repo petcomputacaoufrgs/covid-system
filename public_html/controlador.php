@@ -46,15 +46,22 @@ switch ($_GET['action']):
 
      /* ETAPA 2 */
     case 'montar_preparo_extracao':
-        require_once '../acoes/PreparoExtracao/cadastrar_preparoLote.php';
+        require_once '../acoes/PreparoLote/cadastrar_preparoLote.php';
         break;
     case 'realizar_preparo_inativacao':
-        require_once '../acoes/PreparoExtracao/preparoInativacao.php';
+        require_once '../acoes/PreparoLote/preparoInativacao.php';
         break;
-    
-    case 'cadastrar_amostra_localArmazenamento':
-        require_once 'telas_prototipos_antigas/cadastro_amostra_localArmazenamento.php';
+
+
+    case 'rastrear_amostras':
+        require_once '../acoes/RastreamentoAmostras/rastreamentoAmostras.php';
         break;
+
+    case 'cadastrar_localArmazenamento':
+        require_once '../acoes/LocalArmazenamento/cadastro_localArmazenamento.php';
+        break;
+
+
     case 'extrair_amostra':
         require_once 'telas_prototipos_antigas/etapa_extracao.php';
         break;
@@ -303,9 +310,10 @@ switch ($_GET['action']):
         break;
     
     case 'listar_amostra':
-        require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
-        //require_once '../acoes/Amostra/listar_amostra.php';
+       // require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
+        require_once '../acoes/CadastroAmostra/listar_cadastroIntermediario.php';
         break;
+
     
     case 'remover_amostra':
         require_once '../acoes/CadastroAmostra/remover_cadastroAmostra.php';

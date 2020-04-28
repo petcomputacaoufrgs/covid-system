@@ -6,7 +6,7 @@
 session_start();
 require_once '../classes/Sessao/Sessao.php';
 require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Pagina/Interf.php';
+require_once '../classes/Pagina/InterfacePagina.php';
 require_once '../classes/Excecao/Excecao.php';
 require_once '../utils/Alert.php';
 

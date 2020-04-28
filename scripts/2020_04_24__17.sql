@@ -1,9 +1,9 @@
 alter table tb_tubo add tipo varchar(15);
 
-update tb_tubo set tipo = 'COLETA' where idTubo =
+/*update tb_tubo set tipo = 'COLETA' where idTubo =
 (select idTubo_fk from tb_infostubo where
         statusTubo = 'Aguardando preparação' OR  statusTubo = 'Descartado' and
-        tb_tubo.idTubo = tb_infostubo.idTubo_fk)
+        tb_tubo.idTubo = tb_infostubo.idTubo_fk);*/
 
 
 CREATE TABLE tb_lote (
@@ -49,7 +49,6 @@ CREATE TABLE tb_rel_perfil_preparolote (
 
 ALTER TABLE tb_infostubo ADD idLote_fk int(10) unsigned NULL default null;
 ALTER TABLE tb_infostubo ADD FOREIGN KEY fk_idLote (idLote_fk) REFERENCES tb_lote (idLote);
-ALTER TABLE tb_lote add statusLote varchar(50) null default null;
 CREATE INDEX statusTuboLote ON tb_lote ( statusLote)
 
 

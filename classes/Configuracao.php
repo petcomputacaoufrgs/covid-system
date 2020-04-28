@@ -19,6 +19,7 @@ class Configuracao{
                 'nome' => 'amostras_covid19',
                 'usuario' => 'root',
                 'senha' => ''),
+
         );
     }
     

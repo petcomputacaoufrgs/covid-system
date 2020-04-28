@@ -7,7 +7,7 @@ session_start();
 
 require_once __DIR__.'/../../classes/Sessao/Sessao.php';
 require_once __DIR__.'/../../classes/Pagina/Pagina.php';
-require_once __DIR__.'/../../classes/Pagina/Interf.php';
+require_once __DIR__ . '/../../classes/Pagina/InterfacePagina.php';
 require_once __DIR__.'/../../classes/Excecao/Excecao.php';
 require_once __DIR__.'/../../utils/Alert.php';
 require_once __DIR__.'/../../classes/Estatisticas/PDF_Estatisticas.php';

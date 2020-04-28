@@ -310,7 +310,7 @@ class Pagina {
         return htmlentities($strValor,ENT_QUOTES);
     }
     
-    public static function montar_topo_listar($titulo =null,$link1 =null, $novo1,$link2,$novo2) {
+    public static function montar_topo_listar($titulo=null ,$link1 =null, $novo1= null,$link2,$novo2) {
         echo '<div class="topo_listar">
                 <div class="row">
                     <div class="col-md-6"><h3>'.$titulo.'</h3></div>

@@ -63,10 +63,18 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
 	</style> 
 <?php Pagina::getInstance()->fechar_head(); 
       Pagina::getInstance()->montar_menu_topo();
-?>        
+
+
+
+      //verificação capela
+
+      ?>
+
+
+
     
     <body>
-       // <a href="controlador.php?action=montar_caixas">montar caixas</a>
+        <!--<a href="controlador.php?action=montar_caixas">montar caixas</a>-->
 
          <div class="conjunto_itens">
           <div class="row">
@@ -91,22 +99,48 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
         <?php
         // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
         if(Sessao::getInstance()->verificar_permissao('montar_preparo_extracao')){
-            echo '<div class="col-md-2">
-                          <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao').'">MONTAR PREPARO/EXTRAÇÃO </a>'
+            echo '<div class="col-md-4">
+                          <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao').'">MONTAGEM DO LOTE PARA PREPARAÇÃO </a>'
                 . '</div>';
         }
         ?>
 
-             <?php if(Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao')){
-              echo '<div class="col-md-2">
+             <?php
+            if(Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao')){
+              echo '<div class="col-md-4">
                   <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao').'">REALIZAR PREPARO/INATIVAÇÃO </a>'
                   . '</div>';
               }
               ?>
 
+
+
           </div>
          </div>
-        
+
+        <div class="conjunto_itens">
+            <div class="row">
+                <?php
+                // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+                if(Sessao::getInstance()->verificar_permissao('rastrear_amostras')){
+                    echo '<div class="col-md-2">
+                                  <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=rastrear_amostras').'">RASTREAR AMOSTRAS </a>'
+                        . '</div>';
+                }
+                ?>
+
+                <?php
+                // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+                if(Sessao::getInstance()->verificar_permissao('cadastrar_localArmazenamento')){
+                    echo '<div class="col-md-2">
+                                  <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_localArmazenamento').'">CADASTRAR LOCAL DE ARMAZENAMENTO </a>'
+                        . '</div>';
+                }
+                ?>
+            </div>
+        </div>
+
+
         <div class="conjunto_itens">
           <div class="row">
               

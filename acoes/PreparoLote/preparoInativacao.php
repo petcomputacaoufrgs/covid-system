@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
 require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
 require_once __DIR__ . '/../../classes/Capela/Capela.php';
 require_once __DIR__ . '/../../classes/Capela/CapelaRN.php';
-require_once _DIR__ . '/../../classes/Pagina/Interf.php';
+require_once _DIR__ . '/../../classes/Pagina/InterfacePagina.php';
 
 require_once __DIR__ . '/../../classes/Amostra/Amostra.php';
 require_once __DIR__ . '/../../classes/Amostra/AmostraRN.php';
@@ -173,6 +173,10 @@ try {
                             $show = ' show ';
                         }
 
+                        if(isset($_POST['btn_confirmarPreparacao'])){
+                            $amostra_original = 'DESCARTADO';
+                        }
+
                         $show_amostras .= '
                            
                             <div class="accordion" id="accordionExample" '.$style.'">
@@ -197,7 +201,7 @@ try {
                                                  <div class="col-md-4">
                                                     <label> Local onde está armazenado </label>
                                                         <input type="text" class="form-control form-control-sm" id="idLocalArmazenamento"  disabled style="text-align: center;" placeholder=""
-                                                            name="txtLocalArmazenamento'.$objTubo->getIdTubo().'"  value="DESCARTADO">
+                                                            name="txtLocalArmazenamento'.$objTubo->getIdTubo().'"  value="'.$amostra_original.'">
                                                 </div>
                                                 
                                                 <div class="col-md-4">
@@ -283,12 +287,12 @@ try {
                                 if($i == 1 || $i == 2){
                                     $status = 'banco de amostras - final extração';
                                     $nometubo = 'ALIQUOTA '.$i;
-                                    $objInfosTuboNovo->setVolume(1);
+                                    //$objInfosTuboNovo->setVolume('1.0');
                                     $armazenamento = " banco de amostras ";
                                 }
                                 if($i == 3){
-                                    $nometubo = 'RNA';
-                                    $objInfosTuboNovo->setVolume(0.2);
+                                    $nometubo = 'EXTRAÇÃO';
+                                    //S$objInfosTuboNovo->setVolume('0.2');
                                     $armazenamento = ' extração ';
                                 }
 
@@ -328,7 +332,7 @@ try {
                                                     <div class="col-md-1" style="padding: 10px;">
                                                      <label> Volume</label>
                                                         <input type="number" class="form-control form-control-sm" id="idVolume"  disabled style="text-align: center;" placeholder=""
-                                                            name="txtVolume_'.$nometubo.$i.'"  value="'.$objInfosTuboNovo->getVolume().'">
+                                                            name="txtVolume_'.$nometubo.$i.'"  value="VOLUME"> <!--$objInfosTuboNovo->getVolume().-->
                                                      </div>
                                             </div> 
                                             
@@ -336,7 +340,8 @@ try {
                                             <div class="form-row " style="background-color: whitesmoke;margin-top: -10px;"> 
                                                 <div class="col-md-1" style="background-color: #3a5261"></div>       
                                                 <div class="col-md-2">
-                                                    <div class="custom-control custom-checkbox mr-sm-2" style="margin-top: 20px; margin-left: 20px;">
+                                                
+                                                <div class="custom-control  '.$checked.' custom-checkbox mr-sm-2" style="margin-top: 20px; margin-left: 20px;">
                                                     <input type="checkbox" class="custom-control-input" id="check_'.$nometubo.$i.'" name="checkDescartada_'.$nometubo.$i.'">
                                                     <label class="custom-control-label" for="check_'.$nometubo.$i.'">Precisou ser descartada</label>
                                                   </div>
@@ -355,6 +360,7 @@ try {
                                             ';
 
                                 if(isset($_POST['btn_terminarPreparacao'])){
+
                                     $objTuboNovo = new Tubo();
                                     $objTuboNovo->setTuboOriginal('n');
                                     $objTuboNovo->setIdAmostra_fk($objAmostra->getIdAmostra());
@@ -373,7 +379,7 @@ try {
                                     }
 
                                     if(isset($_POST['check_'.$nometubo.$i]) && $_POST['check_'.$nometubo.$i] == 'on'){
-                                        $objInfosTuboNovo->setDescarteNaEtapa($_POST['check_'.$nometubo.$i]);
+                                        $objInfosTuboNovo->setDescarteNaEtapa('s');
                                         $objInfosTuboNovo->setStatusTubo("Descartado");
                                     }else{
                                         if($i == 1 || $i == 2){
@@ -387,6 +393,8 @@ try {
                                     $objInfosTuboNovo->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
                                     $objInfosTuboNovo->setEtapa("finalizada - preparação ");
                                     $objTuboNovo->setObjInfosTubo($objInfosTuboNovo);
+
+
                                     //$objTuboNovo = $objTuboRN->cadastrar($objTuboNovo);
                                 }
 

@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
 require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
 require_once __DIR__ . '/../../classes/Capela/Capela.php';
 require_once __DIR__ . '/../../classes/Capela/CapelaRN.php';
-require_once '../classes/Pagina/Interf.php';
+require_once '../classes/Pagina/InterfacePagina.php';
 
 require_once __DIR__ . '/../../classes/Amostra/Amostra.php';
 require_once __DIR__ . '/../../classes/Amostra/AmostraRN.php';

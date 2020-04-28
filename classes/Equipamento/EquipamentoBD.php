@@ -59,6 +59,8 @@ class EquipamentoBD{
          try{
       
             $SELECT = "SELECT * FROM tb_equipamento";
+
+
             
             $WHERE = '';
             $AND = '';
@@ -68,6 +70,12 @@ class EquipamentoBD{
                 $AND = ' and '; 
                 $arrayBind[] = array('i',$objEquipamento->getIdDetentor_fk());
             }
+
+             if($objEquipamento->getIdMarca_fk() != null){
+                 $WHERE .= $AND." idMarca_fk = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('i',$objEquipamento->getIdMarca_fk());
+             }
             
 
             if($WHERE != ''){

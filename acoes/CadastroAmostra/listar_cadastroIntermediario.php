@@ -5,36 +5,37 @@
  */
 
 try {
-session_start();
-require_once __DIR__.'/../../classes/Sessao/Sessao.php';
-require_once __DIR__.'/../../classes/Pagina/Pagina.php';
-require_once __DIR__ . '/../../classes/Pagina/InterfacePagina.php';
-require_once __DIR__.'/../../classes/Excecao/Excecao.php';
-require_once __DIR__.'/../../utils/Alert.php';
+    session_start();
+    require_once __DIR__.'/../../classes/Sessao/Sessao.php';
+    require_once __DIR__.'/../../classes/Pagina/Pagina.php';
+    require_once __DIR__ . '/../../classes/Pagina/InterfacePagina.php';
+    require_once __DIR__.'/../../classes/Excecao/Excecao.php';
+    require_once __DIR__.'/../../utils/Alert.php';
 
-require_once __DIR__.'/../../classes/Amostra/Amostra.php';
-require_once __DIR__.'/../../classes/Amostra/AmostraRN.php';
+    require_once __DIR__.'/../../classes/Amostra/Amostra.php';
+    require_once __DIR__.'/../../classes/Amostra/AmostraRN.php';
 
-require_once __DIR__.'/../../classes/PerfilPaciente/PerfilPaciente.php';
-require_once __DIR__.'/../../classes/PerfilPaciente/PerfilPacienteRN.php';
+    require_once __DIR__.'/../../classes/PerfilPaciente/PerfilPaciente.php';
+    require_once __DIR__.'/../../classes/PerfilPaciente/PerfilPacienteRN.php';
 
-require_once __DIR__.'/../../classes/Tubo/Tubo.php';
-require_once __DIR__.'/../../classes/Tubo/TuboRN.php';
+    require_once __DIR__.'/../../classes/Tubo/Tubo.php';
+    require_once __DIR__.'/../../classes/Tubo/TuboRN.php';
 
-require_once __DIR__.'/../../classes/Paciente/Paciente.php';
-require_once __DIR__.'/../../classes/Paciente/PacienteRN.php';
+    require_once __DIR__.'/../../classes/Paciente/Paciente.php';
+    require_once __DIR__.'/../../classes/Paciente/PacienteRN.php';
 
-require_once __DIR__.'/../../classes/InfosTubo/InfosTubo.php';
-require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
+    require_once __DIR__.'/../../classes/InfosTubo/InfosTubo.php';
+    require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
 
 
     Sessao::getInstance()->validar();
 
 
-    $array_colunas = array('CÓDIGO', 'SITUAÇÃO AMOSTRA', 'DATA COLETA','PERFIL AMOSTRA','CADASTRO PENDENTE');
-    $array_tipos_colunas = array('text', 'text', 'date', 'text','select');
+    $array_colunas = array('CÓDIGO', 'SITUAÇÃO AMOSTRA', 'DATA COLETA','PERFIL AMOSTRA','CADASTRO PENDENTE');//,'CÓDIGO INICIAL AMOSTRA');
+    $array_tipos_colunas = array('text', 'text', 'date', 'text','select');//,'text');
 
     $value = '';
+    $valueNum = '';
     $retornou_certo = false;
     $options = '';
     $position = null;
@@ -104,6 +105,8 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
         }else if($valor_selecionado ==  'PERFIL AMOSTRA'){
             InterfacePagina::montar_select_pp($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, $disabled, $onchange);
             $inputs = $select_perfis;
+            $inputs .= '<input type="' . $array_tipos_colunas[$position] . '" value="' . $valueNum .
+                '" placeholder="CÓDIGO" name="txt_numAmostra" aria-label="Search" class="form-control">';
         }else if($valor_selecionado ==  'CADASTRO PENDENTE'){
             $select_cadastroPendente = '';
             InterfacePagina::montar_select_cadastroPendente($select_cadastroPendente,  $objPacienteRN,$objPaciente, $disabled, $onchange) ;
@@ -115,6 +118,11 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
             $inputs = '<input type="' . $array_tipos_colunas[$position] . '" value="' . $value .
                 '" placeholder="Search" name="txtSearch" aria-label="Search" class="form-control">';
             //$options = Interf::montar_select_pesquisa($array_colunas);]
+        }
+        if($array_colunas[$_GET['idColunaSelecionada']] != 'PERFIL AMOSTRA'  && $array_colunas[$_GET['idColunaSelecionada']] != 'CÓDIGO' && $array_colunas[$_GET['idColunaSelecionada']] != 'CÓDIGO INICIAL AMOSTRA' &&
+            $array_colunas[$_GET['idColunaSelecionada']] != 'DATA COLETA' && $array_colunas[$_GET['idColunaSelecionada']] != 'CADASTRO PENDENTE') {
+            $inputs .= '<input type="text" value="' . $valueNum .
+                '" placeholder="CÓDIGO" name="txt_numAmostra" aria-label="Search" class="form-control">';
         }
     }
 
@@ -129,10 +137,14 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
             } else {
                 $retornou_certo = true;
             }
+            $value = $_POST['txtSearch'];
+            $inputs = '<input type="' . $array_tipos_colunas[$position] . '" value="' . $value .
+                '" placeholder="Search" name="txtSearch" aria-label="Search" class="form-control">';
 
         }
 
         if ($array_colunas[$_GET['idColunaSelecionada']] == 'CADASTRO PENDENTE') {
+
             $objPaciente->setCadastroPendente($_POST['sel_CadastroPendente']);
             $arr_pacientes = $objPacienteRN->listar($objPaciente);
 
@@ -213,6 +225,7 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
 
                     $html .= '<tr' . $style . '>
                     <th scope="row">' . Pagina::formatar_html($r->getCodigoAmostra()) . '</th>
+                            <td>' . Pagina::formatar_html($objPaciente->getNome()) . '</td>     
                             <td>' . Pagina::formatar_html($result) . '</td>
                             <td>' . Pagina::formatar_html($data) . '</td>'
                         //<td>' . Pagina::formatar_html($etapa) . '</td>
@@ -242,29 +255,38 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
         }
 
         if ($array_colunas[$_GET['idColunaSelecionada']] == 'SITUAÇÃO AMOSTRA') {
-
+            $id = substr($_POST['txt_numAmostra'], 1);
+            $objAmostra->setIdAmostra($id);
             $objAmostra->set_a_r_g($_POST['sel_a_r_g']);
-            $arrAmostras_pesquisa = $objAmostraRN->listar($objAmostra);
+            $arrAmostras_pesquisa = $objAmostraRN->listar_especial($objAmostra);
             if (empty($arrAmostras_pesquisa)) {
                 //$arrAmostras_pesquisa = array('ERROR' => "Nenhuma lixeira encontrada com este ID");
                 $alert .= Alert::alert_primary("Nenhuma amostra encontrada com esta situação");
             } else {
                 $retornou_certo = true;
             }
+
             InterfacePagina::montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, $disabled, $onchange);
             $inputs = $select_a_r_g;
+            $valueNum = $_POST['txt_numAmostra'];
+            $inputs .= '<input type="' . $array_tipos_colunas[$position] . '" value="' . $valueNum .
+                '" placeholder="CÓDIGO" name="txt_numAmostra" aria-label="Search" class="form-control">';
         }
 
         if ($array_colunas[$_GET['idColunaSelecionada']] == 'DATA COLETA') {
 
             $objAmostra->setDataColeta($_POST['txtSearch']);
-            $arrAmostras_pesquisa = $objAmostraRN->listar($objAmostra);
+            $arrAmostras_pesquisa = $objAmostraRN->listar_especial($objAmostra);
             if (empty($arrAmostras_pesquisa)) {
                 //$arrAmostras_pesquisa = array('ERROR' => "Nenhuma lixeira encontrada com este ID");
                 $alert .= Alert::alert_primary("Nenhuma amostra encontrada nesta data");
             } else {
                 $retornou_certo = true;
             }
+            //$value = $_POST['txtSearch'];
+            //$inputs = '<input type="' . $array_tipos_colunas[$position] . '" value="' . $value .
+                '" placeholder="Search" name="txtSearch" aria-label="Search" class="form-control">';
+
         }
 
         /*if ($array_colunas[$_GET['idColunaSelecionada']] == 'ETAPA') {
@@ -301,8 +323,10 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
 
         if ($array_colunas[$_GET['idColunaSelecionada']] == 'PERFIL AMOSTRA') {
 
+            $id = substr($_POST['txt_numAmostra'], 1);
+            $objAmostra->setIdAmostra($id);
             $objAmostra->setIdPerfilPaciente_fk($_POST['sel_PP']);
-            $arrAmostras_pesquisa = $objAmostraRN->listar($objAmostra);
+            $arrAmostras_pesquisa = $objAmostraRN->listar_especial($objAmostra);
             if (empty($arrAmostras_pesquisa)) {
                 //$arrAmostras_pesquisa = array('ERROR' => "Nenhuma lixeira encontrada com este ID");
                 $alert .= Alert::alert_primary("Nenhuma amostra encontrada com este perfil");
@@ -311,13 +335,35 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
             }
             InterfacePagina::montar_select_pp($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, $disabled, $onchange);
             $inputs = $select_perfis;
+            $valueNum = $_POST['txt_numAmostra'];
+            $inputs .= '<input type="' . $array_tipos_colunas[$position] . '" value="' . $valueNum .
+                '" placeholder="CÓDIGO" name="txt_numAmostra" aria-label="Search" class="form-control">';
         }
+
+        /*if ($array_colunas[$_GET['idColunaSelecionada']] == 'CÓDIGO INICIAL AMOSTRA') {
+
+            //$objAmostra->setCodigoAmostra($_POST['txtSearch']);
+            $id = substr($_POST['txtSearch'], 1);
+            echo $_POST['txtSearch'];
+            $objAmostra->setIdAmostra($id);
+            $arrAmostras_pesquisa = $objAmostraRN->listar_especial($objAmostra);
+            if (empty($arrAmostras_pesquisa)) {
+                //$arrAmostras_pesquisa = array('ERROR' => "Nenhuma lixeira encontrada com este ID");
+                $alert .= Alert::alert_primary("Nenhuma amostra encontrada");
+            } else {
+                $retornou_certo = true;
+            }
+            $value = $_POST['txtSearch'];
+            $inputs = '<input type="' . $array_tipos_colunas[$position] . '" value="' . $value .
+                '" placeholder="Search" name="txtSearch" aria-label="Search" class="form-control">';
+
+        }*/
 
 
     }
 
 
-    if (empty($arrAmostras_pesquisa) || $retornou_certo) {
+    if ( $retornou_certo) {
 
         $objAmostraAux = new Amostra();
         $objAmostraAuxRN = new AmostraRN();

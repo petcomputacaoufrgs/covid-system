@@ -1,3 +1,4 @@
+
 <?php
 /*
  *  Author: Carine Bertagnolli Bathaglini
@@ -503,14 +504,15 @@ try{
                 /*
                  * INFOS TUBO
                  */
-                $objInfosTubo->setEtapa(InfosTuboRN::$TP_RECEPCAO);
-                $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
 
                 if ($objAmostra->get_a_r_g() == 'a') {
-                    $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
+                    $objInfosTubo->setEtapa("recepção - finalizada");
+                    $objInfosTubo->setStatusTubo(" Aguardando preparação ");
                     $objTubo->setObjInfosTubo($objInfosTubo);
                 } else if ($objAmostra->get_a_r_g() == 'r') {
-                    $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO);
+                    $objInfosTubo->setEtapa('emitir laudo - descarte na recepção');
+                    $objInfosTubo->setStatusTubo(" Descartado ");
+                    $objInfosTubo->setDescarteNaEtapa("s");
                     $objTubo->setObjInfosTubo($objInfosTubo);
 
                 }
@@ -784,7 +786,15 @@ try{
                     $objPaciente->setCadastroPendente('n');
                 }
 
+
+                //$objPacienteRN->alterar($objPaciente);
+                //echo $errogal;
                 $objAmostra->setObjPaciente($objPaciente);
+
+                /*if(!$errogal) {
+                    $objAmostraRN->alterar($objAmostra);
+                    $alert .= Alert::alert_success('Dados da amostra <strong>'.$objAmostra->getCodigoAmostra().'</strong> ALTERADOS com sucesso');
+                }*/
 
                 if($objPaciente->getCadastroPendente() == 's'){
                     $checkedCadastroPendente = ' checked ';
@@ -807,15 +817,13 @@ try{
                         $objAmostra->setObjTubo($objTubo);
 
                         //recém criou o tubo
-                        $objInfosTubo->setEtapa(InfosTuboRN::$TP_RECEPCAO);
-                        $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
-
+                        $objInfosTubo->setEtapa("recepção - finalizada");
                         if ($objAmostra->get_a_r_g() == 'a') {
-                            $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
+                            $objInfosTubo->setStatusTubo(" Aguardando preparação ");
                         } else if ($objAmostra->get_a_r_g() == 'r') {
-                            $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO);
+                            $objInfosTubo->setStatusTubo(" Descartado ");
+                            $objInfosTubo->setDescarteNaEtapa("s");
                         }
-
                         $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
                         $objInfosTubo->setReteste('n');
                         $objInfosTubo->setVolume(null);
@@ -826,26 +834,22 @@ try{
                     }
 
                 }
-                else { //já tem algum tubo
+                else {
 
 
                     $objTubo = $arr_tbs[0];
                     $objInfosTubo->setIdTubo_fk($objTubo->getIdTubo());
                     $arr_infos = $objInfosTuboRN->listar($objInfosTubo);
                     $objInfosTubo = end($arr_infos);
-                    $objInfosTuboAux = $objInfosTubo;
 
-                    $objInfosTuboAux->setIdInfosTubo(null);
-                    if ($objAmostra->get_a_r_g() == 'r') {
-                        $objInfosTuboAux->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO);
-
-                    }
 
                     if ($objAmostra->get_a_r_g() == 'r') {
-                        $objInfosTuboAux->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
+                        $objInfosTubo->setStatusTubo(" Descartado ");
+                        $objInfosTubo->setEtapa(" emitir laudo - descarte na recepção ");
+                        $objInfosTubo->setDescarteNaEtapa("s");
                     }
 
-                    if($objAmostra->get_a_r_g() == 'g'){ //se for aguardando então ele remove o tubo que já existia
+                    if($objAmostra->get_a_r_g() == 'g'){
                         $objTubo->getIdAmostra_fk($objAmostra->getIdAmostra());
                         $arr_tubos = $objTuboRN->listar($objTubo);
                         foreach ($arr_tubos as $t) {
@@ -853,13 +857,12 @@ try{
                         }
                     }
 
-                    $objInfosTuboAux->setDataHora(date("Y-m-d H:i:s"));
-                    $objInfosTuboAux->setIdUsuario_fk(Sessao::getInstance()->getMatricula());
-
-                    $objTubo->setObjInfosTubo($objInfosTuboAux);
+                    $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
+                    $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getMatricula());
+                    $objTubo->setObjInfosTubo($objInfosTubo);
                     $objAmostra->setObjTubo($objTubo);
                 }
-                print_r($objAmostra);
+
 
                 $objAmostra->setIdAmostra($_GET['idAmostra']);
                 $objAmostra->setObjPaciente($objPaciente);
@@ -926,7 +929,7 @@ echo $popUp;
 echo $alert;
 
 
-echo ' <!-- Modal -->
+    echo ' <!-- Modal -->
     <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -1578,3 +1581,4 @@ if($listar_pacientes == 's'){
 
 <?php
 Pagina::getInstance()->fechar_corpo();
+

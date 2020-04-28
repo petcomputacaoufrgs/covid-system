@@ -279,7 +279,7 @@ class AmostraRN{
                               
             }
 
-            $this->validarPerfilCodGAL($amostra,$objExcecao);
+            //$this->validarPerfilCodGAL($amostra,$objExcecao);
             $this->validarObservacoes($amostra,$objExcecao);
             $this->validar_a_r_g($amostra,$objExcecao);
             $this->validarDataColeta($amostra,$objExcecao);
@@ -340,6 +340,7 @@ class AmostraRN{
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
 
+
              if($amostra->getObjPaciente() != null){
                  if($amostra->getObjPaciente()->getIdPaciente() == null) {
                      $objExcecao->adicionar_validacao('Não existe paciente cadastrado para esta amostra ',null,'alert-danger');
@@ -348,38 +349,43 @@ class AmostraRN{
                      $objPaciente  = $objPacienteRN->alterar($amostra->getObjPaciente());
                      $amostra->setObjPaciente($objPaciente);
                      $amostra->setIdPaciente_fk($objPaciente->getIdPaciente());
-                     if($objPaciente->getObjCodGAL() != null && $objPaciente->getObjCodGAL()->getIdCodigoGAL() != null) {
+
+                     if($objPaciente->getObjCodGAL() != null &&
+                         $objPaciente->getObjCodGAL()->getIdCodigoGAL() != null) {
                          $amostra->setIdCodGAL_fk($objPaciente->getObjCodGAL()->getIdCodigoGAL());
                      }
                  }
+                 $amostra->setObjPaciente($objPaciente);
              }
+
 
 
             $this->validarObservacoes($amostra,$objExcecao);
             $this->validar_a_r_g($amostra,$objExcecao);
             $this->validarDataColeta($amostra,$objExcecao);
             $this->validarPerfilCartaoSUS($amostra, $objExcecao);
-            $this->validarPerfilCodGAL($amostra,$objExcecao);
+            //$this->validarPerfilCodGAL($amostra,$objExcecao);
             $this->validarObsCEP($amostra,$objExcecao);
             $this->validarObsHoraColeta($amostra,$objExcecao);
             $this->validarObsLugarOrigem($amostra, $objExcecao);
             $this->validarObsMotivo($amostra, $objExcecao);
             $this->validarMotivo($amostra, $objExcecao);
             $this->validarCEP($amostra, $objExcecao);
-            
+
+
             $objExcecao->lancar_validacoes();
-            
+
             $objAmostraBD = new AmostraBD();
             $objAmostraBD->alterar($amostra,$objBanco);
 
              if($amostra->getObjTubo() != null){
                  $objTuboRN = new TuboRN();
                  if($amostra->getObjTubo()->getIdTubo() == null) { //tubo ainda não cadastrado
-                     if ($amostra->get_a_r_g() != 'g') {
+
                          $objTubo = $amostra->getObjTubo();
                          $objTubo->setIdAmostra_fk($amostra->getIdAmostra());
                          $amostra->setObjTubo($objTuboRN->cadastrar($objTubo));
-                     }
+
                  }else {
                      $objTuboRN->alterar($amostra->getObjTubo());
                  }
@@ -390,7 +396,7 @@ class AmostraRN{
              return $amostra;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro alterando amostra.', NULL, $e);
+            throw new Excecao('Erro alterando amostra.', $e);
         }
     }
 
@@ -410,7 +416,7 @@ class AmostraRN{
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro consultando amostra.', NULL, $e);
+            throw new Excecao('Erro consultando amostra.', $e);
         }
     }
 
@@ -449,7 +455,7 @@ class AmostraRN{
             return $arr;
         } catch (Exception $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro removendo amostra.', NULL, $e);
+            throw new Excecao('Erro removendo amostra.',  $e);
         }
     }
 
@@ -469,7 +475,27 @@ class AmostraRN{
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', NULL, $e);
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+    }
+
+    public function listar_especial(Amostra $amostra) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+            $arr =  $objAmostraBD->listar_especial($amostra,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
         }
     }
     
@@ -514,7 +540,7 @@ class AmostraRN{
             }
             return $arr_resultado;
         } catch (Throwable $e) {
-            throw new Excecao('Erro listando amostra.', NULL, $e);
+            throw new Excecao('Erro listando amostra.', $e);
         }
     }
 
@@ -534,7 +560,27 @@ class AmostraRN{
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', NULL, $e);
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+    }
+
+    public function filtrar_por_quantidade(Amostra $amostra) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+            $arr =  $objAmostraBD->filtrar_por_quantidade($amostra,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
         }
     }
 

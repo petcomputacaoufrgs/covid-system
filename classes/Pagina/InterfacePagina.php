@@ -4,7 +4,7 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-class Interf
+class InterfacePagina
 {
 
     private static $instance;
@@ -17,7 +17,7 @@ class Interf
         return self::$instance;
     }
 
-    function montar_select_cidade(&$select_municipios, $objLugarOrigem, $objLugarOrigemRN, &$objEstadoOrigem, &$objAmostra, $disabled, $onchange)
+    static function montar_select_cidade(&$select_municipios, $objLugarOrigem, $objLugarOrigemRN, &$objEstadoOrigem, &$objAmostra, $disabled, $onchange)
     {
         /* MUNICÃPIOS */
         $selected = '';
@@ -42,7 +42,7 @@ class Interf
         $select_municipios .= '</select>';
     }
 
-    function montar_select_niveis_prioridade(&$select_nivelPrioridade, $objNivelPrioridade, $objNivelPrioridadeRN, &$objAmostra, $disabled, $onchange)
+static function montar_select_niveis_prioridade(&$select_nivelPrioridade, $objNivelPrioridade, $objNivelPrioridadeRN, &$objAmostra, $disabled, $onchange)
     {
         /* TIPOS AMOSTRA */
         $selected = '';
@@ -66,7 +66,7 @@ class Interf
         $select_nivelPrioridade .= '</select>';
     }
 
-    function montar_select_amostras(&$select_amostras, $objAmostra, $objAmostraRN, &$objPaciente, $disabled, $onchange)
+static function montar_select_amostras(&$select_amostras, $objAmostra, $objAmostraRN, &$objPaciente, $disabled, $onchange)
     {
         /* AMOSTRAS */
         $selected = '';
@@ -94,7 +94,7 @@ class Interf
         $select_amostras .= '</select>';
     }
 
-    function montar_select_codsGAL(&$select_codsGAL, $objCodigoGAL, $objCodigoGAL_RN, &$objPaciente, $disabled, $onchange)
+static function montar_select_codsGAL(&$select_codsGAL, $objCodigoGAL, $objCodigoGAL_RN, &$objPaciente, $disabled, $onchange)
     {
         /* CÓDIGOS GAL */
         $selected = '';
@@ -121,7 +121,7 @@ class Interf
     }
 
 
-    function montar_select_aceitaRecusadaAguarda(&$select_a_r_g, &$objAmostra, $disabled, $onchange)
+static function montar_select_aceitaRecusadaAguarda(&$select_a_r_g, &$objAmostra, $disabled, $onchange)
     {
         $selectedr = '';
         $selecteda = '';
@@ -146,7 +146,7 @@ class Interf
                     </select>';
     }
 
-    function montar_select_tiposAmostra(&$select_tiposAmostra, $objTipoAmostra, $objTipoAmostraRN, &$objAmostra, $disabled, $onchange)
+static function montar_select_tiposAmostra(&$select_tiposAmostra, $objTipoAmostra, $objTipoAmostraRN, &$objAmostra, $disabled, $onchange)
     {
         /* TIPOS AMOSTRA */
         $selected = '';
@@ -170,7 +170,7 @@ class Interf
         $select_tiposAmostra .= '</select>';
     }
 
-    function montar_select_estado(&$select_estados, $objEstadoOrigem, $objEstadoOrigemRN, &$objAmostra, $disabled, $onchange)
+    static  function montar_select_estado(&$select_estados, $objEstadoOrigem, $objEstadoOrigemRN, &$objAmostra, $disabled, $onchange)
     {
         /* ESTADO */
         $selected = '';
@@ -198,7 +198,7 @@ class Interf
         $select_estados .= '</select>';
     }
 
-    function montar_select_perfilPaciente(&$select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, &$objAmostra, $disabled, $onchange)
+static function montar_select_perfilPaciente(&$select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, &$objAmostra, $disabled, $onchange)
     {
         /* PERFIL DO PACIENTE */
         $selected = '';
@@ -224,7 +224,7 @@ class Interf
         $select_perfis .= '</select>';
     }
 
-    function montar_select_sexo(&$select_sexos, $objSexoPaciente, $objSexoPacienteRN, &$objPaciente, $disabled, $onchange)
+static function montar_select_sexo(&$select_sexos, $objSexoPaciente, $objSexoPacienteRN, &$objPaciente, $disabled, $onchange)
     {
         /* SEXO DO PACIENTE */
         $selected = '';
@@ -254,7 +254,7 @@ class Interf
         $select_sexos .= '</select>';
     }
 
-    function montar_select_etnias(&$select_etnias, $objEtnia, $objEtniaRN, &$objPaciente, $disabled, $onchange)
+    static  function montar_select_etnias(&$select_etnias, $objEtnia, $objEtniaRN, &$objPaciente, $disabled, $onchange)
     {
         /* ETNIAS */
 
@@ -285,7 +285,7 @@ class Interf
         $select_etnias .= '</select>';
     }
 
-    function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPaciente, $objSexoPacienteRN, &$objPaciente)
+static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPaciente, $objSexoPacienteRN, &$objPaciente)
     {
         $selected = '';
         $arr_sexos = $objSexoPacienteRN->listar($objSexoPaciente);
@@ -330,28 +330,28 @@ class Interf
         return $options;
     }
 
-    function montar_select_pp(&$select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, &$objAmostra, $disabled, $onchange)
-    {
-        /* PERFIL DO PACIENTE */
-        $selected = '';
-        $objPerfilPacienteAux = new PerfilPaciente();
-        $arr_perfis = $objPerfilPacienteRN->listar($objPerfilPacienteAux);
-        $select_perfis = ' <select id="idPP" ' . $disabled . $onchange .
-            'class="form-control" name="sel_PP" onblur="">
-                        <option value="">Selecione</option>';
-
-        foreach ($arr_perfis as $perfil) {
+    static function montar_select_pp(&$select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, &$objAmostra, $disabled, $onchange)
+        {
+            /* PERFIL DO PACIENTE */
             $selected = '';
-            if ($perfil->getIdPerfilPaciente() == $objAmostra->getIdPerfilPaciente_fk()) {
-                $selected = 'selected';
+            $objPerfilPacienteAux = new PerfilPaciente();
+            $arr_perfis = $objPerfilPacienteRN->listar($objPerfilPacienteAux);
+            $select_perfis = ' <select id="idPP" ' . $disabled . $onchange .
+                'class="form-control" name="sel_PP" onblur="">
+                            <option value="">Selecione</option>';
+
+            foreach ($arr_perfis as $perfil) {
+                $selected = '';
+                if ($perfil->getIdPerfilPaciente() == $objAmostra->getIdPerfilPaciente_fk()) {
+                    $selected = 'selected';
+                }
+
+                $select_perfis .= '<option ' . $selected . ' value="' . Pagina::formatar_html($perfil->getIdPerfilPaciente())
+                    . '">' . Pagina::formatar_html($perfil->getPerfil()) . '</option>';
             }
-
-            $select_perfis .= '<option ' . $selected . ' value="' . Pagina::formatar_html($perfil->getIdPerfilPaciente())
-                . '">' . Pagina::formatar_html($perfil->getPerfil()) . '</option>';
         }
-    }
 
-    function montar_select_cadastroPendente(&$select_cadastroPendente, $objPacienteRN, &$objPaciente, $disabled, $onchange)
+    static function montar_select_cadastroPendente(&$select_cadastroPendente, $objPacienteRN, &$objPaciente, $disabled, $onchange)
     {
         /* CADASTRO PENDENTE DO PACIENTE */
 
@@ -378,7 +378,7 @@ class Interf
      * SELECTS MÚLTIPLOS
      */
 
-    function montar_select_perfisMultiplos(&$select_perfis, &$perfisSelecionados, &$objPerfilPaciente, $objPerfilPacienteRN, $disabled, $onchange)
+    static function montar_select_perfisMultiplos(&$select_perfis, &$perfisSelecionados, &$objPerfilPaciente, $objPerfilPacienteRN, $disabled, $onchange)
     {
         /* SELECIONAR VÁRIOS PERFIS DE USUÁRIO */
 
@@ -438,4 +438,32 @@ class Interf
         $select_capelas_ocupadas .= '</select>';
 
     }
+
+
+
+    static function montar_select_situacao_capela(&$select_situacao,$objCapela,$disabled){
+        $select_situacao = '<select  class="form-control selectpicker" '
+            . 'id="idSituacaoCapela" data-live-search="true"  '.$disabled
+            . 'name="sel_situacaoCapela">'
+            . '<option data-tokens="">Selecione a situação da capela </option>';
+
+        foreach (CapelaRN::listarValoresTipoEstado() as $situacaoCapela){
+
+            $selected = ' ';
+            if($objCapela->getSituacaoCapela() ==$situacaoCapela->getStrTipo() ){
+                $selected = ' selected ';
+            }
+
+            $select_situacao .=  '<option ' . $selected .
+                '  value="' . Pagina::formatar_html($situacaoCapela->getStrTipo())
+                . '" data-tokens="' .Pagina::formatar_html($situacaoCapela->getStrDescricao()). '">'
+                . Pagina::formatar_html($situacaoCapela->getStrDescricao()) .'</option>';
+
+        }
+
+        $select_situacao .= '</select>';
+
+    }
+
+
 }

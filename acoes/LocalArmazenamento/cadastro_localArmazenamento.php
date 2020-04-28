@@ -4,15 +4,19 @@
  */
 
 session_start();
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/LocalArmazenamento/LocalArmazenamento.php';
-require_once '../classes/LocalArmazenamento/LocalArmazenamentoRN.php';
-require_once '../classes/TipoLocalArmazenamento/TipoLocalArmazenamento.php';
-require_once '../classes/TipoLocalArmazenamento/TipoLocalArmazenamentoRN.php';
-require_once '../classes/TempoPermanencia/TempoPermanencia.php';
-require_once '../classes/TempoPermanencia/TempoPermanenciaRN.php';
+
+try{
+require_once __DIR__.'/../../classes/Sessao/Sessao.php';
+require_once __DIR__.'/../../classes/Pagina/Pagina.php';
+require_once __DIR__.'/../../classes/Excecao/Excecao.php';
+
+
+require_once __DIR__.'/../../classes/LocalArmazenamento/LocalArmazenamento.php';
+require_once __DIR__.'/../../classes/LocalArmazenamento/LocalArmazenamentoRN.php';
+require_once __DIR__.'/../../classes/TipoLocalArmazenamento/TipoLocalArmazenamento.php';
+require_once __DIR__.'/../../classes/TipoLocalArmazenamento/TipoLocalArmazenamentoRN.php';
+require_once __DIR__.'/../../classes/TempoPermanencia/TempoPermanencia.php';
+require_once __DIR__.'/../../classes/TempoPermanencia/TempoPermanenciaRN.php';
 
 $objPagina = new Pagina();
 $objLocalArmazenamento = new LocalArmazenamento();
@@ -21,7 +25,8 @@ $sucesso = '';
 
 $select_temposPermanencias = '';
 $select_tiposLocais = '';
-try{
+
+    Sessao::getInstance()->validar();
     
     /* TIPO LOCAL */
     $objTipoLocalArm = new TipoLocalArmazenamento();

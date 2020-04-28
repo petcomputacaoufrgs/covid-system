@@ -5,7 +5,7 @@ class Lote{
     private $idLote;
     private $qntAmostrasDesejadas;
     private $qntAmostrasAdquiridas;
-    private $statusLote;
+    private $situacaoLote;
     private $objsTubo;
 
 
@@ -16,18 +16,19 @@ class Lote{
     /**
      * @return mixed
      */
-    public function getStatusLote()
+    public function getSituacaoLote()
     {
-        return $this->statusLote;
+        return $this->situacaoLote;
     }
 
     /**
-     * @param mixed $statusLote
+     * @param mixed $situacaoLote
      */
-    public function setStatusLote($statusLote)
+    public function setSituacaoLote($situacaoLote)
     {
-        $this->statusLote = $statusLote;
+        $this->situacaoLote = $situacaoLote;
     }
+
 
 
 
