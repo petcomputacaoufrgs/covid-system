@@ -4,19 +4,19 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../ResultadoPCR/ResultadoPCR.php';
 require_once __DIR__ . '/../ResultadoPCR/ResultadoPCR_RN.php';
 
-use \PhpOffice\PhpSpreadsheet\Reader\Xls;
+use \PhpOffice\PhpSpreadsheet\Reader;
 
 
 
 
 class Planilha {
     
-    public function leituraXLS($filename) {
-
-        $reader = new Xls();
+    public function leituraXLS($fileName) {
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load("../../planilhas/" . $fileName);
+        $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify("../../planilhas/" . $fileName);
+        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
         $reader->setReadDataOnly(true);
         $reader->setLoadSheetsOnly(["Results"]);
-        $spreadsheet = $reader->load("../../planilhas/" . $filename);
     
         $resultadoRN = new ResultadoPCR_RN();
     

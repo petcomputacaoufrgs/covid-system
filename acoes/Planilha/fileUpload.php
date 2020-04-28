@@ -10,7 +10,7 @@ function uploadFile() {
 
     $errors = []; // Store errors here
 
-    $fileExtensionsAllowed = ['xls']; // These will be the only file extensions allowed
+    $fileExtensionsAllowed = ['xls' , 'xlsx']; // These will be the only file extensions allowed
 
     $fileName = $_FILES['the_file']['name'];
     $fileSize = $_FILES['the_file']['size'];
@@ -37,7 +37,7 @@ function uploadFile() {
 
             if ($didUpload) {
                 //echo "<h3>O arquivo " . basename($fileName) . " foi enviado com sucesso </h3>";
-                return $newFileName;
+                return $newFileName . '.' . $fileExtension;
             } else {
                 echo "Houve um erro, por favor tente novamente ou contate o administrador.";
                 return -1;
@@ -55,5 +55,5 @@ $result = uploadFile();
 if(!is_int($result)) {
     //Le o arquivo .xls usando a função leituraXLS();
     $leitor = new Planilha();
-    $leitor->leituraXLS($result . '.xls');
+    $leitor->leituraXLS($result);
 }

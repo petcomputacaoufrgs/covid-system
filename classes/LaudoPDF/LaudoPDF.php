@@ -133,5 +133,6 @@ $pdf->Cell(26, 8, 'Observações: ' , 0, 0);
 $pdf->SetFont('FreeSerif', '', 12);
 $pdf->MultiCell(0, 8, $observacoes, 0, "L");
 
+
 $pdf->Output('I', $nome . date("d_m_Y", time()) . '.pdf', true);
 ?>
