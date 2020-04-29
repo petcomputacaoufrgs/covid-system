@@ -214,6 +214,7 @@ $objPagina = new Pagina();
         box-shadow: 0px 0px 5px #a8a8a8;
     }
 
+
     #select-lista{
         display: flex;
         justify-content: space-around;
@@ -287,8 +288,8 @@ $objPagina = new Pagina();
 
     #cancel-confirm{
         margin-top: 10px;
-        width: 100%;
-        height: auto;
+        width: 50%;
+        height: 10%;
         display: flex;
     }
 
@@ -336,7 +337,7 @@ $objPagina = new Pagina();
                 <h1 id="title1">SELECIONAR UM GRUPO DE EXTRAÇÃO<h1>
                 <div id="select-lista">
                     <div id="select-busca">
-                        <select id="select-grupo" class="form-control" name="sel-grupo">
+                        <select onchange="showDiv('tabela-amostras')" id="select-grupo" class="form-control" name="sel-grupo">
                             <option value="">Selecione um grupo</option>
                             <option value="Grupo 1">Grupo 1</option>
                             <option value="Grupo 2">Grupo 2</option>
@@ -346,7 +347,7 @@ $objPagina = new Pagina();
                         <div id="busca-amostra">
                             <input type="checkbox" id="select-busca-amostra" name="select-busca">
                             <input type="text" id="buscar-amostra" name="obs" placeholder="Buscar por ID de amostra">
-                            <button type="submit" name="buscar-amostra" class="btn" id="btn-buscar">BUSCAR</button>
+                            <button onclick="showDiv('tabela-amostras')" type="submit" name="buscar-amostra" class="btn" id="btn-buscar">BUSCAR</button>
                         </div>
                         <button onclick="showDiv('kit-lote')" type="submit" name="confirmar-grupo" class="btn" id="btn-grupo">CONFIRMAR GRUPO DE EXTRAÇÃO</button>
                     </div>
@@ -355,45 +356,42 @@ $objPagina = new Pagina();
                         <table border="1" id="table-amostras">
                             <thead>
                                 <tr class="listagem-titulo">
+                                    <th scope="col">ID</th>
                                     <th scope="col">AMOSTRA</th>
+                                    <th scope="col">PERFIL</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="listagem">
+                                    <th scope="col">1</th>
                                     <th scope="col">AMOSTRA 1</th> 
+                                    <th scope="col">PACIENTE SUS</th>
                                 </tr>
                                 <tr class="listagem">
+                                    <th scope="col">2</th>
                                     <th scope="col">AMOSTRA 2</th> 
+                                    <th scope="col">PACIENTE SUS</th>
                                 </tr>
                                 <tr class="listagem">
+                                    <th scope="col">3</th>
                                     <th scope="col">AMOSTRA 3</th> 
+                                    <th scope="col">EQUIPE VOLUNTARIOS</th> 
                                 </tr>
                                 <tr class="listagem">
+                                    <th scope="col">4</th>
                                     <th scope="col">AMOSTRA 4</th> 
+                                    <th scope="col">PACIENTE SUS</th>
                                 </tr>
                                 <tr class="listagem">
+                                    <th scope="col">5</th>
                                     <th scope="col">AMOSTRA 5</th> 
-                                </tr>
-                                <tr class="listagem">
-                                    <th scope="col">AMOSTRA 6</th> 
-                                </tr>
-                                <tr class="listagem">
-                                    <th scope="col">AMOSTRA 7</th> 
-                                </tr>
-                                <tr class="listagem">
-                                    <th scope="col">AMOSTRA 8</th> 
-                                </tr>
-                                <tr class="listagem">
-                                    <th scope="col">AMOSTRA 9</th> 
+                                    <th scope="col">PACIENTE SUS</th> 
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
-                
-                
+                </div>   
             </div>
-
 
             <div id="kit-lote">
                 <h1 id="title1">SELECIONAR UM KIT E UM LOTE PARA EXTRAÇÃO<h1>
@@ -466,20 +464,24 @@ $objPagina = new Pagina();
                 document.getElementById(div).style.display = "";
             }
 
-            function eventListenerForSearch(object, searchObj, selectObj){
+            function eventListenerForSearch(object, searchObj, selectObj, btnSearch){
                 const checkbox = document.querySelector('#'+object);
                 const search = document.querySelector('#'+searchObj);
                 const select = document.querySelector('#'+selectObj);
+                const btn = document.querySelector('#'+btnSearch);
 
                 search.disabled = true;
+                btn.disabled = true;
 
                 checkbox.addEventListener("change", (el) => {
                     if(checkbox.checked){
                         search.disabled = false;
                         select.disabled = true;
+                        btn.disabled = false;
                     }else{
                         search.disabled = true;
                         select.disabled = false;
+                        btn.disabled = true;
                     }
                 });
                 checkbox.dispatchEvent(new Event("change"));
@@ -511,10 +513,10 @@ $objPagina = new Pagina();
 
 
             document.getElementById('principal-grupos').style.display = 'none';
-            //document.getElementById('tabela-amostras').style.display = 'none';
+            document.getElementById('tabela-amostras').style.display = 'none';
             document.getElementById('kit-lote').style.display = 'none';
             document.getElementById('secundario-amostras').style.display = 'none';
-            eventListenerForSearch('select-busca-amostra', 'buscar-amostra', 'select-grupo');
+            eventListenerForSearch('select-busca-amostra', 'buscar-amostra', 'select-grupo', 'btn-buscar');
 
             createEventListener("amostra1");
             createEventListener("amostra2");
