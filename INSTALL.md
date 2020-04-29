@@ -18,7 +18,7 @@ O Covid-System é desenvolvido utilizando tecnologias LAMP:
 
 No terminal, execute 
 
-    sudo apt install git geany apache2 libapache2-mod-php mariadb-server php-xml php-mysql composer phpunit
+    sudo apt install git geany apache2 libapache2-mod-php mariadb-client mariadb-server libterm-readkey-perl libdbd-mysql-perl php-xml php-mysql composer phpunit
 
 O comando acima instala: servidor web (com módulo para rodar PHP), banco de dados MariaDB, ferramenta GIT e demais bibliotecas para teste e desenvolvimento, incluindo a IDE Geany.
 
