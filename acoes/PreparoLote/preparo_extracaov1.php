@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
 require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
 require_once __DIR__ . '/../../classes/Capela/Capela.php';
 require_once __DIR__ . '/../../classes/Capela/CapelaRN.php';
-require_once '../classes/Pagina/Interf.php';
+require_once '../classes/Pagina/InterfacePagina.php';
 
 require_once __DIR__ . '/../../classes/Amostra/Amostra.php';
 require_once __DIR__ . '/../../classes/Amostra/AmostraRN.php';
@@ -67,7 +67,9 @@ try {
     $perfisSelecionados = '';
     $capela_liberada = 'n';
     $liberar_prioridade = 'n';
+    $liberar_popUp = 'n';
     $select_perfis = '';
+    $qntSelecionada = 0;
     $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
     $objPerfilPaciente = new PerfilPaciente();
@@ -95,47 +97,94 @@ try {
         $alert .= Alert::alert_primary("Você alocou uma capela");
 
         Interf::getInstance()->montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, '', '');
-
+        $msgPopUp ='';
         if (isset($_POST['enviar_perfil'])) { //se enviou o perfil e a prioridade
-            if (isset($_POST['sel_perfis']) && $_POST['sel_perfis'] != null) {
 
-                //$perfisSelecionados = '';
-                $idQnt = '&idQnt='.count($_POST['sel_perfis']);
-                $paciente_sus = 'n';
-                for ($i = 0; $i < count($_POST['sel_perfis']); $i++) {
-                    $perfisSelecionados .= $_POST['sel_perfis'][$i] . ';';
-                    $url.= '&idP'.($i+1).'='.$_POST['sel_perfis'][$i];
-                    $objPerfilPacienteAux = new PerfilPaciente();
-                    $objPerfilPacienteAux->setIdPerfilPaciente($_POST['sel_perfis'][$i]);
-                    $perfil = $objPerfilPacienteRN->consultar($objPerfilPacienteAux);
-                    $perfis_nome[] = $perfil->getPerfil();
-                    if($perfil->getIndex_perfil() == 'PACIENTES SUS'){
-                        $paciente_sus = 's';
+            if ((isset($_POST['sel_perfis']) && $_POST['sel_perfis'] != null
+                && isset($_POST['numQntAmostras']) && $_POST['numQntAmostras'] != null)
+                && $_POST['numQntAmostras'] != 0 && fmod($_POST['numQntAmostras'], 8) == 0) {
+
+                    //primeiro vê o perfil
+                    if (isset($_POST['sel_perfis']) && $_POST['sel_perfis'] != null){
+                        for ($i = 0; $i < count($_POST['sel_perfis']); $i++) {
+                            $perfisSelecionados .= $_POST['sel_perfis'][$i] . ';';
+                            $objPerfilPacienteAux = new PerfilPaciente();
+                            $objPerfilPacienteAux->setIdPerfilPaciente($_POST['sel_perfis'][$i]);
+                            $perfil = $objPerfilPacienteRN->consultar($objPerfilPacienteAux);
+                            $perfis_nome[] = $perfil->getPerfil();
+                            if ($perfil->getIndex_perfil() == 'PACIENTES SUS') {
+                                $paciente_sus = 's';
+                                $indice_sus = $perfil->getIdPerfilPaciente();
+                            }
+
+                        }
+                        if(count($perfis_nome) > 1 && $paciente_sus = 's'){
+                            $alert .= Alert::alert_danger("Você selecionou o perfil PACIENTES SUS e este perfil deve ser tratado sozinho.");
+                        }else{
+                            $idQntAmostra = "&idQntAmostra=".$_POST['numQntAmostras'];
+                            $perfisSelecionados = '';
+                            $idQnt = '&idQnt=' . count($_POST['sel_perfis']);
+                            $paciente_sus = 'n';
+                            for ($i = 0; $i < count($_POST['sel_perfis']); $i++) {
+                                $perfisSelecionados .= $_POST['sel_perfis'][$i] . ';';
+                                $url .= '&idP' . ($i + 1) . '=' . $_POST['sel_perfis'][$i];
+                                $objPerfilPacienteAux = new PerfilPaciente();
+                                $objPerfilPacienteAux->setIdPerfilPaciente($_POST['sel_perfis'][$i]);
+                                $perfil = $objPerfilPacienteRN->consultar($objPerfilPacienteAux);
+                                $perfis_nome[] = $perfil->getPerfil();
+                                if ($perfil->getIndex_perfil() == 'PACIENTES SUS') {
+                                    $paciente_sus = 's';
+                                    $indice_sus = $perfil->getIdPerfilPaciente();
+                                }
+                            }
+                            Interf::getInstance()->montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, "  ", '');
+                            $liberar_popUp = 's';
+                        }
+                    }
+
+            }else{
+                //não informou nenhum dos dois
+                if($_POST['numQntAmostras'] == 0 && $_POST['sel_perfis'] == null ){
+                    $alert.= Alert::alert_danger("Informe o perfil da amostra e a quantidade de amostras");
+                }else {
+                    //não inseriu a quantidade de amostras
+                    if (isset($_POST['sel_perfis'])  &&
+                        ($_POST['numQntAmostras'] == 0 || $_POST['numQntAmostras'] == null)
+                        || fmod($_POST['numQntAmostras'], 8) != 0) {
+                        if(fmod($_POST['numQntAmostras'], 8) != 0){
+                            $alert .= Alert::alert_danger("Informe um múltiplo de 8 na quantidade das amostras");
+                        }
+                        if($_POST['numQntAmostras'] == 0 || $_POST['numQntAmostras'] == null){
+                            $alert .= Alert::alert_danger("Informe a quantidade de amostras");
+                        }
+                        $qntSelecionada = $_POST['numQntAmostras'];
+                        $perfisSelecionados = '';
+                        for ($i = 0; $i < count($_POST['sel_perfis']); $i++) {
+                            $perfisSelecionados .= $_POST['sel_perfis'][$i] . ';';
+                        }
+
+                        Interf::getInstance()->montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, "  ", '');
+
+                    }
+
+                    //não inseriu o perfil das amostras
+                    if ($_POST['sel_perfis'] == null &&
+                        isset($_POST['numQntAmostras']) && $_POST['numQntAmostras'] != null) {
+                        $qntSelecionada = $_POST['numQntAmostras'];
+                        $alert .= Alert::alert_danger("Informe o perfil da amostra");
+                    }
+
+                    //inseriu uma quantidade de amostras que não é múltipla de 8
+                    if ($_POST['sel_perfis'] == null && fmod($_POST['numQntAmostras'], 8) != 0) { //não é múltiplo
+                        $alert .= Alert::alert_danger("Informe um múltiplo de 8 na quantidade das amostras");
                     }
                 }
 
-                if($paciente_sus == 's'){
-                    $perfis_nome = array();
-                    $perfis_nome[] = 'PACIENTES SUS';
-                    $perfisSelecionados = 'Pacientes SUS;';
-                    $objPerfilPaciente->setIndex_perfil('PACIENTES SUS');
-                    $perfil = $objPerfilPacienteRN->listar($objPerfilPacienteAux);
-                    $perfisSelecionados = $perfil[0]->getPerfil().";";
-                    $objPerfilPaciente = new PerfilPaciente();
-                    $alert .= Alert::alert_danger('Você selecionou o perfil Paciente SUS, nenhum outro perfil pode ser selecionado junto');
-                    $idQnt = 1;
-                }
-                Interf::getInstance()->montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, '', '');
-                print_r($perfis_nome);
-                die();
-                //$liberar_prioridade = 's';
-                //header('Location: '. Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao&idCapela='. $_GET['idCapela'].$idQnt.$url));
-                //die();
+
             }
         }
 
         if(isset($_GET['idQnt'])){
-            Interf::getInstance()->montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, " disabled ", '');
             $liberar_prioridade = 's';
             for ($i=1; $i<=$_GET['idQnt']; $i++){
                 $perfisSelecionados .= $_GET['idP'.$i.'']. ';';
@@ -143,12 +192,11 @@ try {
                 $objPerfilPacienteAux->setIdPerfilPaciente($_GET['idP'.$i.'']);
                 $arr_perfis_selecionados[] = $objPerfilPacienteRN->consultar($objPerfilPacienteAux);
             }
-            //echo $perfisSelecionados;
             Interf::getInstance()->montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, '', '');
         }
 
 
-        print_r($arr_perfis_selecionados);
+        /*print_r($arr_perfis_selecionados);
 
         if(isset($_POST['sel_prioridade'])){
             $selected_data = '';$selected_perfil =''; $selected_reteste = '';
@@ -295,18 +343,18 @@ try {
 
                 Interf::getInstance()->montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, '', 'this.form.submit()');
 
-                if (isset($_POST['unlock_capela'])) {
-                    $objCapela->setIdCapela($_GET['idCapela']);
-                    $objCapela = $objCapelaRN->consultar($objCapela);
-                    $objCapela->setStatusCapela('LIBERADA');
-                    print_r($objCapela);
-                    $objCapelaRN->alterar($objCapela);
-                    $alert = Alert::alert_success("A capela foi liberada");
-                }
             }
-        }
+        }*/
     }
 
+    if (isset($_POST['unlock_capela'])) {
+        $objCapela->setIdCapela($_GET['idCapela']);
+        $objCapela = $objCapelaRN->consultar($objCapela);
+        $objCapela->setStatusCapela('LIBERADA');
+        //print_r($objCapela);
+        $objCapelaRN->alterar($objCapela);
+        $alert = Alert::alert_success("A capela foi liberada");
+    }
 
 } catch (Throwable $ex) {
     die($ex);
@@ -315,15 +363,10 @@ try {
 
 Pagina::abrir_head("LOCK capela");
 Pagina::getInstance()->adicionar_css("precadastros");
-if(count($perfis_nome) > 0) {
+if($liberar_popUp == 's') {
     Pagina::getInstance()->adicionar_javascript("popUp");
 }
 Pagina::getInstance()->fechar_head();
-?>
-
-<?php
-
-
 Pagina::getInstance()->montar_menu_topo();
 echo $alert;
 if ($capela_liberada == 'n') {
@@ -344,50 +387,63 @@ if ($capela_liberada == 's') {
         <div class="conteudo_grande">
             <form method="POST" name="inicio">
             <div class="form-row" >';
-                    if(isset($_GET['idQnt'])){
-                        $col_md = 'col-md-12';
-                        $button_selecionar = 'n';
-                    }else{
-                        $col_md = 'col-md-10';
-                        $button_selecionar = 's';
-                    }
-                   echo '<div class="'.$col_md.'">
+    if (isset($_GET['idQnt'])) {
+        $col_md = 'col-md-10';
+        $button_selecionar = 'n';
+    } else {
+        $col_md = 'col-md-8';
+        $button_selecionar = 's';
+    }
+    echo '<div class="' . $col_md . '">
                         <label for="label_perfisAmostras">Selecione um perfil de amostra</label>'
-                    . $select_perfis .
-                    '</div>';
-                    if($button_selecionar == 's'){
-                     echo '<div class="col-md-2" >
+        . $select_perfis .
+        '</div>';
+    if (isset($_GET['idQntAmostra'])) {
+        $qntSelecionada = $_GET['idQntAmostra'];
+    }
+
+    echo '<div class="col-md-2">
+                        <label for="label_perfisAmostras">Amostras</label>
+                        <input type="number" class="form-control" id="idQntAmostras" placeholder="quantidade" 
+                            name="numQntAmostras"  value="' . $qntSelecionada . '">
+                        </div>';
+
+
+    if ($button_selecionar == 's') {
+        echo '<div class="col-md-2" >
                         <button class="btn btn-primary" style="margin-left:0px;margin-top: 31px;width: 100%;" type="submit" data-target="#exampleModalCenter2" name="enviar_perfil">SELECIONAR</button>
                       </div>';
-                      }
-                echo '</div>
+    }
+    echo '</div>
                 </form>';
     echo '<!-- Modal -->
     <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Tem certeza que dejesa deseja selecionar os perfis abaixo? </h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">
+                    Tem certeza que dejesa deseja selecionar os perfis abaixo? </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">';
-                    foreach ($perfis_nome as $nome){
-                        echo "#".$nome."<br>";
-                    }
-                echo'</div>
+    foreach ($perfis_nome as $nome) {
+        echo "#" . $nome . "<br>";
+    }
+    echo $msgPopUp . "<br>";
+    echo '</div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"  >Close</button>
                     <button type="button"  class="btn btn-primary">
-                    <a href="'. Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao&idCapela='. $_GET['idCapela'].$idQnt.$url).'">Tenho certeza</a></button>
+                    <a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao&idCapela=' . $_GET['idCapela'] . $idQnt . $url . $idQntAmostra) . '">Tenho certeza</a></button>
                 </div>
             </div>
         </div>
     </div>';
 
 
-    if($liberar_prioridade == 's') {
+    /*if ($liberar_prioridade == 's') {
         echo '<form method="POST">
                 <div class="form-row" >
                      <div class="col-md-12">
@@ -414,7 +470,7 @@ if ($capela_liberada == 's') {
         </div>';
 
         echo $html;
-    }
+    }*/
 
     echo
     '<div class="conteudo_grande">
@@ -426,7 +482,9 @@ if ($capela_liberada == 's') {
                 </div>
             </form>
         </div>';
-    echo
+
+}
+ /*   echo
     '<div class="conteudo_grande">
              <form method="POST">
                 <div class="form-row" >
@@ -439,9 +497,30 @@ if ($capela_liberada == 's') {
 
 
 
-
-
-}
+echo '<div class="col-md-6" >
+        <button type="button" class="btn btn-primary" data-toggle="modal" style="width: 100%;margin-left:0%;" data-target="#cancel" > Cancelar</button>
+    </div>';
+echo' 
+    <div class="modal fade" id="cancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Tem certeza que dejesa cancelar o cadastro? </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                Ao cancelar, nenhum dado será cadastrado no banco.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"  >Close</button>
+                    <button type="button"  class="btn btn-primary"><a href="'. Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra').'">Tenho certeza</a></button>
+                </div>
+            </div>
+        </div>
+    </div>';
+ */
 
 
 Pagina::getInstance()->mostrar_excecoes();

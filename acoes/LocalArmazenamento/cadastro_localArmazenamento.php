@@ -1,181 +1,200 @@
 <?php
-/*
- *  Author: Carine Bertagnolli Bathaglini
- */
 
 session_start();
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/LocalArmazenamento/LocalArmazenamento.php';
-require_once '../classes/LocalArmazenamento/LocalArmazenamentoRN.php';
-require_once '../classes/TipoLocalArmazenamento/TipoLocalArmazenamento.php';
-require_once '../classes/TipoLocalArmazenamento/TipoLocalArmazenamentoRN.php';
-require_once '../classes/TempoPermanencia/TempoPermanencia.php';
-require_once '../classes/TempoPermanencia/TempoPermanenciaRN.php';
 
-$objPagina = new Pagina();
-$objLocalArmazenamento = new LocalArmazenamento();
-$objLocalArmazenamentoRN = new LocalArmazenamentoRN();
-$sucesso = '';
+try {
+    require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
+    require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
+    require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
+    require_once __DIR__ . '/../../classes/Pagina/InterfacePagina.php';
 
-$select_temposPermanencias = '';
-$select_tiposLocais = '';
-try{
-    
-    /* TIPO LOCAL */
-    $objTipoLocalArm = new TipoLocalArmazenamento();
-    $objTipoLocalArmRN = new TipoLocalArmazenamentoRN();
-    
-    /* TEMPO PERMANÊNCIA */
-    $objTempoPermanencia = new TempoPermanencia();
-    $objTempoPermanenciaRN = new TempoPermanenciaRN();
-    
+    require_once __DIR__ . '/../../classes/LocalArmazenamento/LocalArmazenamento.php';
+    require_once __DIR__ . '/../../classes/LocalArmazenamento/LocalArmazenamentoRN.php';
+
+    require_once __DIR__ . '/../../classes/TipoLocalArmazenamento/TipoLocalArmazenamento.php';
+    require_once __DIR__ . '/../../classes/TipoLocalArmazenamento/TipoLocalArmazenamentoRN.php';
+
+    require_once __DIR__ . '/../../classes/Porta/Porta.php';
+    require_once __DIR__ . '/../../classes/Porta/PortaRN.php';
+
+    require_once __DIR__ . '/../../classes/Prateleira/Prateleira.php';
+    require_once __DIR__ . '/../../classes/Prateleira/PrateleiraRN.php';
+
+    require_once __DIR__ . '/../../classes/Coluna/Coluna.php';
+    require_once __DIR__ . '/../../classes/Coluna/ColunaRN.php';
+
+    require_once __DIR__ . '/../../classes/Caixa/Caixa.php';
+    require_once __DIR__ . '/../../classes/Caixa/CaixaRN.php';
+
+    require_once __DIR__ . '/../../classes/Posicao/Posicao.php';
+    require_once __DIR__ . '/../../classes/Posicao/PosicaoRN.php';
+
+
+    Sessao::getInstance()->validar();
+    $numero_portas = 0;
+
+    /*
+     *  LOCAL DE ARMAZENAMENTO
+     */
+    $objLocalArmazenamento = new LocalArmazenamento();
+    $objLocalArmazenamentoRN = new LocalArmazenamentoRN();
+
+    /*
+     *  TIPO LOCAL DE ARMAZENAMENTO
+     */
+    $objTipoLA = new TipoLocalArmazenamento();
+    $objTipoLRN = new TipoLocalArmazenamentoRN();
+
+    /*
+     *  PORTA
+     */
+    $objPorta = new Porta();
+    $objPortaRN = new PortaRN();
+
+
+
+    /*
+     *  PRATELEIRA
+     */
+    $objPrateleira = new Prateleira();
+    $objPrateleiraRN = new PrateleiraRN();
+
+    /*
+     *  COLUNA
+     */
+    $objColuna = new Coluna();
+    $objColunaRN = new ColunaRN();
+
+    /*
+     *  CAIXA
+     */
+    $objCaixa = new Caixa();
+    $objCaixaRN = new CaixaRN();
+
+    /*
+      *  POSIÇÃO
+      */
+    $objPosicao = new Posicao();
+    $objPosicaoRN = new PosicaoRN();
+
+    $alert = '';
+
+    $select_tipoLocal = '';
+
+    InterfacePagina::montar_select_tipoLocalArmazenamento($select_tipoLocal,$objTipoLRN,$objTipoLA,$objLocalArmazenamento, $disabled, $onchange);
+
     switch($_GET['action']){
         case 'cadastrar_localArmazenamento':
-            montar_select_tipoLA($select_tiposLocais, $objTipoLocalArm, $objTipoLocalArmRN, $objLocalArmazenamento);
-            montar_select_tempoPermanenciaLA($select_temposPermanencias, $objTempoPermanencia, $objTempoPermanenciaRN, $objLocalArmazenamento);
-            
+
             if(isset($_POST['salvar_localArmazenamento'])){
-                $objLocalArmazenamento->setMatricula( $_POST['numMatricula']);
+
+                if(isset($_POST['sel_tipoLocalArmazenamento'])){
+                    $objLocalArmazenamento->setIdTipoLocalArmazenamento_fk($_POST['sel_tipoLocalArmazenamento']);
+                }
+
+                $objLocalArmazenamento->setNome($_POST['nomeLocal']);
+                $objLocalArmazenamento->setQntPortas($_POST['numPortas']);
+                $objLocalArmazenamento->setQntPrateleiras($_POST['numPrateleiras']);
+                $objLocalArmazenamento->setQntColunas($_POST['numColunas']);
+                $objLocalArmazenamento->setQntCaixas($_POST['numCaixas']);
+                $objLocalArmazenamento->setQntLinhasCaixa($_POST['numLinhasCaixa']);
+                $objLocalArmazenamento->setQntColunasCaixa($_POST['numColunasCaixa']);
+
                 $objLocalArmazenamentoRN->cadastrar($objLocalArmazenamento);
-                $sucesso= '<div id="sucesso_bd" class="sucesso">Cadastrado com sucesso</div>';
-            }else{
-                $objLocalArmazenamento->setIdLocalArmazenamento('');
-                $objLocalArmazenamento->setDataHoraFim('');
-                $objLocalArmazenamento->setDataHoraInicio('');
-                $objLocalArmazenamento->setIdTempoPermanencia_fk('');
-                $objLocalArmazenamento->setIdTipoLocal_fk('');
+                InterfacePagina::montar_select_tipoLocalArmazenamento($select_tipoLocal,$objTipoLRN,$objTipoLA,$objLocalArmazenamento, $disabled, $onchange);
+                $alert .=Alert::alert_success("Os dados foram CADASTRADOS com sucesso");
+
             }
-        break;
-        
-        case 'editar_localArmazenamento':
-            if(!isset($_POST['salvar_localArmazenamento'])){ //enquanto não enviou o formulário com as alterações
-                $objLocalArmazenamento->setIdLocalArmazenamento($_GET['idLocalArmazenamento']);
-                $objLocalArmazenamento = $objLocalArmazenamentoRN->consultar($objLocalArmazenamento);
-            }
-            
-             if(isset($_POST['salvar_localArmazenamento'])){ //se enviou o formulário com as alterações
-                $objLocalArmazenamento->setIdLocalArmazenamento($_GET['idLocalArmazenamento']);
-                $objLocalArmazenamento->setMatricula($_POST['numMatricula']);
-                $objLocalArmazenamentoRN->alterar($objLocalArmazenamento);
-                $sucesso= '<div id="sucesso_id" class="sucesso">Alterado com sucesso</div>';
-            }
-            
-            
+
             break;
-        default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador em cadastro_localArmazenamento.php');  
+
+        case 'editar_localArmazenamento':
+            break;
+        default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador em cadastro_localArmazenamento.php');
     }
-   
-} catch (Exception $ex) {
-    $objPagina->processar_excecao($ex);
+
+
+
+
+
+
+} catch (Throwable $ex) {
+    DIE($ex);
+    Pagina::getInstance()->mostrar_excecoes($ex);
 }
 
-function montar_select_tempoPermanenciaLA(&$select_temposPermanencias, $objTempoPermanencia, $objTempoPermanenciaRN, &$objLocalArmazenamento) {
-    /* TEMPO DE PERMANÊNCIA  */
-    $selected = '';
-    $arr_temposPermanencias= $objTempoPermanenciaRN->listar($objTempoPermanencia);
-    $select_temposPermanencias = '<select class="form-control selectpicker" id="select-country" data-live-search="true" name="sel_tempoPermanencia">'
-            . '<option data-tokens=""></option>';
 
-    foreach ($arr_temposPermanencias as $tempoPermanencia) {
-        if ($tempoPermanencia->getIdTempoPermanencia() == $objLocalArmazenamento->getIdTempoPermanencia_fk()) {
-            $selected = 'selected';
-        }
-        $select_temposPermanencias .= '<option ' . $selected . '  value="' . $tempoPermanencia->getIdTempoPermanencia() 
-                . '" data-tokens="' . $tempoPermanencia->getTempoPermanencia() . '">' 
-                . $tempoPermanencia->getTempoPermanencia(). '</option>';
-    }
-    $select_temposPermanencias .= '</select>';
+Pagina::abrir_head("Montar grupo");
+Pagina::getInstance()->adicionar_css("precadastros");
+if($cadastrar_novo  == 's') {
+    Pagina::getInstance()->adicionar_javascript("popUp");
 }
 
-function montar_select_tipoLA(&$select_tiposLocais, $objTipoLocalArm, $objTipoLocalArmRN, &$objLocalArmazenamento) {
-    /* TIPO LOCAL ARMAZENAMENTO */
-    $selected = '';
-    $arr_tiposLocais = $objTipoLocalArmRN->listar($objTipoLocalArm);
-    $select_tiposLocais = '<select class="form-control selectpicker" id="select-country" data-live-search="true" name="sel_tiposLocais">'
-            . '<option data-tokens=""></option>';
-
-    foreach ($arr_tiposLocais as $tipoLocal) {
-        if ($tipoLocal->getIdTipoLocalArmazenamento() == $objLocalArmazenamento->getIdLocalArmazenamento()) {
-            $selected = 'selected';
-        }
-        $select_tiposLocais .= '<option ' . $selected . '  value="' . $tipoLocal->getIdTipoLocalArmazenamento() 
-                . '" data-tokens="' . $tipoLocal->getNomeLocal() . '">' 
-                . $tipoLocal->getNomeLocal() .' - espaços vazios: '
-                . ($tipoLocal->getQntEspacosTotal()  - $tipoLocal->getQntEspacosAmostra())  . '</option>';
-    }
-    $select_tiposLocais .= '</select>';
-}
-?>
+Pagina::getInstance()->fechar_head();
+Pagina::getInstance()->montar_menu_topo();
 
 
-<?php Pagina::abrir_head("Cadastrar Local Armazenamento"); ?>
- <style>
-    .placeholder_colored::-webkit-input-placeholder  {
-        color: red;
-        text-align: left;
-    } 
-    .sucesso{
-        width: 100%;
-        background-color: green;
-    }
-</style>
-<?php Pagina::fechar_head();?>
-<?php $objPagina->montar_menu_topo();?>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" rel="stylesheet" />
-
-
-<?=$sucesso?>
-<div class="formulario">
-    <form method="POST">
-        <div class="form-row">  
+echo $alert.'<div class="conteudo_grande">
+        <form method="POST">
             
-            <div class="col-md-4 mb-4">
-                <label for="LA_tempoPermanencia" >Qual o tempo de permanência neste local:</label>
-                <?= $select_temposPermanencias ?>
+            <div class="form-row">
+                <div class="col-md-6 mb-3">
+                    <label for="label_numPortas">Informe tipo do local de armazenamento </label>
+                    '.$select_tipoLocal.'                    
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="label_numPortas">Informe o nome do local</label>
+                    <input type="text" class="form-control" id="idNomeLocal" placeholder="nome" 
+                           onblur="" name="nomeLocal" value="'.$objLocalArmazenamento->getNome().'">
+                </div> 
             </div>
-
-            <div class="col-md-4 mb-4">
-                <label for="tipoLocal">Tipo local de armazenamento:</label>
-                <?= $select_tiposLocais ?>
-            </div>
-
-        </div>
-
-        <!--<div class="form-row">  
+            <div class="form-row">
             <div class="col-md-4 mb-3">
-                <label for="label_dataUltimaCalibragem">Digite a data da última calibragem:</label>
-                <input type="date" class="form-control" id="idDataUltimaCalibragem" placeholder="Última calibragem" 
-                       onblur="validaDataUltimaCalibragem()" max="<?php date('Y-m-d'); ?>" name="dtUltimaCalibragem" required value="<?= $objEquipamento->getDataUltimaCalibragem() ?>">
-                <div id ="feedback_dataUltimaCalibragem"></div>
-
+                     <label for="label_numPortas">Informe o número de <strong> portas </strong> </label>
+                     <input type="number" class="form-control" id="idNumPortas" placeholder="quantidade de portas" 
+                                   onblur="" name="numPortas" value="'.$objLocalArmazenamento->getQntPortas().'">
+               </div>
+               <div class="col-md-4 mb-3">
+                    <label for="label_numPortas">Informe a quantidade de <strong> prateleiras  </strong> por porta</label>
+                    <input type="number" class="form-control" id="idNumPrateleiras" placeholder="quantidade de prateleiras"
+                           onblur="" name="numPrateleiras" value="'.$objLocalArmazenamento->getQntPrateleiras().'">
+                </div>
+                <div class="col-md-4 mb-3">
+                     <label for="label_numPortas">Informe o número de <strong> colunas  </strong>por prateleira</label>
+                     <input type="number" class="form-control" id="idNumPortas" placeholder="quantidade de colunas" 
+                                   onblur="" name="numColunas" value="'.$objLocalArmazenamento->getQntColunas().'">
+               </div>
             </div>
+            <div class="form-row">
+               <div class="col-md-4 mb-3">
+                    <label for="label_numPortas">Informe a quantidade de <strong> caixas </strong> por coluna </label>
+                    <input type="number" class="form-control" id="idNumPrateleiras" placeholder="quantidade de caixas"
+                           onblur="" name="numCaixas" value="' . $objLocalArmazenamento->getQntCaixas() . '">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="label_numPortas">Informe o número de <strong> linhas </strong> por caixa </label>
+                    <input type="number" class="form-control" id="idNumPrateleiras" placeholder="quantidade de posições por caixa"
+                           onblur="" name="numLinhasCaixa" value="' . $objLocalArmazenamento->getQntLinhasCaixa() . '">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="label_numPortas">Informe o número de <strong> colunas </strong> por caixa </label>
+                    <input type="number" class="form-control" id="idNumPrateleiras" placeholder="quantidade de posições por caixa"
+                           onblur="" name="numColunasCaixa" value="' . $objLocalArmazenamento->getQntColunasCaixa() . '">
+                </div>
+            </div>
+            
+            
+             <div class="form-row">             
+                <div class="col-md-12 mb-3">
+                    <button class="btn btn-primary" type="submit" name="salvar_localArmazenamento">SALVAR</button>        
+                </div>
+            </div>      
+            
+           
+        </form>
+   </div>';
 
-            <div class="col-md-4 mb-3">
-                <label for="label_dataChegada">Digite a data da chegada:</label>
-                <input type="date" class="form-control" id="idDataChegada" placeholder="Data da chegada" 
-                       onblur="validaDataChegada()" max="<?php date('Y-m-d'); ?>" name="dtChegada" 
-                       required value="<?= $objEquipamento->getDataChegada() ?>">
-                <div id ="feedback_dataChegada"></div>
-
-            </div> -->
-
-        </div> 
-        <button class="btn btn-primary" type="submit" name="salvar_localArmazenamento">Salvar</button>
-    </form>
-</div>
-
-<script src="js/usuario.js"></script>
-<script src="js/fadeOut.js"></script>
-
-<?php 
-$objPagina->mostrar_excecoes(); 
-$objPagina->fechar_corpo(); 
-?>
 
 
+Pagina::getInstance()->mostrar_excecoes();
+Pagina::getInstance()->fechar_corpo();

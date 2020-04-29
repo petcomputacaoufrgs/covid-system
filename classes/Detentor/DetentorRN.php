@@ -14,10 +14,10 @@ class DetentorRN{
         $strDetentor = trim($detentor->getDetentor());
         
         if ($strDetentor == '') {
-            $objExcecao->adicionar_validacao('O detentor não foi informado','idDetentor');
+            $objExcecao->adicionar_validacao('O detentor não foi informado','idDetentor','alert-danger');
         }else{
             if (strlen($strDetentor) > 100) {
-                $objExcecao->adicionar_validacao('O detentor possui mais que 100 caracteres.','idDetentor');
+                $objExcecao->adicionar_validacao('O detentor possui mais que 100 caracteres.','idDetentor','alert-danger');
             }
             
         }
@@ -41,10 +41,24 @@ class DetentorRN{
             }
         
         return true;
-        //return $detentor->setIndex_detentor($strIndexDetentor);
 
     }
-     
+
+    private function validarRemocao(Detentor $detentor,Excecao $objExcecao){
+        $objEquipamento = new Equipamento();
+        $objEquipamentoRN = new EquipamentoRN();
+
+
+        $objEquipamento->setIdDetentor_fk($detentor->getIdDetentor());
+        $arr = $objEquipamentoRN->existe($objEquipamento);
+
+        //print_r($arr);
+        if(count($arr) > 0){
+            $objExcecao->adicionar_validacao('O detentor não pode ser excluído porque tem um equipamento associado a ele','idLocalArmazenamento', 'alert-danger');
+        }
+    }
+
+
 
     public function cadastrar(Detentor $detentor) {
         try {
@@ -106,7 +120,10 @@ class DetentorRN{
          try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+
+             $this->validarRemocao($detentor,$objExcecao);
+
             $objExcecao->lancar_validacoes();
             $objDetentorBD = new DetentorBD();
             $arr =  $objDetentorBD->remover($detentor,$objBanco);

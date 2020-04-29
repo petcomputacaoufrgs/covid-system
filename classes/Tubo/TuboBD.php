@@ -11,19 +11,21 @@ class TuboBD{
             $INSERT = 'INSERT INTO tb_tubo ('
                     . 'idTubo_fk,'
                     . 'idAmostra_fk,'
-                    . 'tuboOriginal'
+                    . 'tuboOriginal,'
+                    . 'tipo'
                     . ')' 
-                    . 'VALUES (?,?,?)';
+                    . 'VALUES (?,?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objTubo->getIdTubo_fk());
             $arrayBind[] = array('i',$objTubo->getIdAmostra_fk());
             $arrayBind[] = array('s',$objTubo->getTuboOriginal());
+            $arrayBind[] = array('s',$objTubo->getTipo());
                        
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objTubo->setIdTubo($objBanco->obterUltimoID());
-           
+            return $objTubo;
         } catch (Exception $ex) {
             throw new Excecao("Erro cadastrando o tubo no BD.",$ex);
         }
@@ -36,7 +38,8 @@ class TuboBD{
             $UPDATE = 'UPDATE tb_tubo SET '
                     . 'idTubo_fk =? ,'
                     . 'idAmostra_fk =?,'
-                    . 'tuboOriginal =?'
+                    . 'tuboOriginal =?,'
+                    . 'tipo =? '
                 . '  where idTubo = ?';
         
                 
@@ -44,6 +47,8 @@ class TuboBD{
             $arrayBind[] = array('i',$objTubo->getIdTubo_fk());
             $arrayBind[] = array('i',$objTubo->getIdAmostra_fk());
             $arrayBind[] = array('s',$objTubo->getTuboOriginal());
+            $arrayBind[] = array('s',$objTubo->getTipo());
+
             $arrayBind[] = array('i',$objTubo->getIdTubo());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
@@ -75,6 +80,12 @@ class TuboBD{
                 $AND = ' and ';
                 $arrayBind[] = array('s', $objTubo->getTuboOriginal());
             }
+
+             if ($objTubo->getTipo() != null) {
+                 $WHERE .= $AND . " tipo = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('s', $objTubo->getTipo());
+             }
             
             if ($WHERE != '') {
                 $WHERE = ' where ' . $WHERE;
@@ -92,6 +103,7 @@ class TuboBD{
                 $objTubo->setIdTubo_fk($reg['idTubo_fk']);
                 $objTubo->setIdAmostra_fk($reg['idAmostra_fk']);
                 $objTubo->setTuboOriginal($reg['tuboOriginal']);
+                $objTubo->setTipo($reg['tipo']);
                
                 $array_tubos[] = $objTubo;
                 
@@ -121,6 +133,7 @@ class TuboBD{
                 $objTuboaux->setIdTubo_fk($arr[0]['idTubo_fk']);
                 $objTuboaux->setIdAmostra_fk($arr[0]['idAmostra_fk']);
                 $objTuboaux->setTuboOriginal($arr[0]['tuboOriginal']);
+                $objTuboaux->setTipo($arr[0]['tipo']);
                 return $objTuboaux;
             }
             return null;

@@ -4,11 +4,11 @@
  */
 
 session_start();
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Etnia/Etnia.php';
-require_once '../classes/Etnia/EtniaRN.php';
+require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
+require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
+ require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
+ require_once __DIR__ . '/../../classes/Etnia/Etnia.php';
+require_once __DIR__ . '/../../classes/Etnia/EtniaRN.php';
 
 $objEtnia = new Etnia();
 $objEtniaRN = new EtniaRN();
@@ -43,7 +43,7 @@ Pagina::getInstance()->montar_menu_topo();
 
     
    echo' <div class="conteudo_listar">'.
-            Pagina::montar_topo_listar('LISTAR ETINIAS', 'cadastrar_etnia', 'NOVA ETNIA').
+            Pagina::montar_topo_listar('LISTAR ETINIAS', null,null,'cadastrar_etnia', 'NOVA ETNIA').
             '<div class="conteudo_tabela">
                 <table class="table table-hover">
                   <thead>

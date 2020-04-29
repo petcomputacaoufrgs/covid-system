@@ -4,25 +4,55 @@
  */
 
 session_start();
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Equipamento/Equipamento.php';
-require_once '../classes/Equipamento/EquipamentoRN.php';
-
-$objEquipamento = new Equipamento();
-$objEquipamentoRN = new EquipamentoRN();
-$html = '';
-
 try{
-    
+
+     require_once __DIR__.'/../../classes/Sessao/Sessao.php';
+    require_once __DIR__.'/../../classes/Pagina/Pagina.php';
+    require_once __DIR__.'/../../classes/Excecao/Excecao.php';
+
+    require_once __DIR__.'/../../classes/Equipamento/Equipamento.php';
+    require_once __DIR__.'/../../classes/Equipamento/EquipamentoRN.php';
+
+    require_once __DIR__.'/../../classes/Marca/Marca.php';
+    require_once __DIR__.'/../../classes/Marca/MarcaRN.php';
+
+    require_once __DIR__.'/../../classes/Modelo/Modelo.php';
+    require_once __DIR__.'/../../classes/Modelo/ModeloRN.php';
+
+    require_once __DIR__.'/../../classes/Detentor/Detentor.php';
+    require_once __DIR__.'/../../classes/Detentor/DetentorRN.php';
+
+    $objEquipamento = new Equipamento();
+    $objEquipamentoRN = new EquipamentoRN();
+    $html = '';
+
+    $objMarca = new Marca();
+    $objMarcaRN = new MarcaRN();
+
+    $objModelo = new Modelo();
+    $objModeloRN = new ModeloRN();
+
+    $objDetentor = new Detentor();
+    $objDetentorRN = new DetentorRN();
+
+
     $arrEquipamentos = $objEquipamentoRN->listar($objEquipamento);
-    foreach ($arrEquipamentos as $e){   
+    foreach ($arrEquipamentos as $e){
+
+        $objMarca->setIdMarca($e->getIdMarca_fk());
+        $objMarca = $objMarcaRN->consultar($objMarca);
+
+        $objModelo->setIdModelo($e->getIdModelo_fk());
+        $objModelo = $objModeloRN->consultar($objModelo);
+
+        $objDetentor->setIdDetentor($e->getIdDetentor_fk());
+        $objDetentor = $objDetentorRN->consultar($objDetentor);
+
         $html.='<tr>
                     <th scope="row">'.Pagina::formatar_html($e->getIdEquipamento()).'</th>
-                        <td>'.Pagina::formatar_html($e->getIdDetentor_fk()).'</td>
-                        <td>'.Pagina::formatar_html($e->getIdMarca_fk()).'</td>
-                        <td>'.Pagina::formatar_html($e->getIdModelo_fk()).'</td>
+                        <td>'.Pagina::formatar_html($objDetentor->getDetentor()).'</td>
+                        <td>'.Pagina::formatar_html($objMarca->getMarca()).'</td>
+                        <td>'.Pagina::formatar_html($objModelo->getModelo()).'</td>
                         <td>'.Pagina::formatar_html($e->getDataUltimaCalibragem()).'</td>
                         <td>'.Pagina::formatar_html($e->getDataChegada()).'</td>
                         <td>';
@@ -50,7 +80,7 @@ Pagina::getInstance()->montar_menu_topo();
 echo    '
     <div class="conteudo_listar">'.
     
-       Pagina::montar_topo_listar('LISTAR EQUIPAMENTOS', 'cadastrar_equipamento', 'NOVO EQUIPAMENTO').
+       Pagina::montar_topo_listar('LISTAR EQUIPAMENTOS', null,null,'cadastrar_equipamento', 'NOVO EQUIPAMENTO').
         
         '<div class="conteudo_tabela">
             <table class="table table-hover">

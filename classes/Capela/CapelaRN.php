@@ -6,32 +6,153 @@
 
 require_once __DIR__ . '/../Excecao/Excecao.php';
 require_once __DIR__ . '/CapelaBD.php';
+require_once __DIR__ . '/../Situacao/Situacao.php';
 
 class CapelaRN{
-    
 
-    private function validarStatus(Capela $capela,Excecao $objExcecao){
-        $strStatus = trim($capela->getStatusCapela());
-        
-        if ($strStatus == '') {
-            $objExcecao->adicionar_validacao('O status da capela não foi informado','idStatusCapela');
-        }else{
-            if (strlen($strStatus) > 100) {
-                $objExcecao->adicionar_validacao('A status da capela possui mais que 100 caracteres.','idStatusCapela');
+    public static $TE_OCUPADA = 'O';
+    public static $TE_LIBERADA = 'L';
+
+
+    public static $TNS_BAIXA_SEGURANCA = 'B';
+    public static $TNS_MEDIA_SEGURANCA = 'M';
+    public static $TNS_ALTA_SEGURANCA = 'A';
+
+
+
+    public static function listarValoresTipoEstado(){
+        try {
+
+            $arrObjTECapela = array();
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TE_LIBERADA);
+            $objSituacao->setStrDescricao('LIBERADA');
+            $arrObjTECapela[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TE_OCUPADA);
+            $objSituacao->setStrDescricao('OCUPADA');
+            $arrObjTECapela[] = $objSituacao;
+
+            return $arrObjTECapela;
+
+        }catch(Throwable $e){
+            throw new Excecao('Erro listando valores de Tipo estado da capela',$e);
+        }
+    }
+
+    public static function listarValoresTipoNivelSeguranca(){
+        try {
+
+            $arrObjTECapela = array();
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TNS_BAIXA_SEGURANCA);
+            $objSituacao->setStrDescricao('Capela de segurança de nível baixo');
+            $arrObjTECapela[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TNS_MEDIA_SEGURANCA);
+            $objSituacao->setStrDescricao('Capela de segurança de nível médio');
+            $arrObjTECapela[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TNS_ALTA_SEGURANCA);
+            $objSituacao->setStrDescricao('Capela de segurança de nível alto');
+            $arrObjTECapela[] = $objSituacao;
+
+            return $arrObjTECapela;
+
+        }catch(Throwable $e){
+            throw new Excecao('Erro listando valores de Tipo de nível de segurança da capela',$e);
+        }
+    }
+
+    public static function mostrarDescricaoTipo($strTipo){
+        //$objExcecao = new Excecao();
+
+        foreach (self::listarValoresTipoEstado() as $tipo){
+           if($tipo->getStrTipo() == $strTipo){
+                return $tipo->getStrDescricao();
+           }
+        }
+
+        //$objExcecao->adicionar_validacao('Não encontrou o tipo informadoo.','alert-danger');
+    }
+
+    public static function mostrarDescricaoTipoSeguranca($strTipo){
+        //$objExcecao = new Excecao();
+
+        foreach (self::listarValoresTipoNivelSeguranca() as $tipo){
+            if($tipo->getStrTipo() == $strTipo){
+                return $tipo->getStrDescricao();
             }
         }
-        
-        return $capela->setStatusCapela($strStatus);
+
+        //$objExcecao->adicionar_validacao('Não encontrou o tipo informadoo.','alert-danger');
+    }
+
+    private function validarStrTipoCapela(Capela $capela,Excecao $objExcecao){
+
+        if ($capela->getSituacaoCapela() == null){
+            $objExcecao->adicionar_validacao('Tipo não informado',null,'alert-danger');
+        }else{
+            $flag = false;
+            foreach (self::listarValoresTipoEstado() as $tipo){
+                if($tipo->getStrTipo() == $capela->getSituacaoCapela()){
+                    $flag = true;
+                }
+            }
+
+            if(!$flag){
+                $objExcecao->adicionar_validacao('Situação da capela não foi encontrada',null,'alert-danger');
+            }
+
+        }
 
     }
-    
+
+
+
+
     private function validarNumero(Capela $capela,Excecao $objExcecao){
         $strNumero = trim($capela->getNumero());
         
         if ($strNumero == '') {
-            $objExcecao->adicionar_validacao('O número da capela não foi informado','idNumeroCapela');
+            $objExcecao->adicionar_validacao('O número da capela não foi informado','idNumeroCapela', 'alert-danger');
+        }else{
+
+            $objCapela = new Capela();
+            $objCapelaRN = new CapelaRN();
+
+
+            $objCapela->setNumero($capela->getNumero());
+            $arr_capelas  = $objCapelaRN->listar($objCapela);
+
+            if($capela->getIdCapela() != null){
+                if($arr_capelas[0]->getIdCapela() != $capela->getIdCapela()){
+                    echo "aqui";
+                    $objExcecao->adicionar_validacao('Já existe uma capela associada a este número',null, 'alert-danger');
+                }
+            }
+
+
+
         }
+
+
         return $capela->setNumero($strNumero);
+
+    }
+
+    private function validarNivelSeguranca(Capela $capela,Excecao $objExcecao){
+        $strNivelSeguranca = trim($capela->getNivelSeguranca());
+
+        if ($strNivelSeguranca == '') {
+            $objExcecao->adicionar_validacao('O nível de segurança da capela não foi informado','idNumeroCapela', 'alert-danger');
+        }
+        return $capela->setNivelSeguranca($strNivelSeguranca);
 
     }
 
@@ -41,10 +162,11 @@ class CapelaRN{
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
-            
-            $this->validarNumero($capela,$objExcecao); 
-            $this->validarStatus($capela,$objExcecao); 
-            
+
+            $this->validarStrTipoCapela($capela,$objExcecao);
+            $this->validarNumero($capela,$objExcecao);
+            $this->validarNivelSeguranca($capela,$objExcecao);
+
             $objExcecao->lancar_validacoes();
             $objCapelaBD = new CapelaBD();
             $objCapelaBD->cadastrar($capela,$objBanco);
@@ -60,10 +182,11 @@ class CapelaRN{
              
             $objExcecao = new Excecao();
             $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
-            
-            $this->validarNumero($capela,$objExcecao);   
-            $this->validarStatus($capela,$objExcecao);   
+            $objBanco->abrirConexao();
+
+             $this->validarStrTipoCapela($capela,$objExcecao);
+            $this->validarNumero($capela,$objExcecao);
+             $this->validarNivelSeguranca($capela,$objExcecao);
                         
             $objExcecao->lancar_validacoes();
             $objCapelaBD = new CapelaBD();
@@ -143,8 +266,9 @@ class CapelaRN{
             $objCapela = new Capela();
             $objCapela->setIdCapela($arr[0]->getIdCapela());
             $objCapela->setNumero($arr[0]->getNumero());
-            $arr[0]->setStatusCapela('OCUPADA');
-            $objCapela->setStatusCapela($arr[0]->getStatusCapela());
+            $arr[0]->setSituacaoCapela(self::$TE_OCUPADA);
+            $objCapela->setSituacaoCapela($arr[0]->getSituacaoCapela());
+            $objCapela->setNivelSeguranca($arr[0]->getNivelSeguranca());
             
             $capelaRN = NEW CapelaRN();
             $capelaRN->alterar($objCapela);
@@ -166,6 +290,8 @@ class CapelaRN{
             $objBanco->abrirConexao(); 
             $objExcecao->lancar_validacoes();
             $objCapelaBD = new CapelaBD();
+            $this->validarNumero($capela,$objExcecao);
+
             $arr = $objCapelaBD->validar_cadastro($capela,$objBanco);
             
             $objBanco->fecharConexao();

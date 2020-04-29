@@ -4,28 +4,32 @@
  */
 
 session_start();
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Marca/Marca.php';
-require_once '../classes/Marca/MarcaRN.php';
-require_once '../utils/Utils.php';
-
-$utils = new Utils();
-$objMarca = new Marca();
-$objMarcaRN = new MarcaRN();
-$alert = '';
-
 try{
+    require_once  __DIR__ . '/../../classes/Sessao/Sessao.php';
+    require_once  __DIR__ . '/../../classes/Pagina/Pagina.php';
+    require_once  __DIR__ . '/../../classes/Excecao/Excecao.php';
+    require_once  __DIR__ . '/../../classes/Marca/Marca.php';
+    require_once  __DIR__ . '/../../classes/Marca/MarcaRN.php';
+    require_once  __DIR__ . '/../../utils/Utils.php';
+
+    Sessao::getInstance()->validar();
+
+    $utils = new Utils();
+    $objMarca = new Marca();
+    $objMarcaRN = new MarcaRN();
+    $alert = '';
+
+
     switch($_GET['action']){
         case 'cadastrar_marca':
+
             if(isset($_POST['salvar_marca'])){
                 $objMarca->setMarca($_POST['txtMarca']);
                 $objMarca->setIndex_marca(strtoupper($utils->tirarAcentos($_POST['txtMarca'])));
                 if(empty($objMarcaRN->pesquisar_index($objMarca))){
                     $objMarcaRN->cadastrar($objMarca);
-                    $alert= Alert::alert_success_cadastrar();
-                }else{$alert= Alert::alert_error_cadastrar_editar();}
+                    $alert= Alert::alert_success('Marca -'.$objMarca->getMarca() .'- CADASTRADA com sucesso');
+                }else{$alert= Alert::alert_danger('Marca -'.$objMarca->getMarca() .'- não foi CADASTRADA');}
                                 
             }else{
                 $objMarca->setIdMarca('');
@@ -45,15 +49,15 @@ try{
                 $objMarca->setIndex_marca(strtoupper($utils->tirarAcentos($_POST['txtMarca'])));
                 if(empty($objMarcaRN->pesquisar_index($objMarca))){
                     $objMarcaRN->alterar($objMarca);
-                    $alert= Alert::alert_success_cadastrar();
-                }else{$alert= Alert::alert_error_cadastrar_editar();}
+                    $alert= Alert::alert_success('Marca -'.$objMarca->getMarca() .'- ALTERADA com sucesso');
+                }else{$alert= Alert::alert_danger('Marca -'.$objMarca->getMarca() .'- não foi ALTERADA');}
                 
             }
             
             break;
         default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador em cadastro_marca.php');  
     }
-   
+
 } catch (Exception $ex) {
     Pagina::getInstance()->processar_excecao($ex);
 }
@@ -67,7 +71,7 @@ Pagina::getInstance()->montar_menu_topo();
 
 
 echo $alert.
-     Pagina::montar_topo_listar('CADASTRAR MARCA', 'listar_marca', 'LISTAR MARCA').
+     Pagina::montar_topo_listar('CADASTRAR MARCA','NOVA MARCA', 'cadastrar_marca','listar_marca', 'LISTAR MARCA').
         '<div class="conteudo">
             <form method="POST">
                 <div class="form-row">
@@ -79,7 +83,7 @@ echo $alert.
 
                     </div>
                 </div>  
-                <button class="btn btn-primary" type="submit" name="salvar_doenca">Salvar</button>
+                <button class="btn btn-primary" type="submit" name="salvar_marca">Salvar</button>
             </form>
         </div>';
 

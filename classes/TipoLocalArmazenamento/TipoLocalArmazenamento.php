@@ -6,44 +6,83 @@
 
 class TipoLocalArmazenamento{
     private $idTipoLocalArmazenamento;
-    private $nomeLocal;
-    private $qntEspacosTotal;
-    private $qntEspacosAmostra;
+    private $tipo;
+    private $index_tipo;
+    private $caractereTipo;
+
     
     function __construct() {
         
     }
-    
-    function getIdTipoLocalArmazenamento() {
+
+    /**
+     * @return mixed
+     */
+    public function getCaractereTipo()
+    {
+        return $this->caractereTipo;
+    }
+
+    /**
+     * @param mixed $caractereTipo
+     */
+    public function setCaractereTipo($caractereTipo)
+    {
+        $this->caractereTipo = $caractereTipo;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getIndexTipo()
+    {
+        return $this->index_tipo;
+    }
+
+    /**
+     * @param mixed $index_tipo
+     */
+    public function setIndexTipo($index_tipo)
+    {
+        $this->index_tipo = $index_tipo;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getIdTipoLocalArmazenamento()
+    {
         return $this->idTipoLocalArmazenamento;
     }
 
-    function getNomeLocal() {
-        return $this->nomeLocal;
-    }
-
-    function getQntEspacosTotal() {
-        return $this->qntEspacosTotal;
-    }
-
-    function getQntEspacosAmostra() {
-        return $this->qntEspacosAmostra;
-    }
-
-    function setIdTipoLocalArmazenamento($idTipoLocalArmazenamento) {
+    /**
+     * @param mixed $idTipoLocalArmazenamento
+     */
+    public function setIdTipoLocalArmazenamento($idTipoLocalArmazenamento)
+    {
         $this->idTipoLocalArmazenamento = $idTipoLocalArmazenamento;
     }
 
-    function setNomeLocal($nomeLocal) {
-        $this->nomeLocal = $nomeLocal;
+    /**
+     * @return mixed
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
     }
 
-    function setQntEspacosTotal($qntEspacosTotal) {
-        $this->qntEspacosTotal = $qntEspacosTotal;
+    /**
+     * @param mixed $tipo
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
     }
+    
 
-    function setQntEspacosAmostra($qntEspacosAmostra) {
-        $this->qntEspacosAmostra = $qntEspacosAmostra;
-    }
     
 }

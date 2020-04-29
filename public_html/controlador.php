@@ -13,6 +13,10 @@ switch ($_GET['action']):
         require_once 'principal.php';
         break;
 
+    case 'montar_caixas':
+        require_once '../telas_prototipos_antigas/tabela_caixas.php';
+        break;
+
     case 'usuario_naoEncontrado':
         require_once '../acoes/PaginaUserNotFound.php';
         break;
@@ -29,6 +33,8 @@ switch ($_GET['action']):
         Sessao::getInstance()->logoff();
         header('Location: controlador.php?action=login');
         break;
+
+
     
     /* ESTATÍSTICAS */
     case 'gerar_estatisticas':
@@ -40,13 +46,23 @@ switch ($_GET['action']):
 
      /* ETAPA 2 */
     case 'montar_preparo_extracao':
-        require_once '../acoes/PreparoExtracao/preparo_extracao.php';
+        require_once '../acoes/PreparoLote/cadastrar_preparoLote.php';
         break;
-    
-    
-    case 'cadastrar_amostra_localArmazenamento':
-        require_once 'telas_prototipos_antigas/cadastro_amostra_localArmazenamento.php';
+    case 'realizar_preparo_inativacao':
+        require_once '../acoes/PreparoLote/preparoInativacao.php';
         break;
+
+
+    case 'rastrear_amostras':
+        require_once '../acoes/RastreamentoAmostras/rastreamentoAmostras.php';
+        break;
+
+
+    case 'cadastrar_localArmazenamento':
+        require_once '../acoes/LocalArmazenamento/cadastro_localArmazenamento.php';
+        break;
+
+
     case 'extrair_amostra':
         require_once 'telas_prototipos_antigas/etapa_extracao.php';
         break;
@@ -261,15 +277,24 @@ switch ($_GET['action']):
     /* LOCAL DE ARMAZENAMENTO */
     case 'cadastrar_localArmazenamento':
     case 'editar_localArmazenamento':
-        require_once '../acoes/LocalArmazenamento/cadastro_localArmazenamento.php';
+        require_once '../acoes/LocalArmazenamento/cadastro_localArmazenamentov0.php';
         break;
     
     case 'listar_localArmazenamento':
         require_once '../acoes/LocalArmazenamento/listar_localArmazenamento.php';
         break;
+
+    case 'mostrar_localArmazenamento':
+        require_once '../acoes/LocalArmazenamento/mostrar_localArmazenamento.php';
+        break;
     
     case 'remover_localArmazenamento':
         require_once '../acoes/LocalArmazenamento/remover_localArmazenamento.php';
+        break;
+
+    /* CAIXA */
+    case 'editar_caixa':
+        require_once '../acoes/Caixa/editar_caixa.php';
         break;
     
     /* PACIENTE */
@@ -295,9 +320,10 @@ switch ($_GET['action']):
         break;
     
     case 'listar_amostra':
-        require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
-        //require_once '../acoes/Amostra/listar_amostra.php';
+       // require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
+        require_once '../acoes/CadastroAmostra/listar_cadastroIntermediario.php';
         break;
+
     
     case 'remover_amostra':
         require_once '../acoes/CadastroAmostra/remover_cadastroAmostra.php';
