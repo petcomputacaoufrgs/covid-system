@@ -25,7 +25,19 @@ class ModeloRN{
         return $modelo->setModelo($strModelo);
 
     }
-    
+    private function validarRemocao(Modelo $modelo,Excecao $objExcecao){
+        $objEquipamento = new Equipamento();
+        $objEquipamentoRN = new EquipamentoRN();
+
+
+        $objEquipamento->setIdModelo_fk($modelo->getIdModelo());
+        $arr = $objEquipamentoRN->existe($objEquipamento);
+
+        //print_r($arr);
+        if(count($arr) > 0){
+            $objExcecao->adicionar_validacao('O modelo não pode ser excluído porque tem um equipamento associado a ele','idLocalArmazenamento', 'alert-danger');
+        }
+    }
     
     public function cadastrar(Modelo $modelo) {
         try {
@@ -88,7 +100,10 @@ class ModeloRN{
          try {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+
+             $this->validarRemocao($modelo,$objExcecao);
+
             $objExcecao->lancar_validacoes();
             $objModeloBD = new ModeloBD();
             $arr =  $objModeloBD->remover($modelo,$objBanco);

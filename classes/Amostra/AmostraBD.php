@@ -153,8 +153,6 @@ class AmostraBD{
                 $arrayBind[] = array('i', $objAmostra->getIdPaciente_fk());
             }
 
-            
-
 
             if ($WHERE != '') {
                 $WHERE = ' where ' . $WHERE;
@@ -252,7 +250,7 @@ class AmostraBD{
                 $WHERE = ' where ' . $WHERE;
             }
 
-            //echo $SELECT.$WHERE;$WHERE
+
 
             $arr = $objBanco->consultarSQL($SELECT . $WHERE." LIMIT 20 ", $arrayBind);
 
@@ -415,8 +413,6 @@ class AmostraBD{
         }
 
     }
-
-
 
 
     public function filtrar_por_quantidade(Amostra $objAmostra, Banco $objBanco) {

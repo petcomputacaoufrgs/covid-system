@@ -39,5 +39,3 @@ try{
 } catch (Exception $ex) {
     Pagina::getInstance()->processar_excecao($ex);
 }
-
-?>

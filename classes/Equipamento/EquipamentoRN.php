@@ -18,7 +18,7 @@ class EquipamentoRN{
             $objExcecao->adicionar_validacao('A data da última calibragem não foi informada','idDataUltimaCalibragem');
         }else{
 
-           // echo date('d-m-Y');            
+            Utils::validarData($strDataUltimaCalibragem, $objExcecao);
             
         }
         
@@ -31,7 +31,7 @@ class EquipamentoRN{
         if ($strDataChegada == '') {
             $objExcecao->adicionar_validacao('A data de chegada não foi informada','idDataChegada');
         }else{
-           
+            Utils::validarData($strDataChegada, $objExcecao);
             
             // echo date('d-m-Y');    
         }
@@ -155,6 +155,25 @@ class EquipamentoRN{
             return $arr;
         } catch (Exception $e) {
             throw new Excecao('Erro pesquisando o equipamento.', $e);
+        }
+    }
+
+    public function existe(Equipamento $equipamento) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objEquipamentoBD = new EquipamentoBD();
+            $arr = $objEquipamentoBD->existe($equipamento,$objBanco);
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro verificando se existe o equipamento.', $e);
         }
     }
 

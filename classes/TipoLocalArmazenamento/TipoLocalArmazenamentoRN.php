@@ -7,173 +7,253 @@
 require_once __DIR__ . '/../Excecao/Excecao.php';
 require_once __DIR__ . '/TipoLocalArmazenamentoBD.php';
 
-class TipoLocalArmazenamentoRN{
-    
+require_once __DIR__ . '/../LocalArmazenamento/LocalArmazenamento.php';
+require_once __DIR__ . '/../LocalArmazenamento/LocalArmazenamentoRN.php';
 
-    private function validarNomeLocal(TipoLocalArmazenamento $tipoLocalArmazenamento,Excecao $objExcecao){
-        $strNomeLocal = trim($tipoLocalArmazenamento->getNomeLocal());
-       
-        if ($strNomeLocal == '') {
-            $objExcecao->adicionar_validacao('O nome do local não foi informado','idNomeTipoLA');
-        }else{
-            if (strlen($strNomeLocal) > 50) {
-                $objExcecao->adicionar_validacao('O nome do local  possui mais que 50 caracteres.','idNomeTipoLA');
+class TipoLocalArmazenamentoRN{
+
+    public static $TL_BANCO_AMOSTRAS = 'B';
+    public static $TL_GELADEIRA = 'G';
+    public static $TL_FREEZER = 'F';
+
+    public static function listarValoresTipoLocal(){
+        try {
+
+            $arrObjStaColuna = array();
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TL_BANCO_AMOSTRAS);
+            $objSituacao->setStrDescricao('Tipo banco de amostras');
+            $arrObjStaColuna[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TL_GELADEIRA);
+            $objSituacao->setStrDescricao('Tipo geladeira');
+            $arrObjStaColuna[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TL_FREEZER);
+            $objSituacao->setStrDescricao('Tipo freezer');
+            $arrObjStaColuna[] = $objSituacao;
+
+            return $arrObjStaColuna;
+
+        }catch(Throwable $e){
+            throw new Excecao('Erro listando valores de Tipo situação da posição da caixa',$e);
+        }
+    }
+
+    public static function mostrarDescricaoTipo($strTipo){
+        //$objExcecao = new Excecao();
+
+        foreach (self::listarValoresTipoLocal() as $tipo){
+            if($tipo->getStrTipo() == $strTipo){
+                return $tipo->getStrDescricao();
             }
-            
-            $tipoLocalArmazenamento_aux_RN = new TipoLocalArmazenamentoRN();
-            $array_sexos = $tipoLocalArmazenamento_aux_RN->listar($tipoLocalArmazenamento);
-            //print_r($array_sexos);
-            foreach ($array_sexos as $s){
-                if($s->getNomeLocal() == $tipoLocalArmazenamento->getNomeLocal()){
-                    $objExcecao->adicionar_validacao('O nome do local digitado já existe.','idNomeTipoLA');
+        }
+
+        //$objExcecao->adicionar_validacao('Não encontrou o tipo informadoo.','alert-danger');
+    }
+
+    private function validarStrTipoPosicao(TipoLocalArmazenamento $tipoLocalArmazenamento,Excecao $objExcecao){
+
+        if ($tipoLocalArmazenamento->getTipoLocal() == null){
+            $objExcecao->adicionar_validacao('Tipo não informado',null,'alert-danger');
+        }else{
+            $flag = false;
+            foreach (self::listarValoresTipoLocal() as $tipo){
+                if($tipo->getStrTipo() == $tipoLocalArmazenamento->getTipoLocal()){
+                    $flag = true;
+                }
+            }
+
+            if(!$flag){
+                $objExcecao->adicionar_validacao('O tipo do local de armazenamento não foi encontrado',null,'alert-danger');
+            }
+        }
+
+    }
+
+
+    private function validarTipo(TipoLocalArmazenamento $tipoLocalArmazenamento,Excecao $objExcecao){
+        $strTipo = trim($tipoLocalArmazenamento->getTipo());
+
+        if ($strTipo == '') {
+            $objExcecao->adicionar_validacao('O tipo do local de armazenamento não foi informado','idNomeColuna', 'alert-danger');
+        }else{
+            if (strlen($strTipo) > 100) {
+                $objExcecao->adicionar_validacao('O tipo do local de armazenamento possui mais que 100 caracteres.','idNomeColuna', 'alert-danger');
+            }
+            $objTipoLocalArmazenamento = new TipoLocalArmazenamento();
+            $objTipoLocalArmazenamentoRN = new TipoLocalArmazenamentoRN();
+
+            $arr_locais = $objTipoLocalArmazenamentoRN->listar($objTipoLocalArmazenamento);
+
+            foreach ($arr_locais as $item) {
+                if($item->getIndexTipo() == $tipoLocalArmazenamento->getIndexTipo()
+                    &&  $item->getIdTipoLocalArmazenamento() != $tipoLocalArmazenamento->getIdTipoLocalArmazenamento()){
+                        $objExcecao->adicionar_validacao('O nome do local já está sendo utilizado','idLocalArmazenamento', 'alert-danger');
                 }
             }
         }
-        
-        return $tipoLocalArmazenamento->setNomeLocal($strNomeLocal);
+
+        return $tipoLocalArmazenamento->setTipo($strTipo);
 
     }
-    
-    private function validarQntEspacosTotal(TipoLocalArmazenamento $tipoLocalArmazenamento,Excecao $objExcecao){
-        $strQntEspacoTotal = trim($tipoLocalArmazenamento->getQntEspacosTotal());
-       
-        if ($strQntEspacoTotal == '') {
-            $objExcecao->adicionar_validacao('A quantidade de espaços totais não foi informada','idQntTotalEspacoLA');
-        }else{
-           if(intval($strQntEspacoTotal) < 0){
-               $objExcecao->adicionar_validacao('A quantidade de espaços totais não pode ser um número negativo','idQntTotalEspacoLA');
-           }
-        }
-        
-        return $tipoLocalArmazenamento->setQntEspacosTotal($strQntEspacoTotal);
+
+
+    private function validarRemocao(TipoLocalArmazenamento $tipoLocalArmazenamento,Excecao $objExcecao){
+
+            $objLocalArmazenamento = new LocalArmazenamento();
+            $objLocalArmazenamentoRN = new LocalArmazenamentoRN();
+
+
+            $objLocalArmazenamento->setIdTipoLocalArmazenamento_fk($tipoLocalArmazenamento->getIdTipoLocalArmazenamento());
+            $arr = $objLocalArmazenamentoRN->existe($objLocalArmazenamento);
+
+            //print_r($arr);
+            if(count($arr) > 0){
+                $objExcecao->adicionar_validacao('O tipo do local não pode ser excluído porque ele está associado a um local de armazenamento','idLocalArmazenamento', 'alert-danger');
+            }
 
     }
-    
-     private function validarQntEspacosAmostras(TipoLocalArmazenamento $tipoLocalArmazenamento,Excecao $objExcecao){
-        $strQntEspacoAmostras = trim($tipoLocalArmazenamento->getQntEspacosAmostra());
-       
-        if ($strQntEspacoAmostras == '') {
-            $objExcecao->adicionar_validacao('A quantidade de espaços com amostras não foi informada','idQntTotalAmostraLA');
-        }else{
-           if(intval($strQntEspacoAmostras) < 0){
-               $objExcecao->adicionar_validacao('A quantidade de espaços com amostras não pode ser um número negativo','idQntTotalAmostraLA');
-           }
-           
-           if(intval($strQntEspacoAmostras) > intval($tipoLocalArmazenamento->getQntEspacosTotal())){
-               $objExcecao->adicionar_validacao('A quantidade de espaços com amostras não pode ser maior que o espaço total','idQntTotalAmostraLA');
-           }
-        }
-        
-        return $tipoLocalArmazenamento->setQntEspacosTotal($strQntEspacoAmostras);
 
-    }
+
+
+
+
     
-     
 
     public function cadastrar(TipoLocalArmazenamento $tipoLocalArmazenamento) {
+        $objBanco = new Banco();
         try {
-            
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             
-            $this->validarNomeLocal($tipoLocalArmazenamento,$objExcecao); 
-            $this->validarQntEspacosAmostras($tipoLocalArmazenamento,$objExcecao); 
-            $this->validarQntEspacosTotal($tipoLocalArmazenamento,$objExcecao); 
+            $this->validarTipo($tipoLocalArmazenamento,$objExcecao);
+
             
             $objExcecao->lancar_validacoes();
             $objTipoLocalArmazenamentoBD = new TipoLocalArmazenamentoBD();
             $objTipoLocalArmazenamentoBD->cadastrar($tipoLocalArmazenamento,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+            return $tipoLocalArmazenamento;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando o tipo do local de armazenamento.', $e);
         }
     }
 
     public function alterar(TipoLocalArmazenamento $tipoLocalArmazenamento) {
-         try {
-             
+        $objBanco = new Banco();
+        try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             
-            $this->validarNomeLocal($tipoLocalArmazenamento,$objExcecao);   
-            $this->validarQntEspacosAmostras($tipoLocalArmazenamento,$objExcecao); 
-            $this->validarQntEspacosTotal($tipoLocalArmazenamento,$objExcecao); 
+            $this->validarTipo($tipoLocalArmazenamento,$objExcecao);
+
             
             $objExcecao->lancar_validacoes();
             $objTipoLocalArmazenamentoBD = new TipoLocalArmazenamentoBD();
             $objTipoLocalArmazenamentoBD->alterar($tipoLocalArmazenamento,$objBanco);
             
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+            return $tipoLocalArmazenamento;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando o tipo do local de armazenamento.', $e);
         }
     }
 
     public function consultar(TipoLocalArmazenamento $tipoLocalArmazenamento) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objTipoLocalArmazenamentoBD = new TipoLocalArmazenamentoBD();
             $arr =  $objTipoLocalArmazenamentoBD->consultar($tipoLocalArmazenamento,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
  
             throw new Excecao('Erro consultando o tipo do local de armazenamento.',$e);
         }
     }
 
+
     public function remover(TipoLocalArmazenamento $tipoLocalArmazenamento) {
-         try {
+        $objBanco = new Banco();
+        try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
+
+            $this->validarRemocao($tipoLocalArmazenamento,$objExcecao);
+            $objExcecao->lancar_validacoes();
+
             $objTipoLocalArmazenamentoBD = new TipoLocalArmazenamentoBD();
             $arr =  $objTipoLocalArmazenamentoBD->remover($tipoLocalArmazenamento,$objBanco);
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro removendo o tipo do local de armazenamento.', $e);
         }
     }
 
     public function listar(TipoLocalArmazenamento $tipoLocalArmazenamento) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objTipoLocalArmazenamentoBD = new TipoLocalArmazenamentoBD();
             
             $arr = $objTipoLocalArmazenamentoBD->listar($tipoLocalArmazenamento,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o tipo do local de armazenamento.',$e);
         }
     }
 
 
     public function pesquisar($campoBD, $valor_usuario) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objTipoLocalArmazenamentoBD = new TipoLocalArmazenamentoBD();
             $arr = $objTipoLocalArmazenamentoBD->pesquisar($campoBD,$valor_usuario,$objBanco);
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro pesquisando o tipo do local de armazenamento.', $e);
         }
     }

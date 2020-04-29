@@ -306,12 +306,14 @@ class AmostraRN{
             $objAmostraAuxRN->alterar($amostra);
             
             if($amostra->getObjTubo() != null){
+
                 $objTuboRN = new TuboRN();
                 if($amostra->getObjTubo()->getIdTubo() == null) { //tubo ainda não cadastrado
                     if ($amostra->get_a_r_g() != 'g') {
                         $objTubo = $amostra->getObjTubo();
                         $objTubo->setIdAmostra_fk($amostra->getIdAmostra());
                         $amostra->setObjTubo($objTuboRN->cadastrar($objTubo));
+
                     }
                 }else {
                     $objTuboRN->alterar($amostra->getObjTubo());

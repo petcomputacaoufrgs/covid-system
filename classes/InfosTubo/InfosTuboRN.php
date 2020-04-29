@@ -234,8 +234,8 @@ class InfosTuboRN{
             $objBanco->abrirConexao(); 
 
 
-            $this->validarIdLocalArmazenamento_fk($infosTubo, $objExcecao);
-            $this->validarIdTubo_fk($infosTubo, $objExcecao);
+            //$this->validarIdLocalArmazenamento_fk($infosTubo, $objExcecao);
+            //$this->validarIdTubo_fk($infosTubo, $objExcecao);
             //$this->validarStatusTubo($infosTubo, $objExcecao);
             $this->validarEtapa($infosTubo, $objExcecao);
             $this->validarDataHora($infosTubo, $objExcecao);
@@ -262,7 +262,7 @@ class InfosTuboRN{
             $objBanco = new Banco();
             $objBanco->abrirConexao(); 
 
-            $this->validarIdLocalArmazenamento_fk($infosTubo, $objExcecao);
+            //$this->validarIdLocalArmazenamento_fk($infosTubo, $objExcecao);
             $this->validarIdTubo_fk($infosTubo, $objExcecao);
             //$this->validarStatusTubo($infosTubo, $objExcecao);
             $this->validarEtapa($infosTubo, $objExcecao);

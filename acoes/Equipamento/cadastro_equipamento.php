@@ -4,36 +4,37 @@
  */
 
 session_start();
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Equipamento/Equipamento.php';
-require_once '../classes/Equipamento/EquipamentoRN.php';
-require_once '../classes/Detentor/Detentor.php';
-require_once '../classes/Detentor/DetentorRN.php';
-require_once '../classes/Marca/Marca.php';
-require_once '../classes/Marca/MarcaRN.php';
-require_once '../classes/Modelo/Modelo.php';
-require_once '../classes/Modelo/ModeloRN.php';
-require_once '../utils/Utils.php';
-require_once '../utils/Alert.php';
-
-
-$utils = new Utils();
-date_default_timezone_set('America/Sao_Paulo');
-$_SESSION['DATA_LOGIN']  = date('d/m/Y  H:i:s');
-
-
-$objEquipamento = new Equipamento();
-$objEquipamentoRN = new EquipamentoRN();
-$alert = '';
-$select_detentores = '';
-$select_marcas = '';
-$select_modelos = '';
-
-$selected = '';
-$alert = '';
 try {
+    require_once __DIR__.'/../../classes/Sessao/Sessao.php';
+    require_once __DIR__.'/../../classes/Pagina/Pagina.php';
+    require_once __DIR__.'/../../classes/Excecao/Excecao.php';
+    require_once __DIR__.'/../../classes/Equipamento/Equipamento.php';
+    require_once __DIR__.'/../../classes/Equipamento/EquipamentoRN.php';
+    require_once __DIR__.'/../../classes/Detentor/Detentor.php';
+    require_once __DIR__.'/../../classes/Detentor/DetentorRN.php';
+    require_once __DIR__.'/../../classes/Marca/Marca.php';
+    require_once __DIR__.'/../../classes/Marca/MarcaRN.php';
+    require_once __DIR__.'/../../classes/Modelo/Modelo.php';
+    require_once __DIR__.'/../../classes/Modelo/ModeloRN.php';
+    require_once __DIR__.'/../../utils/Utils.php';
+    require_once __DIR__.'/../../utils/Alert.php';
+
+
+    $utils = new Utils();
+    date_default_timezone_set('America/Sao_Paulo');
+    $_SESSION['DATA_LOGIN']  = date('d/m/Y  H:i:s');
+
+
+    $objEquipamento = new Equipamento();
+    $objEquipamentoRN = new EquipamentoRN();
+    $alert = '';
+    $select_detentores = '';
+    $select_marcas = '';
+    $select_modelos = '';
+
+    $selected = '';
+    $alert = '';
+
 
     /* DETENTORES */
     $objDetentor = new Detentor();
@@ -88,7 +89,7 @@ try {
                 $objEquipamento->setDataChegada($_POST['dtChegada']);
 
                 $objEquipamentoRN->cadastrar($objEquipamento);
-                $alert= Alert::getInstance()->alert_success_cadastrar();
+                $alert= Alert::alert_success("Equipamento cadastrado com sucesso");
                 
             }else{
                 $objEquipamento->setIdEquipamento('');
@@ -181,7 +182,7 @@ try {
 
                 $objEquipamentoRN->alterar($objEquipamento);
 
-                $alert= Alert::getInstance()->alert_success_editar();
+                $alert= Alert::alert_success("Equipamento ". $objEquipamento->getIdEquipamento()." ALTERADO com sucesso");
             }
 
             break;
@@ -196,11 +197,12 @@ Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::getInstance()->adicionar_javascript("equipamento");
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
-
+Pagina::montar_topo_listar('CADASTRAR EQUIPAMENTO', null,null,'listar_equipamento', 'LISTAR EQUIPAMENTOS');
+Pagina::getInstance()->mostrar_excecoes();
 
    echo 
      $alert.
-     Pagina::montar_topo_listar('CADASTRAR EQUIPAMENTO', 'listar_equipamento', 'LISTAR EQUIPAMENTOS').
+
     '<div class="conteudo_grande">    
         <div class="formulario">
             <form method="POST">
@@ -212,8 +214,8 @@ Pagina::getInstance()->montar_menu_topo();
                     </div>   
 
                     <div class="col-md-3">
-                        <input type="text" class="form-control" id="idDtHrInicio" readonly  style="text-align: center;"
-                           name="dtHrInicio" required value="'. Pagina::formatar_html($_SESSION['DATA_LOGIN']).'" >
+                        <input type="text" class="form-control" hidden id="idDtHrInicio" readonly  style="text-align: center;"
+                           name="dtHrInicio"  value="'. Pagina::formatar_html($_SESSION['DATA_LOGIN']).'" >
                     </div>
 
                 </div>
@@ -223,19 +225,19 @@ Pagina::getInstance()->montar_menu_topo();
                     <div class="col-md-4 mb-4">
                         <label for="detentorEquipamento" >Detentor:</label>
                         <input type="text" class="form-control" id="idDetentor" placeholder="Digite o nome do detentor " 
-                               name="txtDetentor" required value="'.Pagina::formatar_html($objDetentor->getDetentor()).'" >
+                               name="txtDetentor"  value="'.Pagina::formatar_html($objDetentor->getDetentor()).'" >
                     </div>
 
                     <div class="col-md-4 mb-4">
                         <label for="marcaEquipamento" >Marca:</label>
                         <input type="text" class="form-control" id="idMarca" placeholder="Digite o nome da marca " 
-                               name="txtMarca" required value="'.Pagina::formatar_html($objMarca->getMarca()).'" >
+                               name="txtMarca"  value="'.Pagina::formatar_html($objMarca->getMarca()).'" >
                     </div>
 
                     <div class="col-md-4 mb-4">
                         <label for="modeloEquipamento">Modelo:</label>
                         <input type="text" class="form-control" id="idModelo" placeholder="Digite o nome do modelo " 
-                               name="txtModelo" required value="'.Pagina::formatar_html($objModelo->getModelo()).'" >
+                               name="txtModelo"  value="'.Pagina::formatar_html($objModelo->getModelo()).'" >
                     </div>
 
                 </div>
@@ -245,8 +247,8 @@ Pagina::getInstance()->montar_menu_topo();
                     <div class="col-md-4 mb-3">
                         <label for="label_dataUltimaCalibragem">*Digite a data da última calibragem:</label>
                         <input type="date" class="form-control" id="idDataUltimaCalibragem" placeholder="Última calibragem" 
-                               onblur="validaDataUltimaCalibragem()" max="'.date('Y-m-d').'" 
-                                   name="dtUltimaCalibragem" required 
+                               onblur="validaDataUltimaCalibragem()" 
+                                   name="dtUltimaCalibragem"  
                                    value="'.Pagina::formatar_html($objEquipamento->getDataUltimaCalibragem()).'">
                         <div id ="feedback_dataUltimaCalibragem"></div>
 
@@ -255,8 +257,8 @@ Pagina::getInstance()->montar_menu_topo();
                     <div class="col-md-4 mb-3">
                         <label for="label_dataChegada">*Digite a data da chegada:</label>
                         <input type="date" class="form-control" id="idDataChegada" placeholder="Data da chegada" 
-                               onblur="validaDataChegada()" max="'.date('Y-m-d').'" name="dtChegada" 
-                               required value="'.Pagina::formatar_html($objEquipamento->getDataChegada()).'">
+                               onblur="validaDataChegada()" name="dtChegada" 
+                                value="'.Pagina::formatar_html($objEquipamento->getDataChegada()).'">
                         <div id ="feedback_dataChegada"></div>
 
                     </div>
@@ -269,5 +271,5 @@ Pagina::getInstance()->montar_menu_topo();
 
 
 
-Pagina::getInstance()->mostrar_excecoes();
+
 Pagina::getInstance()->fechar_corpo();

@@ -57,6 +57,7 @@ switch ($_GET['action']):
         require_once '../acoes/RastreamentoAmostras/rastreamentoAmostras.php';
         break;
 
+
     case 'cadastrar_localArmazenamento':
         require_once '../acoes/LocalArmazenamento/cadastro_localArmazenamento.php';
         break;
@@ -276,15 +277,24 @@ switch ($_GET['action']):
     /* LOCAL DE ARMAZENAMENTO */
     case 'cadastrar_localArmazenamento':
     case 'editar_localArmazenamento':
-        require_once '../acoes/LocalArmazenamento/cadastro_localArmazenamento.php';
+        require_once '../acoes/LocalArmazenamento/cadastro_localArmazenamentov0.php';
         break;
     
     case 'listar_localArmazenamento':
         require_once '../acoes/LocalArmazenamento/listar_localArmazenamento.php';
         break;
+
+    case 'mostrar_localArmazenamento':
+        require_once '../acoes/LocalArmazenamento/mostrar_localArmazenamento.php';
+        break;
     
     case 'remover_localArmazenamento':
         require_once '../acoes/LocalArmazenamento/remover_localArmazenamento.php';
+        break;
+
+    /* CAIXA */
+    case 'editar_caixa':
+        require_once '../acoes/Caixa/editar_caixa.php';
         break;
     
     /* PACIENTE */

@@ -201,7 +201,7 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
 
                         $tam = count($arr_infosTubo);
                         if ($tam > 0) {
-                            $etapa = $arr_infosTubo[$tam - 1]->getStatusTubo();
+                            $etapa = $arr_infosTubo[$tam - 1]->getSituacaoTubo();
                         }
                     }
 
@@ -380,7 +380,7 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
 
                 $tam = count($arr_infosTubo);
                 if ($tam > 0) {
-                    $etapa = $arr_infosTubo[$tam - 1]->getStatusTubo();
+                    $etapa = $arr_infosTubo[$tam - 1]->getSituacaoTubo();
                 }
             }
 

@@ -8,11 +8,30 @@ class Tubo{
     private $tipo;
     
     private $objInfosTubo;
+    private $objPosicao;
 
     
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObjPosicao()
+    {
+        return $this->objPosicao;
+    }
+
+    /**
+     * @param mixed $objPosicao
+     */
+    public function setObjPosicao($objPosicao)
+    {
+        $this->objPosicao = $objPosicao;
+    }
+
+
     
     function getObjInfosTubo() {
         return $this->objInfosTubo;

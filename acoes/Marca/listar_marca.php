@@ -45,6 +45,7 @@ Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::getInstance()->adicionar_javascript("marca");
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
+Pagina::getInstance()->mostrar_excecoes();
 
 echo '
     
@@ -70,7 +71,7 @@ echo '
 
 
 
-Pagina::getInstance()->mostrar_excecoes();
+
 Pagina::getInstance()->fechar_corpo(); 
 
 

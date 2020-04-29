@@ -57,10 +57,76 @@ try{
     require_once __DIR__.'/../../classes/PerfilPaciente/PerfilPacienteRN.php';
 
 
+    require_once __DIR__ . '/../../classes/Caixa/Caixa.php';
+    require_once __DIR__ . '/../../classes/Caixa/CaixaRN.php';
+
+    require_once __DIR__ . '/../../classes/Posicao/Posicao.php';
+    require_once __DIR__ . '/../../classes/Posicao/PosicaoRN.php';
+
+    require_once __DIR__ . '/../../classes/LocalArmazenamento/LocalArmazenamento.php';
+    require_once __DIR__ . '/../../classes/LocalArmazenamento/LocalArmazenamentoRN.php';
+
+    require_once __DIR__ . '/../../classes/Porta/Porta.php';
+    require_once __DIR__ . '/../../classes/Porta/PortaRN.php';
+
+    require_once __DIR__ . '/../../classes/Prateleira/Prateleira.php';
+    require_once __DIR__ . '/../../classes/Prateleira/PrateleiraRN.php';
+
+    require_once __DIR__ . '/../../classes/Coluna/Coluna.php';
+    require_once __DIR__ . '/../../classes/Coluna/ColunaRN.php';
+
+    require_once __DIR__.'/../../classes/Tubo/Tubo.php';
+    require_once __DIR__.'/../../classes/Tubo/TuboRN.php';
+
+    require_once __DIR__.'/../../classes/InfosTubo/InfosTubo.php';
+    require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
+
+    require_once __DIR__.'/../../classes/Amostra/Amostra.php';
+    require_once __DIR__.'/../../classes/Amostra/AmostraRN.php';
+
+    Sessao::getInstance()->validar();
+
+    /*
+    *  LOCAL DE ARMAZENAMENTO
+    */
+    $objLocalArmazenamento = new LocalArmazenamento();
+    $objLocalArmazenamentoRN = new LocalArmazenamentoRN();
+
+    /*
+        *  PORTA
+        */
+    $objPorta = new Porta();
+    $objPortaRN = new PortaRN();
+
+
+
+    /*
+     *  PRATELEIRA
+     */
+    $objPrateleira = new Prateleira();
+    $objPrateleiraRN = new PrateleiraRN();
+
+    /*
+     *  COLUNA
+     */
+    $objColuna = new Coluna();
+    $objColunaRN = new ColunaRN();
+
+    /*
+     *  CAIXA
+     */
+    $objCaixa = new Caixa();
+    $objCaixaRN = new CaixaRN();
+
+    /*
+      *  POSIÇÃO
+      */
+    $objPosicao = new Posicao();
+    $objPosicaoRN = new PosicaoRN();
+
     date_default_timezone_set('America/Sao_Paulo');
     $_SESSION['DATA_LOGIN'] = date("Y-m-d H:i:s");
 
-    Sessao::getInstance()->validar();
     $utils = new Utils();
 
 
@@ -548,9 +614,10 @@ try{
                 $objCadastroAmostra->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
                 $objCadastroAmostra->setDataHoraInicio($_POST['dtHoraLoginInicio']);
                 $objCadastroAmostra->setDataHoraFim($_SESSION['DATA_SAIDA']);
+
                 if ($objCadastroAmostraRN->cadastrar($objCadastroAmostra) != null) {
 
-                    $aparecer = false;
+                   $aparecer = false;
                     if ($objPaciente->getCadastroPendente() == 's') {
                         $checkedCadastroPendente = ' checked ';
                     }
@@ -561,6 +628,36 @@ try{
                     }
                     $alert .= Alert::alert_success("Paciente <strong>" . $objPaciente->getNome() . "</strong> CADASTRADO com sucesso");
                     $alert .= Alert::alert_success("Amostra <strong>" . $objAmostra->getCodigoAmostra() . "</strong> CADASTRADA com sucesso");
+
+                    $objPosicao = $objCadastroAmostra->getObjAmostra()->getObjTubo()->getObjPosicao();
+
+                    $objCaixa->setIdCaixa($objPosicao->getIdCaixa_fk());
+                    $objCaixa = $objCaixaRN->consultar($objCaixa);
+
+                    $objColuna->setIdColuna($objCaixa->getIdColuna_fk());
+                    $objColuna = $objColunaRN->consultar($objColuna);
+
+                    $objPrateleira->setIdPrateleira($objColuna->getIdPrateleira_fk());
+                    $objPrateleira = $objPrateleiraRN->consultar($objPrateleira);
+
+                    $objPorta->setIdPorta($objPrateleira->getIdPorta_fk());
+                    $objPorta = $objPortaRN->consultar($objPorta);
+
+                    $objLocalArmazenamento->setIdLocalArmazenamento($objPorta->getIdLocalArmazenamentoFk());
+                    $objLocalArmazenamento = $objLocalArmazenamentoRN->consultar($objLocalArmazenamento);
+
+
+                    $alert .= Alert::alert_info('Colocar a amostra <strong>' . $objAmostra->getCodigoAmostra() . '</strong> na posição '.
+                        $objPosicao->getLinha().' linha x '. $objPosicao->getColuna()
+                        .' coluna da caixa '.$objPosicao->getIdCaixa_fk(). ' no local de armazenamento de nome '
+                        .$objLocalArmazenamento->getNome(). ' e de número '.$objLocalArmazenamento->getIdLocalArmazenamento()
+                        .' - Clique <a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_caixa&idCaixa='.$objCaixa->getIdCaixa().'&idLocalArmazenamento='.$objLocalArmazenamento->getIdLocalArmazenamento()).' class="alert-link">aqui</a> para ver a caixa');
+
+                    //print_r($objLocalArmazenamento);
+                    //echo $objLocalArmazenamento->getNome();
+                    //echo 'controlador.php?action=editar_caixa&idCaixa='.$objCaixa->getIdCaixa().'&idLocalArmazenamento='.$objLocalArmazenamento->getIdLocalArmazenamento();
+
+                    //$alert .= Alert::alert_success('Colocar a amostra ')
                 }else {
                     $alert .= Alert::alert_danger("Paciente não foi CADASTRADO");
                     $alert .= Alert::alert_danger("Amostra não foi CADASTRADA");

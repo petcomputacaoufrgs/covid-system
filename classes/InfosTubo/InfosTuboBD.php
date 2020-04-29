@@ -10,7 +10,7 @@ class InfosTuboBD{
            
             $INSERT = 'INSERT INTO tb_infostubo ('
                     . 'idUsuario_fk,'
-                    . 'idLocalArmazenamento_fk,'
+                    . 'idPosicao_fk,'
                     . 'idTubo_fk,'
                     . 'etapa,'
                     . 'etapaAnterior,'
@@ -26,7 +26,7 @@ class InfosTuboBD{
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objInfosTubo->getIdUsuario_fk());
-            $arrayBind[] = array('i',$objInfosTubo->getIdLocalArmazenamento_fk());
+            $arrayBind[] = array('i',$objInfosTubo->getIdPosicao_fk());
             $arrayBind[] = array('i',$objInfosTubo->getIdTubo_fk());
             $arrayBind[] = array('s',$objInfosTubo->getEtapa());
             $arrayBind[] = array('s',$objInfosTubo->getEtapaAnterior());
@@ -54,7 +54,7 @@ class InfosTuboBD{
 
             $UPDATE = 'UPDATE tb_infostubo SET '
                     . 'idUsuario_fk = ?,'
-                    . 'idLocalArmazenamento_fk = ?,'
+                    . 'idPosicao_fk = ?,'
                     . 'idTubo_fk = ?,'
                     . 'etapa = ?,'
                     . 'etapaAnterior = ?,'
@@ -70,7 +70,7 @@ class InfosTuboBD{
                 
             $arrayBind = array();
             $arrayBind[] = array('i',$objInfosTubo->getIdUsuario_fk());
-            $arrayBind[] = array('i',$objInfosTubo->getIdLocalArmazenamento_fk());
+            $arrayBind[] = array('i',$objInfosTubo->getIdPosicao_fk());
             $arrayBind[] = array('i',$objInfosTubo->getIdTubo_fk());
             $arrayBind[] = array('s',$objInfosTubo->getEtapa());
             $arrayBind[] = array('s',$objInfosTubo->getEtapaAnterior());
@@ -139,8 +139,15 @@ class InfosTuboBD{
                  $AND = ' and ';
                  $arrayBind[] = array('s', $objInfosTubo->getEtapa());
              }
-            
-            if ($WHERE != '') {
+
+             if ($objInfosTubo->getIdPosicao_fk() != null) {
+                 $WHERE .= $AND . " idPosicao_fk = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('i', $objInfosTubo->getIdPosicao_fk());
+             }
+
+
+             if ($WHERE != '') {
                 $WHERE = ' where ' . $WHERE;
             }
 
@@ -155,7 +162,7 @@ class InfosTuboBD{
                 $objInfosTubo = new InfosTubo();
                 $objInfosTubo->setIdInfosTubo($reg['idInfosTubo']);
                 $objInfosTubo->setIdUsuario_fk($reg['idUsuario_fk']);
-                $objInfosTubo->setIdLocalArmazenamento_fk($reg['idLocalArmazenamento_fk']);
+                $objInfosTubo->setIdPosicao_fk($reg['idPosicao_fk']);
                 $objInfosTubo->setIdTubo_fk($reg['idTubo_fk']);
                 $objInfosTubo->setEtapa($reg['etapa']);
                 $objInfosTubo->setEtapaAnterior($reg['etapaAnterior']);
@@ -192,7 +199,7 @@ class InfosTuboBD{
             $objInfosTubo = new InfosTubo();
             $objInfosTubo->setIdInfosTubo($arr[0]['idInfosTubo']);
             $objInfosTubo->setIdUsuario_fk($arr[0]['idUsuario_fk']);
-            $objInfosTubo->setIdLocalArmazenamento_fk($arr[0]['idLocalArmazenamento_fk']);
+            $objInfosTubo->setIdPosicao_fk($arr[0]['idPosicao_fk']);
             $objInfosTubo->setIdTubo_fk($arr[0]['idTubo_fk']);
             $objInfosTubo->setEtapa($arr[0]['etapa']);
             $objInfosTubo->setEtapaAnterior($arr[0]['etapaAnterior']);
@@ -241,7 +248,7 @@ class InfosTuboBD{
             $objInfosTubo = new InfosTubo();
             $objInfosTubo->setIdInfosTubo($arr[0]['idInfosTubo']);
             $objInfosTubo->setIdUsuario_fk($arr[0]['idUsuario_fk']);
-            $objInfosTubo->setIdLocalArmazenamento_fk($arr[0]['idLocalArmazenamento_fk']);
+            $objInfosTubo->setIdPosicao_fk($arr[0]['idPosicao_fk']);
             $objInfosTubo->setIdTubo_fk($arr[0]['idTubo_fk']);
             $objInfosTubo->setEtapa($arr[0]['etapa']);
             $objInfosTubo->setEtapaAnterior($arr[0]['etapaAnterior']);
@@ -266,10 +273,10 @@ class InfosTuboBD{
         try {
 
 
-            $INSERT1 = 'INSERT into tb_informacoes_tubo (idUsuario_fk,idLocalArmazenamento_fk,idTubo_fk,idLote_fk,
+            $INSERT1 = 'INSERT into tb_informacoes_tubo (idUsuario_fk,idPosicao_fk,idTubo_fk,idLote_fk,
                 situacaoTubo,situacaoEtapa,etapa,dataHora,reteste,volume,obsProblema,observacoes) 
                 VALUES (' . '\'' . $info->getIdUsuario_fk() . '\',' .
-                $info->getIdLocalArmazenamento_fk() . ',' .
+                $info->getIdPosicao_fk() . ',' .
                 $info->getIdTubo_fk()
                 . ', null ' . ',\'' .
                 $info->getSituacaoTubo() . '\',\'' .
@@ -301,11 +308,11 @@ class InfosTuboBD{
 
 
                if ($info->getSituacaoTubo() != InfosTuboRN::$TST_DESCARTADO) {
-                   $INSERT = 'INSERT into tb_informacoes_tubo (idUsuario_fk,idLocalArmazenamento_fk,idTubo_fk,idLote_fk,
+                   $INSERT = 'INSERT into tb_informacoes_tubo (idUsuario_fk,idPosicao_fk,idTubo_fk,idLote_fk,
                         situacaoTubo,situacaoEtapa,etapa,dataHora,reteste,volume,obsProblema,observacoes)
                         VALUES (
                         (select idUsuario_fk from tb_infostubo where idInfosTubo = ' . $info->getIdInfosTubo() . '),
-                        (select idLocalArmazenamento_fk from tb_infostubo where idInfosTubo=' . $info->getIdInfosTubo() . '),
+                        (select idPosicao_fk from tb_infostubo where idInfosTubo=' . $info->getIdInfosTubo() . '),
                         (select idTubo_fk from tb_infostubo where idInfosTubo = ' . $info->getIdInfosTubo() . '),
                         (select idLote_fk from tb_infostubo where idInfosTubo = ' . $info->getIdInfosTubo() . '),'
                        . '\'' . InfosTuboRN::$TST_SEM_UTILIZACAO . '\',\'' .

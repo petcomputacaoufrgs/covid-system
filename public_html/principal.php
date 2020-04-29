@@ -137,6 +137,34 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                         . '</div>';
                 }
                 ?>
+
+                <?php
+                // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+                if(Sessao::getInstance()->verificar_permissao('cadastrar_tipoLocalArmazenamento')){
+                    echo '<div class="col-md-2">
+                                  <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_tipoLocalArmazenamento').'">CADASTRAR TIPO LOCAL DE ARMAZENAMENTO </a>'
+                        . '</div>';
+                }
+                ?>
+
+                <?php
+                // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+                if(Sessao::getInstance()->verificar_permissao('mostrar_localArmazenamento')){
+                    echo '<div class="col-md-2">
+                                  <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=mostrar_localArmazenamento').'">MOSTRAR LOCAL DE ARMAZENAMENTO </a>'
+                        . '</div>';
+                }
+                ?>
+
+                <?php
+                // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+                if(Sessao::getInstance()->verificar_permissao('editar_caixa')){
+                    echo '<div class="col-md-2">
+                                  <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_caixa').'">EDITAR CAIXA </a>'
+                        . '</div>';
+                }
+                ?>
+
             </div>
         </div>
 

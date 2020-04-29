@@ -2,11 +2,10 @@
 
 class InfosTubo{
     private $idInfosTubo;
-    private $idLocalArmazenamento_fk;
+    private $idPosicao_fk;
     private $idTubo_fk;
     private $idUsuario_fk;
     private $idLote_fk;
-    private $statusTubo;
     private $etapa;
     private $etapaAnterior;
     private $dataHora;
@@ -19,6 +18,102 @@ class InfosTubo{
 
     function __construct() {
         
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdInfosTubo()
+    {
+        return $this->idInfosTubo;
+    }
+
+    /**
+     * @param mixed $idInfosTubo
+     */
+    public function setIdInfosTubo($idInfosTubo)
+    {
+        $this->idInfosTubo = $idInfosTubo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdPosicao_fk()
+    {
+        return $this->idPosicao_fk;
+    }
+
+    /**
+     * @param mixed $idPosicao_fk
+     */
+    public function setIdPosicao_fk($idPosicao_fk)
+    {
+        $this->idPosicao_fk = $idPosicao_fk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdTubo_fk()
+    {
+        return $this->idTubo_fk;
+    }
+
+    /**
+     * @param mixed $idTubo_fk
+     */
+    public function setIdTubo_fk($idTubo_fk)
+    {
+        $this->idTubo_fk = $idTubo_fk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdUsuario_fk()
+    {
+        return $this->idUsuario_fk;
+    }
+
+    /**
+     * @param mixed $idUsuario_fk
+     */
+    public function setIdUsuario_fk($idUsuario_fk)
+    {
+        $this->idUsuario_fk = $idUsuario_fk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdLote_fk()
+    {
+        return $this->idLote_fk;
+    }
+
+    /**
+     * @param mixed $idLote_fk
+     */
+    public function setIdLote_fk($idLote_fk)
+    {
+        $this->idLote_fk = $idLote_fk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEtapa()
+    {
+        return $this->etapa;
+    }
+
+    /**
+     * @param mixed $etapa
+     */
+    public function setEtapa($etapa)
+    {
+        $this->etapa = $etapa;
     }
 
     /**
@@ -37,25 +132,85 @@ class InfosTubo{
         $this->etapaAnterior = $etapaAnterior;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDataHora()
+    {
+        return $this->dataHora;
+    }
 
+    /**
+     * @param mixed $dataHora
+     */
+    public function setDataHora($dataHora)
+    {
+        $this->dataHora = $dataHora;
+    }
 
     /**
      * @return mixed
      */
-    public function getIdLote_fk()
+    public function getReteste()
     {
-        return $this->idLote_fk;
+        return $this->reteste;
     }
 
     /**
-     * @param mixed $idLote_fk
+     * @param mixed $reteste
      */
-    public function setIdLote_fk($idLote_fk)
+    public function setReteste($reteste)
     {
-        $this->idLote_fk = $idLote_fk;
+        $this->reteste = $reteste;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getVolume()
+    {
+        return $this->volume;
+    }
 
+    /**
+     * @param mixed $volume
+     */
+    public function setVolume($volume)
+    {
+        $this->volume = $volume;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getObservacoes()
+    {
+        return $this->observacoes;
+    }
+
+    /**
+     * @param mixed $observacoes
+     */
+    public function setObservacoes($observacoes)
+    {
+        $this->observacoes = $observacoes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getObsProblema()
+    {
+        return $this->obsProblema;
+    }
+
+    /**
+     * @param mixed $obsProblema
+     */
+    public function setObsProblema($obsProblema)
+    {
+        $this->obsProblema = $obsProblema;
+    }
 
     /**
      * @return mixed
@@ -89,132 +244,6 @@ class InfosTubo{
         $this->situacaoEtapa = $situacaoEtapa;
     }
 
-
-
-    /**
-     * @return mixed
-     */
-    public function getObsProblema()
-    {
-        return $this->obsProblema;
-    }
-
-    /**
-     * @param mixed $obsProblema
-     */
-    public function setObsProblema($obsProblema)
-    {
-        $this->obsProblema = $obsProblema;
-    }
-
-
-
-    /**
-     * @return mixed
-     */
-    public function getDescarteNaEtapa()
-    {
-        return $this->descarteNaEtapa;
-    }
-
-    /**
-     * @param mixed $descarteNaEtapa
-     */
-    public function setDescarteNaEtapa($descarteNaEtapa)
-    {
-        $this->descarteNaEtapa = $descarteNaEtapa;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getObservacoes()
-    {
-        return $this->observacoes;
-    }
-
-    /**
-     * @param mixed $observacoes
-     */
-    public function setObservacoes($observacoes)
-    {
-        $this->observacoes = $observacoes;
-    }
-
-
-    
-    function getIdUsuario_fk() {
-        return $this->idUsuario_fk;
-    }
-
-    function setIdUsuario_fk($idUsuario_fk) {
-        $this->idUsuario_fk = $idUsuario_fk;
-    }
-
-        
-    function getIdInfosTubo() {
-        return $this->idInfosTubo;
-    }
-
-    function getIdLocalArmazenamento_fk() {
-        return $this->idLocalArmazenamento_fk;
-    }
-
-    function getIdTubo_fk() {
-        return $this->idTubo_fk;
-    }
-
-    function getStatusTubo() {
-        return $this->statusTubo;
-    }
-
-    function getEtapa() {
-        return $this->etapa;
-    }
-
-    function getDataHora() {
-        return $this->dataHora;
-    }
-
-    function getReteste() {
-        return $this->reteste;
-    }
-
-    function getVolume() {
-        return $this->volume;
-    }
-
-    function setIdInfosTubo($idInfosTubo) {
-        $this->idInfosTubo = $idInfosTubo;
-    }
-
-    function setIdLocalArmazenamento_fk($idLocalArmazenamento_fk) {
-        $this->idLocalArmazenamento_fk = $idLocalArmazenamento_fk;
-    }
-
-    function setIdTubo_fk($idTubo_fk) {
-        $this->idTubo_fk = $idTubo_fk;
-    }
-
-    function setStatusTubo($statusTubo) {
-        $this->statusTubo = $statusTubo;
-    }
-
-    function setEtapa($etapa) {
-        $this->etapa = $etapa;
-    }
-
-    function setDataHora($dataHora) {
-        $this->dataHora = $dataHora;
-    }
-
-    function setReteste($reteste) {
-        $this->reteste = $reteste;
-    }
-
-    function setVolume($volume) {
-        $this->volume = $volume;
-    }
 
 
 

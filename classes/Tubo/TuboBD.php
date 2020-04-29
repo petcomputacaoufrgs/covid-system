@@ -25,7 +25,7 @@ class TuboBD{
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objTubo->setIdTubo($objBanco->obterUltimoID());
-           
+            return $objTubo;
         } catch (Exception $ex) {
             throw new Excecao("Erro cadastrando o tubo no BD.",$ex);
         }

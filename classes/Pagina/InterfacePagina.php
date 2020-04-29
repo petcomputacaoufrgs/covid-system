@@ -42,6 +42,30 @@ class InterfacePagina
         $select_municipios .= '</select>';
     }
 
+    static function montar_select_tipoLocalArmazenamento(&$select_tipoLocal,$objTipoLocalArmazenamentoRN,$objTipoLocalArmazenamento,$objLocalArmazenamento, $disabled, $onchange)
+    {
+        /* tipo local de armazenamento */
+
+        $arr_locais = $objTipoLocalArmazenamentoRN->listar($objTipoLocalArmazenamento);
+
+        $select_tipoLocal = '<select class="form-control selectpicker "  ' . $disabled . $onchange
+            . 'id="select-country idSel_tipoLocal" data-live-search="true" name="sel_tipoLocalArmazenamento">'
+            . '<option data-tokens="" ></option>';
+
+        foreach ($arr_locais as $local) {
+            $selected = '';
+            if ($objLocalArmazenamento->getIdTipoLocalArmazenamento_fk() == $local->getIdTipoLocalArmazenamento()) {
+                    $selected = 'selected';
+            }
+                $select_tipoLocal .= '<option ' . $selected .
+                    '  value="' . Pagina::formatar_html($local->getIdTipoLocalArmazenamento()) .
+                    '" data-tokens="' . Pagina::formatar_html($local->getTipo()) . '">'
+                    . Pagina::formatar_html($local->getTipo()) . '</option>';
+            }
+
+        $select_tipoLocal .= '</select>';
+    }
+
 static function montar_select_niveis_prioridade(&$select_nivelPrioridade, $objNivelPrioridade, $objNivelPrioridadeRN, &$objAmostra, $disabled, $onchange)
     {
         /* TIPOS AMOSTRA */
@@ -462,6 +486,30 @@ static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPacien
         }
 
         $select_situacao .= '</select>';
+
+    }
+
+    static function montar_select_nivelSeguranca_capela(&$select_nivelSeguranca,$objCapela,$disabled){
+        $select_nivelSeguranca = '<select  class="form-control selectpicker" '
+            . 'id="idSeguCapela" data-live-search="true"  '.$disabled
+            . 'name="sel_nivelSegurancaCapela">'
+            . '<option data-tokens="" value="-1">Selecione o nível de segurança </option>';
+
+        foreach (CapelaRN::listarValoresTipoNivelSeguranca() as $segurancaCapela){
+
+            $selected = ' ';
+            if($objCapela->getNivelSeguranca() ==$segurancaCapela->getStrTipo() ){
+                $selected = ' selected ';
+            }
+
+            $select_nivelSeguranca .=  '<option ' . $selected .
+                '  value="' . Pagina::formatar_html($segurancaCapela->getStrTipo())
+                . '" data-tokens="' .Pagina::formatar_html($segurancaCapela->getStrDescricao()). '">'
+                . Pagina::formatar_html($segurancaCapela->getStrDescricao()) .'</option>';
+
+        }
+
+        $select_nivelSeguranca .= '</select>';
 
     }
 

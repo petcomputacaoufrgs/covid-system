@@ -135,7 +135,7 @@ try {
     }
 
     if (isset($_POST['lock_capela'])) {
-        $objCapela->setNivelSeguranca("NB1");
+        $objCapela->setNivelSeguranca(CapelaRN::$TNS_ALTA_SEGURANCA);
         $objCapela->setSituacaoCapela(CapelaRN::$TE_LIBERADA);
         $arr_capelas_livres = $objCapelaRN->bloquear_registro($objCapela);
 
@@ -243,6 +243,7 @@ try {
                         $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
                         $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
                         //falta só colocar o lugar
+                        
                         $arr_infosTubo_status[] = $objInfosTuboRN->listar($objInfosTubo);
                         print_r($arr_infosTubo_status);
 

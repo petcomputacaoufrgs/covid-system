@@ -26,6 +26,9 @@ class Alert{
         if($tipoAlert == 'alert-success'){
             $strong = 'Sucesso!';
         }
+        if($tipoAlert == 'alert-success'){
+            $strong = 'Sucesso!';
+        }
         return '<div class="alert '. $tipoAlert .' alert-dismissible fade show" role="alert" id="alert_id" >
                 <strong>'.$strong.'</strong> '.$mensagem.'.
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -34,11 +37,29 @@ class Alert{
               </div>
              ';
     }
+
+    public static function alert_link($mensagem,$textoLink,$link){
+
+        return '<div class="alert alert-info" role="alert">'
+                      .$mensagem.'<a href="'.$link.'" class="alert-link">'.$textoLink.'</a>
+                    </div>
+             ';
+    }
     
     
     public static function alert_primary($mensagem){
         return '<div class="alert alert-primary alert-dismissible fade show" role="alert" id="alert_id" >
                 <strong>Aviso!</strong> '.$mensagem.'.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+             ';
+    }
+
+    public static function alert_info($mensagem){
+        return '<div class="alert alert-info alert-dismissible fade show" role="alert" id="alert_id" >
+                <strong>Informação!</strong> '.$mensagem.'.
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>

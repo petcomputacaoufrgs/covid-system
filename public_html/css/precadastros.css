@@ -245,6 +245,10 @@ td,th{
 }
 
 
+.localarm td{
+    padding: 10px;
+}
+
 
 /* Media Queries
 -----------------*/
