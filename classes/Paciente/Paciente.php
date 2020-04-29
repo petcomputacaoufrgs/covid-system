@@ -24,7 +24,6 @@ class Paciente{
     private $obsCartaoSUS;
     private $cartaoSUS;
     private $cadastroPendente;
-    private $obsCodGAL;
     private $obsDataNascimento;
     
     private $objCodGAL;
@@ -240,17 +239,6 @@ class Paciente{
     function setCadastroPendente($cadastroPendente) {
         $this->cadastroPendente = $cadastroPendente;
     }
-    
-    function getObsCodGAL() {
-        return $this->obsCodGAL;
-    }
-
-    function setObsCodGAL($obsCodGAL) {
-        $this->obsCodGAL = $obsCodGAL;
-    }
-
-
-
 
 
 }

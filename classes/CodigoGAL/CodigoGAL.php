@@ -8,12 +8,31 @@ class CodigoGAL
     private $idCodigoGAL;
     private $idPaciente_fk;
     private $codigo;
+    private $obsCodGAL;
    
     
     function __construct() {
         
     }
-    
+
+    /**
+     * @return mixed
+     */
+    public function getObsCodGAL()
+    {
+        return $this->obsCodGAL;
+    }
+
+    /**
+     * @param mixed $obsCodGAL
+     */
+    public function setObsCodGAL($obsCodGAL)
+    {
+        $this->obsCodGAL = $obsCodGAL;
+    }
+
+
+
     function getIdCodigoGAL() {
         return $this->idCodigoGAL;
     }

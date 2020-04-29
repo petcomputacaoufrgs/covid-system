@@ -77,23 +77,22 @@ function validaCODGAL(){
     var div_feedback = document.getElementById("feedback_codGal");
     var x = document.getElementById("id_desaparecer_aparecerCodGAL");
 
-    if( strTipo.value.length == 0  || strTipo.value.length > 20 ){ // não digitou nada
+    if( strTipo.value.length > 20 ){ // não digitou nada
         strTipo.classList.add("is-invalid");
         if(strTipo.classList.contains("is-valid")) strTipo.classList.remove("is-valid");
         if(div_feedback.classList.contains("valid-feedback"))
             div_feedback.classList.remove("valid-feedback");
         div_feedback.classList.add("invalid-feedback");
-        if(strTipo.value.length == 0 ){
-            div_feedback.innerHTML = " Informe um motivo. ";
-            if (x.style.display === "none") {
-                x.style.display = "block";
-            }
-        }
+
         if(strTipo.value.length > 20 ) div_feedback.innerHTML = " Informe um código GAL com até 20 caracteres. ";
     }
 
-    if(strTipo.value.length > 0 && strTipo.value.length <= 20){
-        x.style.display = "none";
+    if(strTipo.value.length <= 20){
+        div_feedback.innerHTML = " . ";
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        }
+
         strTipo.classList.add("is-valid");
         if(strTipo.classList.contains("is-invalid")) strTipo.classList.remove("is-invalid");
         if(div_feedback.classList.contains("invalid-feedback"))

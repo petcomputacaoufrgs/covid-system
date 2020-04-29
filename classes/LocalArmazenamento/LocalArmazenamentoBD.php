@@ -9,17 +9,17 @@ class LocalArmazenamentoBD{
         try{
             //echo $objLocalArmazenamento->getLocalArmazenamento();
             //die("die");
-            $INSERT = 'INSERT INTO tb_localArmazenamento (idTipoLocal_fk,idTempoPermanencia_fk,dataHoraInicio, dataHoraFim) VALUES (?,?,?,?)';
+            $INSERT = 'INSERT INTO tb_local_armazenamento (idTipoLocalArmazenamento_fk,nome) VALUES (?,?)';
 
             $arrayBind = array();
-            $arrayBind[] = array('i',$objLocalArmazenamento->getIdTipoLocal_fk());
-            $arrayBind[] = array('i',$objLocalArmazenamento->getIdTempoPermanencia_fk());
-            $arrayBind[] = array('s',$objLocalArmazenamento->getDataHoraInicio());
-            $arrayBind[] = array('s',$objLocalArmazenamento->getDataHoraFim());
+            $arrayBind[] = array('i',$objLocalArmazenamento->getIdTipoLocalArmazenamento_fk());
+            $arrayBind[] = array('s',$objLocalArmazenamento->getNome());
+
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objLocalArmazenamento->setIdLocalArmazenamento($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+            return $objLocalArmazenamento;
+        } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando armazenamento  no BD.",$ex);
         }
         
@@ -27,24 +27,22 @@ class LocalArmazenamentoBD{
     
     public function alterar(LocalArmazenamento $objLocalArmazenamento, Banco $objBanco) {
         try{
-            $UPDATE = 'UPDATE tb_localArmazenamento SET '
-                    . ' idTipoLocal_fk = ? ,'
-                    . ' idTempoPermanencia_fk = ? ,'
-                    . ' dataHoraInicio = ? ,'
-                    . ' dataHoraFim = ? '
+            $UPDATE = 'UPDATE tb_local_armazenamento SET '
+                    . ' nome = ? ,'
+                    . 'idTipoLocalArmazenamento_fk =?'
                 . '  where idLocalArmazenamento = ?';
         
                 
             $arrayBind = array();
-            $arrayBind[] = array('i',$objLocalArmazenamento->getIdTipoLocal_fk());
-            $arrayBind[] = array('i',$objLocalArmazenamento->getIdTempoPermanencia_fk());
-            $arrayBind[] = array('s',$objLocalArmazenamento->getDataHoraInicio());
-            $arrayBind[] = array('s',$objLocalArmazenamento->getDataHoraFim());
+            $arrayBind[] = array('s',$objLocalArmazenamento->getNome());
+            $arrayBind[] = array('i',$objLocalArmazenamento->getIdLocalArmazenamento_fk());
+
+
             $arrayBind[] = array('i',$objLocalArmazenamento->getIdLocalArmazenamento());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
 
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro alterando armazenamento no BD.",$ex);
         }
        
@@ -53,24 +51,41 @@ class LocalArmazenamentoBD{
      public function listar(LocalArmazenamento $objLocalArmazenamento, Banco $objBanco) {
          try{
       
-            $SELECT = "SELECT * FROM tb_localArmazenamento";
+            $SELECT = "SELECT * FROM tb_local_armazenamento";
 
+             $WHERE = '';
+             $AND = '';
+             $arrayBind = array();
 
-            $arr = $objBanco->consultarSQL($SELECT);
+             if ($objLocalArmazenamento->getIdTipoLocalArmazenamento_fk() != null) {
+                 $WHERE .= $AND . " idTipoLocalArmazenamento_fk = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('i', $objLocalArmazenamento->getIdTipoLocalArmazenamento_fk());
+             }
 
-            $array_detentor = array();
+             if ($objLocalArmazenamento->getNome() != null) {
+                 $WHERE .= $AND . " nome LIKE ? ";
+                 $AND = ' and ';
+                 $arrayBind[] = array('s', "%".$objLocalArmazenamento->getNome()."%");
+             }
+
+             if ($WHERE != '') {
+                 $WHERE = ' where ' . $WHERE;
+             }
+
+             $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
+
+            $array = array();
             foreach ($arr as $reg){
                 $objLocalArmazenamento = new LocalArmazenamento();
                 $objLocalArmazenamento->setIdLocalArmazenamento($reg['idLocalArmazenamento']);
-                $objLocalArmazenamento->setIdTipoLocal_fk($reg['idTipoLocal_fk']);
-                $objLocalArmazenamento->setIdTempoPermanencia_fk($reg['idTempoPermanencia_fk']);
-                $objLocalArmazenamento->setDataHoraInicio($reg['dataHoraInicio']);
-                $objLocalArmazenamento->setDataHoraFim($reg['dataHoraFim']);
+                $objLocalArmazenamento->setIdTipoLocalArmazenamento_fk($reg['idTipoLocalArmazenamento_fk']);
+                $objLocalArmazenamento->setNome($reg['nome']);
 
-                $array_detentor[] = $objLocalArmazenamento;
+                $array[] = $objLocalArmazenamento;
             }
-            return $array_detentor;
-        } catch (Exception $ex) {
+            return $array;
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando armazenamento no BD.",$ex);
         }
        
@@ -80,22 +95,21 @@ class LocalArmazenamentoBD{
 
         try{
 
-            $SELECT = 'SELECT idLocalArmazenamento,idTipoLocal_fk,idTempoPermanencia_fk,dataHoraInicio, dataHoraFim FROM tb_localArmazenamento WHERE idLocalArmazenamento = ?';
+            $SELECT = 'SELECT * FROM tb_local_armazenamento WHERE idLocalArmazenamento = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objLocalArmazenamento->getIdLocalArmazenamento());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
 
-             $localArmazenamento  = new LocalArmazenamento();
-             $localArmazenamento ->setIdLocalArmazenamento($arr[0]['idLocalArmazenamento']);
-             $localArmazenamento ->setIdTipoLocal_fk($arr[0]['idTipoLocal_fk']);
-             $localArmazenamento ->setIdTempoPermanencia_fk($arr[0]['idTempoPermanencia_fk']);
-             $localArmazenamento ->setDataHoraInicio($arr[0]['dataHoraInicio']);
-             $localArmazenamento ->setDataHoraFim($arr[0]['dataHoraFim']);
 
+            $localArmazenamento = new LocalArmazenamento();
+            $localArmazenamento->setIdLocalArmazenamento($arr[0]['idLocalArmazenamento']);
+            $localArmazenamento->setIdTipoLocalArmazenamento_fk($arr[0]['idTipoLocalArmazenamento_fk']);
+            $localArmazenamento->setNome($arr[0]['nome']);
             return  $localArmazenamento ;
-        } catch (Exception $ex) {
+
+        } catch (Throwable $ex) {
        
             throw new Excecao("Erro consultando armazenamento no BD.",$ex);
         }
@@ -106,16 +120,56 @@ class LocalArmazenamentoBD{
 
         try{
             
-            $DELETE = 'DELETE FROM tb_localArmazenamento WHERE idLocalArmazenamento = ? ';  
+            $DELETE = 'DELETE FROM tb_local_armazenamento WHERE idLocalArmazenamento = ? ';
             $arrayBind = array();
             $arrayBind[] = array('i',$objLocalArmazenamento->getIdLocalArmazenamento());
             $objBanco->executarSQL($DELETE, $arrayBind);
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo armazenamento no BD.",$ex);
         }
     }
-    
+
+    public function existe(LocalArmazenamento $objLocalArmazenamento, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT * FROM tb_local_armazenamento ";
+
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($objLocalArmazenamento->getIdTipoLocalArmazenamento_fk() != null) {
+                $WHERE .= $AND . " idTipoLocalArmazenamento_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objLocalArmazenamento->getIdTipoLocalArmazenamento_fk());
+            }
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            //echo $SELECT . $WHERE." LIMIT 1 ";
+            //die();
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE." LIMIT 1 ", $arrayBind);
+
+
+
+            $array = array();
+            foreach ($arr as $reg){
+                $objLocalArmazenamento = new LocalArmazenamento();
+                $objLocalArmazenamento->setIdLocalArmazenamento($reg['idLocalArmazenamento']);
+                $objLocalArmazenamento->setIdTipoLocalArmazenamento_fk($reg['idTipoLocalArmazenamento_fk']);
+                $objLocalArmazenamento->setNome($reg['nome']);
+
+                $array[] = $objLocalArmazenamento;
+            }
+            return $array;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando armazenamento no BD.",$ex);
+        }
+
+    }
       
     
 

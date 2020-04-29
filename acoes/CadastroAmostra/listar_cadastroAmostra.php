@@ -8,7 +8,7 @@ try {
 session_start();
 require_once __DIR__.'/../../classes/Sessao/Sessao.php';
 require_once __DIR__.'/../../classes/Pagina/Pagina.php';
-require_once __DIR__.'/../../classes/Pagina/Interf.php';
+require_once __DIR__ . '/../../classes/Pagina/InterfacePagina.php';
 require_once __DIR__.'/../../classes/Excecao/Excecao.php';
 require_once __DIR__.'/../../utils/Alert.php';
 
@@ -71,7 +71,7 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
     $alert = '';
     $html = '';
 
-    $options = Interf::montar_select_pesquisa($array_colunas,$position);
+    $options = InterfacePagina::montar_select_pesquisa($array_colunas,$position);
 
     $botoes_aparecer = false;
     //resetar
@@ -91,7 +91,7 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
         $valor_selecionado = $array_colunas[$_GET['idColunaSelecionada']]; // a coluna pesquisa me da o numero da coluna que foi escolhida pra a pesquisa
         $position = $_GET['idColunaSelecionada'];
 
-        $options = Interf::montar_select_pesquisa($array_colunas,$position);
+        $options = InterfacePagina::montar_select_pesquisa($array_colunas,$position);
 
 
         //$options = '';
@@ -99,14 +99,14 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
 
 
         if($valor_selecionado ==  'SITUAÇÃO AMOSTRA'){
-            Interf::getInstance()->montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, $disabled, $onchange);
+            InterfacePagina::montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, $disabled, $onchange);
             $inputs = $select_a_r_g;
         }else if($valor_selecionado ==  'PERFIL AMOSTRA'){
-            Interf::getInstance()->montar_select_pp($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, $disabled, $onchange);
+            InterfacePagina::montar_select_pp($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, $disabled, $onchange);
             $inputs = $select_perfis;
         }else if($valor_selecionado ==  'CADASTRO PENDENTE'){
             $select_cadastroPendente = '';
-            Interf::getInstance()->montar_select_cadastroPendente($select_cadastroPendente,  $objPacienteRN,$objPaciente, $disabled, $onchange) ;
+            InterfacePagina::montar_select_cadastroPendente($select_cadastroPendente,  $objPacienteRN,$objPaciente, $disabled, $onchange) ;
             $inputs = $select_cadastroPendente;
         }
         else{
@@ -136,7 +136,7 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
             $objPaciente->setCadastroPendente($_POST['sel_CadastroPendente']);
             $arr_pacientes = $objPacienteRN->listar($objPaciente);
 
-            Interf::getInstance()->montar_select_cadastroPendente($select_cadastroPendente,  $objPacienteRN,$objPaciente, $disabled, $onchange) ;
+            InterfacePagina::montar_select_cadastroPendente($select_cadastroPendente,  $objPacienteRN,$objPaciente, $disabled, $onchange) ;
             $inputs = $select_cadastroPendente;
 
             foreach ($arr_pacientes as $p){
@@ -201,7 +201,7 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
 
                         $tam = count($arr_infosTubo);
                         if ($tam > 0) {
-                            $etapa = $arr_infosTubo[$tam - 1]->getStatusTubo();
+                            $etapa = $arr_infosTubo[$tam - 1]->getSituacaoTubo();
                         }
                     }
 
@@ -248,7 +248,7 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
             } else {
                 $retornou_certo = true;
             }
-            Interf::getInstance()->montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, $disabled, $onchange);
+            InterfacePagina::montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, $disabled, $onchange);
             $inputs = $select_a_r_g;
         }
 
@@ -306,7 +306,7 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
             } else {
                 $retornou_certo = true;
             }
-            Interf::getInstance()->montar_select_pp($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, $disabled, $onchange);
+            InterfacePagina::montar_select_pp($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, $disabled, $onchange);
             $inputs = $select_perfis;
         }
 
@@ -376,10 +376,9 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
                     $objInfosTubo->setIdTubo_fk($indiceTubo);
                     $arr_infosTubo = $objInfosTuboRN->listar($objInfosTubo);
 
-                    $tam = count($arr_infosTubo);
-                    if ($tam > 0) {
-                        $etapa = $arr_infosTubo[$tam - 1]->getStatusTubo();
-                    }
+                $tam = count($arr_infosTubo);
+                if ($tam > 0) {
+                    $etapa = $arr_infosTubo[$tam - 1]->getSituacaoTubo();
                 }
 
                 if ($objPaciente->getCadastroPendente() == 's') {
@@ -390,6 +389,7 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
 
                 $html .= '<tr' . $style . '>
                     <th scope="row">' . Pagina::formatar_html($r->getCodigoAmostra()) . '</th>
+                            <td>' . Pagina::formatar_html($objPaciente->getNome()) . '</td>
                             <td>' . Pagina::formatar_html($result) . '</td>
                             <td>' . Pagina::formatar_html($data) . '</td>'
                     //<td>' . Pagina::formatar_html($etapa) . '</td>
@@ -468,6 +468,7 @@ echo '<div class="conteudo_tabela">
                 <thead>
                     <tr>
                         <th scope="col">CÓDIGO DA AMOSTRA</th>
+                        <th scope="col">PACIENTE</th>
                         <th scope="col">SITUAÇÃO AMOSTRA</th>
                         <th scope="col">DATA DA COLETA</th>
                         <th scope="col">PERFIL DA AMOSTRA</th>

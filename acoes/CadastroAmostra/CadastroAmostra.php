@@ -5,59 +5,128 @@
 
 
 session_start();
+try{
 
-require_once __DIR__.'/../../classes/Sessao/Sessao.php';
-require_once __DIR__.'/../../classes/Pagina/Pagina.php';
-require_once __DIR__.'/../../classes/Pagina/Interf.php';
-require_once __DIR__.'/../../classes/Excecao/Excecao.php';
 
-require_once __DIR__.'/../../classes/Usuario/Usuario.php';
-require_once __DIR__.'/../../classes/Usuario/UsuarioRN.php';
 
-require_once __DIR__.'/../../classes/Paciente/Paciente.php';
-require_once __DIR__.'/../../classes/Paciente/PacienteRN.php';
+    require_once __DIR__.'/../../classes/Sessao/Sessao.php';
+    require_once __DIR__.'/../../classes/Pagina/Pagina.php';
+    require_once __DIR__ . '/../../classes/Pagina/InterfacePagina.php';
+    require_once __DIR__.'/../../classes/Excecao/Excecao.php';
 
-require_once __DIR__.'/../../classes/Sexo/Sexo.php';
-require_once __DIR__.'/../../classes/Sexo/SexoRN.php';
+    require_once __DIR__.'/../../classes/Usuario/Usuario.php';
+    require_once __DIR__.'/../../classes/Usuario/UsuarioRN.php';
 
-require_once __DIR__.'/../../classes/Amostra/Amostra.php';
-require_once __DIR__.'/../../classes/Amostra/AmostraRN.php';
+    require_once __DIR__.'/../../classes/Paciente/Paciente.php';
+    require_once __DIR__.'/../../classes/Paciente/PacienteRN.php';
 
-require_once __DIR__.'/../../classes/EstadoOrigem/EstadoOrigem.php';
-require_once __DIR__.'/../../classes/EstadoOrigem/EstadoOrigemRN.php';
+    require_once __DIR__.'/../../classes/Sexo/Sexo.php';
+    require_once __DIR__.'/../../classes/Sexo/SexoRN.php';
 
-require_once __DIR__.'/../../classes/LugarOrigem/LugarOrigem.php';
-require_once __DIR__.'/../../classes/LugarOrigem/LugarOrigemRN.php';
+    require_once __DIR__.'/../../classes/Amostra/Amostra.php';
+    require_once __DIR__.'/../../classes/Amostra/AmostraRN.php';
 
-require_once __DIR__.'/../../classes/CodigoGAL/CodigoGAL.php';
-require_once __DIR__.'/../../classes/CodigoGAL/CodigoGAL_RN.php';
+    require_once __DIR__.'/../../classes/EstadoOrigem/EstadoOrigem.php';
+    require_once __DIR__.'/../../classes/EstadoOrigem/EstadoOrigemRN.php';
 
-require_once __DIR__.'/../../classes/NivelPrioridade/NivelPrioridade.php';
-require_once __DIR__.'/../../classes/NivelPrioridade/NivelPrioridadeRN.php';
+    require_once __DIR__.'/../../classes/LugarOrigem/LugarOrigem.php';
+    require_once __DIR__.'/../../classes/LugarOrigem/LugarOrigemRN.php';
 
-require_once __DIR__.'/../../classes/CadastroAmostra/CadastroAmostra.php';
-require_once __DIR__.'/../../classes/CadastroAmostra/CadastroAmostraRN.php';
+    require_once __DIR__.'/../../classes/CodigoGAL/CodigoGAL.php';
+    require_once __DIR__.'/../../classes/CodigoGAL/CodigoGAL_RN.php';
 
-require_once __DIR__.'/../../utils/Utils.php';
-require_once __DIR__.'/../../utils/Alert.php';
+    require_once __DIR__.'/../../classes/NivelPrioridade/NivelPrioridade.php';
+    require_once __DIR__.'/../../classes/NivelPrioridade/NivelPrioridadeRN.php';
 
-require_once __DIR__.'/../../classes/Tubo/Tubo.php';
-require_once __DIR__.'/../../classes/Tubo/TuboRN.php';
+    require_once __DIR__.'/../../classes/CadastroAmostra/CadastroAmostra.php';
+    require_once __DIR__.'/../../classes/CadastroAmostra/CadastroAmostraRN.php';
 
-require_once __DIR__.'/../../classes/InfosTubo/InfosTubo.php';
-require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
+    require_once __DIR__.'/../../utils/Utils.php';
+    require_once __DIR__.'/../../utils/Alert.php';
 
-require_once __DIR__.'/../../classes/Etnia/Etnia.php';
-require_once __DIR__.'/../../classes/Etnia/EtniaRN.php';
+    require_once __DIR__.'/../../classes/Tubo/Tubo.php';
+    require_once __DIR__.'/../../classes/Tubo/TuboRN.php';
 
-require_once __DIR__.'/../../classes/PerfilPaciente/PerfilPaciente.php';
-require_once __DIR__.'/../../classes/PerfilPaciente/PerfilPacienteRN.php';
+    require_once __DIR__.'/../../classes/InfosTubo/InfosTubo.php';
+    require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
 
-try {
+    require_once __DIR__.'/../../classes/Etnia/Etnia.php';
+    require_once __DIR__.'/../../classes/Etnia/EtniaRN.php';
+
+    require_once __DIR__.'/../../classes/PerfilPaciente/PerfilPaciente.php';
+    require_once __DIR__.'/../../classes/PerfilPaciente/PerfilPacienteRN.php';
+
+
+    require_once __DIR__ . '/../../classes/Caixa/Caixa.php';
+    require_once __DIR__ . '/../../classes/Caixa/CaixaRN.php';
+
+    require_once __DIR__ . '/../../classes/Posicao/Posicao.php';
+    require_once __DIR__ . '/../../classes/Posicao/PosicaoRN.php';
+
+    require_once __DIR__ . '/../../classes/LocalArmazenamento/LocalArmazenamento.php';
+    require_once __DIR__ . '/../../classes/LocalArmazenamento/LocalArmazenamentoRN.php';
+
+    require_once __DIR__ . '/../../classes/Porta/Porta.php';
+    require_once __DIR__ . '/../../classes/Porta/PortaRN.php';
+
+    require_once __DIR__ . '/../../classes/Prateleira/Prateleira.php';
+    require_once __DIR__ . '/../../classes/Prateleira/PrateleiraRN.php';
+
+    require_once __DIR__ . '/../../classes/Coluna/Coluna.php';
+    require_once __DIR__ . '/../../classes/Coluna/ColunaRN.php';
+
+    require_once __DIR__.'/../../classes/Tubo/Tubo.php';
+    require_once __DIR__.'/../../classes/Tubo/TuboRN.php';
+
+    require_once __DIR__.'/../../classes/InfosTubo/InfosTubo.php';
+    require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
+
+    require_once __DIR__.'/../../classes/Amostra/Amostra.php';
+    require_once __DIR__.'/../../classes/Amostra/AmostraRN.php';
+
+    Sessao::getInstance()->validar();
+
+    /*
+    *  LOCAL DE ARMAZENAMENTO
+    */
+    $objLocalArmazenamento = new LocalArmazenamento();
+    $objLocalArmazenamentoRN = new LocalArmazenamentoRN();
+
+    /*
+        *  PORTA
+        */
+    $objPorta = new Porta();
+    $objPortaRN = new PortaRN();
+
+
+
+    /*
+     *  PRATELEIRA
+     */
+    $objPrateleira = new Prateleira();
+    $objPrateleiraRN = new PrateleiraRN();
+
+    /*
+     *  COLUNA
+     */
+    $objColuna = new Coluna();
+    $objColunaRN = new ColunaRN();
+
+    /*
+     *  CAIXA
+     */
+    $objCaixa = new Caixa();
+    $objCaixaRN = new CaixaRN();
+
+    /*
+      *  POSIÇÃO
+      */
+    $objPosicao = new Posicao();
+    $objPosicaoRN = new PosicaoRN();
+
     date_default_timezone_set('America/Sao_Paulo');
     $_SESSION['DATA_LOGIN'] = date("Y-m-d H:i:s");
 
-    Sessao::getInstance()->validar();
     $utils = new Utils();
 
 
@@ -130,6 +199,8 @@ try {
     $selected_cpf = '';
     $selected_passaporte = '';
     $selected_codGal = '';
+    $selected_nome = '';
+    $listar_pacientes = 'n';
 
     $salvou = '';
     $cadastrarNovo = false;
@@ -149,13 +220,14 @@ try {
     $select_perfis = '';
     $select_a_r_g = '';
 
-    Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
-    Interf::getInstance()->montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
-    Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
-    Interf::getInstance()->montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, '','');
-    Interf::getInstance()->montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra, ' disabled ',''); //por default RS
-    Interf::getInstance()->montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
-    Interf::getInstance()->montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, '','');
+    $campoInformado ='';
+
+    InterfacePagina::montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
+    InterfacePagina::montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
+    InterfacePagina::montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
+    InterfacePagina::montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, '','');
+    InterfacePagina::montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra, ' disabled ',''); //por default RS
+    InterfacePagina::montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, '','');
 
     if(isset($_GET['idPaciente'])){
         $aparecer = true;
@@ -169,7 +241,7 @@ try {
 
     }
 
-    if(isset($_GET['idAmostra'])){
+    if(isset($_GET['idAmostra'])){ //pro caso de editar
         $objAmostra->setIdAmostra($_GET['idAmostra']);
         $objAmostra = $objAmostraRN->consultar($objAmostra);
 
@@ -181,6 +253,7 @@ try {
         }
 
     }
+
 
     switch ($_GET['action']) {
         case 'cadastrar_amostra':
@@ -203,87 +276,136 @@ try {
                     if ($_POST['sel_opcoesCadastro'] == 'passaporte') {
                         $selected_passaporte = ' selected ';
                     }
-                }
-
-                if (isset($_POST['procurar_paciente_CPF'])) {
-                    if (isset($_POST['txtProcuraCPF']) && $_POST['txtProcuraCPF'] != '') {
-                        $objPaciente->setCPF($_POST['txtProcuraCPF']);
-                        $paciente = $objPacienteRN->procurar($objPaciente);
-
-                        if ($paciente == null) {
-                            $alert .= Alert::alert_warning("Nenhum paciente foi encontrado com esse campo (CPF)");
-                            $cadastrarNovo = true;
-                        } else {
-                            $alert .= Alert::alert_success("Foi encontrado paciente com esse campo (CPF)");
-                        }
-                    } else {
-                        $alert .= Alert::alert_warning("Informe o CPF para a busca");
-                    }
-                } else if (isset($_POST['procurar_paciente_passaporte'])) {
-                    if (isset($_POST['txtProcuraPassaporte']) && $_POST['txtProcuraPassaporte'] != '') {
-                        $objPaciente->setPassaporte($_POST['txtProcuraPassaporte']);
-                        $paciente = $objPacienteRN->procurar($objPaciente);
-
-                        if ($paciente == null) {
-                            $alert .= Alert::alert_warning("Nenhum paciente foi encontrado com esse campo (passaporte)");
-                            $cadastrarNovo = true;
-                        } else {
-                            $alert .= Alert::alert_success("Foi encontrado paciente com esse campo (passaporte)");
-                        }
-                    } else {
-                        $alert .= Alert::alert_warning("Informe o passaporte para a busca");
-                    }
-                } else if (isset($_POST['procurar_paciente_RG'])) {
-                    if (isset($_POST['txtProcuraRG']) && $_POST['txtProcuraRG'] != '') {
-                        $objPaciente->setRG($_POST['txtProcuraRG']);
-                        $paciente = $objPacienteRN->procurar($objPaciente);
-
-                        if ($paciente == null) {
-                            $alert .= Alert::alert_warning("Nenhum paciente foi encontrado com esse campo (RG)");
-                            $cadastrarNovo = true;
-                        } else {
-                            $alert .= Alert::alert_success("Foi encontrado paciente com esse campo (RG)");
-                        }
-                    } else {
-                        $alert .= Alert::alert_warning("Informe o RG para a busca");
+                    if ($_POST['sel_opcoesCadastro'] == 'nome') {
+                        $selected_nome = ' selected ';
                     }
                 }
 
-                if (!empty($paciente) && $paciente != null) {
-                    header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra&idPaciente='
-                                    . $paciente[0]->getIdPaciente()));
-                    die();
-                }
-
-                if (isset($_POST['procurar_paciente_codGAL'])) {
-                    if (isset($_POST['txtProcuraCodGAL']) && $_POST['txtProcuraCodGAL'] != '') {
-                        if (is_numeric($_POST['txtProcuraCodGAL'])) {
-                            $objCodigoGAL = new CodigoGAL();
-                            $objCodigoGAL->setCodigo($_POST['txtProcuraCodGAL']);
-                            $paciente = $objCodigoGAL_RN->listar($objCodigoGAL);
-                        } else {
-                            $paciente = null;
-                        }
-                        if ($paciente == null) {
-                            $alert .= Alert::alert_warning("Nenhum paciente foi encontrado com esse campo (código GAL)");
+                if (isset($_POST['procurar_paciente_nome'])) {
+                    if (isset($_POST['txtProcuraNome']) && $_POST['txtProcuraNome'] != '') {
+                        $objPacienteAux = new Paciente();
+                        $objPacienteAux->setNome($_POST['txtProcuraNome']);
+                        $paciente = $objPacienteRN->listar($objPacienteAux);
+                        $selected_nome = ' selected ';
+                        $campoInformado = $_POST['txtProcuraNome'];
+                        if ($paciente == null || count($paciente) == 0) {
+                            $alert .= Alert::alert_warning("Nenhum paciente foi encontrado com esse campo (nome)");
                             $cadastrarNovo = true;
                         } else {
-                            $objCodigoGAL = $paciente[0];
-                            $objPaciente->setIdPaciente($objCodigoGAL->getIdPaciente_fk());
-                            $objPaciente = $objPacienteRN->consultar($objPaciente);
+                            $qntPacientesEncontrados = count($paciente);
+                            $alert .= Alert::alert_success('Foram encontrados '.$qntPacientesEncontrados.' pacientes com esse campo (nome)');
+                            //print_r($paciente);
+                            $listar_pacientes = 's';
 
-                            Header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra&idPaciente='
-                                            . $objPaciente->getIdPaciente() . '&idCodigo=' . $objCodigoGAL->getCodigo()));
-                            die();
-                            //$alert .= Alert::alert_success("código GAL");
-                            //Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente);
-                            //Interf::getInstance()->montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente);
+                            foreach ($paciente as $p) {
+                                if($p->getCadastroPendente() == 's'){
+                                    $pendente = 'sim';
+                                }else{
+                                    $pendente = 'não';
+                                }
+
+                                $lista_pacientes .= '<tr>
+                                        <th scope="row">' . Pagina::formatar_html($p->getIdPaciente()) . '</th>
+                                                <td>' . Pagina::formatar_html($p->getNome()) . '</td>
+                                                <td>' . Pagina::formatar_html($p->getNomeMae()) . '</td>
+                                                <td>' . Pagina::formatar_html($p->getCPF()) . '</td>'
+                                    . '<td>' . Pagina::formatar_html($p->getRG()) . '</td>
+                                                <td>' . Pagina::formatar_html($pendente) . '</td>
+                                                
+                                     <td style="background-color: #3a5261;width: 8%;"><a style="color: white; text-decoration: none;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra&idPaciente='.$p->getIdPaciente()).'" 
+                                    class=""><i style="color:white;margin: 0px; padding: 0px;" class="fas fa-plus-square "></i> Cadastrar</a></td>';
+                            }
+
+                            //tratamento da página
                         }
                     } else {
-                        $alert .= Alert::alert_warning("Informe o código GAL para a busca");
+                        $alert .= Alert::alert_warning("Informe o nome para a busca");
                     }
                 }
+                else {
 
+                    if (isset($_POST['procurar_paciente_CPF'])) {
+                        if (isset($_POST['txtProcuraCPF']) && $_POST['txtProcuraCPF'] != '') {
+                            $objPaciente->setCPF($_POST['txtProcuraCPF']);
+                            $paciente = $objPacienteRN->procurar($objPaciente);
+                            $selected_cpf = ' selected ';
+                            $campoInformado = $_POST['txtProcuraCPF'];
+
+                            if ($paciente == null) {
+                                $alert .= Alert::alert_warning("Nenhum paciente foi encontrado com esse campo (CPF)");
+                                $cadastrarNovo = true;
+                            } else {
+                                $alert .= Alert::alert_success("Foi encontrado paciente com esse campo (CPF)");
+                            }
+                        } else {
+                            $alert .= Alert::alert_warning("Informe o CPF para a busca");
+                        }
+                    } else if (isset($_POST['procurar_paciente_passaporte'])) {
+                        if (isset($_POST['txtProcuraPassaporte']) && $_POST['txtProcuraPassaporte'] != '') {
+                            $objPaciente->setPassaporte($_POST['txtProcuraPassaporte']);
+                            $paciente = $objPacienteRN->procurar($objPaciente);
+                            $selected_passaporte = ' selected ';
+                            $campoInformado = $_POST['txtProcuraPassaporte'];
+                            if ($paciente == null) {
+                                $alert .= Alert::alert_warning("Nenhum paciente foi encontrado com esse campo (passaporte)");
+                                $cadastrarNovo = true;
+                            } else {
+                                $alert .= Alert::alert_success("Foi encontrado paciente com esse campo (passaporte)");
+                            }
+                        } else {
+                            $alert .= Alert::alert_warning("Informe o passaporte para a busca");
+                        }
+                    } else if (isset($_POST['procurar_paciente_RG'])) {
+                        if (isset($_POST['txtProcuraRG']) && $_POST['txtProcuraRG'] != '') {
+                            $objPaciente->setRG($_POST['txtProcuraRG']);
+                            $paciente = $objPacienteRN->procurar($objPaciente);
+                            $selected_rg = ' selected ';
+                            $campoInformado = $_POST['txtProcuraRG'];
+                            if ($paciente == null) {
+                                $alert .= Alert::alert_warning("Nenhum paciente foi encontrado com esse campo (RG)");
+                                $cadastrarNovo = true;
+                            } else {
+                                $alert .= Alert::alert_success("Foi encontrado paciente com esse campo (RG)");
+                            }
+                        } else {
+                            $alert .= Alert::alert_warning("Informe o RG para a busca");
+                        }
+                    }
+
+                    if (!empty($paciente) && $paciente != null) {
+                        header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra&idPaciente='
+                                . $paciente[0]->getIdPaciente()));
+                        die();
+                    }
+
+                    if (isset($_POST['procurar_paciente_codGAL'])) {
+                        if (isset($_POST['txtProcuraCodGAL']) && $_POST['txtProcuraCodGAL'] != '') {
+                            if (is_numeric($_POST['txtProcuraCodGAL'])) {
+                                $objCodigoGAL = new CodigoGAL();
+                                $objCodigoGAL->setCodigo($_POST['txtProcuraCodGAL']);
+                                $paciente = $objCodigoGAL_RN->listar($objCodigoGAL);
+                                $selected_codGal = ' selected ';
+                                $campoInformado = $_POST['txtProcuraCodGAL'];
+                            } else {
+                                $paciente = null;
+                            }
+                            if ($paciente == null) {
+                                $alert .= Alert::alert_warning("Nenhum paciente foi encontrado com esse campo (código GAL)");
+                                $cadastrarNovo = true;
+                            } else {
+                                $objCodigoGAL = $paciente[0];
+                                $objPaciente->setIdPaciente($objCodigoGAL->getIdPaciente_fk());
+                                $objPaciente = $objPacienteRN->consultar($objPaciente);
+
+                                Header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra&idPaciente='
+                                        . $objPaciente->getIdPaciente() . '&idCodigo=' . $objCodigoGAL->getCodigo()));
+                                die();
+                            }
+                        } else {
+                            $alert .= Alert::alert_warning("Informe o código GAL para a busca");
+                        }
+                    }
+                }
 
                 if (isset($_GET['idPaciente'])) {
                     $alert .= Alert::alert_success("Um paciente foi encontrado com esses dados");
@@ -293,26 +415,16 @@ try {
                     $objAmostraAux->setIdPaciente_fk($_GET['idPaciente']);
                     $arr_amostras = $objAmostraRN->listar($objAmostraAux);
 
-
                     if (count($arr_amostras) > 1) {
                         $alert .= Alert::alert_primary("O paciente possui mais de uma amostra");
-                        //Interf::getInstance()->montar_select_amostras($select_amostras, $objAmostra, $objAmostraRN, $objPaciente, '', 'onchange="this.form.submit()"');
                     }
-                    Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
-                    Interf::getInstance()->montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
-                    Interf::getInstance()->montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, '','');
-                    Interf::getInstance()->montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra, 'disabled',''); //por default RS
-                    Interf::getInstance()->montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
-                    Interf::getInstance()->montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, '','');
-                }
+                    InterfacePagina::montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
+                    InterfacePagina::montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
 
-                if (isset($_POST['sel_amostras']) && $_POST['sel_amostras'] != null) {
-                    $objAmostra->setIdAmostra($_POST['sel_amostras']);
-                    Interf::getInstance()->montar_select_amostras($select_amostras, $objAmostra, $objAmostraRN, $objPaciente, '','');
-                    $objAmostra = $objAmostraRN->consultar($objAmostra);
                 }
             }
 
+            //salvou o cadastro
             if (isset($_POST['salvar_cadastro'])) {
                 $errogal = false;
                 $_SESSION['DATA_SAIDA'] = date("Y-m-d H:i:s");
@@ -333,7 +445,7 @@ try {
 
                 $objPaciente->setEndereco($_POST['txtEndereco']);
                 if($objPaciente->getEndereco() == null){
-                        $objPaciente->setObsEndereco($_POST['txtObsEndereco']);
+                    $objPaciente->setObsEndereco($_POST['txtObsEndereco']);
                 }
 
                 $objPaciente->setPassaporte($_POST['txtPassaporte']);
@@ -360,44 +472,31 @@ try {
                     $objPerfilPaciente->setIdPerfilPaciente($_POST['sel_perfil']);
                     $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
                     $objAmostra->setIdPerfilPaciente_fk($_POST['sel_perfil']);
-                    Interf::getInstance()->montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, '','');
+                    InterfacePagina::montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, '','');
                 }
 
-                if(!isset($_GET['idPaciente'])) {
-                    if (isset($_POST['txtCodGAL']) && $_POST['txtCodGAL'] != null) {
+
+                if (isset($_POST['txtCodGAL']) && $_POST['txtCodGAL'] != null) { //se escreveu algo no gal
+
+                    if (!isset($_GET['idPaciente'])) { //paciente NÃO existe
                         $objCodigoGAL->setCodigo($_POST['txtCodGAL']);
-                        $objPaciente->setObjCodGAL($objCodigoGAL);
                     } else {
-                        $objPaciente->setObsCodGAL($_POST['txtObsCodGAL']);
+                        $objCodigoGAL->setCodigo($_POST['txtCodGAL']);
+                        $objCodigoGAL->setIdPaciente_fk($_GET['idPaciente']);
                     }
-                }else{
-
-                    if (isset($_POST['txtCodGAL']) && $_POST['txtCodGAL'] != null) {
-
-                        if($objPerfilPaciente->getIndex_perfil() == 'PACIENTES SUS') {
-                            $objCodigoGAL->setCodigo($_POST['txtCodGAL']);
-                            $objCodigoGAL->setIdPaciente_fk($_GET['idPaciente']);
-                            $objCodigoGAL_RN->alterar($objCodigoGAL);
-                            $objPaciente->setObjCodGAL($objCodigoGAL);
-                        }else{
-                            $objCodigoGAL->setCodigo($_POST['txtCodGAL']);
-                            $objCodigoGAL->setIdPaciente_fk($_GET['idPaciente']);
-                            $errogal = true;
-                            $alert.= Alert::alert_danger("O perfil da amostra não permite que este paciente tenha um código GAL");
-                        }
-                    }
+                    $objCodigoGAL->setObsCodGAL($_POST['txtObsCodGAL']);
+                    $objPaciente->setObjCodGAL($objCodigoGAL);
                 }
-
 
 
                 if (isset($_POST['sel_etnias']) && $_POST['sel_etnias'] != '') {
                     $objPaciente->setIdEtnia_fk($_POST['sel_etnias']);
-                    Interf::getInstance()->montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
+                    InterfacePagina::montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
                 }
 
                 if (isset($_POST['sel_sexo']) && $_POST['sel_sexo'] != '') {
                     $objPaciente->setIdSexo_fk($_POST['sel_sexo']);
-                    Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
+                    InterfacePagina::montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
 
                 }
 
@@ -420,6 +519,10 @@ try {
                     $objPaciente->setCadastroPendente('n');
                 }
 
+                /*
+                 *  CADASTRO DA AMOSTRA - PARTE DA COLETA
+                 */
+
                 $objAmostra->setDataColeta($_POST['dtColeta']);
 
                 if (isset($_POST['timeColeta']) && $_POST['timeColeta'] != null) {
@@ -431,7 +534,7 @@ try {
 
                 if (isset($_POST['sel_a_r_g'])) {
                     $objAmostra->set_a_r_g($_POST['sel_a_r_g']);
-                    Interf::getInstance()->montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, '','');
+                    InterfacePagina::montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, '','');
                 }
 
 
@@ -455,18 +558,26 @@ try {
                 }
 
 
+                /*
+                * TUBO
+                */
+                $objTubo->setIdTubo_fk(null);
+                $objTubo->setTuboOriginal('s');
+                $objTubo->setTipo('COLETA');
+
 
                 /*
-                 * INFOS TUBO 
+                 * INFOS TUBO
                  */
-
+                $objInfosTubo->setEtapa(InfosTuboRN::$TP_RECEPCAO);
+                $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
 
                 if ($objAmostra->get_a_r_g() == 'a') {
-                    $objInfosTubo->setEtapa("recepção - finalizada");
-                    $objInfosTubo->setStatusTubo(" Aguardando preparação ");
+                    $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
+                    $objTubo->setObjInfosTubo($objInfosTubo);
                 } else if ($objAmostra->get_a_r_g() == 'r') {
-                    $objInfosTubo->setEtapa('emitir laudo - descarte na recepção');
-                    $objInfosTubo->setStatusTubo(" Descartado ");
+                    $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO);
+                    $objTubo->setObjInfosTubo($objInfosTubo);
 
                 }
                 $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
@@ -474,77 +585,91 @@ try {
                 $objInfosTubo->setVolume(null);
                 $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getMatricula());
 
-                /*
-                 * TUBO 
-                 */
-                $objTubo->setIdTubo_fk(null);
-                $objTubo->setTuboOriginal('s');
+
 
                 /*
-                 * setar os objs 
+                 * setar os objs
                  */
                 if (isset($_GET['idPaciente'])) {
                     $objPaciente->setIdPaciente($_GET['idPaciente']);
-                    $objPacienteRN->alterar($objPaciente);
-                    $objAmostra->setIdPaciente_fk($objPaciente->getIdPaciente());
-                } ELSE {
-                    $objAmostra->setObjPaciente($objPaciente);
                 }
-
+                $objAmostra->setObjPaciente($objPaciente);
                 $objAmostra->setObjTubo($objTubo);
-                $objTubo->setObjInfosTubo($objInfosTubo);
                 $objCadastroAmostra->setObjAmostra($objAmostra);
 
-                Interf::getInstance()->montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
-                Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
-                Interf::getInstance()->montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
-                Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
-                Interf::getInstance()->montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, '','');
-                Interf::getInstance()->montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra, ' disabled ',''); //por default RS
-                Interf::getInstance()->montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, '','');
+                InterfacePagina::montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
+                InterfacePagina::montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
+                InterfacePagina::montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
+                InterfacePagina::montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
+                InterfacePagina::montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, '','');
+                InterfacePagina::montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra, ' disabled ',''); //por default RS
+                InterfacePagina::montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, '','');
 
                 //print_r($objAmostra);
 
                 /*
                  * CADASTRO AMOSTRA
                  */
-                echo $errogal;
 
-                //DIE();
-                if(!$errogal) {
-                    $objCadastroAmostra->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
-                    $objCadastroAmostra->setDataHoraInicio($_POST['dtHoraLoginInicio']);
-                    $objCadastroAmostra->setDataHoraFim($_SESSION['DATA_SAIDA']);
-                    if ($objCadastroAmostraRN->cadastrar($objCadastroAmostra) != null) {
+                $objCadastroAmostra->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+                $objCadastroAmostra->setDataHoraInicio($_POST['dtHoraLoginInicio']);
+                $objCadastroAmostra->setDataHoraFim($_SESSION['DATA_SAIDA']);
 
-                        $aparecer = false;
-                        if ($objPaciente->getCadastroPendente() == 's') {
-                            $checkedCadastroPendente = ' checked ';
-                        }
-                        $salvou_tudo = 's';
-                        $botaoNovo =  true;
-                        if ($objAmostra->get_a_r_g() == 'r') {
-                            $alert .= Alert::alert_primary('Amostra descartada! Emitir laudo');
-                        }
-                        $alert .= Alert::alert_success("Paciente <strong>" . $objPaciente->getNome() . "</strong> CADASTRADO com sucesso");
-                        $alert .= Alert::alert_success("Amostra <strong>" . $objAmostra->getCodigoAmostra() . "</strong> CADASTRADA com sucesso");
-                    }else {
-                        $alert .= Alert::alert_danger("Paciente não foi CADASTRADO");
-                        $alert .= Alert::alert_danger("Amostra não foi CADASTRADA");
+                if ($objCadastroAmostraRN->cadastrar($objCadastroAmostra) != null) {
+
+                   $aparecer = false;
+                    if ($objPaciente->getCadastroPendente() == 's') {
+                        $checkedCadastroPendente = ' checked ';
                     }
+                    $salvou_tudo = 's';
+                    $botaoNovo =  true;
+                    if ($objAmostra->get_a_r_g() == 'r') {
+                        $alert .= Alert::alert_primary('Amostra descartada! Emitir laudo');
+                    }
+                    $alert .= Alert::alert_success("Paciente <strong>" . $objPaciente->getNome() . "</strong> CADASTRADO com sucesso");
+                    $alert .= Alert::alert_success("Amostra <strong>" . $objAmostra->getCodigoAmostra() . "</strong> CADASTRADA com sucesso");
 
+                    $objPosicao = $objCadastroAmostra->getObjAmostra()->getObjTubo()->getObjPosicao();
+
+                    $objCaixa->setIdCaixa($objPosicao->getIdCaixa_fk());
+                    $objCaixa = $objCaixaRN->consultar($objCaixa);
+
+                    $objColuna->setIdColuna($objCaixa->getIdColuna_fk());
+                    $objColuna = $objColunaRN->consultar($objColuna);
+
+                    $objPrateleira->setIdPrateleira($objColuna->getIdPrateleira_fk());
+                    $objPrateleira = $objPrateleiraRN->consultar($objPrateleira);
+
+                    $objPorta->setIdPorta($objPrateleira->getIdPorta_fk());
+                    $objPorta = $objPortaRN->consultar($objPorta);
+
+                    $objLocalArmazenamento->setIdLocalArmazenamento($objPorta->getIdLocalArmazenamentoFk());
+                    $objLocalArmazenamento = $objLocalArmazenamentoRN->consultar($objLocalArmazenamento);
+
+
+                    $alert .= Alert::alert_info('Colocar a amostra <strong>' . $objAmostra->getCodigoAmostra() . '</strong> na posição '.
+                        $objPosicao->getLinha().' linha x '. $objPosicao->getColuna()
+                        .' coluna da caixa '.$objPosicao->getIdCaixa_fk(). ' no local de armazenamento de nome '
+                        .$objLocalArmazenamento->getNome(). ' e de número '.$objLocalArmazenamento->getIdLocalArmazenamento()
+                        .' - Clique <a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_caixa&idCaixa='.$objCaixa->getIdCaixa().'&idLocalArmazenamento='.$objLocalArmazenamento->getIdLocalArmazenamento()).' class="alert-link">aqui</a> para ver a caixa');
+
+                    //print_r($objLocalArmazenamento);
+                    //echo $objLocalArmazenamento->getNome();
+                    //echo 'controlador.php?action=editar_caixa&idCaixa='.$objCaixa->getIdCaixa().'&idLocalArmazenamento='.$objLocalArmazenamento->getIdLocalArmazenamento();
+
+                    //$alert .= Alert::alert_success('Colocar a amostra ')
                 }else {
                     $alert .= Alert::alert_danger("Paciente não foi CADASTRADO");
                     $alert .= Alert::alert_danger("Amostra não foi CADASTRADA");
                 }
 
-                Interf::getInstance()->montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
-                Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
-                Interf::getInstance()->montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
-                Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
-                Interf::getInstance()->montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, '','');
-                Interf::getInstance()->montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra, ' disabled ',''); //por default RS
-                Interf::getInstance()->montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, '','');
+
+                InterfacePagina::montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
+                InterfacePagina::montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
+                InterfacePagina::montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
+                InterfacePagina::montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, '','');
+                InterfacePagina::montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra, ' disabled ',''); //por default RS
+                InterfacePagina::montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, '','');
 
             }
 
@@ -574,22 +699,28 @@ try {
                 }
 
 
+                InterfacePagina::montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
+                InterfacePagina::montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
+                InterfacePagina::montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
+                InterfacePagina::montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, '','');
+                InterfacePagina::montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra, ' disabled ',''); //por default RS
+                InterfacePagina::montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, '','');
 
-                Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
-                Interf::getInstance()->montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
-                Interf::getInstance()->montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, '','');
-                Interf::getInstance()->montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra, ' disabled',''); //por default RS
-                Interf::getInstance()->montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
-                Interf::getInstance()->montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, '','');
             }
 
 
             if (isset($_POST['salvar_cadastro'])) {
-                $_SESSION['DATA_LOGIN'] = date("Y-m-d H:i:s");
+                $_SESSION['DATA_SAIDA'] = date("Y-m-d H:i:s");
+                //$_SESSION['DATA_LOGIN'] = date("Y-m-d H:i:s");
 
 
                 $objAmostra->setIdAmostra($_GET['idAmostra']);
                 $objAmostra = $objAmostraRN->consultar($objAmostra);
+
+                if($objAmostra->getIdCodGAL_fk() != null){
+                    $objCodigoGAL->setIdCodigoGAL($objAmostra->getIdCodGAL_fk());
+                    $objCodigoGAL = $objCodigoGAL_RN->consultar($objCodigoGAL);
+                }
 
                 $objAmostra->setDataColeta($_POST['dtColeta']);
 
@@ -624,14 +755,14 @@ try {
 
                 if (isset($_POST['sel_a_r_g'])) {
                     $objAmostra->set_a_r_g($_POST['sel_a_r_g']);
-                    Interf::getInstance()->montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, '','');
+                    InterfacePagina::montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, '','');
                 }
 
                 if (isset($_POST['sel_perfil'])) {
                     $objPerfilPaciente->setIdPerfilPaciente($_POST['sel_perfil']);
                     $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
                     $objAmostra->setIdPerfilPaciente_fk($_POST['sel_perfil']);
-                    Interf::getInstance()->montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, '','');
+                    InterfacePagina::montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, '','');
                 }
 
 
@@ -646,7 +777,7 @@ try {
                 if($objAmostra->getIdLugarOrigem_fk() == null){
                     $objAmostra->setObsLugarOrigem($_POST['txtObsLugarOrigem']);
                 }
-                Interf::getInstance()->montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
+                InterfacePagina::montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
 
                 $objAmostra->setIdNivelPrioridade_fk(null);
 
@@ -707,33 +838,22 @@ try {
                 }
 
 
-
-                /*
-                print_r($objPerfilPaciente);
-                 if (isset($_POST['txtCartaoSUS']) && $_POST['txtCartaoSUS'] != null) {
-
-                     if($objPerfilPaciente->getIndex_perfil() == 'PACIENTES SUS') {
-                         $objPaciente->setCartaoSUS($_POST['txtCartaoSUS']);
-                     }else{
-                         $erroSUS = true;
-                         $alert.= Alert::alert_danger("O perfil da amostra não permite que este paciente tenha um cartão SUS");
-                     }
-
-                 }*/
-
-                if (isset($_POST['txtCodGAL']) && $_POST['txtCodGAL'] != null) {
-                    if($objPerfilPaciente->getIndex_perfil() == 'PACIENTES SUS') {
+                $objPaciente->setObjCodGAL(null);
+                if (isset($_POST['txtCodGAL']) && $_POST['txtCodGAL'] != null && strlen($_POST['txtCodGAL']) > 1) { //se escreveu algo no gal
+                    if ($objAmostra->getIdCodGAL_fk() == null && $_POST['txtCodGAL'] != 0 ) { //não tinha nenhum código gal associado até agora
                         $objCodigoGAL->setCodigo($_POST['txtCodGAL']);
                         $objCodigoGAL->setIdPaciente_fk($_GET['idPaciente']);
-                        $objCodigoGAL_RN->alterar($objCodigoGAL);
-                    }else{
-                        $objCodigoGAL->setCodigo($_POST['txtCodGAL']);
-                        $objCodigoGAL->setIdPaciente_fk($_GET['idPaciente']);
-                        $errogal = true;
-                        $alert.= Alert::alert_danger("O perfil da amostra não permite que este paciente tenha um código GAL");
+                    } else { //o código gal já existia, precisa ser editado
+                        if($_POST['txtCodGAL'] != 0) {
+                            $objCodigoGAL->setIdCodigoGAL($objAmostra->getIdCodGAL_fk());
+                            $objCodigoGAL->setCodigo($_POST['txtCodGAL']);
+                            $objCodigoGAL->setIdPaciente_fk($_GET['idPaciente']);
+                        }
                     }
-                    //$objPaciente->setObjCodGAL();
+                    $objCodigoGAL->setObsCodGAL($_POST['txtObsCodGAL']);
+                    $objPaciente->setObjCodGAL($objCodigoGAL);
                 }
+
 
 
                 if (isset($_POST['sel_etnias']) && $_POST['sel_etnias'] != '') {
@@ -761,68 +881,116 @@ try {
                     $objPaciente->setCadastroPendente('n');
                 }
 
-
-                $objPacienteRN->alterar($objPaciente);
-                //echo $errogal;
-                if(!$errogal) {
-                    $objAmostraRN->alterar($objAmostra);
-                    $alert .= Alert::alert_success('Dados da amostra <strong>'.$objAmostra->getCodigoAmostra().'</strong> ALTERADOS com sucesso');
-                }
+                $objAmostra->setObjPaciente($objPaciente);
 
                 if($objPaciente->getCadastroPendente() == 's'){
                     $checkedCadastroPendente = ' checked ';
                 }
 
                 /*
-                 * TUBO 
+                 * TUBO
                  */
                 $objTubo->setIdAmostra_fk($objAmostra->getIdAmostra());
                 $objTubo->setTuboOriginal('s');
+                $objTubo->setTipo('COLETA');
                 $arr_tbs = $objTuboRN->listar($objTubo);
 
                 if (empty($arr_tbs)) {
                     if ($objAmostra->get_a_r_g() == 'a' || $objAmostra->get_a_r_g() == 'r') {
+
                         $objTubo->setIdTubo_fk(null);
                         $objTubo->setTuboOriginal('s');
                         $objTubo->setIdAmostra_fk($_GET['idAmostra']);
                         $objAmostra->setObjTubo($objTubo);
 
                         //recém criou o tubo
-                        $objInfosTubo->setEtapa("recepção - finalizada");
+                        $objInfosTubo->setEtapa(InfosTuboRN::$TP_RECEPCAO);
+                        $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
+
                         if ($objAmostra->get_a_r_g() == 'a') {
-                            $objInfosTubo->setStatusTubo(" Aguardando preparação ");
+                            $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
                         } else if ($objAmostra->get_a_r_g() == 'r') {
-                            $objInfosTubo->setStatusTubo(" Descartado ");
+                            $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO);
                         }
+
                         $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
                         $objInfosTubo->setReteste('n');
                         $objInfosTubo->setVolume(null);
                         $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getMatricula());
-
                         $objTubo->setObjInfosTubo($objInfosTubo);
-                        $objTuboRN->cadastrar($objTubo);
+                        $objAmostra->setObjTubo($objTubo);
+
                     }
-                } else {
+
+                }
+                else { //já tem algum tubo
+
+
                     $objTubo = $arr_tbs[0];
                     $objInfosTubo->setIdTubo_fk($objTubo->getIdTubo());
+                    $arr_infos = $objInfosTuboRN->listar($objInfosTubo);
+                    $objInfosTubo = end($arr_infos);
+                    $objInfosTuboAux = $objInfosTubo;
+
+                    $objInfosTuboAux->setIdInfosTubo(null);
                     if ($objAmostra->get_a_r_g() == 'r') {
-                        $objInfosTubo->setStatusTubo(" Descartado ");
+                        $objInfosTuboAux->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO);
+
                     }
-                    $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
-                    $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getMatricula());
+
+                    if ($objAmostra->get_a_r_g() == 'r') {
+                        $objInfosTuboAux->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
+                    }
+
+                    if($objAmostra->get_a_r_g() == 'g'){ //se for aguardando então ele remove o tubo que já existia
+                        $objTubo->getIdAmostra_fk($objAmostra->getIdAmostra());
+                        $arr_tubos = $objTuboRN->listar($objTubo);
+                        foreach ($arr_tubos as $t) {
+                            $objTuboRN->remover($t);
+                        }
+                    }
+
+                    $objInfosTuboAux->setDataHora(date("Y-m-d H:i:s"));
+                    $objInfosTuboAux->setIdUsuario_fk(Sessao::getInstance()->getMatricula());
+
+                    $objTubo->setObjInfosTubo($objInfosTuboAux);
+                    $objAmostra->setObjTubo($objTubo);
+                }
+                print_r($objAmostra);
+
+                $objAmostra->setIdAmostra($_GET['idAmostra']);
+                $objAmostra->setObjPaciente($objPaciente);
+                $objCadastroAmostra->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+                $objCadastroAmostra->setDataHoraInicio($_POST['dtHoraLoginInicio']);
+                $objCadastroAmostra->setDataHoraFim($_SESSION['DATA_SAIDA']);
+                $objCadastroAmostra->setObjAmostra($objAmostra);
+
+
+                if ($objCadastroAmostraRN->cadastrar($objCadastroAmostra) != null) {
+
+                    if ($objPaciente->getCadastroPendente() == 's') {
+                        $checkedCadastroPendente = ' checked ';
+                    }
+                    $salvou_tudo = 's';
+                    $botaoNovo =  true;
+                    if ($objAmostra->get_a_r_g() == 'r') {
+                        $alert .= Alert::alert_primary('Amostra descartada! Emitir laudo');
+                    }
+                    $alert .= Alert::alert_success("Paciente <strong>" . $objPaciente->getNome() . "</strong> ALTERADO com sucesso");
+                    $alert .= Alert::alert_success("Amostra <strong>" . $objAmostra->getCodigoAmostra() . "</strong> ALTERADO com sucesso");
+                }else {
+                    $alert .= Alert::alert_danger("Paciente não foi ALTERADO");
+                    $alert .= Alert::alert_danger("Amostra não foi ALTERADO");
                 }
 
 
 
-            
-
-                Interf::getInstance()->montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '', '');
-                Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '', '');
-                Interf::getInstance()->montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '', '');
-                Interf::getInstance()->montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '', '');
-                Interf::getInstance()->montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, '', '');
-                Interf::getInstance()->montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra, '', ''); //por default RS
-                Interf::getInstance()->montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, '', '');
+                InterfacePagina::montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
+                InterfacePagina::montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
+                InterfacePagina::montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
+                InterfacePagina::montar_select_perfilPaciente($select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $objAmostra, '','');
+                InterfacePagina::montar_select_estado($select_estados, $objEstadoOrigem, $objEstadoOrigemRN, $objAmostra, ' disabled ',''); //por default RS
+                InterfacePagina::montar_select_aceitaRecusadaAguarda($select_a_r_g, $objAmostra, '','');
             }
 
             break;
@@ -855,7 +1023,7 @@ echo $popUp;
 echo $alert;
 
 
-    echo ' <!-- Modal -->
+echo ' <!-- Modal -->
     <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -895,19 +1063,34 @@ if(!$aparecer && !$botaoNovo){
                     <option ' . $selected_cpf . ' value="CPF" data-tokens="CPF"> CPF</option>
                     <option  ' . $selected_rg . 'value="RG" data-tokens="RG"> RG</option>
                     <option  ' . $selected_passaporte . 'value="passaporte" data-tokens="Passaporte"> Passaporte</option>
+                    <option  ' . $selected_nome . 'value="nome" data-tokens="Nome"> Nome</option>
                     </select>
                 </div>
             </div>
 
         </form>   
     </div>';
-        if (isset($_POST['sel_opcoesCadastro']) && $_POST['sel_opcoesCadastro'] != '' && $_POST['sel_opcoesCadastro'] != null) {
+        //if (isset($_POST['sel_opcoesCadastro']) && $_POST['sel_opcoesCadastro'] != '' && $_POST['sel_opcoesCadastro'] != null ) {
+        if($selected_nome != '' ||  $selected_cpf != '' || $selected_rg != '' || $selected_passaporte != ''){
             echo '<div class="conteudo_grande" style="margin-top:-20px;">
                     <form method="POST">
                         <div class="form-row"> 
                             <div class="col-md-10">';
 
-            if ($_POST['sel_opcoesCadastro'] == 'CPF') {
+            if ($_POST['sel_opcoesCadastro'] == 'nome' || $selected_nome != '') {
+
+                echo '
+                     <label for="label_cpf">Digite o nome:</label>
+                     <input type="text" class="form-control" id="idNome" placeholder="" 
+                               onblur="valida_nome()" name="txtProcuraNome"  
+                               value="'.$campoInformado.'">
+                        <div id ="feedback_nome"></div>
+                </div>
+                <div class="col-md-2"><button class="btn btn-primary" 
+                style="width: 100%; height: 55%;margin:0px;margin-top:30px;" type="submit" 
+                name="procurar_paciente_nome">Procurar</button></div>';
+
+            } else if ($_POST['sel_opcoesCadastro'] == 'CPF' || $selected_cpf != '') {
                 echo '
                                  <label for="label_cpf">Digite o CPF:</label>
                                  <input type="number" class="form-control" id="idCPF" placeholder="" 
@@ -917,7 +1100,7 @@ if(!$aparecer && !$botaoNovo){
                             <div class="col-md-2"><button class="btn btn-primary" 
                             style="width: 100%; height: 55%;margin:0px;margin-top:30px;" type="submit" 
                             name="procurar_paciente_CPF">Procurar</button></div>';
-            } else if ($_POST['sel_opcoesCadastro'] == 'codGal') {
+            } else if ($_POST['sel_opcoesCadastro'] == 'codGal' || $selected_codGal != '') {
                 echo '               <label for="label_codGAL">Digite o código GAL:</label>
                                  <input type="text" class="form-control" id="idCodGAL" placeholder="" 
                                            onblur="" name="txtProcuraCodGAL"  value="' . Pagina::formatar_html($objCodigoGAL->getCodigo()) . '">
@@ -926,7 +1109,8 @@ if(!$aparecer && !$botaoNovo){
                             <div class="col-md-2"><button class="btn btn-primary" 
                             style="width: 100%; height: 55%;margin:0px;margin-top:30px;" type="submit" 
                             name="procurar_paciente_codGAL">Procurar</button></div>';
-            } else if ($_POST['sel_opcoesCadastro'] == 'RG') {
+
+            } else if ($_POST['sel_opcoesCadastro'] == 'RG' || $selected_rg != '') {
                 echo '
                                  <label for="label_rg">Digite o RG:</label>
                                  <input type="number" class="form-control" id="idRG" placeholder="" 
@@ -936,7 +1120,7 @@ if(!$aparecer && !$botaoNovo){
                             <div class="col-md-2"><button class="btn btn-primary" 
                             style="width: 100%; height: 55%;margin:0px;margin-top:30px;" type="submit" 
                             name="procurar_paciente_RG">Procurar</button></div>';
-            } else if ($_POST['sel_opcoesCadastro'] == 'passaporte') {
+            } else if ($_POST['sel_opcoesCadastro'] == 'passaporte' || $selected_passaporte!= '') {
                 echo '
                 <label for="label_passaporte">Digite o passaporte:</label>
                 <input type="text" class="form-control" id="idPassaporte" placeholder="" 
@@ -955,54 +1139,75 @@ if(!$aparecer && !$botaoNovo){
     }
 }
 
-/*if ($cadastrarNovo)
-    echo '<small ' . $salvou . ' style="width:50%; margin-left:7%; color:red;">Informe o paciente desde o início ou procure por outro documento</small>';*/
-if ($aparecer || $cadastrarNovo){//(isset($_GET['idPaciente']) || $cadastrarNovo ) {
-    ?>
+
+if($listar_pacientes == 's'){
+    echo   '<div class="conteudo_tabela" style="width:98%;margin-left: 1%;margin-right: 1%;">
+            <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col"># </th>
+                <th scope="col">NOME</th>
+                <th scope="col">NOME MAE</th>
+                <th scope="col">CPF</th>
+                <th scope="col">RG</th>
+                <th scope="col">PENDENTE</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>';
+    echo $lista_pacientes;
+    echo '</tbody>
+          </table>';
+
+}else{
+    /*if ($cadastrarNovo)
+        echo '<small ' . $salvou . ' style="width:50%; margin-left:7%; color:red;">Informe o paciente desde o início ou procure por outro documento</small>';*/
+    if ($aparecer || $cadastrarNovo){//(isset($_GET['idPaciente']) || $cadastrarNovo ) {
+        ?>
 
 
-    <div class="conteudo_grande">
-        <form method="POST" onsubmit="validar()" >
-            <div class="col-md-3">
-                <input type="text" class="form-control" id="idDataHoraLogin" hidden style="text-align: center;"
-                       name="dtHoraLoginInicio" required value="<?= $_SESSION['DATA_LOGIN'] ?>">
-            </div>
+        <div class="conteudo_grande">
+            <form method="POST" onsubmit="validar()" >
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="idDataHoraLogin" hidden style="text-align: center;"
+                           name="dtHoraLoginInicio" required value="<?= $_SESSION['DATA_LOGIN'] ?>">
+                </div>
 
-            <?php
-            if ($select_amostras != null) {
+                <?php
+                if ($select_amostras != null) {
 
-                echo '  
+                    echo '  
                   <div class="form-row">
                          <div class="col-md-12">
                             <label for="tdsAmostras" >Amostras:</label>' .
-                $select_amostras .
-                '</div>
+                        $select_amostras .
+                        '</div>
                         </div>
                   
                      ';
-            }
-            ?>
+                }
+                ?>
 
 
-            <h2> Sobre o paciente </h2>
-            <hr width = 2 size = 2>
-            <div class="form-row" style="margin-top:10px;">
-                <div class="col-md-3 mb-3">
-                    <label for="label_nome">Digite o nome:</label>
-                    <input type="text" class="form-control <?= $invalid ?>" id="idNome" placeholder="Nome"
-                           onblur="validaNome()" name="txtNome"  value="<?= $objPaciente->getNome() ?>">
-                    <div id ="feedback_nome" ></div>
+                <h2> Sobre o paciente </h2>
+                <hr width = 2 size = 2>
+                <div class="form-row" style="margin-top:10px;">
+                    <div class="col-md-3 mb-3">
+                        <label for="label_nome">Digite o nome:</label>
+                        <input type="text" class="form-control <?= $invalid ?>" id="idNome" placeholder="Nome"
+                               onblur="validaNome()" name="txtNome"  value="<?= $objPaciente->getNome() ?>">
+                        <div id ="feedback_nome" ></div>
 
-                </div>
-                <div class="col-md-3 mb-9">
-                    <label for="label_nomeMae">Digite o nome da mãe:</label>
-                    <input type="text" class="form-control" id="idNomeMae" placeholder="Nome da mãe"
-                           onblur="validaNomeMae()" name="txtNomeMae" value="<?= $objPaciente->getNomeMae() ?>">
-                    <div id ="feedback_nomeMae"></div>
-                    <?php if($objPaciente->getNomeMae() != null){
-                        $displayNomeMae = ' display:none;';
-                    } ?>
-                    <div class="desaparecer_aparecer" id="id_desaparecer_aparecerObsNomeMae" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayNomeMae?>" >
+                    </div>
+                    <div class="col-md-3 mb-9">
+                        <label for="label_nomeMae">Digite o nome da mãe:</label>
+                        <input type="text" class="form-control" id="idNomeMae" placeholder="Nome da mãe"
+                               onblur="validaNomeMae()" name="txtNomeMae" value="<?= $objPaciente->getNomeMae() ?>">
+                        <div id ="feedback_nomeMae"></div>
+                        <?php if($objPaciente->getNomeMae() != null){
+                            $displayNomeMae = ' display:none;';
+                        } ?>
+                        <div class="desaparecer_aparecer" id="id_desaparecer_aparecerObsNomeMae" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayNomeMae?>" >
 
                             <div class="form-row align-items-center" >
                                 <div class="col-auto my-1">
@@ -1015,19 +1220,19 @@ if ($aparecer || $cadastrarNovo){//(isset($_GET['idPaciente']) || $cadastrarNovo
                                     <div id ="feedback_obsNomeMae"></div>
                                 </div>
                             </div>
-                    </div>
+                        </div>
 
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="label_dtNascimento">Digite a data de nascimento:</label>
-                    <input type="date" class="form-control" id="idDtNascimento" placeholder="Data de nascimento"
-                           onblur="validaDataNascimento()" name="dtDataNascimento"
-                           value="<?= $objPaciente->getDataNascimento() ?>">
-                    <div id ="feedback_dtNascimento"></div>
-                    <?php if($objPaciente->getDataNascimento() != null){
-                        $displayNascimento = ' display:none;';
-                    } ?>
-                    <div class="desaparecer_aparecer" id="id_desaparecer_aparecerDataNascimento" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayNascimento?>" >
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="label_dtNascimento">Digite a data de nascimento:</label>
+                        <input type="date" class="form-control" id="idDtNascimento" placeholder="Data de nascimento"
+                               onblur="validaDataNascimento()" name="dtDataNascimento"
+                               value="<?= $objPaciente->getDataNascimento() ?>">
+                        <div id ="feedback_dtNascimento"></div>
+                        <?php if($objPaciente->getDataNascimento() != null){
+                            $displayNascimento = ' display:none;';
+                        } ?>
+                        <div class="desaparecer_aparecer" id="id_desaparecer_aparecerDataNascimento" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayNascimento?>" >
                             <div class="form-row align-items-center" >
                                 <div class="col-auto my-1">
                                     <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
@@ -1036,37 +1241,37 @@ if ($aparecer || $cadastrarNovo){//(isset($_GET['idPaciente']) || $cadastrarNovo
                                     <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
                                            type="text" class="form-control" id="idObsDtNascimento" placeholder="Desconhecido"
                                            onblur="validaObsDtNascimento()" name="txtObsDataNascimento" value="<?= $objPaciente->getObsDataNascimento() ?>">
-                                    <div id ="feedback_obsCodGAL"></div>
+                                    <div id ="feedback_dtNascimento"></div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+
+                    <div class="col-md-3 mb-4">
+                        <label for="sexoPaciente" >Sexo:</label>
+                        <?= $select_sexos ?>
+                        <div id ="feedback_sexo"></div>
+                    </div>
+
                 </div>
 
 
-                <div class="col-md-3 mb-4">
-                    <label for="sexoPaciente" >Sexo:</label>
-                    <?= $select_sexos ?>
-                    <div id ="feedback_sexo"></div>
-                </div>
+                <div class="form-row">
 
-            </div>  
-
-
-            <div class="form-row">
-
-                <div class="col-md-3 mb-4">
-                    <label for="etniaPaciente" >Etnia:</label>
-                    <?= $select_etnias ?>
-                    <div id ="feedback_sexo"></div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="label_cpf">Digite o CPF:</label>
-                    <input type="text" class="form-control cep-mask" id="idCPF" placeholder="CPF"
-                           onblur="validaCPF()" name="txtCPF" value="<?= $objPaciente->getCPF() ?>">
-                    <div id ="feedback_cpf"></div>
-                    <?php if($objPaciente->getCPF() != null){
-                        $displayCPF = ' display:none;';
-                    } ?>
+                    <div class="col-md-3 mb-4">
+                        <label for="etniaPaciente" >Etnia:</label>
+                        <?= $select_etnias ?>
+                        <div id ="feedback_sexo"></div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="label_cpf">Digite o CPF:</label>
+                        <input type="text" class="form-control cep-mask" id="idCPF" placeholder="CPF"
+                               onblur="validaCPF()" name="txtCPF" value="<?= $objPaciente->getCPF() ?>">
+                        <div id ="feedback_cpf"></div>
+                        <?php if($objPaciente->getCPF() != null){
+                            $displayCPF = ' display:none;';
+                        } ?>
                         <div class="desaparecer_aparecer" id="id_desaparecer_aparecerCPF" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayCPF?>" >
                             <div class="form-row align-items-center" >
                                 <div class="col-auto my-1">
@@ -1081,15 +1286,15 @@ if ($aparecer || $cadastrarNovo){//(isset($_GET['idPaciente']) || $cadastrarNovo
                             </div>
                         </div>
 
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="label_rg">Digite o RG:</label>
-                    <input type="txt" class="form-control" id="idRG" placeholder="RG"
-                           onblur="validaRG()" name="txtRG"  value="<?= $objPaciente->getRG() ?>">
-                    <div id ="feedback_rg"></div>
-                    <?php if($objPaciente->getRG() != null){
-                        $displayRG = ' display:none;';
-                    } ?>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="label_rg">Digite o RG:</label>
+                        <input type="txt" class="form-control" id="idRG" placeholder="RG"
+                               onblur="validaRG()" name="txtRG"  value="<?= $objPaciente->getRG() ?>">
+                        <div id ="feedback_rg"></div>
+                        <?php if($objPaciente->getRG() != null){
+                            $displayRG = ' display:none;';
+                        } ?>
                         <div class="desaparecer_aparecer" id="id_desaparecer_aparecerRG" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayRG?>" >
                             <div class="form-row align-items-center" >
                                 <div class="col-auto my-1">
@@ -1104,47 +1309,47 @@ if ($aparecer || $cadastrarNovo){//(isset($_GET['idPaciente']) || $cadastrarNovo
                             </div>
                         </div>
 
-                </div>
+                    </div>
 
-                <div class="col-md-3 mb-3">
-                    <label for="label_passaporte">Digite o passaporte:</label>
-                    <input type="txt" class="form-control" id="idPassaporte" placeholder="Passaporte"
-                           onblur="validaPassaporte()" name="txtPassaporte"  value="<?= $objPaciente->getPassaporte() ?>">
-                    <div id ="feedback_passaporte"></div>
-                    <?php if($objPaciente->getPassaporte() != null){
-                        $displayPassaporte = ' display:none;';
-                    } ?>
-                    <div class="desaparecer_aparecer" id="id_desaparecer_aparecerPassaporte" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayPassaporte?>" >
+                    <div class="col-md-3 mb-3">
+                        <label for="label_passaporte">Digite o passaporte:</label>
+                        <input type="txt" class="form-control" id="idPassaporte" placeholder="Passaporte"
+                               onblur="validaPassaporte()" name="txtPassaporte"  value="<?= $objPaciente->getPassaporte() ?>">
+                        <div id ="feedback_passaporte"></div>
+                        <?php if($objPaciente->getPassaporte() != null){
+                            $displayPassaporte = ' display:none;';
+                        } ?>
+                        <div class="desaparecer_aparecer" id="id_desaparecer_aparecerPassaporte" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayPassaporte?>" >
 
-                        <div class="form-row align-items-center" >
-                            <div class="col-auto my-1">
-                                <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
-                            </div>
-                            <div class="col-auto my-1" >
-                                <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
-                                       type="text" class="form-control" id="idObsPassaporte" placeholder="Desconhecido"
-                                       onblur="validaObsPassaporte()" name="txtObsPassaporte" value="<?= $objPaciente->getObsPassaporte() ?>">
-                                <div id ="feedback_obsPassaporte"></div>
+                            <div class="form-row align-items-center" >
+                                <div class="col-auto my-1">
+                                    <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
+                                </div>
+                                <div class="col-auto my-1" >
+                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                           type="text" class="form-control" id="idObsPassaporte" placeholder="Desconhecido"
+                                           onblur="validaObsPassaporte()" name="txtObsPassaporte" value="<?= $objPaciente->getObsPassaporte() ?>">
+                                    <div id ="feedback_obsPassaporte"></div>
 
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
-            </div>  
+                <div class="form-row">
 
-            <div class="form-row">
-
-                <!-- getDadosEnderecoPorCEP(this.value) -->
-                <div class="col-md-3 mb-4">
-                    <label for="CEP" >CEP:</label> 
-                    <input type="text" class="form-control " id="idCEP" placeholder="CEP"
-                           onblur="validaCEP()" name="txtCEP" value="<?= $objPaciente->getCEP() ?>">
-                    <div id ="feedback_cep"></div>
-                    <?php if($objPaciente->getCEP() != null){
-                        $displayCEP = ' display:none;';
-                    } ?>
-                    <div class="desaparecer_aparecer" id="id_desaparecer_aparecerCEPPaciente" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayCEP?>" >
+                    <!-- getDadosEnderecoPorCEP(this.value) -->
+                    <div class="col-md-3 mb-4">
+                        <label for="CEP" >CEP:</label>
+                        <input type="text" class="form-control " id="idCEP" placeholder="CEP"
+                               onblur="validaCEP()" name="txtCEP" value="<?= $objPaciente->getCEP() ?>">
+                        <div id ="feedback_cep"></div>
+                        <?php if($objPaciente->getCEP() != null){
+                            $displayCEP = ' display:none;';
+                        } ?>
+                        <div class="desaparecer_aparecer" id="id_desaparecer_aparecerCEPPaciente" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayCEP?>" >
 
                             <div class="form-row align-items-center" >
                                 <div class="col-auto my-1">
@@ -1160,37 +1365,33 @@ if ($aparecer || $cadastrarNovo){//(isset($_GET['idPaciente']) || $cadastrarNovo
                             </div>
                         </div>
 
-                </div>
-                <div class="col-md-3 mb-3">
-                    <label for="label_endereco">Digite o Endereço:</label>
-                    <input type="text" class="form-control " id="idEndereco" placeholder="Endereço"
-                           onblur="validaEndereco()" name="txtEndereco" value="<?= $objPaciente->getEndereco() ?>">
-                    <div id ="feedback_endereco"></div>
-                    <?php if($objPaciente->getEndereco() != null){
-                        $displayEndereco = ' display:none;';
-                    } ?>
-
-                    <div class="desaparecer_aparecer" id="id_desaparecer_aparecerEndereco" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayEndereco?>" >
-                        <div class="form-row align-items-center" >
-                            <div class="col-auto my-1">
-                                <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
-                            </div>
-                            <div class="col-auto my-1" >
-                                <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
-                                       type="text" class="form-control" id="idObsEndereco" placeholder="Desconhecido"
-                                       onblur="validaObsEndereco()" name="txtObsEndereco" value="<?= $objPaciente->getObsEndereco() ?>">
-                                <div id ="feedback_obsEndereco"></div>
-                            </div>
-                        </div>
                     </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="label_endereco">Digite o Endereço:</label>
+                        <input type="text" class="form-control " id="idEndereco" placeholder="Endereço"
+                               onblur="validaEndereco()" name="txtEndereco" value="<?= $objPaciente->getEndereco() ?>">
+                        <div id ="feedback_endereco"></div>
+                        <?php if($objPaciente->getEndereco() != null){
+                            $displayEndereco = ' display:none;';
+                        } ?>
 
-
-
+                        <div class="desaparecer_aparecer" id="id_desaparecer_aparecerEndereco" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayEndereco?>" >
+                            <div class="form-row align-items-center" >
+                                <div class="col-auto my-1">
+                                    <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
+                                </div>
+                                <div class="col-auto my-1" >
+                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                           type="text" class="form-control" id="idObsEndereco" placeholder="Desconhecido"
+                                           onblur="validaObsEndereco()" name="txtObsEndereco" value="<?= $objPaciente->getObsEndereco() ?>">
+                                    <div id ="feedback_obsEndereco"></div>
+                                </div>
+                            </div>
                         </div>
 
 
 
-
+                    </div>
 
                     <div class="col-md-3 mb-3">
                         <label for="label_codGal">Digite o código Gal:</label>
@@ -1198,18 +1399,18 @@ if ($aparecer || $cadastrarNovo){//(isset($_GET['idPaciente']) || $cadastrarNovo
                                placeholder="GAL" data-mask=""
                                onblur="validaCODGAL()" name="txtCodGAL" value="<?= $objCodigoGAL->getCodigo() ?>">
                         <div id ="feedback_codGal"></div>
-                        <?php if($objCodigoGAL->getCodigo() != null){
+                        <?php if($objCodigoGAL->getCodigo() == null){
                             $displayCodGAL = ' display:none;';
                         } ?>
                         <div class="desaparecer_aparecer" id="id_desaparecer_aparecerCodGAL" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayCodGAL?>" >
                             <div class="form-row align-items-center" >
                                 <div class="col-auto my-1">
-                                    <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
+                                    <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Observações:</label>
                                 </div>
                                 <div class="col-auto my-1" >
                                     <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
-                                           type="text" class="form-control" id="idObsCodGAL" placeholder="Desconhecido"
-                                           onblur="validaObsCodGAL()" name="txtObsCodGAL" value="<?= $objPaciente->getObsCodGAL() ?>">
+                                           type="text" class="form-control" id="idObsCodGAL" placeholder="Observações"
+                                           onblur="validaObsCodGAL()" name="txtObsCodGAL" value="<?= $objCodigoGAL->getObsCodGAL() ?>">
                                     <div id ="feedback_obsCodGAL"></div>
                                 </div>
                             </div>
@@ -1217,219 +1418,219 @@ if ($aparecer || $cadastrarNovo){//(isset($_GET['idPaciente']) || $cadastrarNovo
                     </div>
 
 
-                        <div class="col-md-3 mb-3">
-                            <label for="label_codGal">Digite o cartão SUS:</label>
-                            <input type="text" class="form-control" id="idCartaoSUS"
-                                   placeholder="SUS" data-mask=""
-                                   onblur="validaCartaoSUS()" name="txtCartaoSUS" value="<?= $objPaciente->getCartaoSUS() ?>">
-                            <div id ="feedback_cartaoSUS"></div>
-                            <?php if($objPaciente->getCartaoSUS() != null){
-                                $displayCartaoSUS = ' display:none;';
-                            } ?>
-                            <div class="desaparecer_aparecer" id="id_desaparecer_aparecerCartaoSUS" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayCartaoSUS?>" >
-                                <div class="form-row align-items-center" >
-                                    <div class="col-auto my-1">
-                                        <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
-                                    </div>
-                                    <div class="col-auto my-1" >
-                                        <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
-                                               type="text" class="form-control" id="idObsCartaoSUS" placeholder="Desconhecido"
-                                               onblur="validaObsCartaoSUS()" name="txtObsCartaoSUS" value="<?= $objPaciente->getObsCartaoSUS() ?>">
-                                        <div id ="feedback_cartaoSUS"></div>
+                    <div class="col-md-3 mb-3">
+                        <label for="label_codGal">Digite o cartão SUS:</label>
+                        <input type="text" class="form-control" id="idCartaoSUS"
+                               placeholder="SUS" data-mask=""
+                               onblur="validaCartaoSUS()" name="txtCartaoSUS" value="<?= $objPaciente->getCartaoSUS() ?>">
+                        <div id ="feedback_cartaoSUS"></div>
+                        <?php if($objPaciente->getCartaoSUS() != null){
+                            $displayCartaoSUS = ' display:none;';
+                        } ?>
+                        <div class="desaparecer_aparecer" id="id_desaparecer_aparecerCartaoSUS" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayCartaoSUS?>" >
+                            <div class="form-row align-items-center" >
+                                <div class="col-auto my-1">
+                                    <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
+                                </div>
+                                <div class="col-auto my-1" >
+                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                           type="text" class="form-control" id="idObsCartaoSUS" placeholder="Desconhecido"
+                                           onblur="validaObsCartaoSUS()" name="txtObsCartaoSUS" value="<?= $objPaciente->getObsCartaoSUS() ?>">
+                                    <div id ="feedback_cartaoSUS"></div>
 
-                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+
+                <div class="form-row">
+
+                    <div class="col-md-12">
+                        <div class="custom-control custom-checkbox" style="float: right;">
+                            <input type="checkbox" class="custom-control-input" <?= $checkedCadastroPendente ?> id="idCadastroPendente"
+                                   name="cadastroPendente">
+                            <label class="custom-control-label"  for="idCadastroPendente">Cadastro Pendente</label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                <h3> Sobre a Coleta </h3>
+                <hr width = “2” size = “100”>
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <label for="inputAceitaRecusada">Aceita / Recusada / A caminho</label>
+                        <?= $select_a_r_g ?>
+                        <div id ="feedback_aceita_recusada"></div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="labelData">Data Coleta:</label>
+                        <input type="date" class="form-control" id="idDtColeta" placeholder="00/00/0000"
+                               onblur="validaDataColeta()" name="dtColeta"
+                               value="<?= $objAmostra->getDataColeta() ?>">
+                        <div id ="feedback_dataColeta"></div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="labelHora">Hora Coleta:</label>
+                        <input type="time" class="form-control" id="idHoraColeta" placeholder="00:00:00"
+                               onblur="validaHoraColeta()" name="timeColeta"
+                               value="<?= $objAmostra->getHoraColeta() ?>">
+                        <div id ="feedback_horaColeta"></div>
+                        <?php if($objAmostra->getHoraColeta() != null){
+                            $displayHoraColeta = ' display:none;';
+                        } ?>
+
+                        <div class="desaparecer_aparecer" id="id_desaparecer_aparecerHoraColeta" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayHoraColeta?>" >
+                            <div class="form-row align-items-center" >
+                                <div class="col-auto my-1">
+                                    <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
+                                </div>
+                                <div class="col-auto my-1" >
+                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                           type="text" class="form-control" id="idObsHoraColeta" placeholder="desconhecido"
+                                           onblur="validaObsHoraColeta()" name="txtObsHoraColeta" value="<?= $objAmostra->getObsHoraColeta() ?>">
+                                    <div id ="feedback_obsHoraColeta"></div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-4">
+                        <label for="labelMotivo">Motivo Coleta:</label>
+                        <input type="text" class="form-control" id="idMotivo" placeholder="Motivo "
+                               onblur="validaMotivo()" name="txtMotivo"
+                               value="<?= $objAmostra->getMotivoExame() ?>">
+                        <div id ="feedback_motivo"></div>
+                        <?php if($objAmostra->getMotivoExame() != null){
+                            $displayMotivoColeta = ' display:none;';
+                        } ?>
+
+                        <div class="desaparecer_aparecer" id="id_desaparecer_aparecerMotivo" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayMotivoColeta?>" >
+                            <div class="form-row align-items-center" >
+                                <div class="col-auto my-1">
+                                    <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
+                                </div>
+                                <div class="col-auto my-1" >
+                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                           type="text" class="form-control" id="idObsCartaoSUS" placeholder="Desconhecido"
+                                           onblur="validaObsCartaoSUS()" name="txtObsCartaoSUS"
+                                           value="<?= $objAmostra->getObsMotivo() ?>">
+                                    <div id ="feedback_cartaoSUS"></div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+
+                    <div class="col-md-2">
+                        <label for="inputPerfis">Perfil da amostra</label>
+                        <?= $select_perfis ?>
+                        <div id ="feedback_perfil"></div>
+                    </div>
+
+
+                    <div class="col-md-3">
+                        <label for="labelCEP">CEP:</label>
+                        <input type="text" class="form-control" id="idCEPAmostra" placeholder="CEP"
+                               onblur="validaCEPAmostra()" name="txtCEPAmostra"
+                               value="<?= $objAmostra->getCEP() ?>">
+                        <div id ="feedback_cepAmostra"></div>
+                        <?php if($objAmostra->getCEP() != null){
+                            $displayCEPamostra = ' display:none;';
+                        } ?>
+                        <div class="desaparecer_aparecer" id="id_desaparecer_aparecerCEPAmostra" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayCEPamostra?>" >
+                            <div class="form-row align-items-center" >
+                                <div class="col-auto my-1">
+                                    <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
+                                </div>
+                                <div class="col-auto my-1" >
+                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                           class="form-control" id="idObsCEPAmostra" placeholder="desconhecido"
+                                           onblur="validaCEPAmostra()" name="txtObsCEPAmostra" value="<?= $objAmostra->getObsCEP() ?>">
+                                    <div id ="feedback_CEPAmostra"></div>
+
                                 </div>
                             </div>
                         </div>
 
 
 
-            </div>
-
-
-
-            <div class="form-row">
-
-                <div class="col-md-12">
-                    <div class="custom-control custom-checkbox" style="float: right;">
-                        <input type="checkbox" class="custom-control-input" <?= $checkedCadastroPendente ?> id="idCadastroPendente"
-                               name="cadastroPendente">
-                        <label class="custom-control-label"  for="idCadastroPendente">Cadastro Pendente</label>
                     </div>
-                </div>
-            </div>
 
-
-
-
-
-            <h3> Sobre a Coleta </h3>
-            <hr width = “2” size = “100”>
-            <div class="form-row">  
-                <div class="col-md-3">
-                    <label for="inputAceitaRecusada">Aceita / Recusada / A caminho</label>
-                    <?= $select_a_r_g ?>
-                    <div id ="feedback_aceita_recusada"></div>
-                </div>
-
-                <div class="col-md-2">
-                    <label for="labelData">Data Coleta:</label>
-                    <input type="date" class="form-control" id="idDtColeta" placeholder="00/00/0000"
-                           onblur="validaDataColeta()" name="dtColeta"  
-                           value="<?= $objAmostra->getDataColeta() ?>"> 
-                    <div id ="feedback_dataColeta"></div>
-                </div>
-
-                <div class="col-md-3">
-                    <label for="labelHora">Hora Coleta:</label>
-                    <input type="time" class="form-control" id="idHoraColeta" placeholder="00:00:00"
-                           onblur="validaHoraColeta()" name="timeColeta"  
-                           value="<?= $objAmostra->getHoraColeta() ?>">
-                    <div id ="feedback_horaColeta"></div>
-                    <?php if($objAmostra->getHoraColeta() != null){
-                        $displayHoraColeta = ' display:none;';
-                    } ?>
-
-                    <div class="desaparecer_aparecer" id="id_desaparecer_aparecerHoraColeta" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayHoraColeta?>" >
-                        <div class="form-row align-items-center" >
-                            <div class="col-auto my-1">
-                                <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
-                            </div>
-                            <div class="col-auto my-1" >
-                                <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
-                                       type="text" class="form-control" id="idObsHoraColeta" placeholder="desconhecido"
-                                       onblur="validaObsHoraColeta()" name="txtObsHoraColeta" value="<?= $objAmostra->getObsHoraColeta() ?>">
-                                <div id ="feedback_obsHoraColeta"></div>
-
-                            </div>
-                        </div>
+                    <div class="col-md-2">
+                        <label for="labelEstadoColeta">Estado:</label>
+                        <?= $select_estados ?>
                     </div>
-                </div>
+                    <div id ="feedback_estado"></div>
 
-
-
-                <div class="col-md-4">
-                    <label for="labelMotivo">Motivo Coleta:</label>
-                    <input type="text" class="form-control" id="idMotivo" placeholder="Motivo "
-                           onblur="validaMotivo()" name="txtMotivo"  
-                           value="<?= $objAmostra->getMotivoExame() ?>"> 
-                    <div id ="feedback_motivo"></div>
-                    <?php if($objAmostra->getMotivoExame() != null){
-                        $displayMotivoColeta = ' display:none;';
-                    } ?>
-
-                    <div class="desaparecer_aparecer" id="id_desaparecer_aparecerMotivo" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayMotivoColeta?>" >
-                        <div class="form-row align-items-center" >
-                            <div class="col-auto my-1">
-                                <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
-                            </div>
-                            <div class="col-auto my-1" >
-                                <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
-                                       type="text" class="form-control" id="idObsCartaoSUS" placeholder="Desconhecido"
-                                       onblur="validaObsCartaoSUS()" name="txtObsCartaoSUS"
-                                       value="<?= $objAmostra->getObsMotivo() ?>">
-                                <div id ="feedback_cartaoSUS"></div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-row">  
-
-                <div class="col-md-2">
-                    <label for="inputPerfis">Perfil da amostra</label>
-                    <?= $select_perfis ?>
-                    <div id ="feedback_perfil"></div>
-                </div>
-
-
-                <div class="col-md-3">
-                    <label for="labelCEP">CEP:</label>
-                    <input type="text" class="form-control" id="idCEPAmostra" placeholder="CEP"
-                           onblur="validaCEPAmostra()" name="txtCEPAmostra"
-                           value="<?= $objAmostra->getCEP() ?>"> 
-                    <div id ="feedback_cepAmostra"></div>
-                    <?php if($objAmostra->getCEP() != null){
-                        $displayCEPamostra = ' display:none;';
-                    } ?>
-                    <div class="desaparecer_aparecer" id="id_desaparecer_aparecerCEPAmostra" style="background-color: rgba(192,192,192,0.2);border-radius:5px;<?=$displayCEPamostra?>" >
-                        <div class="form-row align-items-center" >
-                            <div class="col-auto my-1">
-                                <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
-                            </div>
-                            <div class="col-auto my-1" >
-                                <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
-                                       class="form-control" id="idObsCEPAmostra" placeholder="desconhecido"
-                                       onblur="validaCEPAmostra()" name="txtObsCEPAmostra" value="<?= $objAmostra->getObsCEP() ?>">
-                                <div id ="feedback_CEPAmostra"></div>
-
-                            </div>
-                        </div>
+                    <div class="col-md-3">
+                        <label for="labelMunicípioColeta">Município:</label>
+                        <?= $select_municipios ?>
                     </div>
 
 
-
-                </div>
-
-                <div class="col-md-2">
-                    <label for="labelEstadoColeta">Estado:</label>
-                    <?= $select_estados ?>
-                </div>
-                <div id ="feedback_estado"></div>
-
-                <div class="col-md-3">
-                    <label for="labelMunicípioColeta">Município:</label>
-                    <?= $select_municipios ?>
-                </div>
-
-
-                <div class="col-md-2" style="background-color: rgba(192,192,192,0.2);border-radius:5px;height: 80px;">
-                    <?php
+                    <div class="col-md-2" style="background-color: rgba(192,192,192,0.2);border-radius:5px;height: 80px;">
+                        <?php
                         if($objAmostra->getObsLugarOrigem() == '' || $objAmostra->getObsLugarOrigem() == null){
                             $lugar = ' Desconhecido ';
                         }else{
                             $lugar = $objAmostra->getObsLugarOrigem();
                         }
 
-                    ?>
-                    <label for="labelObsLugarOrigem">Não tem município?</label>
-                    <input type="text" class="form-control" id="idObsLugarOrigem" placeholder="Desconhecido"
-                           onblur="validaObsLugarOrigem()" name="txtObsLugarOrigem"  
-                           value="<?= $lugar ?>">
-                    <div id ="feedback_lugarOrigem"></div>
+                        ?>
+                        <label for="labelObsLugarOrigem">Não tem município?</label>
+                        <input type="text" class="form-control" id="idObsLugarOrigem" placeholder="Desconhecido"
+                               onblur="validaObsLugarOrigem()" name="txtObsLugarOrigem"
+                               value="<?= $lugar ?>">
+                        <div id ="feedback_lugarOrigem"></div>
 
-                </div>
+                    </div>
 
 
 
-                <!-- <div class="col-md-2">
+                    <!-- <div class="col-md-2">
                      <label for="labelNivelPrioridade">Nivel de Prioridade:</label>
                 <?= $select_nivelPrioridade ?>
                  </div> -->
 
-            </div>
-
-            <div class="form-row">
-                <div class="col-md-12">
-                    <label for="observações amostra">Observações</label>
-                    <textarea onblur="validaObs()" id="idTxtAreaObs"
-                              name="txtAreaObs" rows="2" cols="100" class="form-control"
-                              id="obsAmostra" rows="3"><?=$objAmostra->getObservacoes()?></textarea>
-                    <div id ="feedback_obsAmostra"></div>
                 </div>
-            </div>
+
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label for="observações amostra">Observações</label>
+                        <textarea onblur="validaObs()" id="idTxtAreaObs"
+                                  name="txtAreaObs" rows="2" cols="100" class="form-control"
+                                  id="obsAmostra" rows="3"><?=$objAmostra->getObservacoes()?></textarea>
+                        <div id ="feedback_obsAmostra"></div>
+                    </div>
+                </div>
 
 
-            <?php if ($BOTAO_SALVAR == 'on') {
+                <?php if ($BOTAO_SALVAR == 'on') {
                     if($BOTAO_CANCELAR == 'off'){ $col= " col-md-12 ";$style= 'margin-left:0px;style="width:100%;"';}
                     else {$col="col-md-6"; $style=  'style="width: 100%;margin-left:0px;"';}
-               echo '<div class="form-row">
+                    echo '<div class="form-row">
                     <div class="'.$col.'" >
                         <button class="btn btn-primary" '.$style.' type="submit" name="salvar_cadastro">Salvar</button>
                     </div>';
-            }
-                    if($BOTAO_CANCELAR == 'on'){
+                }
+                if($BOTAO_CANCELAR == 'on'){
                     echo '<div class="col-md-6" >
                         <button type="button" class="btn btn-primary" data-toggle="modal" style="width: 100%;margin-left:0%;" data-target="#exampleModalCenter" > Cancelar</button>
                     </div>
@@ -1437,40 +1638,40 @@ if ($aparecer || $cadastrarNovo){//(isset($_GET['idPaciente']) || $cadastrarNovo
                 } ?>
 
 
-        </form>
+            </form>
 
 
 
-    </div>
+        </div>
 
 
 
 
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Tem certeza que dejesa cancelar o cadastro? </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Ao cancelar, nenhum dado será cadastrado no banco.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"  >Close</button>
-                    <button type="button"  class="btn btn-primary"><a href="<?= Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra') ?>">Tenho certeza</a></button>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Tem certeza que dejesa cancelar o cadastro? </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Ao cancelar, nenhum dado será cadastrado no banco.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"  >Close</button>
+                        <button type="button"  class="btn btn-primary"><a href="<?= Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra') ?>">Tenho certeza</a></button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
 
-<?php } ?>
+    <?php }
+}?>
 
 <?php
 Pagina::getInstance()->fechar_corpo();
-

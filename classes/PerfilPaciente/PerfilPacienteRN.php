@@ -8,7 +8,64 @@ require_once __DIR__ . '/../Excecao/Excecao.php';
 require_once __DIR__ . '/PerfilPacienteBD.php';
 
 class PerfilPacienteRN{
-    
+
+    public static $TP_PROFISSIONAIS_SAUDE = 'S';
+    public static $TP_VOLUNTARIOS = 'V';
+    public static $TP_PACIENTES_SUS = 'L';
+    public static $TP_FUNCIONARIOS_ENGIE = 'E';
+    public static $TE_OUTROS = 'O';
+
+
+    public static function listarValoresTipoEstado(){
+        try {
+
+            $arrObjTECapela = array();
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TP_PROFISSIONAIS_SAUDE);
+            $objSituacao->setStrDescricao('Profissionais da Saúde');
+            $arrObjTECapela[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TP_VOLUNTARIOS);
+            $objSituacao->setStrDescricao('Equipes de Voluntários');
+            $arrObjTECapela[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TP_PACIENTES_SUS);
+            $objSituacao->setStrDescricao('Pacientes SUS');
+            $arrObjTECapela[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TP_FUNCIONARIOS_ENGIE);
+            $objSituacao->setStrDescricao('Funcionários ENGIE');
+            $arrObjTECapela[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TE_OUTROS);
+            $objSituacao->setStrDescricao('outros');
+            $arrObjTECapela[] = $objSituacao;
+
+
+            return $arrObjTECapela;
+
+        }catch(Throwable $e){
+            throw new Excecao('Erro listando valores de Tipo estado da capela',$e);
+        }
+    }
+
+    public static function mostrarDescricaoTipo($strTipo){
+        //$objExcecao = new Excecao();
+
+        foreach (self::listarValoresTipoEstado() as $tipo){
+            if($tipo->getStrTipo() == $strTipo){
+                return $tipo->getStrDescricao();
+            }
+        }
+        return null;
+        //$objExcecao->adicionarValidacao('Não encontrou o tipo informadoo.','alert-danger');
+    }
+
 
     private function validarPerfil(PerfilPaciente $perfilPaciente,Excecao $objExcecao){
         $strPerfilPaciente = trim($perfilPaciente->getPerfil());

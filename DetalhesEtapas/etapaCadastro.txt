@@ -1,0 +1,17 @@
+1º) verifica se já não existe o paciente, pq caso ele exista já carreaga os dados dele
+2º) verifica se já não existe a amostra (acontece apenas no caso do editar),  pq caso ele exista já carreaga os dados dela
+3º) verifica se a tela é de cadastro ou de edição
+4º)caso seja a tela de cadastro
+    1) enquanto não aperta o botão de salvar aparece o select para escolher uma forma de encontrar o paciente
+    2) uma das opções é escolhida
+    3) preencheu tudo
+    4) verifica se o paciente já existe de novo, para exibir infos como se ele já tem mais de uma amostra, se encontrou
+    um paciente, e para montar todos os selects que tem relação com o paciente
+    5) apertou o botao de salvar
+    6) seta algumas infos do paciente até chegar no código GAL
+    7) se não tem o paciente ainda então o objCodGAL é setado apenas com o código pq no paciente RN tudo será setado
+    e o código cadastrado
+        1) quando for cadastrar, entra no codigoGALRN e lá é verificado se já tem algm com aquele codgal, retornando
+        em uma excecao caso seja verdade
+
+

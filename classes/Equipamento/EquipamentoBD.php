@@ -57,8 +57,10 @@ class EquipamentoBD{
     
      public function listar(Equipamento $objEquipamento, Banco $objBanco) {
          try{
-      
+
             $SELECT = "SELECT * FROM tb_equipamento";
+
+
             
             $WHERE = '';
             $AND = '';
@@ -68,6 +70,12 @@ class EquipamentoBD{
                 $AND = ' and '; 
                 $arrayBind[] = array('i',$objEquipamento->getIdDetentor_fk());
             }
+
+             if($objEquipamento->getIdMarca_fk() != null){
+                 $WHERE .= $AND." idMarca_fk = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('i',$objEquipamento->getIdMarca_fk());
+             }
             
 
             if($WHERE != ''){
@@ -137,6 +145,62 @@ class EquipamentoBD{
             
         } catch (Exception $ex) {
             throw new Excecao("Erro removendo equipamento no BD.",$ex);
+        }
+    }
+
+    public function existe(Equipamento $objEquipamento, Banco $objBanco)
+    {
+        try {
+
+            $SELECT = "SELECT * FROM tb_equipamento";
+
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($objEquipamento->getIdMarca_fk() != null) {
+                $WHERE .= $AND . " idMarca_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objEquipamento->getIdMarca_fk());
+            }
+
+            if ($objEquipamento->getIdDetentor_fk() != null) {
+                $WHERE .= $AND . " idDetentor_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objEquipamento->getIdDetentor_fk());
+            }
+
+            if ($objEquipamento->getIdModelo_fk() != null) {
+                $WHERE .= $AND . " idModelo_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objEquipamento->getIdModelo_fk());
+            }
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            //echo $SELECT . $WHERE." LIMIT 1 ";
+            //die();
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE . " LIMIT 1 ", $arrayBind);
+
+
+            $array = array();
+            foreach ($arr as $reg) {
+                $objEquipamento = new Equipamento();
+                $objEquipamento->setIdEquipamento($reg['idEquipamento']);
+                $objEquipamento->setIdDetentor_fk($reg['idDetentor_fk']);
+                $objEquipamento->setIdMarca_fk($reg['idMarca_fk']);
+                $objEquipamento->setIdModelo_fk($reg['idModelo_fk']);
+                $objEquipamento->setDataUltimaCalibragem($reg['dataUltimaCalibragem']);
+                $objEquipamento->setDataChegada($reg['dataChegada']);
+
+
+                $array[] = $objEquipamento;
+            }
+            return $array;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro verificando se existe o equipamento no BD.", $ex);
         }
     }
     

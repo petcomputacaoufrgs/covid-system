@@ -72,11 +72,11 @@ class PacienteRN {
                         if($item->getIdPaciente() != $paciente->getIdPaciente()){
                             $objExcecao->adicionar_validacao('O CPF já pertence a outro paciente', null, 'alert-danger');
                         }
-                    }else{
-                        $objExcecao->adicionar_validacao('O CPF já pertence a outro paciente', null, 'alert-danger');
-                    }
+                    //}else{
+                   //     $objExcecao->adicionar_validacao('O CPF já pertence a outro paciente', null, 'alert-danger');
+                   // }
                     
-                }
+                }}
             }
             
             
@@ -225,34 +225,7 @@ class PacienteRN {
         }
     }
 
-    private function validaObsCodGAL(Paciente $paciente, Excecao $objExcecao) {
-        if($paciente->getObsCodGAL() != null) {
-            $strObsCodGAL = trim($paciente->getObsCodGAL());
 
-            /* CÓDIGO GAL */
-            $objCodigoGAL = new CodigoGAL();
-            $objCodigoGAL_RN = new CodigoGAL_RN();
-
-            $idGAL = '';
-            $arr_codsGAL = $objCodigoGAL_RN->listar($objCodigoGAL);
-            foreach ($arr_codsGAL as $cg) {
-                if ($cg->getIdPaciente_fk() == $paciente->getIdPaciente()) {
-                    $idGAL = $cg->getCodigo();
-                }
-            }
-
-            if ($idGAL == null) { // esse paciente não tem código gal
-                $strObsCodGAL = 'Desconhecido';
-            }
-
-            if (strlen($strObsCodGAL) > 300) {
-                $objExcecao->adicionar_validacao('As observações do código GAL do paciente possui mais que 300 caracteres.', null, 'alert-danger');
-            }
-
-
-            return $paciente->setObsCodGAL($strObsCodGAL);
-        }
-    }
 
     private function validarObsPassaporte(Paciente $paciente, Excecao $objExcecao) {
         if($paciente->getObsPassaporte() != null) {
@@ -437,7 +410,7 @@ class PacienteRN {
             $paciente->setObsCartaoSUS('Desconhecido');
             $paciente->setObsPassaporte('Desconhecido');
             $paciente->setObsNomeMae('Desconhecido');
-            $paciente->setObsCodGAL('Desconhecido');
+
         }
 
         /* CENÁRIO 8 */
@@ -457,7 +430,6 @@ class PacienteRN {
             $paciente->setObsEndereco('Desconhecido');
             $paciente->setObsPassaporte('Desconhecido');
             $paciente->setObsNomeMae('Desconhecido');
-            $paciente->setObsCodGAL('Desconhecido');
             $paciente->setCadastroPendente('s');
         }
 
@@ -478,7 +450,6 @@ class PacienteRN {
             $paciente->setObsEndereco('Desconhecido');
             $paciente->setObsPassaporte('Desconhecido');
             $paciente->setObsNomeMae('Desconhecido');
-            $paciente->setObsCodGAL('Desconhecido');
             $paciente->setCadastroPendente('s');
         }
 
@@ -549,7 +520,6 @@ class PacienteRN {
             $paciente->setObsPassaporte('Desconhecido');
             $paciente->setObsDataNascimento('Desconhecido');
             $paciente->setObsNomeMae('Desconhecido');
-            $paciente->setObsCodGAL('Desconhecido');
             $paciente->setCadastroPendente('s');
         }
 
@@ -585,7 +555,6 @@ class PacienteRN {
             $this->validarNome($paciente, $objExcecao);
             $this->validarObsCartaoSUS($paciente, $objExcecao);
             $this->validarCartaoSUS($paciente, $objExcecao);
-            $this->validaObsCodGAL($paciente, $objExcecao);
             $this->validarNomeMae($paciente, $objExcecao);
             $this->validarObsDataNascimento($paciente, $objExcecao);
             $this->validarObsNomeMae($paciente, $objExcecao);
@@ -607,12 +576,12 @@ class PacienteRN {
             
             if($paciente->getObjCodGAL() != null){
               
-                $objCodGAL = $paciente->getObjCodGAL();    
+                $objCodGAL = $paciente->getObjCodGAL();
                 $objCodGAL->setIdPaciente_fk($paciente->getIdPaciente()); 
             
                 $objCodGALRN = new CodigoGAL_RN();
                 $objCodGALRN->cadastrar($objCodGAL);
-               
+               $paciente->setObjCodGAL($objCodGAL);
             }
             
 
@@ -632,6 +601,21 @@ class PacienteRN {
             $objExcecao = new Excecao();
             $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objCodGALRN = new CodigoGAL_RN();
+
+            if($paciente->getObjCodGAL() != null){
+                if($paciente->getObjCodGAL()->getIdCodigoGAL() == null){
+                    $objCodGAL = $paciente->getObjCodGAL();
+                    $objCodGAL->setIdPaciente_fk($paciente->getIdPaciente());
+                    $objCodGALRN->cadastrar($objCodGAL);
+
+                }else{
+                    $objCodGALRN->alterar($paciente->getObjCodGAL());
+
+                }
+                $paciente->setObjCodGAL($objCodGAL);
+
+            }
 
             $this->validarCenarioPendente($paciente, $objExcecao);
             $this->validarCEP($paciente, $objExcecao);
@@ -641,7 +625,6 @@ class PacienteRN {
             $this->validarNome($paciente, $objExcecao);
             $this->validarObsCartaoSUS($paciente, $objExcecao);
             $this->validarCartaoSUS($paciente, $objExcecao);
-            $this->validaObsCodGAL($paciente, $objExcecao);
             $this->validarNomeMae($paciente, $objExcecao);
             $this->validarObsDataNascimento($paciente, $objExcecao);
             $this->validarObsNomeMae($paciente, $objExcecao);
@@ -659,6 +642,7 @@ class PacienteRN {
             $objPacienteBD->alterar($paciente, $objBanco);
 
             $objBanco->fecharConexao();
+            return $paciente;
         } catch (Exception $e) {
             throw new Excecao('Erro alterando o paciente.', $e);
         }

@@ -3,17 +3,21 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 session_start();
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Marca/Marca.php';
-require_once '../classes/Marca/MarcaRN.php';
+try{
+
+require_once  __DIR__ . '/../../classes/Sessao/Sessao.php';
+require_once  __DIR__ . '/../../classes/Pagina/Pagina.php';
+require_once  __DIR__ . '/../../classes/Excecao/Excecao.php';
+require_once  __DIR__ . '/../../classes/Marca/Marca.php';
+require_once  __DIR__ . '/../../classes/Marca/MarcaRN.php';
+
+Sessao::getInstance()->validar();
 
 $objMarca = new Marca();
 $objMarcaRN = new MarcaRN();
 $html = '';
 
-try{
+
     
     $arrMarcas = $objMarcaRN->listar($objMarca);
     foreach ($arrMarcas as $m){   
@@ -41,11 +45,12 @@ Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::getInstance()->adicionar_javascript("marca");
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
+Pagina::getInstance()->mostrar_excecoes();
 
 echo '
     
     <div class="conteudo_listar">'.
-       Pagina::montar_topo_listar('LISTAR MARCAS', 'cadastrar_marca', 'NOVA MARCA').
+       Pagina::montar_topo_listar('LISTAR MARCAS',null,null, 'cadastrar_marca', 'NOVA MARCA').
         
         '<div class="conteudo_tabela">
             <table class="table table-hover">
@@ -66,7 +71,7 @@ echo '
 
 
 
-Pagina::getInstance()->mostrar_excecoes();
+
 Pagina::getInstance()->fechar_corpo(); 
 
 

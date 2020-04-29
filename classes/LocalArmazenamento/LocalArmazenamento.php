@@ -5,55 +5,163 @@
 
 class LocalArmazenamento{
     private $idLocalArmazenamento;
-    private $idTipoLocal_fk;
-    private $idTempoPermanencia_fk;
-    private $dataHoraInicio;
-    private $dataHoraFim;
+    private $nome;
+    private $qntPortas;
+    private $qntPrateleiras;
+    private $qntColunas;
+    private $qntCaixas;
+    private $qntLinhasCaixa;
+    private $qntColunasCaixa;
+    private $idTipoLocalArmazenamento_fk;
+
     
     function __construct() {
         
     }
-    
-    function getIdLocalArmazenamento() {
+
+    /**
+     * @return mixed
+     */
+    public function getIdLocalArmazenamento()
+    {
         return $this->idLocalArmazenamento;
     }
 
-    function getIdTipoLocal_fk() {
-        return $this->idTipoLocal_fk;
-    }
-
-    function getIdTempoPermanencia_fk() {
-        return $this->idTempoPermanencia_fk;
-    }
-
-    function getDataHoraInicio() {
-        return $this->dataHoraInicio;
-    }
-
-    function getDataHoraFim() {
-        return $this->dataHoraFim;
-    }
-
-    function setIdLocalArmazenamento($idLocalArmazenamento) {
+    /**
+     * @param mixed $idLocalArmazenamento
+     */
+    public function setIdLocalArmazenamento($idLocalArmazenamento)
+    {
         $this->idLocalArmazenamento = $idLocalArmazenamento;
     }
 
-    function setIdTipoLocal_fk($idTipoLocal_fk) {
-        $this->idTipoLocal_fk = $idTipoLocal_fk;
+    /**
+     * @return mixed
+     */
+    public function getNome()
+    {
+        return $this->nome;
     }
 
-    function setIdTempoPermanencia_fk($idTempoPermanencia_fk) {
-        $this->idTempoPermanencia_fk = $idTempoPermanencia_fk;
+    /**
+     * @param mixed $nome
+     */
+    public function setNome($nome)
+    {
+        $this->nome = $nome;
     }
 
-    function setDataHoraInicio($dataHoraInicio) {
-        $this->dataHoraInicio = $dataHoraInicio;
+    /**
+     * @return mixed
+     */
+    public function getQntPortas()
+    {
+        return $this->qntPortas;
     }
 
-    function setDataHoraFim($dataHoraFim) {
-        $this->dataHoraFim = $dataHoraFim;
+    /**
+     * @param mixed $qntPortas
+     */
+    public function setQntPortas($qntPortas)
+    {
+        $this->qntPortas = $qntPortas;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getQntPrateleiras()
+    {
+        return $this->qntPrateleiras;
+    }
+
+    /**
+     * @param mixed $qntPrateleiras
+     */
+    public function setQntPrateleiras($qntPrateleiras)
+    {
+        $this->qntPrateleiras = $qntPrateleiras;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQntColunas()
+    {
+        return $this->qntColunas;
+    }
+
+    /**
+     * @param mixed $qntColunas
+     */
+    public function setQntColunas($qntColunas)
+    {
+        $this->qntColunas = $qntColunas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQntCaixas()
+    {
+        return $this->qntCaixas;
+    }
+
+    /**
+     * @param mixed $qntCaixas
+     */
+    public function setQntCaixas($qntCaixas)
+    {
+        $this->qntCaixas = $qntCaixas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQntLinhasCaixa()
+    {
+        return $this->qntLinhasCaixa;
+    }
+
+    /**
+     * @param mixed $qntLinhasCaixa
+     */
+    public function setQntLinhasCaixa($qntLinhasCaixa)
+    {
+        $this->qntLinhasCaixa = $qntLinhasCaixa;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQntColunasCaixa()
+    {
+        return $this->qntColunasCaixa;
+    }
+
+    /**
+     * @param mixed $qntColunasCaixa
+     */
+    public function setQntColunasCaixa($qntColunasCaixa)
+    {
+        $this->qntColunasCaixa = $qntColunasCaixa;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdTipoLocalArmazenamento_fk()
+    {
+        return $this->idTipoLocalArmazenamento_fk;
+    }
+
+    /**
+     * @param mixed $idTipoLocalArmazenamento_fk
+     */
+    public function setIdTipoLocalArmazenamento_fk($idTipoLocalArmazenamento_fk)
+    {
+        $this->idTipoLocalArmazenamento_fk = $idTipoLocalArmazenamento_fk;
+    }
 
 
 }

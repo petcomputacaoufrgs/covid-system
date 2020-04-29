@@ -6,11 +6,30 @@
 class Capela{
     private $idCapela;
     private $numero;
-    private $statusCapela; //liberada ou não
+    private $situacaoCapela; //liberada ou não
+    private $nivelSeguranca;
     
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNivelSeguranca()
+    {
+        return $this->nivelSeguranca;
+    }
+
+    /**
+     * @param mixed $nivelSeguranca
+     */
+    public function setNivelSeguranca($nivelSeguranca)
+    {
+        $this->nivelSeguranca = $nivelSeguranca;
+    }
+
+
     
     function getIdCapela() {
         return $this->idCapela;
@@ -29,12 +48,12 @@ class Capela{
     }
 
     
-    function getStatusCapela() {
-        return $this->statusCapela;
+    function getSituacaoCapela() {
+        return $this->situacaoCapela;
     }
 
-    function setStatusCapela($statusCapela) {
-        $this->statusCapela = $statusCapela;
+    function setSituacaoCapela($situacaoCapela) {
+        $this->situacaoCapela = $situacaoCapela;
     }
 
 

@@ -32,9 +32,7 @@ class AmostraRN{
             $strDataColeta = trim($objAmostra->getDataColeta());
             if ($strDataColeta == '') {
                 $objExcecao->adicionar_validacao('Informar a data da coleta', 'idDtColeta', 'alert-danger');
-            } else if (count($objAmostra->getDataColeta()) <= 11) {
-
-
+            } else if (strlen($objAmostra->getDataColeta()) <= 11) {
                 Utils::validarData($strDataColeta, $objExcecao);
 
                 //validar para que não se coloque datas futuras a atual
@@ -164,13 +162,13 @@ class AmostraRN{
             $objPaciente->setIdPaciente($objAmostra->getIdPaciente_fk());
             $objPaciente = $objPacienteRN->consultar($objPaciente);
 
-            if($perfil[0]->getIndex_perfil() == 'PACIENTES SUS' && $objAmostra->getIdCodGAL_fk() == null){
-                $objExcecao->adicionar_validacao('O perfil da amostra exige que o paciente tenha um código GAL','idPerfilAmostra','alert-danger');
-            }
+            /*if($perfil[0]->getIndex_perfil() == 'PACIENTES SUS' && $objAmostra->getIdCodGAL_fk() == null){
+                $objExcecao->adicionar_validacao('#O perfil da amostra exige que o paciente tenha um código GAL','idPerfilAmostra','alert-danger');
+            }*/
 
-            if($perfil[0]->getIndex_perfil() == 'PACIENTES SUS' && $objPaciente->getCartaoSUS() == null){
-                $objExcecao->adicionar_validacao('O perfil da amostra exige que o paciente tenha um cartão SUS','idPerfilAmostra','alert-danger');
-            }
+            //if($perfil[0]->getIndex_perfil() == 'PACIENTES SUS' && $objPaciente->getCartaoSUS() == null){
+            //    $objExcecao->adicionar_validacao('O perfil da amostra exige que o paciente tenha um cartão SUS','idPerfilAmostra','alert-danger');
+            //}
 
             //$objExcecao->adicionar_validacao('O perfil da amostra exige que o paciente tenha um código GAL','idPerfilAmostra','alert-danger');
 
@@ -180,17 +178,28 @@ class AmostraRN{
     }
 
     private function validarPerfilCodGAL(Amostra $objAmostra, Excecao $objExcecao) {
-        // print_r($objAmostra);
-        if($objAmostra->getIdCodGAL_fk() != null){
-            $objPerfilPaciente = new PerfilPaciente();
-            $objPerfilPacienteRN = new PerfilPacienteRN();
 
-            $objPerfilPaciente->setIdPerfilPaciente($objAmostra->getIdPerfilPaciente_fk());
-            $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
-            if($objPerfilPaciente->getIndex_perfil() != 'PACIENTES SUS'){
-                $objExcecao->adicionar_validacao('O perfil da amostra não permite que este paciente tenha um código GAL',null,'alert-danger');
+            if ($objAmostra->getIdCodGAL_fk() != null) {
+                $objPerfilPaciente = new PerfilPaciente();
+                $objPerfilPacienteRN = new PerfilPacienteRN();
+
+                $objPerfilPaciente->setIdPerfilPaciente($objAmostra->getIdPerfilPaciente_fk());
+                $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
+                if ($objPerfilPaciente->getIndex_perfil() != 'PACIENTES SUS') {
+                    $objExcecao->adicionar_validacao('O perfil da amostra não permite que este paciente tenha um código GAL', null, 'alert-danger');
+                }
+
             }
-        }
+            if ($objAmostra->getIdCodGAL_fk() == null) {
+                $objPerfilPaciente = new PerfilPaciente();
+                $objPerfilPacienteRN = new PerfilPacienteRN();
+
+                $objPerfilPaciente->setIdPerfilPaciente($objAmostra->getIdPerfilPaciente_fk());
+                $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
+                if ($objPerfilPaciente->getIndex_perfil() == 'PACIENTES SUS') {
+                    $objExcecao->adicionar_validacao('O perfil da amostra exige que este paciente tenha um código GAL', null, 'alert-danger');
+                }
+            }
 
     }
 
@@ -241,24 +250,36 @@ class AmostraRN{
             $objExcecao = new Excecao();
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
-            
-            //print_r($amostra->getObjPaciente());
-            if($amostra->getObjPaciente() != null){
-                $objPacienteRN = new PacienteRN();
-                $objPaciente = $objPacienteRN->cadastrar($amostra->getObjPaciente());
-                $amostra->setIdPaciente_fk($objPaciente->getIdPaciente());
 
-                if($objPaciente->getObjCodGAL() != null) {
-                    //print_r($objPaciente->getObjCodGAL());
-                    if ($objPaciente->getObjCodGAL()->getIdCodigoGAL() != null) {
-                        $amostra->setIdCodGAL_fk($objPaciente->getObjCodGAL()->getIdCodigoGAL());
+            //print_r($amostra->getObjPaciente());
+            //existe o obj paciente
+            if($amostra->getObjPaciente() != null){
+                if($amostra->getObjPaciente()->getIdPaciente() == null) {
+
+                    $objPacienteRN = new PacienteRN();
+                    $objPaciente = $objPacienteRN->cadastrar($amostra->getObjPaciente());
+                    $amostra->setIdPaciente_fk($objPaciente->getIdPaciente());
+                    if ($objPaciente->getObjCodGAL() != null) {
+                        if ($objPaciente->getObjCodGAL()->getIdCodigoGAL() != null) {
+                            $amostra->setIdCodGAL_fk($objPaciente->getObjCodGAL()->getIdCodigoGAL());
+                        }
+                    }
+                }else{ // nesse objeto paciente já havia sido cadastrado
+
+                    $objPacienteRN = new PacienteRN();
+                    $objPaciente  = $objPacienteRN->alterar($amostra->getObjPaciente());
+                    $amostra->setObjPaciente($objPaciente);
+                    $amostra->setIdPaciente_fk($objPaciente->getIdPaciente());
+                    if ($objPaciente->getObjCodGAL() != null) {
+                        if ($objPaciente->getObjCodGAL()->getIdCodigoGAL() != null) {
+                            $amostra->setIdCodGAL_fk($objPaciente->getObjCodGAL()->getIdCodigoGAL());
+                        }
                     }
                 }
                               
             }
 
-
-            $this->validarPerfilCodGAL($amostra,$objExcecao);
+            //$this->validarPerfilCodGAL($amostra,$objExcecao);
             $this->validarObservacoes($amostra,$objExcecao);
             $this->validar_a_r_g($amostra,$objExcecao);
             $this->validarDataColeta($amostra,$objExcecao);
@@ -274,7 +295,7 @@ class AmostraRN{
             
             $objExcecao->lancar_validacoes();
             $objAmostraBD = new AmostraBD();
-            $objAmostraBD->cadastrar($amostra,$objBanco);
+            $objAmostraBD->cadastrar($amostra,$objBanco); //cadastra sem o código pq precisa do ID
             
             $objPerfilPaciente = new PerfilPaciente();
             $objPerfilPacienteRN = new PerfilPacienteRN();
@@ -285,13 +306,17 @@ class AmostraRN{
             $objAmostraAuxRN->alterar($amostra);
             
             if($amostra->getObjTubo() != null){
-                if($amostra->get_a_r_g() != 'g'){
-                    
-                    $objTubo = $amostra->getObjTubo();
-                    $objTubo->setIdAmostra_fk($amostra->getIdAmostra()); 
-                    $objTuboRN = new TuboRN();
-                    $amostra->setObjTubo($objTuboRN->cadastrar($objTubo));
-                 
+
+                $objTuboRN = new TuboRN();
+                if($amostra->getObjTubo()->getIdTubo() == null) { //tubo ainda não cadastrado
+                    if ($amostra->get_a_r_g() != 'g') {
+                        $objTubo = $amostra->getObjTubo();
+                        $objTubo->setIdAmostra_fk($amostra->getIdAmostra());
+                        $amostra->setObjTubo($objTuboRN->cadastrar($objTubo));
+
+                    }
+                }else {
+                    $objTuboRN->alterar($amostra->getObjTubo());
                 }
                
             }
@@ -309,32 +334,71 @@ class AmostraRN{
     }
 
     public function alterar(Amostra $amostra) {
-         try {
+
+        $objBanco = new Banco();
+        try {
              
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+
+             if($amostra->getObjPaciente() != null){
+                 if($amostra->getObjPaciente()->getIdPaciente() == null) {
+                     $objExcecao->adicionar_validacao('Não existe paciente cadastrado para esta amostra ',null,'alert-danger');
+                 }else{ // nesse objeto paciente já havia sido cadastrado
+                     $objPacienteRN = new PacienteRN();
+                     $objPaciente  = $objPacienteRN->alterar($amostra->getObjPaciente());
+                     $amostra->setObjPaciente($objPaciente);
+                     $amostra->setIdPaciente_fk($objPaciente->getIdPaciente());
+
+                     if($objPaciente->getObjCodGAL() != null &&
+                         $objPaciente->getObjCodGAL()->getIdCodigoGAL() != null) {
+                         $amostra->setIdCodGAL_fk($objPaciente->getObjCodGAL()->getIdCodigoGAL());
+                     }
+                 }
+                 $amostra->setObjPaciente($objPaciente);
+             }
+
+
 
             $this->validarObservacoes($amostra,$objExcecao);
             $this->validar_a_r_g($amostra,$objExcecao);
             $this->validarDataColeta($amostra,$objExcecao);
             $this->validarPerfilCartaoSUS($amostra, $objExcecao);
-            $this->validarPerfilCodGAL($amostra,$objExcecao);
+            //$this->validarPerfilCodGAL($amostra,$objExcecao);
             $this->validarObsCEP($amostra,$objExcecao);
             $this->validarObsHoraColeta($amostra,$objExcecao);
             $this->validarObsLugarOrigem($amostra, $objExcecao);
             $this->validarObsMotivo($amostra, $objExcecao);
             $this->validarMotivo($amostra, $objExcecao);
             $this->validarCEP($amostra, $objExcecao);
-            
+
+
             $objExcecao->lancar_validacoes();
-            
+
             $objAmostraBD = new AmostraBD();
             $objAmostraBD->alterar($amostra,$objBanco);
-            $objBanco->fecharConexao();
 
+             if($amostra->getObjTubo() != null){
+                 $objTuboRN = new TuboRN();
+                 if($amostra->getObjTubo()->getIdTubo() == null) { //tubo ainda não cadastrado
+
+                         $objTubo = $amostra->getObjTubo();
+                         $objTubo->setIdAmostra_fk($amostra->getIdAmostra());
+                         $amostra->setObjTubo($objTuboRN->cadastrar($objTubo));
+
+                 }else {
+                     $objTuboRN->alterar($amostra->getObjTubo());
+                 }
+
+             }
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+             return $amostra;
         } catch (Throwable $e) {
-            throw new Excecao('Erro alterando amostra.', NULL, $e);
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro alterando amostra.', $e);
         }
     }
 
@@ -354,7 +418,7 @@ class AmostraRN{
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro consultando amostra.', NULL, $e);
+            throw new Excecao('Erro consultando amostra.', $e);
         }
     }
 
@@ -393,7 +457,7 @@ class AmostraRN{
             return $arr;
         } catch (Exception $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro removendo amostra.', NULL, $e);
+            throw new Excecao('Erro removendo amostra.',  $e);
         }
     }
 
@@ -413,7 +477,27 @@ class AmostraRN{
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', NULL, $e);
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+    }
+
+    public function listar_especial(Amostra $amostra) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+            $arr =  $objAmostraBD->listar_especial($amostra,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
         }
     }
     
@@ -458,7 +542,7 @@ class AmostraRN{
             }
             return $arr_resultado;
         } catch (Throwable $e) {
-            throw new Excecao('Erro listando amostra.', NULL, $e);
+            throw new Excecao('Erro listando amostra.', $e);
         }
     }
 
@@ -478,7 +562,27 @@ class AmostraRN{
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', NULL, $e);
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+    }
+
+    public function filtrar_por_quantidade(Amostra $amostra) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+            $arr =  $objAmostraBD->filtrar_por_quantidade($amostra,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
         }
     }
 
