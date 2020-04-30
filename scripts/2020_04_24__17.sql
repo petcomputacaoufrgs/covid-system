@@ -49,7 +49,7 @@ CREATE TABLE tb_rel_perfil_preparolote (
 
 ALTER TABLE tb_infostubo ADD idLote_fk int(10) unsigned NULL default null;
 ALTER TABLE tb_infostubo ADD FOREIGN KEY fk_idLote (idLote_fk) REFERENCES tb_lote (idLote);
-CREATE INDEX statusTuboLote ON tb_lote ( statusLote)
+CREATE INDEX statusTuboLote ON tb_lote ( statusLote);
 
 
 Alter table tb_codgal add obsCodGAL varchar(300) default null;
