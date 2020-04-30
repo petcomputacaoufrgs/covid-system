@@ -26,8 +26,8 @@ Nota:
 * Na sequência, serão configurados o servidor Apache (web) e o SGBD MariaDB (banco de dados) na mesma máquina GNU/Linux. 
 * Na máquina virtual (previamente configurada seguindo essas instruções) definimos o seguinte usuário com status de administrador:
 
-    User:     covid
-    Password: covid
+      User:     covid
+      Password: covid
 
 
 # 2. Baixando e instalando a versão estável do covid-system
@@ -139,9 +139,9 @@ Note que o comando acima atualiza somente o código-fonte da aplicação, sem af
 Verifique também se a atualização não alterou as informações de acesso ao SGBD no arquivo /var/covid-system/classes/Configuracao.php
 
 
-*Banco de Dados:* se houver arquivos aaaa_mm_dd__hh.sql em /var/covid-system/database/ posteriores à data da última atualização, os mesmo precisam ser incorporados ao banco de dados através do comando abaixo, para deixar o esquema de dados consistente com a última versão da aplicação. 
+*Banco de Dados:* se houver arquivos aaaa_mm_dd__hh.sql em /var/covid-system/scripts/ posteriores à data da última atualização, os mesmo precisam ser incorporados ao banco de dados através do comando abaixo, para deixar o esquema de dados consistente com a última versão da aplicação. 
 
-    sudo mysql --database=amostras_covid19 --user='covid' --password='covid' < /var/covid-system/database/XXXX_XX_XX__XX.sql
+    sudo mysql --database=amostras_covid19 --user='covid' --password='covid' < /var/covid-system/scripts/XXXX_XX_XX__XX.sql
 
  
 
