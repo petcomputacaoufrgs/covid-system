@@ -331,7 +331,7 @@ $objPagina = new Pagina();
                     <option value="Capela 2">Capela 2</option>
                     <option value="Capela 3">Capela 3</option>
                 </select>
-                <button onclick="showDiv('principal-grupos')" type="submit" name="alocar-capela" class="btn" id="btn-capela">ALOCAR</button><br><br>
+                <button type="submit" name="alocar-capela" class="btn" id="btn-capela">ALOCAR</button><br><br>
             </div>
             <div id="principal-grupos">    
                 <h1 id="title1">SELECIONAR UM GRUPO DE EXTRAÇÃO<h1>
@@ -401,12 +401,7 @@ $objPagina = new Pagina();
                     <option value="Kit 2">Kit 2</option>
                     <option value="Kit 3">Kit 3</option>
                 </select>
-                <select id="select-lote" class="form-control" name="sel-lote">
-                    <option value="">Selecione um lote</option>
-                    <option value="Lote 1">Lote 1</option>
-                    <option value="Lote 2">Lote 2</option>
-                    <option value="Lote 3">Lote 3</option>
-                </select>
+                <input type="text" id="select-lote" name="sel-lote" placeholder="Digite um lote">
                 <div id="cancel-confirm">
                     <button type="submit" name="cancelar-kit-lote" class="btn2">CANCELAR INÍCIO DA EXTRAÇÃO</button>
                     <button onclick="showDiv('secundario-amostras')" type="submit" name="confirmar-kit-lote" class="btn2">CONFIRMAR INÍCIO DA EXTRAÇÃO</button>
@@ -421,7 +416,7 @@ $objPagina = new Pagina();
                             <thead>
                                 <tr class="listagem-titulo">
                                     <th scope="col">AMOSTRA</th>
-                                    <th scope="col">VOLUME (μl)</th>
+                                    <th scope="col">VOLUME DO ITEM (μl)</th>
                                     <th scope="col">PROBLEMA</th>
                                     <th scope="col">OBSERVAÇÕES</th>
                                 </tr>
@@ -429,19 +424,19 @@ $objPagina = new Pagina();
                             <tbody>
                                 <tr class="listagem">
                                     <th scope="col">AMOSTRA 1</th>
-                                    <th scope="col"><input type="number" id="amostra1Vol" name="vol" class="txtbox" placeholder="Volume (μl)"></th>
+                                    <th scope="col"><input type="number" id="amostra1Vol" name="vol" class="txtbox" placeholder="50 μL"></th>
                                     <th scope="col"><input type="checkbox" id="amostra1Prob" name="problema"></th>
                                     <th scope="col"><input type="text" id="amostra1Obs" name="obs" placeholder="Observações"></th>
                                 </tr>
                                 <tr class="listagem">
                                     <th scope="col">AMOSTRA 2</th>
-                                    <th scope="col"><input type="number" id="amostra2Vol" name="vol" class="txtbox" placeholder="Volume (μl)"></th>
+                                    <th scope="col"><input type="number" id="amostra2Vol" name="vol" class="txtbox" placeholder="50 μL"></th>
                                     <th scope="col"><input type="checkbox" id="amostra2Prob" name="problema"></th>
                                     <th scope="col"><input type="text" id="amostra2Obs" name="obs" placeholder="Observações"></th>
                                 </tr>
                                 <tr class="listagem">
                                     <th scope="col">AMOSTRA 3</th>
-                                    <th scope="col"><input type="number" id="amostra3Vol" name="vol" class="txtbox" placeholder="Volume (μl)"></th>
+                                    <th scope="col"><input type="number" id="amostra3Vol" name="vol" class="txtbox" placeholder="50 μL"></th>
                                     <th scope="col"><input type="checkbox" id="amostra3Prob" name="problema"></th>
                                     <th scope="col"><input type="text" id="amostra3Obs" name="obs" placeholder="Observações"></th>
                                 </tr>
@@ -511,8 +506,6 @@ $objPagina = new Pagina();
                 prob.dispatchEvent(new Event("change"));
             }
 
-
-            document.getElementById('principal-grupos').style.display = 'none';
             document.getElementById('tabela-amostras').style.display = 'none';
             document.getElementById('kit-lote').style.display = 'none';
             document.getElementById('secundario-amostras').style.display = 'none';
