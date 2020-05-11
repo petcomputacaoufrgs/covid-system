@@ -20,7 +20,7 @@ class Rel_perfil_preparoLote_BD{
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objRel_perfil_preparoLote->setIdRelPerfilPreparoLote($objBanco->obterUltimoID());
-
+            return $objRel_perfil_preparoLote;
         } catch (Exception $ex) {
             throw new Excecao("Erro cadastrando o relacionamento do tubo com um dos seus lotes no BD.",$ex);
         }
@@ -42,7 +42,7 @@ class Rel_perfil_preparoLote_BD{
             $arrayBind[] = array('i',$objRel_perfil_preparoLote->getIdRelPerfilPreparoLote());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
-
+            return $objRel_perfil_preparoLote;
         } catch (Exception $ex) {
             throw new Excecao("Erro alterando o relacionamento do tubo com um dos seus lotes no BD.",$ex);
         }
@@ -129,5 +129,21 @@ class Rel_perfil_preparoLote_BD{
             throw new Excecao("Erro removendo o relacionamento do tubo com um dos seus lotes no BD.",$ex);
         }
     }
+
+
+    public function remover_peloIdPreparo(Rel_perfil_preparoLote $objRel_perfil_preparoLote, Banco $objBanco) {
+
+        try{
+
+            $DELETE = 'DELETE FROM tb_rel_perfil_preparolote WHERE idPreparoLote_fk = ? ';
+            $arrayBind = array();
+            $arrayBind[] = array('i',$objRel_perfil_preparoLote->getIdPreparoLoteFk());
+            $objBanco->executarSQL($DELETE, $arrayBind);
+
+        } catch (Exception $ex) {
+            throw new Excecao("Erro removendo o relacionamento do tubo com um dos seus lotes no BD.",$ex);
+        }
+    }
+
 
 }

@@ -113,7 +113,7 @@ class PacienteRN {
             $objExcecao->adicionar_validacao('O RG já possui mais de 10 caracteres', null, 'alert-danger');
         }
 
-        if (strlen($strRG) > 0) {
+        /*if (strlen($strRG) > 0) {
             $objPacienteAux = new Paciente();
             $objPacienteAuxRN = new PacienteRN();
             $arr = $objPacienteAuxRN->listar($objPacienteAux);
@@ -130,7 +130,7 @@ class PacienteRN {
                     
                 }
             }
-        }
+        }*/
 
         return $paciente->setRG($strRG);
     }
@@ -186,7 +186,7 @@ class PacienteRN {
                 $objExcecao->adicionar_validacao('O cartão do SUS do paciente possui mais que 15 caracteres.', null, 'alert-danger');
             }
 
-            if (strlen($strCartaoSUS) > 0) {
+            /*if (strlen($strCartaoSUS) > 0) {
                 $objPacienteAux = new Paciente();
                 $objPacienteAuxRN = new PacienteRN();
                 $arr = $objPacienteAuxRN->listar($objPacienteAux);
@@ -203,7 +203,7 @@ class PacienteRN {
 
                     }
                 }
-            }
+            }*/
 
             return $paciente->setCartaoSUS($strCartaoSUS);
         }
@@ -269,7 +269,7 @@ class PacienteRN {
                     $objExcecao->adicionar_validacao('O passaporte do paciente possui mais que 15 caracteres.', 'idPassaporte', 'alert-danger');
                 }
 
-                if (strlen($strPassaporte) > 0) {
+                /*if (strlen($strPassaporte) > 0) {
                     $objPacienteAux = new Paciente();
                     $objPacienteAuxRN = new PacienteRN();
                     $arr = $objPacienteAuxRN->listar($objPacienteAux);
@@ -286,7 +286,7 @@ class PacienteRN {
 
                         }
                     }
-                }
+                }*/
 
 
                 return $paciente->setPassaporte($strPassaporte);
@@ -523,6 +523,8 @@ class PacienteRN {
             $paciente->setCadastroPendente('s');
         }
 
+
+
     }
 
     private function validarObsDataNascimento(Paciente $paciente, Excecao $objExcecao) {
@@ -547,7 +549,7 @@ class PacienteRN {
             $objBanco->abrirTransacao();
             $objPacienteBD = new PacienteBD();
 
-            $this->validarCenarioPendente($paciente, $objExcecao);
+            //$this->validarCenarioPendente($paciente, $objExcecao);
             $this->validarCEP($paciente, $objExcecao);
             $this->validarEndereco($paciente, $objExcecao);
             $this->validarCPF($paciente, $objExcecao);
@@ -596,11 +598,12 @@ class PacienteRN {
     }
 
     public function alterar(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
 
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objCodGALRN = new CodigoGAL_RN();
 
             if($paciente->getObjCodGAL() != null){
@@ -617,7 +620,7 @@ class PacienteRN {
 
             }
 
-            $this->validarCenarioPendente($paciente, $objExcecao);
+            //$this->validarCenarioPendente($paciente, $objExcecao);
             $this->validarCEP($paciente, $objExcecao);
             $this->validarEndereco($paciente, $objExcecao);
             $this->validarCPF($paciente, $objExcecao);
@@ -641,143 +644,203 @@ class PacienteRN {
             $objPacienteBD = new PacienteBD();
             $objPacienteBD->alterar($paciente, $objBanco);
 
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $paciente;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando o paciente.', $e);
         }
     }
 
     public function consultar(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
             $arr = $objPacienteBD->consultar($paciente, $objBanco);
 
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
-
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o paciente.', $e);
         }
     }
 
     public function remover(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
             $arr = $objPacienteBD->remover($paciente, $objBanco);
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro removendo o paciente.', $e);
         }
     }
 
     public function listar(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
 
             $arr = $objPacienteBD->listar($paciente, $objBanco);
 
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o paciente.', $e);
         }
     }
 
     public function validarCadastro(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
             $arr = $objPacienteBD->validarCadastro($paciente, $objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro pesquisando o paciente.', $e);
         }
     }
 
     public function procurar(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
             $arr = $objPacienteBD->procurar($paciente, $objBanco);
 
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
-
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o paciente.', $e);
         }
     }
 
     public function procurarCPF(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
             $arr = $objPacienteBD->procurarCPF($paciente, $objBanco);
 
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
-
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o paciente.', $e);
         }
     }
 
     public function procurarRG(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
             $arr = $objPacienteBD->procurarRG($paciente, $objBanco);
 
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
-
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o paciente.', $e);
         }
     }
 
     
     public function procurarPassaporte(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
             $arr = $objPacienteBD->procurarPassaporte($paciente, $objBanco);
 
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
-
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o paciente.', $e);
+        }
+    }
+
+    public function procurar_paciente(Paciente $paciente) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $objExcecao->lancar_validacoes();
+            $objPacienteBD = new PacienteBD();
+
+            $arr = $objPacienteBD->procurar_paciente($paciente, $objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro procurando o paciente.', $e);
         }
     }
     

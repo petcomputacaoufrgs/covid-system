@@ -22,7 +22,7 @@ class CadastroAmostraBD{
             $objBanco->executarSQL($INSERT,$arrayBind);
             //$objCadastroAmostra->setIdAmostra_fk($objBanco->obterUltimoID());
             
-           
+           return $objCadastroAmostra;
         } catch (Exception $ex) {
             throw new Excecao("Erro cadastrando o paciente  no BD.",$ex);
         }

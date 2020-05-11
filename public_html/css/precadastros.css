@@ -250,6 +250,13 @@ td,th{
 }
 
 
+#tabela_preparos{
+    max-width: 100%;
+    height: auto;
+    overflow-x: scroll;
+}
+
+
 /* Media Queries
 -----------------*/
 

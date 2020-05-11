@@ -11,9 +11,44 @@ class PreparoLote
     private $dataHoraInicio;
     private $dataHoraFim;
     private $idLote_fk;
-    private $idCapela_fk;
     private $objLote;
     private $objPerfil;
+    private $objsTubos;
+
+    private $ObjsTubosCadastro;
+    private $ObjsTubosAlterados;
+
+    /**
+     * @return mixed
+     */
+    public function getObjsTubosCadastro()
+    {
+        return $this->ObjsTubosCadastro;
+    }
+
+    /**
+     * @param mixed $ObjsTubosCadastro
+     */
+    public function setObjsTubosCadastro($ObjsTubosCadastro)
+    {
+        $this->ObjsTubosCadastro = $ObjsTubosCadastro;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getObjsTubosAlterados()
+    {
+        return $this->ObjsTubosAlterados;
+    }
+
+    /**
+     * @param mixed $ObjsTubosAlterados
+     */
+    public function setObjsTubosAlterados($ObjsTubosAlterados)
+    {
+        $this->ObjsTubosAlterados = $ObjsTubosAlterados;
+    }
 
 
     /**
@@ -22,6 +57,24 @@ class PreparoLote
     public function __construct()
     {
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObjsTubos()
+    {
+        return $this->objsTubos;
+    }
+
+    /**
+     * @param mixed $objsTubos
+     */
+    public function setObjsTubos($objsTubos)
+    {
+        $this->objsTubos = $objsTubos;
+    }
+
+
 
     /**
      * @return mixed
@@ -103,21 +156,6 @@ class PreparoLote
         $this->idLote_fk = $idLote_fk;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getIdCapelaFk()
-    {
-        return $this->idCapela_fk;
-    }
-
-    /**
-     * @param mixed $idCapela_fk
-     */
-    public function setIdCapelaFk($idCapela_fk)
-    {
-        $this->idCapela_fk = $idCapela_fk;
-    }
 
     /**
      * @return mixed

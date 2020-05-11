@@ -129,7 +129,7 @@ try{
         }
 
     }else {
-        ECHO 'AQUI';
+        //ECHO 'AQUI';
 
         $quantidade = 10;
         $letras = range('A', chr(ord('A') + $quantidade));
@@ -158,17 +158,17 @@ try{
                                    name="input_' . $i . '" value=""></td>';
             } else {
                 $table .= '<td><input type="text" class="form-control" id="idDataHoraLogin" disabled style="text-align: center;"
-                                   name="input_' . $i . '" value="COLUNA ' . $i . '"></td>';
+                                   name="input_' . $i . '" value=" ' . $i . '"></td>';
             }
         }
         $table .= '<tr>';
-        for ($i = 1; $i <= $objCaixa->getQntColunas(); $i++) {
+        for ($i = 1; $i <= $objCaixa->getQntLinhas(); $i++) {
             $table .= '<td><input type="text" class="form-control" id="idDataHoraLogin" disabled style="text-align: center;"
-                       name="input_' . $i . '_' . $j . '" value="LINHA ' . $letras[($i - 1)] . '"></td>';
-            for ($j = 1; $j <= $objCaixa->getQntLinhas(); $j++) {
+                       name="input_' . $i . '_' . $j . '" value=" ' . $letras[($i - 1)] . '"></td>';
+            for ($j = 1; $j <= $objCaixa->getQntColunas(); $j++) {
                 $objPosicao = new Posicao();
-                $objPosicao->setLinha(strval($j));
-                $objPosicao->setColuna(strval($i));
+                $objPosicao->setLinha(strval($i));
+                $objPosicao->setColuna(strval($j));
                 $objPosicao->setIdCaixa_fk($_GET['idCaixa']);
 
                 $posicao = $objPosicaoRN->listar($objPosicao);
@@ -201,7 +201,8 @@ try{
                 </div>
             </div>
                 
-            </form>';
+            </form>
+            </div>';
 
         if(isset($_POST['inserir_amostra'])){
             for($i=1; $i<=$objCaixa->getQntLinhas(); $i++) {

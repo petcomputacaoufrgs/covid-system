@@ -11,19 +11,21 @@ class LoteBD{
             $INSERT = 'INSERT INTO tb_lote (
                             qntAmostrasDesejadas,
                             qntAmostrasAdquiridas,
+                            tipo,
                             situacaoLote
-                            ) VALUES (?,?,?)';
+                            ) VALUES (?,?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objLote->getQntAmostrasDesejadas());
             $arrayBind[] = array('i',$objLote->getQntAmostrasAdquiridas());
+            $arrayBind[] = array('s',$objLote->getTipo());
             $arrayBind[] = array('s',$objLote->getSituacaoLote());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objLote->setIdLote($objBanco->obterUltimoID());
             return $objLote;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando o lote no BD.",$ex);
         }
 
@@ -34,6 +36,7 @@ class LoteBD{
             $UPDATE = 'UPDATE tb_lote SET '
                 . ' qntAmostrasDesejadas = ?,'
                 . ' qntAmostrasAdquiridas = ?,'
+                . ' tipo = ?,'
                 . ' situacaoLote = ?'
                 . '  where idLote = ?';
 
@@ -41,13 +44,14 @@ class LoteBD{
             $arrayBind = array();
             $arrayBind[] = array('i',$objLote->getQntAmostrasDesejadas());
             $arrayBind[] = array('i',$objLote->getQntAmostrasAdquiridas());
+            $arrayBind[] = array('s',$objLote->getTipo());
             $arrayBind[] = array('s',$objLote->getSituacaoLote());
 
             $arrayBind[] = array('i',$objLote->getIdLote());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
 
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro alterando o lote no BD.",$ex);
         }
 
@@ -80,6 +84,12 @@ class LoteBD{
                 $arrayBind[] = array('s', $objLote->getQntAmostrasAdquiridas());
             }
 
+            if ($objLote->getTipo()!= null) {
+                $WHERE .= $AND . " tipo = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objLote->getTipo());
+            }
+
 
 
             if ($WHERE != '') {
@@ -97,11 +107,12 @@ class LoteBD{
                 $objLote->setQntAmostrasDesejadas($reg['qntAmostrasDesejadas']);
                 $objLote->setQntAmostrasAdquiridas($reg['qntAmostrasAdquiridas']);
                 $objLote->setSituacaoLote($reg['situacaoLote']);
+                $objLote->setTipo($reg['tipo']);
 
                 $array[] = $objLote;
             }
             return $array;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando o lote no BD.",$ex);
         }
 
@@ -118,19 +129,22 @@ class LoteBD{
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
 
-            $perfilUsu = new Lote();
-            $perfilUsu->setIdLote($arr[0]['idLote']);
-            $perfilUsu->setQntAmostrasDesejadas($arr[0]['qntAmostrasDesejadas']);
-            $perfilUsu->setQntAmostrasAdquiridas($arr[0]['qntAmostrasAdquiridas']);
-            $perfilUsu->setSituacaoLote($arr[0]['situacaoLote']);
+            $lote = new Lote();
+            $lote->setIdLote($arr[0]['idLote']);
+            $lote->setQntAmostrasDesejadas($arr[0]['qntAmostrasDesejadas']);
+            $lote->setQntAmostrasAdquiridas($arr[0]['qntAmostrasAdquiridas']);
+            $lote->setSituacaoLote($arr[0]['situacaoLote']);
+            $lote->setTipo($arr[0]['tipo']);
 
-            return $perfilUsu;
-        } catch (Exception $ex) {
+            return $lote;
+        } catch (Throwable $ex) {
 
             throw new Excecao("Erro consultando o lote no BD.",$ex);
         }
 
     }
+
+
 
     public function remover(Lote $objLote, Banco $objBanco) {
 
@@ -141,9 +155,40 @@ class LoteBD{
             $arrayBind[] = array('i',$objLote->getIdLote());
             $objBanco->executarSQL($DELETE, $arrayBind);
 
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo o lote no BD.",$ex);
         }
     }
+
+
+    public function consultar_perfis(Lote $objLote, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT DISTINCT tb_perfilpaciente.idPerfilPaciente 
+                        from tb_rel_perfil_preparolote, tb_perfilpaciente, tb_preparo_lote, tb_lote 
+                        where tb_lote.idLote = ? 
+                        AND tb_preparo_lote.idLote_fk = tb_lote.idLote 
+                        and tb_rel_perfil_preparolote.idPreparoLote_fk = tb_preparo_lote.idPreparoLote 
+                        AND tb_rel_perfil_preparolote.idPerfilPaciente_fk = tb_perfilpaciente.idPerfilPaciente";
+
+            $arrayBind = array();
+            $arrayBind[] = array('i', $objLote->getIdLote());
+            $arr = $objBanco->consultarSQL($SELECT , $arrayBind);
+            $arr_perfis = array();
+
+            foreach ($arr as $reg){
+                $objPerfilPaciente = new PerfilPaciente();
+                $objPerfilPaciente->setIdPerfilPaciente($reg['idPerfilPaciente']);
+                $arr_perfis[] = $objPerfilPaciente;
+            }
+
+            return $arr_perfis;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando os perfis do lote no BD.",$ex);
+        }
+
+    }
+
+
 
 }

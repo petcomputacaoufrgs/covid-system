@@ -58,6 +58,7 @@ class Pagina {
                 $log = new Log();
                 $log->setIdUsuario(Sessao::getInstance()->getIdUsuario());
                 $log->setTexto($e->__toString()."\n".$e->getTraceAsString());
+                date_default_timezone_set('America/Sao_Paulo');
                 $log->setDataHora(date("Y-m-d H:i:s"));
                 print_r($log);
                 $logRN = new LogRN();
@@ -79,7 +80,7 @@ class Pagina {
            <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <div class="mx-auto d-sm-flex d-block flex-sm-nowrap">
 
-                <a class="navbar-brand" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">COVID19<i class="fas fa-virus"></i></a>
+                <a class="navbar-brand" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">Tela Inicial<i class="fas fa-virus"></i></a>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -157,6 +158,7 @@ class Pagina {
                         <script src="js/jquery-3.3.1.slim.min.js"></script>
                         <script src="js/popper.min.js"></script>
                         <script src="js/bootstrap.min.js"></script>
+                        
                         
                         <!-- Bootstrap CSS -->
                         <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -242,8 +244,8 @@ class Pagina {
                       
                     <body>
 
-                    <a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" >'
-                         .'<img src="img/header.png" class="HeaderImg"></a>';
+                    <!--<a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" >-->
+                         <img src="img/header.png" class="HeaderImg"></a>';
 
     }
 
@@ -310,7 +312,7 @@ class Pagina {
         return htmlentities($strValor,ENT_QUOTES);
     }
     
-    public static function montar_topo_listar($titulo=null ,$link1 =null, $novo1= null,$link2,$novo2) {
+    public static function montar_topo_listar($titulo=null ,$link1 =null, $novo1= null,$link2= null,$novo2=null) {
         echo '<div class="topo_listar">
                 <div class="row">
                     <div class="col-md-6"><h3>'.$titulo.'</h3></div>

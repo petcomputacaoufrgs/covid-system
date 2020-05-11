@@ -24,7 +24,7 @@ session_destroy();
 
 
     <main>
-      <div class="form-box">
+      <div class="form-box" style="margin-top: 10px;">
           <section class="section-default">
               <form method="POST">
               <h1 id="title-login">LOGIN NO SISTEMA</h1>

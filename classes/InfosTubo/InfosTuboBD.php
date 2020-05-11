@@ -12,6 +12,7 @@ class InfosTuboBD{
                     . 'idUsuario_fk,'
                     . 'idPosicao_fk,'
                     . 'idTubo_fk,'
+                    . 'idLote_fk,'
                     . 'etapa,'
                     . 'etapaAnterior,'
                     . 'dataHora,'
@@ -20,14 +21,16 @@ class InfosTuboBD{
                     . 'obsProblema,'
                     . 'observacoes,'
                     . 'situacaoEtapa,'
-                    . 'situacaoTubo'
+                    . 'situacaoTubo,'
+                    . 'idLocal_fk'
                     . ')' 
-                    . 'VALUES (?,?,?,?,?,?,?,?,?,?,?,?)';
+                    . 'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objInfosTubo->getIdUsuario_fk());
             $arrayBind[] = array('i',$objInfosTubo->getIdPosicao_fk());
             $arrayBind[] = array('i',$objInfosTubo->getIdTubo_fk());
+            $arrayBind[] = array('i',$objInfosTubo->getIdLote_fk());
             $arrayBind[] = array('s',$objInfosTubo->getEtapa());
             $arrayBind[] = array('s',$objInfosTubo->getEtapaAnterior());
             $arrayBind[] = array('s',$objInfosTubo->getDataHora());
@@ -37,12 +40,13 @@ class InfosTuboBD{
             $arrayBind[] = array('s',$objInfosTubo->getObservacoes());
             $arrayBind[] = array('s',$objInfosTubo->getSituacaoEtapa());
             $arrayBind[] = array('s',$objInfosTubo->getSituacaoTubo());
+            $arrayBind[] = array('i',$objInfosTubo->getIdLocalFk());
                        
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objInfosTubo->setIdInfosTubo($objBanco->obterUltimoID());
             //echo $objInfosTubo->getIdInfosTubo();
-           
+           return $objInfosTubo;
         } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando a amostra no BD.",$ex);
         }
@@ -56,6 +60,7 @@ class InfosTuboBD{
                     . 'idUsuario_fk = ?,'
                     . 'idPosicao_fk = ?,'
                     . 'idTubo_fk = ?,'
+                    . 'idLote_fk = ?,'
                     . 'etapa = ?,'
                     . 'etapaAnterior = ?,'
                     . 'dataHora = ?,'
@@ -64,7 +69,8 @@ class InfosTuboBD{
                     . 'obsProblema = ?,'
                     . 'observacoes = ?,'
                     . 'situacaoEtapa = ?,'
-                    . 'situacaoTubo = ?'
+                    . 'situacaoTubo = ?,'
+                    . 'idLocal_fk = ?'
                 . '  where idInfosTubo = ?';
         
                 
@@ -72,6 +78,7 @@ class InfosTuboBD{
             $arrayBind[] = array('i',$objInfosTubo->getIdUsuario_fk());
             $arrayBind[] = array('i',$objInfosTubo->getIdPosicao_fk());
             $arrayBind[] = array('i',$objInfosTubo->getIdTubo_fk());
+            $arrayBind[] = array('i',$objInfosTubo->getIdLote_fk());
             $arrayBind[] = array('s',$objInfosTubo->getEtapa());
             $arrayBind[] = array('s',$objInfosTubo->getEtapaAnterior());
             $arrayBind[] = array('s',$objInfosTubo->getDataHora());
@@ -81,13 +88,13 @@ class InfosTuboBD{
             $arrayBind[] = array('s',$objInfosTubo->getObservacoes());
             $arrayBind[] = array('s',$objInfosTubo->getSituacaoEtapa());
             $arrayBind[] = array('s',$objInfosTubo->getSituacaoTubo());
+            $arrayBind[] = array('i',$objInfosTubo->getIdLocalFk());
             
             $arrayBind[] = array('i',$objInfosTubo->getIdInfosTubo());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
-
+            return $objInfosTubo;
         } catch (Throwable $ex) {
-            DIE($ex);
             throw new Excecao("Erro alterando a amostra no BD.",$ex);
         }
        
@@ -146,6 +153,12 @@ class InfosTuboBD{
                  $arrayBind[] = array('i', $objInfosTubo->getIdPosicao_fk());
              }
 
+             if ($objInfosTubo->getIdLocalFk() != null) {
+                 $WHERE .= $AND . " idLocal_fk = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('i', $objInfosTubo->getIdLocalFk());
+             }
+
 
              if ($WHERE != '') {
                 $WHERE = ' where ' . $WHERE;
@@ -155,7 +168,6 @@ class InfosTuboBD{
 
             $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
 
-
  
             $array_paciente = array();
             foreach ($arr as $reg){
@@ -164,6 +176,7 @@ class InfosTuboBD{
                 $objInfosTubo->setIdUsuario_fk($reg['idUsuario_fk']);
                 $objInfosTubo->setIdPosicao_fk($reg['idPosicao_fk']);
                 $objInfosTubo->setIdTubo_fk($reg['idTubo_fk']);
+                $objInfosTubo->setIdLote_fk($reg['idLote_fk']);
                 $objInfosTubo->setEtapa($reg['etapa']);
                 $objInfosTubo->setEtapaAnterior($reg['etapaAnterior']);
                 $objInfosTubo->setDataHora($reg['dataHora']);
@@ -173,6 +186,7 @@ class InfosTuboBD{
                 $objInfosTubo->setObservacoes($reg['observacoes']);
                 $objInfosTubo->setSituacaoEtapa($reg['situacaoEtapa']);
                 $objInfosTubo->setSituacaoTubo($reg['situacaoTubo']);
+                $objInfosTubo->setIdLocalFk($reg['idLocal_fk']);
 
 
                 $array_paciente[] = $objInfosTubo;
@@ -201,6 +215,7 @@ class InfosTuboBD{
             $objInfosTubo->setIdUsuario_fk($arr[0]['idUsuario_fk']);
             $objInfosTubo->setIdPosicao_fk($arr[0]['idPosicao_fk']);
             $objInfosTubo->setIdTubo_fk($arr[0]['idTubo_fk']);
+            $objInfosTubo->setIdLote_fk($arr[0]['idLote_fk']);
             $objInfosTubo->setEtapa($arr[0]['etapa']);
             $objInfosTubo->setEtapaAnterior($arr[0]['etapaAnterior']);
             $objInfosTubo->setDataHora($arr[0]['dataHora']);
@@ -210,6 +225,7 @@ class InfosTuboBD{
             $objInfosTubo->setObservacoes($arr[0]['observacoes']);
             $objInfosTubo->setSituacaoEtapa($arr[0]['situacaoEtapa']);
             $objInfosTubo->setSituacaoTubo($arr[0]['situacaoTubo']);
+            $objInfosTubo->setIdLocalFk($arr[0]['idLocal_fk']);
 
             return $objInfosTubo;
         } catch (Throwable $ex) {
@@ -244,12 +260,14 @@ class InfosTuboBD{
             $arrayBind[] = array('i',$objInfosTubo->getIdTubo_fk());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
-
+            //echo "!!!";
+            //print_r($arr);
             $objInfosTubo = new InfosTubo();
             $objInfosTubo->setIdInfosTubo($arr[0]['idInfosTubo']);
             $objInfosTubo->setIdUsuario_fk($arr[0]['idUsuario_fk']);
             $objInfosTubo->setIdPosicao_fk($arr[0]['idPosicao_fk']);
             $objInfosTubo->setIdTubo_fk($arr[0]['idTubo_fk']);
+            $objInfosTubo->setIdLote_fk($arr[0]['idLote_fk']);
             $objInfosTubo->setEtapa($arr[0]['etapa']);
             $objInfosTubo->setEtapaAnterior($arr[0]['etapaAnterior']);
             $objInfosTubo->setDataHora($arr[0]['dataHora']);
@@ -259,6 +277,7 @@ class InfosTuboBD{
             $objInfosTubo->setObservacoes($arr[0]['observacoes']);
             $objInfosTubo->setSituacaoEtapa($arr[0]['situacaoEtapa']);
             $objInfosTubo->setSituacaoTubo($arr[0]['situacaoTubo']);
+            $objInfosTubo->setIdLocalFk($arr[0]['idLocal_fk']);
 
             return $objInfosTubo;
         } catch (Throwable $ex) {
@@ -273,15 +292,26 @@ class InfosTuboBD{
         try {
 
 
-            $INSERT1 = 'INSERT into tb_informacoes_tubo (idUsuario_fk,idPosicao_fk,idTubo_fk,idLote_fk,
-                situacaoTubo,situacaoEtapa,etapa,dataHora,reteste,volume,obsProblema,observacoes) 
-                VALUES (' . '\'' . $info->getIdUsuario_fk() . '\',' .
-                $info->getIdPosicao_fk() . ',' .
+            $INSERT1 = 'INSERT into tb_informacoes_tubo (
+                
+                idUsuario_fk,
+                idPosicao_fk,
+                idTubo_fk,
+                idLote_fk,
+                situacaoTubo,
+                situacaoEtapa,
+                etapa,
+                etapaAnterior,
+                dataHora,reteste,volume,obsProblema,observacoes) 
+                VALUES (
+                ' . '\'' . $info->getIdUsuario_fk() . '\',' .
+                 ' null ' . ',' .
                 $info->getIdTubo_fk()
                 . ', null ' . ',\'' .
                 $info->getSituacaoTubo() . '\',\'' .
                 $info->getSituacaoEtapa() . '\',\'' .
-                $info->getEtapa() . '\',\'' .
+                $info->getEtapa() . '\',' .
+                'null,\''.
                 $info->getDataHora() . '\',\'' .
                 $info->getReteste() . '\',' .
                 $info->getVolume()
@@ -309,15 +339,18 @@ class InfosTuboBD{
 
                if ($info->getSituacaoTubo() != InfosTuboRN::$TST_DESCARTADO) {
                    $INSERT = 'INSERT into tb_informacoes_tubo (idUsuario_fk,idPosicao_fk,idTubo_fk,idLote_fk,
-                        situacaoTubo,situacaoEtapa,etapa,dataHora,reteste,volume,obsProblema,observacoes)
+                        situacaoTubo,situacaoEtapa,etapa,etapaAnterior,dataHora,reteste,volume,obsProblema,
+                        observacoes)
                         VALUES (
+                       
                         (select idUsuario_fk from tb_infostubo where idInfosTubo = ' . $info->getIdInfosTubo() . '),
-                        (select idPosicao_fk from tb_infostubo where idInfosTubo=' . $info->getIdInfosTubo() . '),
+                        null,
                         (select idTubo_fk from tb_infostubo where idInfosTubo = ' . $info->getIdInfosTubo() . '),
                         (select idLote_fk from tb_infostubo where idInfosTubo = ' . $info->getIdInfosTubo() . '),'
                        . '\'' . InfosTuboRN::$TST_SEM_UTILIZACAO . '\',\'' .
                        InfosTuboRN::$TSP_AGUARDANDO . '\',\'' .
-                       InfosTuboRN::$TP_MONTAGEM_GRUPOS_AMOSTRAS . '\',
+                       InfosTuboRN::$TP_MONTAGEM_GRUPOS_AMOSTRAS .  '\',\'' .
+                       InfosTuboRN::$TP_RECEPCAO . '\',
                         (select dataHora from tb_infostubo where idInfosTubo = ' . $info->getIdInfosTubo() . '),
                         (select reteste from tb_infostubo where idInfosTubo = ' . $info->getIdInfosTubo() . '),
                         (select volume from tb_infostubo where idInfosTubo = ' . $info->getIdInfosTubo() . '),
@@ -325,8 +358,33 @@ class InfosTuboBD{
                    echo $INSERT . "\n";
                }
 
-               $SELECT = 'SELECT * from tb_informacoes_tubo';
-               echo $SELECT;
+               //$SELECT = 'SELECT * from tb_informacoes_tubo';
+               //echo $SELECT;
+
+                //ALTER TABLE tb_informacoes_tubo ADD FOREIGN KEY fk_lote (idLote_fk) REFERENCES tb_lote (idLote);
+                //ALTER TABLE tb_informacoes_tubo ADD FOREIGN KEY fk_usuario (idUsuario_fk) REFERENCES tb_usuario (idUsuario);
+                //ALTER TABLE tb_informacoes_tubo ADD FOREIGN KEY fk_tubo (idTubo_fk) REFERENCES tb_tubo (idTubo);
+                //ALTER TABLE tb_informacoes_tubo ADD FOREIGN KEY fk_posicao (idPosicao_fk) REFERENCES tb_posicao_caixa (idPosicaoCaixa);
+
+               /*CREATE TABLE tb_informacoes_tubo (
+                  idInfosTubo INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+                  idLote_fk INTEGER UNSIGNED NULL,
+                  idUsuario_fk INTEGER UNSIGNED NOT NULL,
+                  idPosicao_fk INTEGER UNSIGNED NULL,
+                  idTubo_fk INTEGER UNSIGNED NULL,
+                  situacaoTubo CHAR(1) NULL,
+                  etapa CHAR(1) NULL,
+                  etapaAnterior CHAR(1) NULL,
+                  situacaoEtapa CHAR(1) NULL,
+                  dataHora DATETIME NOT NULL,
+                  reteste char(1) NULL,
+                  volume DOUBLE NULL,
+                  PRIMARY KEY(idInfosTubo)
+                  );*/
+
+
+
+
 
                /*$arrayBind = array();
                $arrayBind[] = array('i', $objInfosTubo->getIdUsuario_fk());
@@ -352,8 +410,70 @@ class InfosTuboBD{
             //echo $objInfosTubo->getIdInfosTubo();
 
         } catch (Throwable $ex) {
-            die($ex);
+            //die($ex);
             throw new Excecao("Erro cadastrando a amostra no BD.",$ex);
+        }
+
+    }
+
+
+    public function validar_volume(PreparoLote $preparoLote, Banco $objBanco) {
+        try{
+
+            foreach ($preparoLote->getObjsTubosAlterados() as $tubos_alterados) {
+
+                $SELECT = "SELECT DISTINCT idTubo FROM tb_tubo, tb_amostra
+                        where tb_amostra.idAmostra = tb_tubo.idAmostra_fk
+                        and tb_amostra.idAmostra = ?  and tb_tubo.tipo = ?";
+
+                $arrayBind = array();
+                $arrayBind[] = array('i', $tubos_alterados->getIdAmostra_fk());
+                $arrayBind[] = array('s', TuboRN::$TT_ALIQUOTA);
+
+                $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
+                $volume = array();
+                foreach ($arr as $t){
+                    $SELECT = "SELECT max(idInfosTubo), idTubo_fk, volume from tb_infostubo where idTubo_fk = ? LIMIT 1";
+                    $arrayBind = array();
+                    $arrayBind[] = array('i', $t['idTubo']);
+
+                    $arr_infos = $objBanco->consultarSQL($SELECT, $arrayBind);
+
+                    $volume[0] += $arr_infos[0]['volume'];
+                }
+
+                if($tubos_alterados->getTipo() == TuboRN::$TT_ALIQUOTA){ //era um tubo de reteste inicialmente
+                    //$tubos_alterados->getIdTubo_fk();
+                    //if(count($arr) > 1){
+                }
+
+
+                //caso a soma das aliquotas seja 0
+                if($volume[0] == 0){
+
+                        $objInfosTuboRN = new InfosTuboRN();
+                        $objInfosTubo = new InfosTubo();
+                        $objInfosTubo->setIdTubo_fk($arr[0]['idTubo']);
+                        $objInfosTuboRN->pegar_ultimo($objInfosTubo);
+
+                        $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+                        $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
+                        $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
+                        $objInfosTubo->setEtapa(InfosTuboRN::$TP_LAUDO);
+                        $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO_SEM_VOLUME);
+                        $objInfosTuboRN->cadastrar($objInfosTubo);
+
+
+                }
+
+
+
+
+
+            }
+            return null;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando a amostra no BD.",$ex);
         }
 
     }

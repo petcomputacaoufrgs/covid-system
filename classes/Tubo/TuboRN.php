@@ -42,6 +42,61 @@ require_once __DIR__.'/../../classes/Amostra/AmostraRN.php';
 class TuboRN{
 
 
+    public static $TT_COLETA  = 'C';
+    public static $TT_ALIQUOTA = 'A';
+    public static $TT_RNA = 'N';
+    public static $TT_INDO_EXTRACAO = 'R';
+
+
+    public static $TUBO_CADASTRADOS_PREPARACAO_INATIVACAO = 'C';
+    public static $TUBO_ALTERADOS_PREPARACAO_INATIVACAO = 'A';
+    public static $TUBO_NOVOSTUBOS_PREPARACAO_INATIVACAO = 'N';
+
+    public static function listarValoresTipoTubo(){
+        try {
+
+            $arrObjTStaTubo = array();
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TT_COLETA);
+            $objSituacao->setStrDescricao('COLETA');
+            $arrObjTStaTubo[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TT_ALIQUOTA);
+            $objSituacao->setStrDescricao('ALIQUOTA');
+            $arrObjTStaTubo[] = $objSituacao;
+
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TT_RNA);
+            $objSituacao->setStrDescricao('RNA');
+            $arrObjTStaTubo[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TT_INDO_EXTRACAO);
+            $objSituacao->setStrDescricao('Tubo que está indo para extração');
+            $arrObjTStaTubo[] = $objSituacao;
+
+            return $arrObjTStaTubo;
+
+        }catch(Throwable $e){
+            throw new Excecao('Erro listando valores de Tipo estado da capela',$e);
+        }
+    }
+
+
+    public static function mostrarDescricaoTipoTubo($caractere){
+        foreach (self::listarValoresTipoTubo() as $sta){
+            if($sta->getStrTipo() == $caractere){
+                return $sta->getStrDescricao();
+            }
+        }
+        return null;
+    }
+
+
+
     private function validarTuboOriginal(Tubo $tubo, Excecao $objExcecao){
         $boolTuboOriginal = $tubo->getTuboOriginal();
 
@@ -65,19 +120,27 @@ class TuboRN{
             $objTuboBD = new TuboBD();
             $tubo = $objTuboBD->cadastrar($tubo,$objBanco);
 
-            $objTipoLocalArmazenamento  = new TipoLocalArmazenamento();
-            $objTipoLocalArmazenamentoRN  = new TipoLocalArmazenamentoRN();
-
-            $objLocalArmazenamento = new LocalArmazenamento();
-            $objLocalArmazenamentoRN = new LocalArmazenamentoRN();
-
-            $objPosicao = new Posicao();
-            $objPosicaoRN = new PosicaoRN();
-
 
             if($tubo->getObjInfosTubo() != null){
+                $objInfosTuboRN = new InfosTuboRN();
+                if(count($tubo->getObjInfosTubo() > 0 || $tubo->getObjInfosTubo() != null)) {
+                    foreach ($tubo->getObjInfosTubo() as $info) {
+                        if ($info->getIdInfosTubo() == null) {
+                            $objInfosTubo = $info;
+                            $objInfosTubo->setObjTubo($tubo);
+                            $objInfosTubo->setIdTubo_fk($tubo->getIdTubo());
+                            $objInfosTubo = $objInfosTuboRN->cadastrar($objInfosTubo);
 
-                if($tubo->getObjInfosTubo()->getEtapa() == InfosTuboRN::$TP_RECEPCAO) { //tubo veio da recepção
+
+                        } else {
+                            $objInfosTubo = $objInfosTuboRN->alterar($info);
+                        }
+                        $arr_infos[] = $objInfosTubo;
+                    }
+                    $tubo->setObjInfosTubo($arr_infos);
+                }
+
+                /*if($objInfosTuboAux->getEtapa() == InfosTuboRN::$TP_RECEPCAO && $objInfosTuboAux->getSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO)) { //tubo veio da recepção
                     $objTipoLocalArmazenamento->setCaractereTipo(TipoLocalArmazenamentoRN::$TL_GELADEIRA);
                     $arr_tipos_locais = $objTipoLocalArmazenamentoRN->listar($objTipoLocalArmazenamento);
 
@@ -91,18 +154,7 @@ class TuboRN{
                             if($posicao != null) $tubo->setObjPosicao($posicao);
                         }
                     }
-                }
-
-                $objInfosTuboRN = new InfosTuboRN();
-                if($tubo->getObjInfosTubo()->getIdInfosTubo() == null) { // info tubo é novo
-                    $objInfosTubo = $tubo->getObjInfosTubo();
-                    $objInfosTubo->setIdTubo_fk($tubo->getIdTubo());
-                    $objInfosTubo->setIdPosicao_fk($posicao->getIdPosicaoCaixa());
-
-                    $objInfosTuboRN->cadastrar($objInfosTubo);
-                }else{
-                    $objInfosTuboRN->alterar($tubo->getObjInfosTubo());
-                }
+                }*/
 
             }
 
@@ -127,50 +179,30 @@ class TuboRN{
 
             $objExcecao->lancar_validacoes();
             $objTuboBD = new TuboBD();
-            $objTuboBD->alterar($tubo,$objBanco);
+            $tubo = $objTuboBD->alterar($tubo,$objBanco);
 
-            $objTipoLocalArmazenamento  = new TipoLocalArmazenamento();
-            $objTipoLocalArmazenamentoRN  = new TipoLocalArmazenamentoRN();
-
-            $objLocalArmazenamento = new LocalArmazenamento();
-            $objLocalArmazenamentoRN = new LocalArmazenamentoRN();
-
-            $objPosicao = new Posicao();
-            $objPosicaoRN = new PosicaoRN();
-
-
-            if($tubo->getObjInfosTubo() != null){
+             if($tubo->getObjInfosTubo() != null) {
                 $objInfosTuboRN = new InfosTuboRN();
-                if($tubo->getObjInfosTubo()->getEtapa() == InfosTuboRN::$TP_RECEPCAO) { //tubo veio da recepção
-                    $objTipoLocalArmazenamento->setCaractereTipo(TipoLocalArmazenamentoRN::$TL_GELADEIRA);
-                    $arr_tipos_locais = $objTipoLocalArmazenamentoRN->listar($objTipoLocalArmazenamento);
-
-                    foreach ($arr_tipos_locais as $tipo) {
-                        $objLocalArmazenamento->setIdTipoLocalArmazenamento_fk($tipo->getIdTipoLocalArmazenamento());
-                        $arr_locais = $objLocalArmazenamentoRN->listar($objLocalArmazenamento);
-
-                        foreach ($arr_locais as $local) {
-                            $posicao = $objPosicaoRN->bloquear_registro($objPosicao, $tubo, $local);
-                            if($posicao != null) $tubo->setObjPosicao($posicao);
+                if (count($tubo->getObjInfosTubo() > 0)) {
+                    foreach ($tubo->getObjInfosTubo() as $info) {
+                        if ($info->getIdInfosTubo() == null) {
+                            $objInfosTubo = $info;
+                            $objInfosTubo->setObjTubo($tubo);
+                            $objInfosTubo->setIdTubo_fk($tubo->getIdTubo());
+                            $objInfosTubo = $objInfosTuboRN->cadastrar($objInfosTubo);
+                        }else {
+                            $objInfosTubo = $objInfosTuboRN->alterar($info);
                         }
+                        $arr_infos[] = $objInfosTubo;
                     }
+                    $tubo->setObjInfosTubo($arr_infos);
                 }
-
-
-                if($tubo->getObjInfosTubo()->getIdInfosTubo() == null) { // info tubo é novo
-                    $objInfosTubo = $tubo->getObjInfosTubo();
-                    $objInfosTubo->setIdTubo_fk($tubo->getIdTubo());
-                    $objInfosTubo->setIdPosicao_fk($posicao->getIdPosicaoCaixa());
-
-                    $objInfosTuboRN->cadastrar($objInfosTubo);
-                }else{
-                    $objInfosTuboRN->alterar($tubo->getObjInfosTubo());
-                }
-
             }
+
             
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
+            return $tubo;
         }catch (Throwable $e){
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro na alteração do tubo.', $e);
@@ -265,4 +297,6 @@ class TuboRN{
             throw new Excecao('Erro na pesquisa do tubo.', $e);
         }
     }
+
+
 }

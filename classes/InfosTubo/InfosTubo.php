@@ -1,5 +1,7 @@
 <?php
-
+/*
+ *  Author: Carine Bertagnolli Bathaglini
+ */
 class InfosTubo{
     private $idInfosTubo;
     private $idPosicao_fk;
@@ -15,10 +17,106 @@ class InfosTubo{
     private $obsProblema;
     private $situacaoTubo;
     private $situacaoEtapa;
+    private $idLocal_fk;
+
+    private $objLocal;
+    private $objTubo;
+    private $objLote;
+    private $codAmostra;
 
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getIdLocalFk()
+    {
+        return $this->idLocal_fk;
+    }
+
+    /**
+     * @param mixed $idLocal_fk
+     */
+    public function setIdLocalFk($idLocal_fk)
+    {
+        $this->idLocal_fk = $idLocal_fk;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getCodAmostra()
+    {
+        return $this->codAmostra;
+    }
+
+    /**
+     * @param mixed $codAmostra
+     */
+    public function setCodAmostra($codAmostra)
+    {
+        $this->codAmostra = $codAmostra;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjLote()
+    {
+        return $this->objLote;
+    }
+
+    /**
+     * @param mixed $objLote
+     */
+    public function setObjLote($objLote)
+    {
+        $this->objLote = $objLote;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjTubo()
+    {
+        return $this->objTubo;
+    }
+
+    /**
+     * @param mixed $objTubo
+     */
+    public function setObjTubo($objTubo)
+    {
+        $this->objTubo = $objTubo;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjLocal()
+    {
+        return $this->objLocal;
+    }
+
+    /**
+     * @param mixed $objLocal
+     */
+    public function setObjLocal($objLocal)
+    {
+        $this->objLocal = $objLocal;
+    }
+
+
 
     /**
      * @return mixed

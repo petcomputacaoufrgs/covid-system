@@ -22,13 +22,90 @@ class Amostra{
     private $obsCEP;
     private $CEP;
     private $motivoExame;
+    private $nickname;
     
     private $objPaciente;
     private $objTubo;
-    
+    private $idsAmostras;
+    private $objLaudo;
+    private $objPerfil;
+
+
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObjPerfil()
+    {
+        return $this->objPerfil;
+    }
+
+    /**
+     * @param mixed $objPerfil
+     */
+    public function setObjPerfil($objPerfil)
+    {
+        $this->objPerfil = $objPerfil;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjLaudo()
+    {
+        return $this->objLaudo;
+    }
+
+    /**
+     * @param mixed $objLaudo
+     */
+    public function setObjLaudo($objLaudo)
+    {
+        $this->objLaudo = $objLaudo;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getNickname()
+    {
+        return $this->nickname;
+    }
+
+    /**
+     * @param mixed $nickname
+     */
+    public function setNickname($nickname)
+    {
+        $this->nickname = $nickname;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getIdsAmostras()
+    {
+        return $this->idsAmostras;
+    }
+
+    /**
+     * @param mixed $idsAmostras
+     */
+    public function setIdsAmostras($idsAmostras)
+    {
+        $this->idsAmostras = $idsAmostras;
+    }
+
+
     
     function getObjTubo() {
         return $this->objTubo;

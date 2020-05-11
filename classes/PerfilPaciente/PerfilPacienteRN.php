@@ -16,7 +16,7 @@ class PerfilPacienteRN{
     public static $TE_OUTROS = 'O';
 
 
-    public static function listarValoresTipoEstado(){
+    public static function listarValoresTipoPaciente(){
         try {
 
             $arrObjTECapela = array();
@@ -54,10 +54,19 @@ class PerfilPacienteRN{
         }
     }
 
+    public static function retornarTipoPaciente($tipoPaciente){
+        $arr = self::listarValoresTipoPaciente();
+        foreach ($arr as $a){
+            if($a->getStrTipo() == $tipoPaciente ){
+                return $a->getStrDescricao();
+            }
+        }
+    }
+
     public static function mostrarDescricaoTipo($strTipo){
         //$objExcecao = new Excecao();
 
-        foreach (self::listarValoresTipoEstado() as $tipo){
+        foreach (self::listarValoresTipoPaciente() as $tipo){
             if($tipo->getStrTipo() == $strTipo){
                 return $tipo->getStrDescricao();
             }

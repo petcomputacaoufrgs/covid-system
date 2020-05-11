@@ -4,6 +4,13 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
+
+require_once __DIR__ . '/../../classes/PerfilPaciente/PerfilPaciente.php';
+require_once __DIR__ . '/../../classes/PerfilPaciente/PerfilPacienteRN.php';
+
+require_once __DIR__ . '/../../classes/PreparoLote/PreparoLote.php';
+require_once __DIR__ . '/../../classes/PreparoLote/PreparoLoteRN.php';
+
 class InterfacePagina
 {
 
@@ -164,7 +171,7 @@ static function montar_select_aceitaRecusadaAguarda(&$select_a_r_g, &$objAmostra
         $select_a_r_g = ' <select id="idSelAceitaRecusada" ' . $disabled . $onchange .
             'class="form-control" name="sel_a_r_g" onblur="">
                         <option value="">Selecione</option>
-                        <option' . Pagina::formatar_html($selecteda) . ' value="a">Aceita</option>
+                        <option   ' . Pagina::formatar_html($selecteda) . ' value="a">Aceita</option>
                         <option' . Pagina::formatar_html($selectedr) . ' value="r">Recusada</option>
                         <option' . Pagina::formatar_html($selectedg) . ' value="g">Aguardando chegada</option>
                     </select>';
@@ -402,13 +409,13 @@ static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPacien
      * SELECTS MÚLTIPLOS
      */
 
-    static function montar_select_perfisMultiplos(&$select_perfis, &$perfisSelecionados, &$objPerfilPaciente, $objPerfilPacienteRN, $disabled, $onchange)
+    static function montar_select_perfisMultiplos(&$select_perfis, &$perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, $disabled, $onchange)
     {
         /* SELECIONAR VÁRIOS PERFIS DE USUÁRIO */
-
+        $objPerfilPacienteRN = new PerfilPacienteRN();
         $selected = '';
         $arr_perfis = $objPerfilPacienteRN->listar($objPerfilPaciente);
-        echo $disabled;
+
         $select_perfis = '<select ' . $disabled . ' class="form-control selectpicker" onchange="' . $onchange . '" 
             multiple data-live-search="true"        name="sel_perfis[]"  id="selectpicker"  >'
             . '<option value="0" ></option><br>';
@@ -436,6 +443,9 @@ static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPacien
             . 'id="select-country idCapelas" data-live-search="true"  '
             . 'name="sel_capelasOcupadas">'
             . '<option data-tokens="">Selecione uma capela </option>';
+
+
+
         foreach ($arr_capelas_ocupadas as $capela_ocupada) {
             $objPreparoLote->setIdCapelaFk($capela_ocupada->getIdCapela());
             $preparos_lote = $objPreparoLoteRN->listar($objPreparoLote);
@@ -463,7 +473,47 @@ static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPacien
 
     }
 
+    static function montar_grupos_amostras($objPreparoLote, $objPreparoLoteRN, &$select_grupos, $readonly, $tipo)
+    {
+        $select_grupos = '<select  class="form-control selectpicker" '
+            . 'id="select-country idGrupos" data-live-search="true"  '.$readonly
+            . 'name="sel_grupos">'
+            . '<option data-tokens="" value="-1">Selecione um grupo </option>';
 
+        //listar apenas lotes que ainda n foram para preparacao
+        if($objPreparoLote->getIdPreparoLote() == null) {
+            if($tipo == LoteRN::$TL_PREPARO) {
+                $arr_preparos = $objPreparoLoteRN->listar_preparos($objPreparoLote,LoteRN::$TE_TRANSPORTE_PREPARACAO, LoteRN::$TL_PREPARO);
+
+            }else if($tipo == LoteRN::$TL_EXTRACAO){
+                $arr_preparos = $objPreparoLoteRN->listar_preparos($objPreparoLote,LoteRN::$TE_AGUARDANDO_EXTRACAO, LoteRN::$TL_EXTRACAO);
+            }
+
+            //print_r($arr_preparos);
+            foreach ($arr_preparos as $preparo) {
+                $selected = '';
+                if ($preparo->getIdPreparoLote() == $objPreparoLote->getIdPreparoLote()) {
+                    $selected = ' selected ';
+                }
+
+                $select_grupos .= '<option ' . $selected .
+                    '  value="' . Pagina::formatar_html($preparo->getIdPreparoLote())
+                    . '" data-tokens="' . Pagina::formatar_html($preparo->getIdPreparoLote()) . '">Preparo lote: '
+                    . Pagina::formatar_html($preparo->getIdPreparoLote()) . ' - Lote: ' . Pagina::formatar_html($preparo->getObjLote()->getIdLote()) . ' com ' . Pagina::formatar_html($preparo->getObjLote()->getQntAmostrasAdquiridas()) . ' amostras</option>';
+
+            }
+        }else{
+            $select_grupos .=' <option selected '.
+                    '  value="' . Pagina::formatar_html($objPreparoLote->getIdPreparoLote())
+                    . '" data-tokens="' . Pagina::formatar_html($objPreparoLote->getIdPreparoLote()) . '">Preparo lote: '
+                    . Pagina::formatar_html($objPreparoLote->getIdPreparoLote()) .'</option>';
+
+        }
+
+
+        $select_grupos .= '</select>';
+
+    }
 
     static function montar_select_situacao_capela(&$select_situacao,$objCapela,$disabled){
         $select_situacao = '<select  class="form-control selectpicker" '
@@ -513,5 +563,99 @@ static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPacien
 
     }
 
+    static function montar_select_localArmazenamento_bancoAmostra(&$select_locais,$objLocalArmazenamento,$objLocalArmazenamentoRN,$objTipoLocalArmazenamento,$objTipoLocalArmazenamentoRN,$disabled){
+        $select_locais = '<select  class="form-control selectpicker" '
+            . 'id="idSeguCapela" data-live-search="true"  '.$disabled
+            . 'name="sel_localArm">'
+            . '<option data-tokens="" value="-1">Selecione um local </option>';
+
+        $objTipoLocalArmazenamento->setCaractereTipo(TipoLocalArmazenamentoRN::$TL_BANCO_AMOSTRAS);
+        $arr_tipos = $objTipoLocalArmazenamentoRN->listar($objTipoLocalArmazenamento);
+
+
+        $objLocalArmazenamentoRN->listar($objLocalArmazenamento);
+
+        foreach (CapelaRN::listarValoresTipoNivelSeguranca() as $segurancaCapela){
+
+            $selected = ' ';
+            if($objLocalArmazenamento->get() ==$segurancaCapela->getStrTipo() ){
+                $selected = ' selected ';
+            }
+
+            $select_locais .=  '<option ' . $selected .
+                '  value="' . Pagina::formatar_html($segurancaCapela->getStrTipo())
+                . '" data-tokens="' .Pagina::formatar_html($segurancaCapela->getStrDescricao()). '">'
+                . Pagina::formatar_html($segurancaCapela->getStrDescricao()) .'</option>';
+
+        }
+
+        $select_locais .= '</select>';
+
+    }
+
+    static function montar_capelas_liberadas(&$objCapela, $objCapelaRN, &$select_capelas, $nivel, $disabled){
+        $select_capelas = '<select  class="form-control selectpicker" '
+            . 'id="idSeguCapela" data-live-search="true"  '.$disabled
+            . 'name="sel_nivelSegsCapela">'
+            . '<option data-tokens="" value="-1">Selecione uma capela </option>';
+
+        $arr_capelas = $objCapelaRN->listar($objCapela);
+
+        foreach ($arr_capelas as $capela){
+            $selected = '';
+
+            if($objCapela->getIdCapela() == null) {
+                if ($capela->getNivelSeguranca() == $nivel && $capela->getSituacaoCapela() == CapelaRN::$TE_LIBERADA) {
+                    if ($capela->getIdCapela() == $objCapela->getIdCapela()) {
+                        $selected = ' selected ';
+                    }
+                    $select_capelas .= '<option ' . $selected .
+                        '  value="' . Pagina::formatar_html($capela->getIdCapela())
+                        . '" data-tokens="' . Pagina::formatar_html($capela->getNumero()) . '"> Capela '
+                        . Pagina::formatar_html($capela->getNumero()) . '</option>';
+                }
+            }else {
+                if ($capela->getIdCapela() ==  $objCapela->getIdCapela()) {
+                    $selected = ' selected ';
+                }
+                $select_capelas .= '<option ' . $selected .
+                    '  value="' . Pagina::formatar_html($capela->getIdCapela())
+                    . '" data-tokens="' . Pagina::formatar_html($capela->getNumero()) . '"> Capela '
+                    . Pagina::formatar_html($capela->getNumero()) . '</option>';
+            }
+
+
+        }
+
+        $select_capelas .= '</select>';
+
+    }
+
+
+    static function montar_select_kitsExtracao($objKitExtracao, $objKitExtracaoRN, &$select_kitExtracao,$disabled){
+        $select_kitExtracao = '<select  class="form-control selectpicker" '
+            . 'id="idSeguCapela" data-live-search="true"  '.$disabled
+            . 'name="sel_kitsExtracao">'
+            . '<option data-tokens="" value="-1">Selecione o kit de extração </option>';
+
+        $arr_kits_extracao = $objKitExtracaoRN->listar($objKitExtracao);
+
+        foreach ($arr_kits_extracao as $ke){
+
+            $selected = ' ';
+            if($objKitExtracao->getIdKitExtracao() == $ke->getIdKitExtracao() ){
+                $selected = ' selected ';
+            }
+
+            $select_kitExtracao .=  '<option ' . $selected .
+                '  value="' . Pagina::formatar_html($ke->getIdKitExtracao())
+                . '" data-tokens="' .Pagina::formatar_html($ke->getNome()). '">'
+                . Pagina::formatar_html($ke->getNome()) .'</option>';
+
+        }
+
+        $select_kitExtracao .= '</select>';
+
+    }
 
 }

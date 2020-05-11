@@ -412,10 +412,7 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
             $html .= '</td></tr>';
 
         }
-
     }
-
-
 
 } catch (Throwable $ex) {
     //die($ex);

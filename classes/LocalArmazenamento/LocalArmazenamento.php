@@ -14,10 +14,48 @@ class LocalArmazenamento{
     private $qntColunasCaixa;
     private $idTipoLocalArmazenamento_fk;
 
+    private $objTipoLocalArmazenamento;
+    private $obj;
     
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObj()
+    {
+        return $this->obj;
+    }
+
+    /**
+     * @param mixed $obj
+     */
+    public function setObj($obj)
+    {
+        $this->obj = $obj;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjTipoLocalArmazenamento()
+    {
+        return $this->objTipoLocalArmazenamento;
+    }
+
+    /**
+     * @param mixed $objTipoLocalArmazenamento
+     */
+    public function setObjTipoLocalArmazenamento($objTipoLocalArmazenamento)
+    {
+        $this->objTipoLocalArmazenamento = $objTipoLocalArmazenamento;
+    }
+
+
 
     /**
      * @return mixed

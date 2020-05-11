@@ -98,36 +98,105 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
 
         <?php
         // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-        if(Sessao::getInstance()->verificar_permissao('montar_preparo_extracao')){
-            echo '<div class="col-md-4">
-                          <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao').'">MONTAGEM DO LOTE PARA PREPARAÇÃO </a>'
+        if(Sessao::getInstance()->verificar_permissao('rastrear_amostras')){
+            echo '<div class="col-md-4" style="margin-top: 10px;">
+                        <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=rastrear_amostras').'">RASTREAR AMOSTRAS </a>'
                 . '</div>';
         }
         ?>
 
-             <?php
-            if(Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao')){
-              echo '<div class="col-md-4">
-                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao').'">REALIZAR PREPARO/INATIVAÇÃO </a>'
-                  . '</div>';
-              }
-              ?>
 
 
 
           </div>
          </div>
 
-        <div class="conjunto_itens">
+        <div class="conjunto_itens" STYLE="margin-top: 10px;">
             <div class="row">
+
+
+                  <?php
+                  // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+                  if(Sessao::getInstance()->verificar_permissao('montar_preparo_extracao')){
+                      echo '<div class="col-md-3">
+                          <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao').'">MONTAGEM DO GRUPO DE AMOSTRAS PARA PREPARAÇÃO </a>'
+                          . '</div>';
+                  }
+                  ?>
+
+                  <?php
+                  if(Sessao::getInstance()->verificar_permissao('listar_preparo_lote')){
+                      echo '<div class="col-md-3">
+                          <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_preparo_lote').'">LISTAR AS MONTAGENS DO GRUPO DE AMOSTRAS PARA PREPARAÇÃO </a>'
+                          . '</div>';
+                  }
+                  ?>
+
+                  <?php
+                  if(Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao')){
+                      echo '<div class="col-md-3">
+                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao').'">REALIZAR PREPARO/INATIVAÇÃO </a>'
+                          . '</div>';
+                  }
+                  ?>
+
+                  <?php
+                  if(Sessao::getInstance()->verificar_permissao('listar_preparo_inativacao')){
+                      echo '<div class="col-md-3">
+                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_preparo_inativacao').'">LISTAR PREPARO/INATIVAÇÃO </a>'
+                          . '</div>';
+                  }
+                  ?>
+
+            </div>
+        </div>
+
+
+
+        <div class="conjunto_itens" STYLE="margin-top: 10px;">
+            <div class="row">
+
+
                 <?php
-                // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-                if(Sessao::getInstance()->verificar_permissao('rastrear_amostras')){
-                    echo '<div class="col-md-2">
-                                  <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=rastrear_amostras').'">RASTREAR AMOSTRAS </a>'
+                    if(Sessao::getInstance()->verificar_permissao('realizar_extracao')){
+                        echo '<div class="col-md-3">
+                              <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao').'">EXTRAÇÃO </a>'
+                            . '</div>';
+                    }
+                ?>
+
+                <?php
+                    if(Sessao::getInstance()->verificar_permissao('listar_kitExtracao')){
+                        echo '<div class="col-md-3">
+                              <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_kitExtracao').'">LISTAR KITS DE EXTRAÇÃO </a>'
+                            . '</div>';
+                    }
+                ?>
+
+
+
+            </div>
+        </div>
+
+
+        <div class="conjunto_itens" STYLE="margin-top: 10px;">
+            <div class="row">
+
+
+                <?php
+                if(Sessao::getInstance()->verificar_permissao('listar_laudo')){
+                    echo '<div class="col-md-3">
+                              <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_laudo').'">LISTAR LAUDOS </a>'
                         . '</div>';
                 }
                 ?>
+
+            </div>
+        </div>
+
+        <div class="conjunto_itens">
+            <div class="row">
+
 
                 <?php
                 // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';

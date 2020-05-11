@@ -27,11 +27,31 @@ class Paciente{
     private $obsDataNascimento;
     
     private $objCodGAL;
+    private $objsAmostras;
+    private $qntPacientes;
     
     
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObjsAmostras()
+    {
+        return $this->objsAmostras;
+    }
+
+    /**
+     * @param mixed $objsAmostras
+     */
+    public function setObjsAmostras($objsAmostras)
+    {
+        $this->objsAmostras = $objsAmostras;
+    }
+
+
 
     /**
      * @return mixed

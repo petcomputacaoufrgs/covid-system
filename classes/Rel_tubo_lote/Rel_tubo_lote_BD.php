@@ -132,4 +132,18 @@ class Rel_tubo_lote_BD{
         }
     }
 
+    public function remover_peloIdLote(Rel_tubo_lote $objRelTuboLote, Banco $objBanco) {
+
+        try{
+
+            $DELETE = 'DELETE FROM tb_rel_tubo_lote WHERE idLote_fk = ? ';
+            $arrayBind = array();
+            $arrayBind[] = array('i',$objRelTuboLote->getIdLote_fk());
+            $objBanco->executarSQL($DELETE, $arrayBind);
+
+        } catch (Exception $ex) {
+            throw new Excecao("Erro removendo o relacionamento do tubo com um dos seus lotes no BD.",$ex);
+        }
+    }
+
 }

@@ -213,7 +213,7 @@ try {
 
                         $tam = count($arr_infosTubo);
                         if ($tam > 0) {
-                            $etapa = $arr_infosTubo[$tam - 1]->getStatusTubo();
+                            $etapa = $arr_infosTubo[$tam - 1]->getSituacaoTubo();
                         }
                     }
 
@@ -224,7 +224,7 @@ try {
                     }
 
                     $html .= '<tr' . $style . '>
-                    <th scope="row">' . Pagina::formatar_html($r->getCodigoAmostra()) . '</th>
+                    <th scope="row">' . Pagina::formatar_html($r->getNickname()) . '</th>
                             <td>' . Pagina::formatar_html($objPaciente->getNome()) . '</td>     
                             <td>' . Pagina::formatar_html($result) . '</td>
                             <td>' . Pagina::formatar_html($data) . '</td>'
@@ -426,7 +426,7 @@ try {
 
                 $tam = count($arr_infosTubo);
                 if ($tam > 0) {
-                    $etapa = $arr_infosTubo[$tam - 1]->getStatusTubo();
+                    $etapa = $arr_infosTubo[$tam - 1]->getSituacaoTubo();
                 }
             }
 
@@ -437,7 +437,7 @@ try {
             }
 
             $html .= '<tr' . $style . '>
-                    <th scope="row">' . Pagina::formatar_html($r->getCodigoAmostra()) . '</th>
+                    <th scope="row">' . Pagina::formatar_html($r->getNickname()) . '</th>
                             <td>' . Pagina::formatar_html($objPaciente->getNome()) . '</td>
                             <td>' . Pagina::formatar_html($result) . '</td>
                             <td>' . Pagina::formatar_html($data) . '</td>'
@@ -445,13 +445,13 @@ try {
                 . '<td>' . Pagina::formatar_html($objPerfilPaciente->getPerfil()) . '</td>
                  <td>' . Pagina::formatar_html($cadastroPendente) . '</td>
                             
-                        <td class="td_a">';
+                        <td >';
 
             if (Sessao::getInstance()->verificar_permissao('editar_amostra')) {
                 $html .= '<a href="' .
                     Sessao::getInstance()->assinar_link('controlador.php?action=editar_amostra&idAmostra=' . Pagina::formatar_html($r->getIdAmostra()) . '&idPaciente=' . Pagina::formatar_html($r->getIdPaciente_fk())) . '"><i class="fas fa-edit"></i></a>';
             }
-            $html .= '</td><td class="td_a">';
+            $html .= '</td><td>';
             if (Sessao::getInstance()->verificar_permissao('remover_amostra')) {
                 $html .= '<a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_amostra&idAmostra=' . Pagina::formatar_html($r->getIdAmostra()) . '&idPaciente=' . Pagina::formatar_html($r->getIdPaciente_fk())) . '"><i class="fas fa-trash-alt"></i></a>';
             }

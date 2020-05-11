@@ -19,9 +19,9 @@ class Rel_perfil_preparoLote_RN
                 $objPreparoLote = $rel_perfil_preparoLote->getObjPreparoLote();
 
                 if($rel_perfil_preparoLote->getObjPreparoLote()->getIdPreparoLote() == null) { //não existe
-                    $objPreparoLoteRN->cadastrar($objPreparoLote);
+                    $objPreparoLote = $objPreparoLoteRN->cadastrar($objPreparoLote);
                 }else{
-                    $objPreparoLoteRN->alterar($objPreparoLote);
+                    $objPreparoLote = $objPreparoLoteRN->alterar($objPreparoLote);
                 }
             }
 
@@ -33,10 +33,10 @@ class Rel_perfil_preparoLote_RN
                 foreach ($objPreparoLote->getObjPerfil() as $perfil) {
                     $rel_perfil_preparoLote->setIdPerfilPacienteFk($perfil->getIdPerfilPaciente());
                     $rel_perfil_preparoLote->setIdPreparoLoteFk($objPreparoLote->getIdPreparoLote());
-                    $objRel_perfil_preparoLote_BD->cadastrar($rel_perfil_preparoLote, $objBanco);
+                    $rel_perfil_preparoLote = $objRel_perfil_preparoLote_BD->cadastrar($rel_perfil_preparoLote, $objBanco);
                 }
             }
-
+            $rel_perfil_preparoLote->setObjPreparoLote($objPreparoLote);
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $rel_perfil_preparoLote;
@@ -103,6 +103,27 @@ class Rel_perfil_preparoLote_RN
             $objRel_perfil_preparoLote_BD = new Rel_perfil_preparoLote_BD();
 
             $arr =  $objRel_perfil_preparoLote_BD->remover($rel_perfil_preparoLote,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro na remoção do relacionamento do perfil com um lote.', $e);
+        }
+    }
+
+    public function remover_peloIdPreparo(Rel_perfil_preparoLote $rel_perfil_preparoLote) {
+        $objBanco = new Banco();
+
+        try{
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objRel_perfil_preparoLote_BD = new Rel_perfil_preparoLote_BD();
+
+            $arr =  $objRel_perfil_preparoLote_BD->remover_peloIdPreparo($rel_perfil_preparoLote,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();

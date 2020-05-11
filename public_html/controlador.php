@@ -46,10 +46,26 @@ switch ($_GET['action']):
 
      /* ETAPA 2 */
     case 'montar_preparo_extracao':
-        require_once '../acoes/PreparoLote/cadastrar_preparoLote.php';
+        require_once '../acoes/PreparoLote/realizar_montagemGrupo.php';
         break;
     case 'realizar_preparo_inativacao':
-        require_once '../acoes/PreparoLote/preparoInativacao.php';
+        require_once '../acoes/PreparoInativacao/realizar_preparoInativacao.php';
+        break;
+    case 'listar_preparo_inativacao':
+        require_once '../acoes/PreparoInativacao/listar_preparoInativacao.php';
+        break;
+    case 'listar_preparo_lote':
+        require_once '../acoes/PreparoLote/listar_preparoLote.php';
+        break;
+    case 'imprimir_preparo_lote':
+        require_once '../acoes/PreparoLote/imprimir_preparoLote.php';
+        break;
+    case 'remover_montagemGrupo':
+        require_once '../acoes/PreparoLote/remover_montagemGrupo.php';
+        break;
+
+    case 'realizar_extracao':
+        require_once '../acoes/Extracao/realizar_extracao.php';
         break;
 
 
@@ -60,6 +76,38 @@ switch ($_GET['action']):
 
     case 'cadastrar_localArmazenamento':
         require_once '../acoes/LocalArmazenamento/cadastro_localArmazenamento.php';
+        break;
+
+
+    /*
+     *  KITS DE EXTRAÇÃO
+     */
+    case 'cadastrar_kitExtracao':
+    case 'editar_kitExtracao':
+        require_once '../acoes/KitExtracao/cadastro_kitExtracao.php';
+        break;
+    case 'listar_kitExtracao':
+        require_once '../acoes/KitExtracao/listar_kitExtracao.php';
+        break;
+    case 'remover_kitExtracao':
+        require_once '../acoes/KitExtracao/remover_kitExtracao.php';
+        break;
+
+    /*
+     *  LAUDOS
+     */
+    case 'cadastro_laudo':
+    case 'editar_laudo':
+        require_once '../acoes/Laudo/cadastro_laudo.php';
+        break;
+    case 'listar_laudo':
+        require_once '../acoes/Laudo/listar_laudo.php';
+        break;
+    case 'imprimir_laudo':
+        require_once '../acoes/Laudo/imprimir_laudo.php';
+        break;
+    case 'remover_laudo':
+        require_once '../acoes/Laudo/remover_laudo.php';
         break;
 
 

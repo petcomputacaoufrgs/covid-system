@@ -52,7 +52,7 @@ class TuboBD{
             $arrayBind[] = array('i',$objTubo->getIdTubo());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
-
+            return $objTubo;
         } catch (Exception $ex) {
             throw new Excecao("Erro alterando o tubo no BD.",$ex);
         }

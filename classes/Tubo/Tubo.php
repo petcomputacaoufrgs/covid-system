@@ -9,11 +9,53 @@ class Tubo{
     
     private $objInfosTubo;
     private $objPosicao;
+    private $objLocal;
+
+    private $lote;
+
 
     
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLote()
+    {
+        return $this->lote;
+    }
+
+    /**
+     * @param mixed $lote
+     */
+    public function setLote($lote)
+    {
+        $this->lote = $lote;
+    }
+
+
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjLocal()
+    {
+        return $this->objLocal;
+    }
+
+    /**
+     * @param mixed $objLocal
+     */
+    public function setObjLocal($objLocal)
+    {
+        $this->objLocal = $objLocal;
+    }
+
+
 
     /**
      * @return mixed

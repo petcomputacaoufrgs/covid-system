@@ -29,13 +29,13 @@ class CadastroAmostraRN{
 
             $objExcecao->lancar_validacoes();
             $objCadastroAmostraBD = new CadastroAmostraBD();
-            $objCadastroAmostraBD->cadastrar($cadastroAmostra,$objBanco);
+            $cadastroAmostra = $objCadastroAmostraBD->cadastrar($cadastroAmostra,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            
             return $cadastroAmostra;
         } catch (Throwable $e) {
+
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando amostra.', $e);
         }

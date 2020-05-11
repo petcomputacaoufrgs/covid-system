@@ -10,6 +10,26 @@ class Posicao
     private $linha;
     private $situacaoPosicao;
 
+    private $objCaixa;
+
+    /**
+     * @return mixed
+     */
+    public function getObjCaixa()
+    {
+        return $this->objCaixa;
+    }
+
+    /**
+     * @param mixed $objCaixa
+     */
+    public function setObjCaixa($objCaixa)
+    {
+        $this->objCaixa = $objCaixa;
+    }
+
+
+
     /**
      * @return mixed
      */

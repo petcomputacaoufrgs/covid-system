@@ -1,17 +1,57 @@
 <?php
-
+/*
+ *  Author: Carine Bertagnolli Bathaglini
+ */
 class Lote{
 
     private $idLote;
     private $qntAmostrasDesejadas;
     private $qntAmostrasAdquiridas;
     private $situacaoLote;
+    private $tipo;
     private $objsTubo;
+    private $objsAmostras;
 
 
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * @param mixed $tipo
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjsAmostras()
+    {
+        return $this->objsAmostras;
+    }
+
+    /**
+     * @param mixed $objsAmostras
+     */
+    public function setObjsAmostras($objsAmostras)
+    {
+        $this->objsAmostras = $objsAmostras;
+    }
+
+
 
     /**
      * @return mixed

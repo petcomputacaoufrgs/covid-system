@@ -136,4 +136,27 @@ class Rel_tubo_lote_RN{
     }
 }
 
+
+    public function remover_peloIdLote(Rel_tubo_lote $relTuboLote) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $objExcecao->lancar_validacoes();
+            $objRel_tubo_lote_BD = new Rel_tubo_lote_BD();
+
+            $arr =  $objRel_tubo_lote_BD->remover_peloIdLote($relTuboLote,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro na remoção do relacionamento do tubo com seu respectivo lote.', $e);
+        }
+    }
+
    }
