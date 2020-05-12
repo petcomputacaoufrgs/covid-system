@@ -2,6 +2,9 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
+
+/* NÃO ESTÁ SENDO UTILIZADO
+
 session_start();
 require_once '../classes/Sessao/Sessao.php';
 require_once '../classes/Pagina/Pagina.php';

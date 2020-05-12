@@ -658,4 +658,62 @@ static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPacien
 
     }
 
+
+
+    static function montar_select_perfil(&$select_perfilUsu, $objPerfilUsuarioRN, &$objPerfilUsuario, &$perfis_selecionados) {
+
+        /* PERFIS DO USUÁRIO */
+        $selected = '';
+        $arr_perfis = $objPerfilUsuarioRN->listar($objPerfilUsuario);
+
+        $select_perfilUsu = '<select  class="form-control selectpicker" multiple data-live-search="true"   name="sel_perfil[]">'
+            . '<option value="0" ></option>';
+
+        foreach ($arr_perfis as $todos_perfis) {
+            $selected = ' ';
+            if ($perfis_selecionados != '') {
+                $perfis = explode(";", $perfis_selecionados);
+                foreach ($perfis as $p) {
+                    if ($todos_perfis->getIdPerfilUsuario() == $p) {
+                        $selected = ' selected ';
+                    }
+                }
+                $select_perfilUsu .= '<option ' . $selected . '  '
+                    . 'value="' .  Pagina::formatar_html($todos_perfis->getIdPerfilUsuario()) . '">'
+                    .  Pagina::formatar_html($todos_perfis->getPerfil()) . '</option>';
+            } else {
+                $select_perfilUsu .= '<option  '
+                    . 'value="' .  Pagina::formatar_html($todos_perfis->getIdPerfilUsuario()) . '">'
+                    .  Pagina::formatar_html($todos_perfis->getPerfil())  . '</option>';
+            }
+        }
+        $select_perfilUsu .= '</select>';
+    }
+
+    static function montar_select_usuario(&$select_usuario, $objUsuarioRN, &$objUsuario) {
+
+        /* USUÁRIO */
+        $disabled ='';
+        $selected = '';
+        if(isset($_GET['idUsuario'])){
+            $disabled = ' disabled ';
+        }
+        $arr_usuarios = $objUsuarioRN->listar($usuario = new Usuario());
+
+        $select_usuario = '<select ' . $disabled . ' class="form-control selectpicker"   onchange="this.form.submit()"  '
+            . 'id="idSel_usuarios" data-live-search="true" name="sel_usuario">'
+            . '<option data-tokens="" ></option>';
+
+        foreach ($arr_usuarios as $u) {
+            $selected = '';
+            if ($u->getIdUsuario() == $objUsuario->getIdUsuario()) {
+                $selected = 'selected';
+            }
+
+            $select_usuario .= '<option ' . $selected . '  value="' . Pagina::formatar_html($u->getIdUsuario()) .
+                '" data-tokens="' .  Pagina::formatar_html($u->getMatricula()) . '">' . Pagina::formatar_html($u->getMatricula()) . '</option>';
+        }
+        $select_usuario .= '</select>';
+    }
+
 }

@@ -287,7 +287,7 @@ try {
                           <h5 class="mb-0">
                             <button  style="text-decoration: none;color: #3a5261;"  class="btn btn-link" type="button" 
                             data-toggle="collapse" data-target="#collapse_' . $tubosLote->getObjTubo()->getIdTubo() . '" aria-expanded="true" aria-controls="collapseOne">
-                              <h5>AMOSTRA ' . $tubosLote->getNickname() .'</h5>
+                              <h5>AMOSTRA ' . $tubosLote->getNickname() .PerfilPacienteRN::mostrarDescricaoTipo($tubosLote->getObjAmostra()->getObjPerfilPaciente()->getCaractere()).'</h5>
                             </button>
                           </h5>
                         </div>
@@ -862,7 +862,7 @@ try {
 
                 }
 
-                /*
+
                 if (isset($_POST['btn_terminarPreparacao'])) {
                     $salvou_dados = 's';
 
@@ -899,9 +899,9 @@ try {
 
                     $objRel_Perfil_preparoLote->setObjPreparoLote($objPreparoLote);
                     $objRel_Perfil_preparoLote->setObjPerfilPaciente($arr_perfis);
-                    //print_r($objRel_Perfil_preparoLote);
 
-                    $objRel_Perfil_preparoLote = $objRel_Perfil_preparoLoteRN->cadastrar($objRel_Perfil_preparoLote);
+
+                    /*$objRel_Perfil_preparoLote = $objRel_Perfil_preparoLoteRN->cadastrar($objRel_Perfil_preparoLote);
 
                     $alert = Alert::alert_success('Cadastrado com sucesso');
 
@@ -913,18 +913,17 @@ try {
 
                     //MUDOU A SITUAÇÃO DO LOTE
                     $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
-                    $objPreparoLoteRN->mudar_status_lote($objPreparoLote, LoteRN::$TE_PREPARACAO_FINALIZADA);
+                    $objPreparoLoteRN->mudar_status_lote($objPreparoLote, LoteRN::$TE_PREPARACAO_FINALIZADA);*/
 
                     $sumir_btns = 's';
 
-                    // $arr_tubos
-                    //foreach ($arr_tubos[0]->getObjsTubos() as $tubo) {
+
                         $objInfosTuboRN = new InfosTuboRN();
                         //r($objRel_Perfil_preparoLote->getObjPreparoLote());
                         $objInfosTuboRN->validar_volume($objRel_Perfil_preparoLote->getObjPreparoLote());
-                    //}
 
-                }*/
+
+                }
 
             }
         }
@@ -961,7 +960,7 @@ echo '<!-- Modal -->
                 </div>
                 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"  >Close</button>
+                    <!--<button type="button" class="btn btn-secondary" data-dismiss="modal"  >Close</button>-->
                     <button type="button"  class="btn btn-primary">
                     <a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao&idLiberar=' . $_GET['idCapela']) . '">Tenho certeza</a></button>
                 </div>

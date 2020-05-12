@@ -52,14 +52,18 @@ try{
             $objPerfilUsuario = $objPerfilUsuarioRN->consultar($objPerfilUsuario);
             $html .= Pagina::formatar_html($objPerfilUsuario->getPerfil()).'    ';
         }
-        $html .= '</td>
-            <td><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_usuario_perfilUsuario&idUsuario='.$usuario->getIdUsuario()).'">Editar</a></td>
-            <td><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=remover_usuario_perfilUsuario&idUsuario='.$usuario->getIdUsuario()).'">Remover</a></td>
-         </tr>';
+        $html .= '</td>';
+        if(Sessao::getInstance()->verificar_permissao('editar_usuario_perfilUsuario')) {
+            $html .= '  <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_usuario_perfilUsuario&idUsuario=' . $usuario->getIdUsuario()) . '"><i class="fas fa-edit "></i></a></td>';
+        }
+        /*if(Sessao::getInstance()->verificar_permissao('remover_usuario_perfilUsuario')) {
+            $html .= '  <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_usuario_perfilUsuario&idUsuario=' . $usuario->getIdUsuario()) . '"><i class="fas fa-trash-alt"></a></td>';
+        }*/
+        $html .= ' </tr>';
     }
     
        
-} catch (Exception $ex) {
+} catch (Throwable $ex) {
      Pagina::getInstance()->processar_excecao($ex);
 }
 
@@ -67,10 +71,11 @@ Pagina::getInstance()->abrir_head("Listar Usuários");
 Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
+Pagina::montar_topo_listar('LISTAR RELACIONAMENTO DO USUÁRIO COM SEU PERFIL',null,null, 'cadastrar_usuario_perfilUsuario', 'NOVO USUÁRIO + PERFIL');
 
+Pagina::getInstance()->mostrar_excecoes();
 echo '
     <div class="conteudo_listar">'.
-       Pagina::montar_topo_listar('LISTAR RELACIONAMENTO DO USUÁRIO COM SEU PERFIL',null,null, 'cadastrar_usuario_perfilUsuario', 'NOVO USUÁRIO + PERFIL').
         '<div class="conteudo_tabela">
             <table class="table table-hover">
                 <thead>
@@ -78,7 +83,7 @@ echo '
                         <th scope="col">USUÁRIO</th>
                         <th scope="col">PERFIL</th>
                         <th scope="col"></th>
-                        <th scope="col"></th>
+                   
                     </tr>
                 </thead>
                 <tbody>'
@@ -88,5 +93,5 @@ echo '
         </div>
     </div>';
 
-Pagina::getInstance()->mostrar_excecoes();
+
 Pagina::getInstance()->fechar_corpo();

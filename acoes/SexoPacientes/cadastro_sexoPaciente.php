@@ -4,31 +4,31 @@
  */
 
 session_start();
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Sexo/Sexo.php';
-require_once '../classes/Sexo/SexoRN.php';
-require_once '../utils/Utils.php';
-require_once '../utils/Alert.php';
-$utils = new Utils();
-$objPagina = new Pagina();
-$objSexo = new Sexo();
-$objSexoRN = new SexoRN();
-$alert = "";
-try {
+try{
+    require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
+    require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
+    require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
+    require_once __DIR__ . '/../../classes/Sexo/Sexo.php';
+    require_once __DIR__ . '/../../classes/Sexo/SexoRN.php';
+    require_once __DIR__ . '/../../utils/Utils.php';
+    require_once __DIR__ . '/../../utils/Alert.php';
+
+    Sessao::getInstance()->validar();
+
+    $utils = new Utils();
+    $objSexo = new Sexo();
+    $objSexoRN = new SexoRN();
+    $alert = "";
+
     switch ($_GET['action']) {
         case 'cadastrar_sexoPaciente':
             if (isset($_POST['salvar_sexoPaciente'])) {
 
                 $objSexo->setSexo($_POST['txtSexo']);
                 $objSexo->setIndex_sexo(strtoupper($utils->tirarAcentos($_POST['txtSexo'])));
-                if (empty($objSexoRN->pesquisar_index($objSexo))) {
-                    $objSexoRN->cadastrar($objSexo);
-                    $alert = Alert::alert_success_cadastrar();
-                } else {
-                    $alert = Alert::alert_error_cadastrar_editar();
-                }
+                $objSexoRN->cadastrar($objSexo);
+                $alert .= Alert::alert_success("Sexo do paciente CADASTRADO com sucesso");
+
             } else {
                 $objSexo->setIdSexo('');
                 $objSexo->setSexo('');
@@ -46,37 +46,37 @@ try {
                 $objSexo->setIdSexo($_GET['idSexoPaciente']);
                 $objSexo->setSexo($_POST['txtSexo']);
                 $objSexo->setIndex_sexo(strtoupper($utils->tirarAcentos($_POST['txtSexo'])));
-                if (empty($objSexoRN->pesquisar_index($objSexo))) {
-                    $objSexoRN->alterar($objSexo);
-                    $alert = Alert::alert_success_editar();
-                } else {
-                    $alert = Alert::alert_error_cadastrar_editar();
-                }
+                $objSexoRN->alterar($objSexo);
+                $alert .= Alert::alert_success("Sexo do paciente ALTERADO com sucesso");
+
             }
 
 
             break;
         default : die('Ação [' . $_GET['action'] . '] não reconhecida pelo controlador em cadastro_sexoPaciente.php');
     }
-} catch (Exception $ex) {
-    $objPagina->processar_excecao($ex);
+} catch (Throwable $ex) {
+    Pagina::getInstance()->processar_excecao($ex);
 }
-?>
 
-<?php Pagina::abrir_head("Cadastrar Sexo do paciente"); ?>
-<link rel="stylesheet" type="text/css" href="css/precadastros.css">
-<?php Pagina::fechar_head(); ?>
-<?php $objPagina->montar_menu_topo(); ?>
-<?= $alert ?>
 
-<div class="conteudo">
+Pagina::abrir_head("Cadastrar Sexo do paciente");
+Pagina::getInstance()->adicionar_css("precadastros");
+Pagina::getInstance()->adicionar_javascript("sexoPaciente");
+Pagina::fechar_head();
+Pagina::getInstance()->montar_menu_topo();
+Pagina::montar_topo_listar("CADASTRO SEXO PACIENTE", "cadastrar_sexoPaciente", "NOVO SEXO", "listar_sexoPaciente", "LISTAR SEXO PACIENTES");
+Pagina::getInstance()->mostrar_excecoes();
+echo $alert.'
+
+<div class="conteudo" style="margin-top: -50px;">
     <div class="formulario">
         <form method="POST">
             <div class="form-row">
                 <div class="col-md-12 mb-3">
                     <label for="label_sexoPaciente">Digite o sexo do paciente:</label>
                     <input type="text" class="form-control" id="idSexoPaciente" placeholder="Sexo do paciente" 
-                           onblur="validaSexoPaciente()" name="txtSexo" required value="<?= $objSexo->getSexo() ?>">
+                           onblur="validaSexoPaciente()" name="txtSexo" required value="'.Pagina::formatar_html($objSexo->getSexo()).'">
                     <div id ="feedback_sexoPaciente"></div>
 
                 </div>
@@ -84,11 +84,7 @@ try {
             <button class="btn btn-primary" type="submit" name="salvar_sexoPaciente">Salvar</button>
         </form>
     </div>  
-</div>
-<script src="js/sexoPaciente.js"></script>
-<script src="js/fadeOut.js"></script>
-<?php
-$objPagina->mostrar_excecoes();
-$objPagina->fechar_corpo();
-?>
+</div>';
+
+Pagina::fechar_corpo();
 

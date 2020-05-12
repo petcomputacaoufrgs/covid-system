@@ -5,18 +5,18 @@
 session_start();
 
 try{
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Excecao/Excecao.php';
+    require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
+    require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
+    require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
 
-require_once '../classes/Capela/Capela.php';
-require_once '../classes/Capela/CapelaRN.php';
+    require_once __DIR__ . '/../../classes/Capela/Capela.php';
+    require_once __DIR__ . '/../../classes/Capela/CapelaRN.php';
 
 
-Sessao::getInstance()->validar();
-$objCapela = new Capela();
-$objCapelaRN = new CapelaRN();
-$html = '';
+    Sessao::getInstance()->validar();
+    $objCapela = new Capela();
+    $objCapelaRN = new CapelaRN();
+    $html = '';
 
 
     
@@ -32,20 +32,21 @@ $html = '';
         $html.='<tr '.$style.'>
                     <th scope="row">'.Pagina::formatar_html($m->getIdCapela()).'</th>
                         <td>'.Pagina::formatar_html($m->getNumero()).'</td>
-                        <td>'.Pagina::formatar_html($objCapelaRN->mostrarDescricaoTipo($m->getSituacaoCapela())).'</td>
-                        <td>'.Pagina::formatar_html($m->getNivelSeguranca()).'</td>
+                        <td>'.Pagina::formatar_html(CapelaRN::mostrarDescricaoTipo($m->getSituacaoCapela())).'</td>
+                        <td>'.Pagina::formatar_html(CapelaRN::mostrarDescricaoTipoSeguranca($m->getNivelSeguranca())).'</td>
                 <td>';
                if(Sessao::getInstance()->verificar_permissao('editar_capela')){
-                   $html .= '<a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_capela&idCapela='.Pagina::formatar_html($m->getIdCapela())).'">Editar</a>';
+                   $html .= '<a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_capela&idCapela='.Pagina::formatar_html($m->getIdCapela())).'"><i class="fas fa-edit "></i></a>';
                }
-               $html .= '</td><td>';
-               if(Sessao::getInstance()->verificar_permissao('remover_capela')){
-                     $html .= '<a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=remover_capela&idCapela='.Pagina::formatar_html($m->getIdCapela())).'">Remover</a>';
-               }
-               $html .= '</td></tr>';
+               $html .= '</td>';
+
+               /*if(Sessao::getInstance()->verificar_permissao('remover_capela')){
+                     $html .= '<td><a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=remover_capela&idCapela='.Pagina::formatar_html($m->getIdCapela())).'"><i class="fas fa-trash-alt"></a></td>';
+               }*/
+               $html .= '</tr>';
     }
     
-} catch (Exception $ex) {
+} catch (Throwable $ex) {
     Pagina::getInstance()->processar_excecao($ex);
 }
 
@@ -68,7 +69,7 @@ echo '
                   <th scope="col">SITUAÇÃO</th>
                   <th scope="col">NÍVEL SEGURANÇA</th>
                   <th scope="col"></th>
-                  <th scope="col"></th>
+                  
                 </tr>
               </thead>
               <tbody>'

@@ -144,12 +144,10 @@ switch ($_GET['action']):
         break;
     
     case 'listar_sexoPaciente':
+    case 'remover_sexoPaciente':
         require_once '../acoes/SexoPacientes/listar_sexoPaciente.php';
         break;
-    
-    case 'remover_sexoPaciente':
-        require_once '../acoes/SexoPacientes/remover_sexoPaciente.php';
-        break;
+
     
     /* PERFIL DO PACIENTE */
     case 'cadastrar_perfilPaciente':
@@ -158,12 +156,10 @@ switch ($_GET['action']):
         break;
     
     case 'listar_perfilPaciente':
+    case 'remover_perfilPaciente':
         require_once '../acoes/PerfilPaciente/listar_perfilPaciente.php';
         break;
-    
-    case 'remover_perfilPaciente':
-        require_once '../acoes/PerfilPaciente/remover_perfilPaciente.php';
-        break;
+
     
     
     /* TIPO LOCAL DE ARMAZENAMENTO */
@@ -187,12 +183,10 @@ switch ($_GET['action']):
         break;
     
     case 'listar_perfilUsuario':
+    case 'remover_perfilUsuario':
         require_once '../acoes/PerfilUsuario/listar_perfilUsuario.php';
         break;
-    
-    case 'remover_perfilUsuario':
-        require_once '../acoes/PerfilUsuario/remover_perfilUsuario.php';
-        break;
+
     
     
      /* DOENÇA */
@@ -244,12 +238,10 @@ switch ($_GET['action']):
         break;
     
     case 'listar_recurso':
+    case 'remover_recurso':
         require_once '../acoes/Recurso/listar_recurso.php';
         break;
-    
-    case 'remover_recurso':
-        require_once '../acoes/Recurso/remover_recurso.php';
-        break;
+
     
     /* EQUIPAMENTO */
     case 'cadastrar_equipamento':

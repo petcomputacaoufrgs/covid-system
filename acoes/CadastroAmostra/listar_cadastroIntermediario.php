@@ -129,7 +129,7 @@ try {
     if (isset($_GET['idColunaSelecionada']) && isset($_POST['bt_pesquisar_palavra'])) {
 
         if ($array_colunas[$_GET['idColunaSelecionada']] == 'CÓDIGO') {
-            $objAmostra->setCodigoAmostra($_POST['txtSearch']);
+            $objAmostra->setNickname($_POST['txtSearch']);
             $arrAmostras_pesquisa = $objAmostraRN->listar($objAmostra);
             if (empty($arrAmostras_pesquisa)) {
                 //$arrAmostras_pesquisa = array('ERROR' => "Nenhuma lixeira encontrada com este ID");

@@ -17,7 +17,8 @@ class PerfilUsuarioBD{
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objPerfilUsuario->setIdPerfilUsuario($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+            return $objPerfilUsuario;
+        } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando perfil do usuário no BD.",$ex);
         }
         
@@ -37,8 +38,8 @@ class PerfilUsuarioBD{
             $arrayBind[] = array('i',$objPerfilUsuario->getIdPerfilUsuario());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
-
-        } catch (Exception $ex) {
+            return $objPerfilUsuario;
+        } catch (Throwable $ex) {
             throw new Excecao("Erro alterando perfil do usuário no BD.",$ex);
         }
        
@@ -62,7 +63,7 @@ class PerfilUsuarioBD{
                 $array_perfilUsu[] = $objPerfilUsuario;
             }
             return $array_perfilUsu;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando perfil do usuário no BD.",$ex);
         }
        
@@ -85,7 +86,7 @@ class PerfilUsuarioBD{
             $perfilUsu->setIndex_perfil($arr[0]['index_perfil']);
 
             return $perfilUsu;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
        
             throw new Excecao("Erro consultando perfil do usuário no BD.",$ex);
         }
@@ -101,7 +102,7 @@ class PerfilUsuarioBD{
             $arrayBind[] = array('i',$objPerfilUsuario->getIdPerfilUsuario());
             $objBanco->executarSQL($DELETE, $arrayBind);
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo perfil do usuário no BD.",$ex);
         }
     }
@@ -131,9 +132,32 @@ class PerfilUsuarioBD{
             }
              return $arr_perfis_usuario;
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro pesquisando o perfil do usuário no BD.",$ex);
         }
+    }
+
+
+    public function existe_usuario_com_perfil(PerfilUsuario $objPerfilUsuario, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT tb_perfilusuario.idPerfilUsuario FROM tb_perfilusuario,tb_rel_usuario_perfilusuario
+                        where tb_perfilusuario.idPerfilUsuario = tb_rel_usuario_perfilusuario.idPerfilUsuario_fk 
+                        and tb_perfilusuario.idPerfilUsuario = ?
+                        LIMIT 1";
+
+            $arrayBind = array();
+            $arrayBind[] = array('i',$objPerfilUsuario->getIdPerfilUsuario());
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
+
+            if(count($arr) > 0){
+                return true;
+            }
+            return false;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando perfil do usuário no BD.",$ex);
+        }
+
     }
     
     

@@ -64,7 +64,6 @@ class PerfilPacienteRN{
     }
 
     public static function mostrarDescricaoTipo($strTipo){
-        //$objExcecao = new Excecao();
 
         foreach (self::listarValoresTipoPaciente() as $tipo){
             if($tipo->getStrTipo() == $strTipo){
@@ -80,10 +79,10 @@ class PerfilPacienteRN{
         $strPerfilPaciente = trim($perfilPaciente->getPerfil());
         
         if ($strPerfilPaciente == '') {
-            $objExcecao->adicionar_validacao('O perfil do paciente não foi informado','idPerfilPaciente');
+            $objExcecao->adicionar_validacao('O perfil do paciente não foi informado',null,'alert-danger');
         }else{
             if (strlen($strPerfilPaciente) > 50) {
-                $objExcecao->adicionar_validacao('O perfil do paciente possui mais que 50 caracteres.','idPerfilPaciente');
+                $objExcecao->adicionar_validacao('O perfil do paciente possui mais que 50 caracteres',null,'alert-danger');
             }
         }
         
@@ -95,10 +94,10 @@ class PerfilPacienteRN{
         $strCaractere = trim($perfilPaciente->getCaractere());
         
         if ($strCaractere == '') {
-            $objExcecao->adicionar_validacao('O caractere do perfil do paciente não foi informado','idCaractere');
+            $objExcecao->adicionar_validacao('O caractere do perfil do paciente não foi informado',null,'alert-danger');
         }else{
             if (strlen($strCaractere) > 1) {
-                $objExcecao->adicionar_validacao('O máximo é de 1 caractere.','idCaractere');
+                $objExcecao->adicionar_validacao('O máximo é de 1 caractere',null,'alert-danger');
             }
         }
         
@@ -106,137 +105,193 @@ class PerfilPacienteRN{
 
     }
     
-    private function validarIndexPerfil(PerfilPaciente $perfilPaciente,Excecao $objExcecao){
-        $strPerfilPacienteUPPER = trim($perfilPaciente->getIndex_perfil());
-        
-      
-        $perfilPaciente_aux_RN = new PerfilPacienteRN();
-        $array_perfis = $perfilPaciente_aux_RN->listar($perfilPaciente);
-        //print_r($array_sexos);
-        foreach ($array_perfis as $p){
-            if($p->getIndex_perfil() == $perfilPaciente->getIndex_perfil()){
-                //$objExcecao->adicionar_validacao('O perfil do paciente já existe.','idPerfilPaciente');
-                return false;
-            }
-        }
-        return true;
-        
-        
-        //return $perfilPaciente->setIndex_perfil($strPerfilPacienteUPPER);
 
+    private function validar_ja_existe_perfilPaciente(PerfilPaciente $perfilPaciente,Excecao $objExcecao){
+        $objPerfilPacienteRN= new PerfilPacienteRN();
+        if($objPerfilPacienteRN->ja_existe_perfil($perfilPaciente)){
+            $objExcecao->adicionar_validacao('O perfil do paciente já existe',null,'alert-danger');
+        }
     }
-     
+
+    private function validar_existe_amostra_com_o_perfil(PerfilPaciente $perfilPaciente,Excecao $objExcecao){
+        $objPerfilPacienteRN= new PerfilPacienteRN();
+        if($objPerfilPacienteRN->existe_amostra_com_o_perfil($perfilPaciente)){
+            $objExcecao->adicionar_validacao('Existe ao menos uma amostra associado a este perfil. Logo, ele não pode ser excluído',null,'alert-danger');
+        }
+    }
+
+
 
     public function cadastrar(PerfilPaciente $perfilPaciente) {
+        $objBanco = new Banco();
         try {
-            
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             
             $this->validarPerfil($perfilPaciente,$objExcecao); 
-            $this->validarIndexPerfil($perfilPaciente,$objExcecao);
+            $this->validar_ja_existe_perfilPaciente($perfilPaciente,$objExcecao);
             $this->validarCaractere($perfilPaciente,$objExcecao);
             
             $objExcecao->lancar_validacoes();
             $objPerfilPacienteBD = new PerfilPacienteBD();
-            $objPerfilPacienteBD->cadastrar($perfilPaciente,$objBanco);
-            
+            $perfilPaciente = $objPerfilPacienteBD->cadastrar($perfilPaciente,$objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+            return $perfilPaciente;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando o perfil do paciente.', $e);
         }
     }
 
     public function alterar(PerfilPaciente $perfilPaciente) {
-         try {
-             
+        $objBanco = new Banco();
+        try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objPerfilPacienteBD = new PerfilPacienteBD();
             
             $this->validarPerfil($perfilPaciente,$objExcecao); 
             $this->validarCaractere($perfilPaciente,$objExcecao);
-            
-            if($this->validarIndexPerfil($perfilPaciente,$objExcecao)){
-                $objExcecao->lancar_validacoes();
-                $objPerfilPacienteBD->alterar($perfilPaciente,$objBanco);
-            }else{
-                $objExcecao->lancar_validacoes();
-                $objPerfilPacienteBD->consultar($perfilPaciente,$objBanco);
-            }
-                        
-            $objBanco->fecharConexao();
-        } catch (Exception $e) {
+             $this->validar_ja_existe_perfilPaciente($perfilPaciente,$objExcecao);
+             $objExcecao->lancar_validacoes();
+
+             $perfilPaciente = $objPerfilPacienteBD->alterar($perfilPaciente,$objBanco);
+
+             $objBanco->confirmarTransacao();
+             $objBanco->fecharConexao();
+             return $perfilPaciente;
+         } catch (Throwable $e) {
+             $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando o perfil do paciente.', $e);
         }
     }
 
     public function consultar(PerfilPaciente $perfilPaciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objPerfilPacienteBD = new PerfilPacienteBD();
             $arr =  $objPerfilPacienteBD->consultar($perfilPaciente,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
- 
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o perfil do paciente.',$e);
         }
     }
 
     public function remover(PerfilPaciente $perfilPaciente) {
-         try {
+         $objBanco = new Banco();
+        try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $this->validar_existe_amostra_com_o_perfil($perfilPaciente,$objExcecao);
+
             $objExcecao->lancar_validacoes();
             $objPerfilPacienteBD = new PerfilPacienteBD();
             $arr =  $objPerfilPacienteBD->remover($perfilPaciente,$objBanco);
-            $objBanco->fecharConexao();
-            return $arr;
-
-        } catch (Exception $e) {
+             $objBanco->confirmarTransacao();
+             $objBanco->fecharConexao();
+             return $arr;
+         } catch (Throwable $e) {
+             $objBanco->cancelarTransacao();
             throw new Excecao('Erro removendo o perfil do paciente.', $e);
         }
     }
 
     public function listar(PerfilPaciente $perfilPaciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objPerfilPacienteBD = new PerfilPacienteBD();
             
             $arr = $objPerfilPacienteBD->listar($perfilPaciente,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o perfil do paciente.',$e);
         }
     }
 
 
      public function pesquisar_index(PerfilPaciente $perfilPaciente) {
-        try {
-            $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+         $objBanco = new Banco();
+         try {
+
+             $objExcecao = new Excecao();
+             $objBanco->abrirConexao();
+             $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objPerfilPacienteBD = new PerfilPacienteBD();
             $arr = $objPerfilPacienteBD->pesquisar_index($perfilPaciente,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro pesquisando o perfil do paciente.', $e);
+        }
+    }
+
+    public function ja_existe_perfil(PerfilPaciente $perfilPaciente) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objPerfilPacienteBD = new PerfilPacienteBD();
+
+            $arr = $objPerfilPacienteBD->ja_existe_perfil($perfilPaciente,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando o sexo do paciente.',$e);
+        }
+    }
+
+    public function existe_amostra_com_o_perfil(PerfilPaciente $perfilPaciente) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objPerfilPacienteBD = new PerfilPacienteBD();
+
+            $arr = $objPerfilPacienteBD->existe_amostra_com_o_perfil($perfilPaciente,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando o sexo do paciente.',$e);
         }
     }
 

@@ -19,7 +19,8 @@ class RecursoBD{
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objRecurso->setIdRecurso($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+            return $objRecurso;
+        } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando recurso paciente no BD.",$ex);
         }
         
@@ -41,8 +42,8 @@ class RecursoBD{
             $arrayBind[] = array('i',$objRecurso->getIdRecurso());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
-
-        } catch (Exception $ex) {
+            return $objRecurso;
+        } catch (Throwable $ex) {
             throw new Excecao("Erro alterando recurso no BD.",$ex);
         }
        
@@ -67,7 +68,7 @@ class RecursoBD{
                 $array_recurso[] = $objRecurso;
             }
             return $array_recurso;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando recurso no BD.",$ex);
         }
        
@@ -92,7 +93,7 @@ class RecursoBD{
             $recurso->setEtapa($arr[0]['etapa']);
             
             return $recurso;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
        
             throw new Excecao("Erro consultando recurso no BD.",$ex);
         }
@@ -108,7 +109,7 @@ class RecursoBD{
             $arrayBind[] = array('i',$objRecurso->getIdRecurso());
             $objBanco->executarSQL($DELETE, $arrayBind);
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo recurso no BD.",$ex);
         }
     }
@@ -140,9 +141,57 @@ class RecursoBD{
             }
              return $arr_recursos;
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro pesquisando o perfil do usuário no BD.",$ex);
         }
+    }
+
+
+    public function ja_existe_recurso(Recurso $objRecurso, Banco $objBanco) {
+
+        try{
+
+            $SELECT = 'SELECT idRecurso from tb_recurso WHERE nome = ? LIMIT 1';
+
+            $arrayBind = array();
+            $arrayBind[] = array('s',$objRecurso->getIdRecurso());
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
+
+            if(count($arr) > 0){
+                return true;
+            }
+
+            return false;
+
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro verificando se já existe um recurso no BD.",$ex);
+        }
+    }
+
+
+    public function existe_usuario_com_o_recurso(Recurso $objRecurso, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT * FROM tb_usuario, tb_perfilusuario,tb_rel_usuario_perfilusuario, tb_rel_perfilusuario_recurso,tb_recurso 
+                        where tb_usuario.idUsuario = tb_rel_usuario_perfilusuario.idUsuario_fk 
+                        and tb_perfilusuario.idPerfilUsuario = tb_rel_usuario_perfilusuario.idPerfilUsuario_fk 
+                        and tb_perfilusuario.idPerfilUsuario = tb_rel_perfilusuario_recurso.idPerfilUsuario_fk 
+                        and tb_recurso.idRecurso = tb_rel_perfilusuario_recurso.idRecurso_fk 
+                        and tb_recurso.idRecurso = ?
+                        LIMIT 1";
+
+            $arrayBind = array();
+            $arrayBind[] = array('i',$objRecurso->getIdRecurso());
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
+
+            if(count($arr) > 0){
+                return true;
+            }
+            return false;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro verificando se existe um usuário com o recurso no BD.",$ex);
+        }
+
     }
     
     

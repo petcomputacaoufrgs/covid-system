@@ -3,21 +3,24 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 session_start();
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/PerfilPaciente/PerfilPaciente.php';
-require_once '../classes/PerfilPaciente/PerfilPacienteRN.php';
-require_once '../utils/Utils.php';
-require_once '../utils/Alert.php';
-
-$utils = new Utils();
-$objPerfilPaciente = new PerfilPaciente();
-$objPerfilPacienteRN = new PerfilPacienteRN();
-
-$cadastrado_sucesso = '';
-$alert ='';
 try{
+    require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
+    require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
+    require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
+    require_once __DIR__ . '/../../classes/PerfilPaciente/PerfilPaciente.php';
+    require_once __DIR__ . '/../../classes/PerfilPaciente/PerfilPacienteRN.php';
+    require_once __DIR__ . '/../../utils/Utils.php';
+    require_once __DIR__ . '/../../utils/Alert.php';
+
+    Sessao::getInstance()->validar();
+
+    $utils = new Utils();
+    $objPerfilPaciente = new PerfilPaciente();
+    $objPerfilPacienteRN = new PerfilPacienteRN();
+
+    $cadastrado_sucesso = '';
+    $alert ='';
+
     switch($_GET['action']){
         case 'cadastrar_perfilPaciente':
             if(isset($_POST['salvar_perfilPaciente'])){
@@ -25,14 +28,10 @@ try{
                 
                 $objPerfilPaciente->setCaractere(strtoupper($utils->tirarAcentos($_POST['txtCaractere'])));  
                 $objPerfilPaciente->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilPaciente'])));  
-                if(empty($objPerfilPacienteRN->pesquisar_index($objPerfilPaciente))){
-                   $objPerfilPacienteRN->cadastrar($objPerfilPaciente);
-                   $alert= Alert::alert_success("O perfil foi CADASTRADO com sucesso");
-                }else {$alert= Alert::alert_danger("O perfil não foi CADASTRADO");}
-                
-            }else{
-                $objPerfilPaciente->setIdPerfilPaciente('');
-                $objPerfilPaciente->setPerfil('');
+
+                $objPerfilPacienteRN->cadastrar($objPerfilPaciente);
+                $alert .= Alert::alert_success("O perfil foi CADASTRADO com sucesso");
+
             }
         break;
         
@@ -45,12 +44,12 @@ try{
              if(isset($_POST['salvar_perfilPaciente'])){ //se enviou o formulário com as alterações
                 $objPerfilPaciente->setIdPerfilPaciente($_GET['idPerfilPaciente']);
                 $objPerfilPaciente->setPerfil($_POST['txtPerfilPaciente']);
-                $objPerfilPaciente->setCaractere(strtoupper($utils->tirarAcentos($_POST['txtCaractere'])));  
+                $objPerfilPaciente->setCaractere(strtoupper($utils->tirarAcentos($_POST['txtCaractere'])));
                 $objPerfilPaciente->setIndex_perfil(strtoupper($utils->tirarAcentos($_POST['txtPerfilPaciente'])));
-                if(empty($objPerfilPacienteRN->pesquisar_index($objPerfilPaciente))){
-                    $objPerfilPacienteRN->alterar($objPerfilPaciente);
-                     $alert= Alert::alert_success("O perfil foi ALTERADO com sucesso");
-                }else {$alert= Alert::alert_danger("O perfil não foi ALTERADO");}
+
+                 $objPerfilPacienteRN->alterar($objPerfilPaciente);
+                 $alert .= Alert::alert_success("O perfil foi ALTERADO com sucesso");
+
                 
             }
             
@@ -59,7 +58,7 @@ try{
         default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador em cadastro_perfilPaciente.php');  
     }
    
-} catch (Exception $ex) {
+} catch (Throwable $ex) {
     Pagina::getInstance()->processar_excecao($ex);
 }
 
@@ -69,35 +68,39 @@ Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::getInstance()->adicionar_javascript("perfilPaciente");
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
+Pagina::montar_topo_listar('CADASTRAR PERFIL PACIENTE',null,null, 'listar_perfilPaciente', 'LISTAR PERFIL PACIENTE');
+echo Alert::alert_warning("Ao realizar o cadastro deve-se criar uma variável estática em PerfilPacienteRN com o respectivo caractere. NÃO REPETIR CARACTERES!!");
+Pagina::getInstance()->mostrar_excecoes();
 
 echo $alert.
-     Pagina::montar_topo_listar('CADASTRAR PERFIL PACIENTE',null,null, 'listar_perfilPaciente', 'LISTAR PERFIL PACIENTE').
-        '<DIV class="conteudo">
-            <form method="POST">
-                <div class="form-row">
-                    <div class="col-md-6 mb-3">
-                        <label for="label_perfilPaciente">Digite o perfil do paciente:</label>
-                        <input type="text" class="form-control" id="idPerfilPaciente" placeholder="Perfil do paciente" 
-                               onblur="validaPerfilPaciente()" name="txtPerfilPaciente" 
-                               required value="'. Pagina::formatar_html($objPerfilPaciente->getPerfil()).'">
-                        <div id ="feedback_perfilPaciente"></div>
-
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                        <label for="label_perfilPaciente">Digite o caractere do perfil do paciente:</label>
-                        <input type="text" class="form-control" id="idCaracterePerfilPaciente" placeholder="Caractere" 
-                               onblur="validaCaractere()" name="txtCaractere" 
-                               required value="'. Pagina::formatar_html($objPerfilPaciente->getCaractere()).'">
-                        <div id ="feedback_caracterePerfilPaciente"></div>
-
-                    </div>
-                </div>  
-                <button class="btn btn-primary" type="submit" name="salvar_perfilPaciente">Salvar</button>
-            </form>
+        '<div class="conteudo" style="margin-top: -50px;">
+             <div class="formulario">
+                <form method="POST">
+                    <div class="form-row">
+                        <div class="col-md-6 mb-3">
+                            <label for="label_perfilPaciente">Digite o perfil do paciente:</label>
+                            <input type="text" class="form-control" id="idPerfilPaciente" placeholder="Perfil do paciente" 
+                                   onblur="validaPerfilPaciente()" name="txtPerfilPaciente" 
+                                   required value="'. Pagina::formatar_html($objPerfilPaciente->getPerfil()).'">
+                            <div id ="feedback_perfilPaciente"></div>
+    
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="label_perfilPaciente">Digite o caractere:</label>
+                            <input type="text" class="form-control" id="idCaracterePerfilPaciente" placeholder="Caractere" 
+                                   onblur="validaCaractere()" name="txtCaractere" 
+                                   required value="'. Pagina::formatar_html($objPerfilPaciente->getCaractere()).'">
+                            <div id ="feedback_caracterePerfilPaciente"></div>
+    
+                        </div>
+                    </div>  
+                    <button class="btn btn-primary" type="submit" name="salvar_perfilPaciente">Salvar</button>
+                </form>
+            </div>
         </DIV>';
 
-Pagina::getInstance()->mostrar_excecoes(); 
+
 Pagina::getInstance()->fechar_corpo(); 
 
 

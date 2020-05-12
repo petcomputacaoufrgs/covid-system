@@ -1442,7 +1442,7 @@ if($listar_pacientes == 's'){
                                 <div class="col-auto my-1" >
                                     <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
                                            type="text" class="form-control" id="idObsDtNascimento" placeholder="Desconhecido"
-                                           onblur="validaObsDtNascimento()" name="txtObsDataNascimento" value="<?= $objPaciente->getObsDataNascimento() ?>">
+                                           onblur="validaObsDtNascimento()" name="txtObsDataNascimento" value="<?= Pagina::formatar_html($objPaciente->getObsDataNascimento()) ?>">
                                     <div id ="feedback_dtNascimento"></div>
                                 </div>
                             </div>
