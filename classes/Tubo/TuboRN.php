@@ -101,7 +101,7 @@ class TuboRN{
         $boolTuboOriginal = $tubo->getTuboOriginal();
 
         if($boolTuboOriginal == null){
-            $objExcecao->adicionar_validacao('A originalidade do tubo precisa ser informada', 'idTuboOriginal');
+            $objExcecao->adicionar_validacao('A originalidade do tubo precisa ser informada', null,'alert-danger');
         }
         return $tubo->setTuboOriginal($boolTuboOriginal);
     }
@@ -200,6 +200,49 @@ class TuboRN{
             }
 
             
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $tubo;
+        }catch (Throwable $e){
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro na alteração do tubo.', $e);
+        }
+    }
+
+    public function alterar_array_tubos($arr_tubo){
+        $objBanco = new Banco();
+        try{
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            foreach ($arr_tubo as $tubo) {
+
+                $this->validarTuboOriginal($tubo, $objExcecao);
+
+                $objExcecao->lancar_validacoes();
+                $objTuboBD = new TuboBD();
+                $tubo = $objTuboBD->alterar($tubo, $objBanco);
+
+                if($tubo->getObjInfosTubo() != null) {
+                    $objInfosTuboRN = new InfosTuboRN();
+                    if (count($tubo->getObjInfosTubo() > 0)) {
+                        foreach ($tubo->getObjInfosTubo() as $info) {
+                            if ($info->getIdInfosTubo() == null) {
+                                $objInfosTubo = $info;
+                                $objInfosTubo->setObjTubo($tubo);
+                                $objInfosTubo->setIdTubo_fk($tubo->getIdTubo());
+                                $objInfosTubo = $objInfosTuboRN->cadastrar($objInfosTubo);
+                            }else {
+                                $objInfosTubo = $objInfosTuboRN->alterar($info);
+                            }
+                            $arr_infos[] = $objInfosTubo;
+                        }
+                        $tubo->setObjInfosTubo($arr_infos);
+                    }
+                }
+            }
+
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $tubo;

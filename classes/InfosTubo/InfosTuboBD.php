@@ -3,6 +3,10 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 require_once __DIR__ . '/../Banco/Banco.php';
+
+require_once __DIR__ . '/../Laudo/Laudo.php';
+require_once __DIR__ . '/../Laudo/LaudoRN.php';
+
 class InfosTuboBD{
 
     public function cadastrar(InfosTubo $objInfosTubo, Banco $objBanco) {
@@ -419,8 +423,11 @@ class InfosTuboBD{
 
     public function validar_volume(PreparoLote $preparoLote, Banco $objBanco) {
         try{
+            //print_r($preparoLote);
+            /*foreach ($preparoLote->getObjsTubosAlterados() as $tubos_alterados) {
 
-            foreach ($preparoLote->getObjsTubosAlterados() as $tubos_alterados) {
+
+                print_r($tubos_alterados);
 
                 $SELECT = "SELECT DISTINCT idTubo FROM tb_tubo, tb_amostra
                         where tb_amostra.idAmostra = tb_tubo.idAmostra_fk
@@ -429,51 +436,152 @@ class InfosTuboBD{
                 $arrayBind = array();
                 $arrayBind[] = array('i', $tubos_alterados->getIdAmostra_fk());
                 $arrayBind[] = array('s', TuboRN::$TT_ALIQUOTA);
-
+                // no arr tem os ids dos tubos que foram gerados
                 $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
-                $volume = array();
-                foreach ($arr as $t){
+            }*/
+            $volume = array();
+            foreach ($preparoLote->getObjsTubosCadastro() as $tubosCadastrados) {
+                if($tubosCadastrados->getTipo() == TuboRN::$TT_INDO_EXTRACAO){ //se cadastrou o tubo já é um sinal de que foi descartado, senão estaria em $preparoLote->getObjLote()->getObjsTubo(),algo assim
                     $SELECT = "SELECT max(idInfosTubo), idTubo_fk, volume from tb_infostubo where idTubo_fk = ? LIMIT 1";
                     $arrayBind = array();
-                    $arrayBind[] = array('i', $t['idTubo']);
+                    $arrayBind[] = array('i', $tubosCadastrados->getIdTubo());
+                    $ultima_info = $objBanco->consultarSQL($SELECT, $arrayBind);
+                    if($ultima_info[0]['volume'] == 0.0){
+                        //procurar por algum tubo dessa amostra q tenha volume, se não encontrar entao ir para o laudo
+                        $SELECT2 = "SELECT DISTINCT idTubo FROM tb_tubo, tb_amostra
+                        where tb_amostra.idAmostra = tb_tubo.idAmostra_fk
+                        and tb_amostra.idAmostra = ? ";
+                        $arrayBind2 = array();
+                        $arrayBind2[] = array('i', $tubosCadastrados->getIdAmostra_fk());
+                        $arr_tubos = $objBanco->consultarSQL($SELECT2, $arrayBind2);
 
-                    $arr_infos = $objBanco->consultarSQL($SELECT, $arrayBind);
+                        $tubo_com_volume = array();
+                        $tb_com_vol = 0;
+                        foreach ($arr_tubos as $tubo) {
 
-                    $volume[0] += $arr_infos[0]['volume'];
+                            $SELECT3 = "SELECT max(tb_infostubo.idInfosTubo), tb_infostubo.idTubo_fk, volume,tb_tubo.tipo 
+                                            from tb_infostubo,tb_tubo 
+                                            where tb_infostubo.idTubo_fk = ?
+                                            AND tb_tubo.idTubo = tb_infostubo.idTubo_fk LIMIT 1";
+                            $arrayBind3 = array();
+                            $arrayBind3[] = array('i', $tubo['idTubo']);
+                            $arr_infos = $objBanco->consultarSQL($SELECT3, $arrayBind3);
+                            if($arr_infos[0]['volume'] >= 0.0) {
+                                if($arr_infos[0]['volume'] > 0.0 && $arr_infos[0]['tipo'] == TuboRN::$TT_ALIQUOTA){
+                                    $tubo_com_volume[0] = $arr_infos[0];
+                                }
+
+                                $volume[$tubosCadastrados->getIdAmostra_fk()] += $arr_infos[0]['volume'];
+                            }
+                        }
+
+                        if($volume[$tubosCadastrados->getIdAmostra_fk()] == 0.0){ //não tem volumes sobrando para mais nada
+                            //PEGAR O TUBO ORIGINAL DA AMOSTRA
+                            $select_tubo_original = "SELECT idTubo from tb_tubo, tb_amostra
+                                                where tb_tubo.tuboOriginal = 's'
+                                                and tb_amostra.idAmostra = ?
+                                                and tb_tubo.idAmostra_fk = tb_amostra.idAmostra";
+
+                            $idTubo = $objBanco->consultarSQL($select_tubo_original, $arrayBind2);
+
+                            $objInfosTubo = new InfosTubo();
+                            $objInfosTuboRN = new InfosTuboRN();
+                            $objInfosTubo->setIdTubo_fk($idTubo[0]['idTubo']);
+                            $objInfosTubo = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
+
+                            $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+                            $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
+                            $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
+                            $objInfosTubo->setEtapa(InfosTuboRN::$TP_LAUDO);
+                            $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO_SEM_VOLUME);
+                            $objInfosTuboRN->cadastrar($objInfosTubo);
+
+                            $objLaudo = new Laudo();
+                            $objLaudoRN = new LaudoRN();
+
+                            $objLaudo->setIdAmostraFk($tubosCadastrados->getIdAmostra_fk());
+                            $objLaudo->setIdUsuarioFk(Sessao::getInstance()->getIdUsuario());
+                            $objLaudo->setDataHoraGeracao(date("Y-m-d H:i:s"));
+                            $objLaudo->setResultado(LaudoRN::$RL_PROBLEMAS_PREPARACAO);
+                            $objLaudo->setSituacao(LaudoRN::$SL_PENDENTE);
+                            $objLaudo = $objLaudoRN->cadastrar($objLaudo);
+
+
+                        }else { //extração é ZERO, mas tem algum volume sobrando
+
+                            if ($tubo_com_volume[0]['tipo'] == TuboRN::$TT_ALIQUOTA) {
+
+                                $objInfosTubo2 = new InfosTubo();
+                                $objInfosTuboRN = new InfosTuboRN();
+                                $objInfosTubo2->setIdTubo_fk($tubo_com_volume[0]['idTubo_fk']);
+                                $objInfosTubo2 = $objInfosTuboRN->pegar_ultimo($objInfosTubo2);
+                                //print_r($objInfosTubo);
+                                $objInfosTubo2->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+                                $objInfosTubo2->setDataHora(date("Y-m-d H:i:s"));
+                                $objInfosTubo2->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
+                                $objInfosTubo2->setEtapa(InfosTuboRN::$TP_PREPARACAO_INATIVACAO);
+                                $objInfosTubo2->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
+                                $objInfosTubo2->setReteste('s');
+                                $objInfosTuboRN->cadastrar($objInfosTubo2);
+                                // break;
+
+                            }
+                        }
+
+                    }
                 }
-
-                if($tubos_alterados->getTipo() == TuboRN::$TT_ALIQUOTA){ //era um tubo de reteste inicialmente
-                    //$tubos_alterados->getIdTubo_fk();
-                    //if(count($arr) > 1){
-                }
-
-
-                //caso a soma das aliquotas seja 0
-                if($volume[0] == 0){
-
-                        $objInfosTuboRN = new InfosTuboRN();
-                        $objInfosTubo = new InfosTubo();
-                        $objInfosTubo->setIdTubo_fk($arr[0]['idTubo']);
-                        $objInfosTuboRN->pegar_ultimo($objInfosTubo);
-
-                        $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
-                        $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
-                        $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
-                        $objInfosTubo->setEtapa(InfosTuboRN::$TP_LAUDO);
-                        $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO_SEM_VOLUME);
-                        $objInfosTuboRN->cadastrar($objInfosTubo);
-
-
-                }
-
-
-
-
-
             }
+
+
+
             return null;
         } catch (Throwable $ex) {
             throw new Excecao("Erro listando a amostra no BD.",$ex);
+        }
+
+    }
+
+
+    public function lockRegistro_utilizacaoTubo_MG( $montagemGrupo, Banco $objBanco) {
+
+        try{
+
+            //print_r($montagemGrupo);
+            foreach ($montagemGrupo as $grupo){
+                echo $grupo->getAmostra()->getObjTubo()->getIdTubo()."\n";
+                $objInfosTubo = new InfosTubo();
+            }
+            die();
+
+            $SELECT = 'SELECT * from tb_infostubo where idTubo_fk = ? order by idInfosTubo DESC LIMIT 1;';
+
+            $arrayBind = array();
+            $arrayBind[] = array('i',$objInfosTubo->getIdTubo_fk());
+
+            $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
+            //echo "!!!";
+            //print_r($arr);
+            $objInfosTubo = new InfosTubo();
+            $objInfosTubo->setIdInfosTubo($arr[0]['idInfosTubo']);
+            $objInfosTubo->setIdUsuario_fk($arr[0]['idUsuario_fk']);
+            $objInfosTubo->setIdPosicao_fk($arr[0]['idPosicao_fk']);
+            $objInfosTubo->setIdTubo_fk($arr[0]['idTubo_fk']);
+            $objInfosTubo->setIdLote_fk($arr[0]['idLote_fk']);
+            $objInfosTubo->setEtapa($arr[0]['etapa']);
+            $objInfosTubo->setEtapaAnterior($arr[0]['etapaAnterior']);
+            $objInfosTubo->setDataHora($arr[0]['dataHora']);
+            $objInfosTubo->setReteste($arr[0]['reteste']);
+            $objInfosTubo->setVolume($arr[0]['volume']);
+            $objInfosTubo->setObsProblema($arr[0]['obsProblema']);
+            $objInfosTubo->setObservacoes($arr[0]['observacoes']);
+            $objInfosTubo->setSituacaoEtapa($arr[0]['situacaoEtapa']);
+            $objInfosTubo->setSituacaoTubo($arr[0]['situacaoTubo']);
+            $objInfosTubo->setIdLocalFk($arr[0]['idLocal_fk']);
+
+            return $objInfosTubo;
+        } catch (Throwable $ex) {
+
+            throw new Excecao("Erro consultando a amostra no BD.",$ex);
         }
 
     }

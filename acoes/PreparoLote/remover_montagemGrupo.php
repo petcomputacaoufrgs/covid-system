@@ -2,6 +2,7 @@
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
+/*
 session_start();
 require_once __DIR__.'/../../classes/Sessao/Sessao.php';
 require_once __DIR__.'/../../classes/Pagina/Pagina.php';

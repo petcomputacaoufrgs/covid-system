@@ -15,6 +15,8 @@ class InfosTuboRN{
     public static $TP_MONTAGEM_GRUPOS_AMOSTRAS = 'G';
     public static $TP_PREPARACAO_INATIVACAO = 'I';
     public static $TP_EXTRACAO = 'E';
+    public static $TP_RTqPCR_SOLICITACAO__MONTAGEM_PLACA = 'M';
+    public static $TP_RTqPCR_MIX_PLACA = 'X';
     public static $TP_RTqPCR = 'Q';
     public static $TP_LAUDO = 'L';
 
@@ -34,13 +36,19 @@ class InfosTuboRN{
     public static $TST_TRANSPORTE_EXTRACAO= 'R';
     public static $TST_AGUARDANDO_BANCO_AMOSTRAS= 'B';
     public static $TST_DESCARTADO_SEM_VOLUME= 'V';
+    public static $TST_AGUARDANDO_SOLICITACAO_MONTAGEM_PLACA =  'N';
+    public static $TST_AGUARDANDO_MIX_PLACA =  'X';
     public static $TST_AGUARDANDO_RTqCPR =  'Q';
+    /*public static $TST_NA_MONTAGEM = 'N';
+    public static $TST_NA_PREPARACAO = 'R';
+    public static $TST_NA_EXTRACAO = 'X';
+    public static $TST_NA_SOLICITACAO_MONTAGEM_PLACA = 'L';*/
 
     //observações
     public static $O_PREPARO_LOTE_APAGADO= 'P';
 
 
-    public static $VOLUME_ALIQUOTA = 1;
+    public static $VOLUME_ALIQUOTA = 1.0;
     public static $VOLUME_INDO_EXTRACAO = 0.2;
 
 
@@ -77,6 +85,11 @@ class InfosTuboRN{
             $arrObjTEtapa[] = $objSituacao;
 
             $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TP_RTqPCR_SOLICITACAO__MONTAGEM_PLACA);
+            $objSituacao->setStrDescricao('Solicitação de montagem da placa RT-qPCR');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$TP_LAUDO);
             $objSituacao->setStrDescricao('Laudo');
             $arrObjTEtapa[] = $objSituacao;
@@ -85,7 +98,7 @@ class InfosTuboRN{
             return $arrObjTEtapa;
 
         }catch(Throwable $e){
-            throw new Excecao('Erro listando valores de Tipo estado da capela',$e);
+            throw new Excecao('Erro listando valores de Tipo etapa do infostubo',$e);
         }
     }
 
@@ -117,7 +130,7 @@ class InfosTuboRN{
             return $arrObjTStaEtapa;
 
         }catch(Throwable $e){
-            throw new Excecao('Erro listando valores de Tipo estado da capela',$e);
+            throw new Excecao('Erro listando valores de Situação da infostubo',$e);
         }
     }
 
@@ -173,6 +186,7 @@ class InfosTuboRN{
             $objSituacao->setStrTipo(self::$TST_AGUARDANDO_RTqCPR);
             $objSituacao->setStrDescricao('Aguardando a etapa de RT-qCPR');
             $arrObjTStaTubo[] = $objSituacao;
+
 
             return $arrObjTStaTubo;
 
@@ -284,7 +298,7 @@ class InfosTuboRN{
         $dthr = trim($infosTubo->getDataHora());
         //echo $infosTubo->getDataHora();
         //echo strlen($infosTubo->getDataHora());
-        if (strlen($infosTubo->getDataHora()) == 0) {
+        if (strlen($infosTubo->getDataHora()) == 0.0) {
             $objExcecao->adicionar_validacao('Informar a data e hora.','idDataHora', 'alert-danger');
         }
 
@@ -293,40 +307,57 @@ class InfosTuboRN{
 
     private function validarVolume(InfosTubo $infosTubo, Excecao $objExcecao)
     {
+
+
+
+        if($infosTubo->getVolume() != null){
         $strVolume = trim($infosTubo->getVolume());
 
-        /*if($infosTubo->getObjTubo()->getTipo() == TuboRN::$TT_ALIQUOTA && $infosTubo->getReteste() == 'S'){
-            if($infosTubo->getVolume() != InfosTuboRN::$VOLUME_INDO_EXTRACAO ){
+            if($infosTubo->getVolume() == 0.0){
+                $infosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA);
 
             }
-        }*/
+
+                /*if($infosTubo->getObjTubo()->getTipo() == TuboRN::$TT_ALIQUOTA && $infosTubo->getReteste() == 'S'){
+                    if($infosTubo->getVolume() != InfosTuboRN::$VOLUME_INDO_EXTRACAO ){
+
+                    }
+                }*/
 
         if ($infosTubo->getObjTubo() != null) {
             if ($infosTubo->getEtapa() != InfosTuboRN::$TP_RECEPCAO) {
                 //print_r($infosTubo->getObjTubo());
 
-                if ($infosTubo->getObjTubo()->getTipo() == TuboRN::$TT_INDO_EXTRACAO || $infosTubo->getObjTubo()->getTipo() == TuboRN::$TT_ALIQUOTA) {
-                    if ($infosTubo->getVolume() == 0 && ($infosTubo->getSituacaoTubo() != InfosTuboRN::$TST_DESCARTADO || $infosTubo->getSituacaoTubo() != InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA)) {
-                        $objExcecao->adicionar_validacao('O volume do tubo é 0 mas ele não foi descartado? <strong>' . $infosTubo->getCodAmostra() . '</strong> ', 'idVolume', 'alert-danger');
+                if ($infosTubo->getObjTubo()->getTipo() == TuboRN::$TT_INDO_EXTRACAO) {
+                    if ($infosTubo->getVolume() == 0.0 && ($infosTubo->getSituacaoTubo() != InfosTuboRN::$TST_DESCARTADO || $infosTubo->getSituacaoTubo() != InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA)) {
+                        $objExcecao->adicionar_validacao('O volume do tubo é 0.0 mas ele não foi descartado? <strong>' . $infosTubo->getCodAmostra() . '</strong> ', 'idVolume', 'alert-danger');
                     }
                 }
 
 
-            if ($infosTubo->getObjTubo()->getTipo() == TuboRN::$TT_INDO_EXTRACAO) {
-                if ($infosTubo->getVolume() != InfosTuboRN::$VOLUME_INDO_EXTRACAO && $infosTubo->getObsProblema() == null) {
+                if ($infosTubo->getObjTubo()->getTipo() == TuboRN::$TT_INDO_EXTRACAO) {
+                    if ($infosTubo->getVolume() != InfosTuboRN::$VOLUME_INDO_EXTRACAO && $infosTubo->getObsProblema() == null) {
+                        $objExcecao->adicionar_validacao('Informe porque o volume foi diferente de ' . InfosTuboRN::$VOLUME_INDO_EXTRACAO . ' na amostra <strong>' . $infosTubo->getCodAmostra() . '</strong> ', 'idVolume', 'alert-danger');
+                    }
+                }
+
+                if ($infosTubo->getSituacaoTubo() == InfosTuboRN::$TST_AGUARDANDO_RTqCPR && $infosTubo->getVolume() != InfosTuboRN::$VOLUME_INDO_EXTRACAO && $infosTubo->getObsProblema() == null) {
+
                     $objExcecao->adicionar_validacao('Informe porque o volume foi diferente de ' . InfosTuboRN::$VOLUME_INDO_EXTRACAO . ' na amostra <strong>' . $infosTubo->getCodAmostra() . '</strong> ', 'idVolume', 'alert-danger');
                 }
-            }
 
 
-            if ($infosTubo->getObjTubo()->getTipo() == TuboRN::$TT_ALIQUOTA) {
-                if ($infosTubo->getVolume() != InfosTuboRN::$VOLUME_ALIQUOTA && $infosTubo->getObsProblema() == null) {
-                    $objExcecao->adicionar_validacao('Informe porque o volume foi diferente de ' . InfosTuboRN::$VOLUME_ALIQUOTA . ' na amostra <strong>' . $infosTubo->getCodAmostra() . '</strong> ', 'idVolume', 'alert-danger');
+                /*if ($infosTubo->getObjTubo()->getTipo() == TuboRN::$TT_ALIQUOTA) {
+                    if ($infosTubo->getVolume() != InfosTuboRN::$VOLUME_ALIQUOTA && $infosTubo->getObsProblema() == null ) {
+                        $objExcecao->adicionar_validacao('Informe porque o volume foi diferente de ' . InfosTuboRN::$VOLUME_ALIQUOTA . ' na amostra <strong>' . $infosTubo->getCodAmostra() . '</strong> ', 'idVolume', 'alert-danger');
+                    }
+                }*/
+
+                if ($infosTubo->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA) {
+                    return $infosTubo->setVolume(0.0);
                 }
-            }
 
-            if($infosTubo->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA){
-                return $infosTubo->setVolume(0);
+
             }
         }
 
@@ -340,7 +371,7 @@ class InfosTuboRN{
             $objExcecao->adicionar_validacao('Informe um volume.','idVolume');
         }*/
                            
-        return $infosTubo->setVolume($strVolume);
+        return $infosTubo->setVolume(doubleval($strVolume));
     }
 
     private function  validarSituacaoEtapa(InfosTubo $infosTubo, Excecao $objExcecao){
@@ -370,7 +401,7 @@ class InfosTuboRN{
 
         if($infosTubo->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA && strlen($strObsProblemas) == 0){
 
-            $objExcecao->adicionar_validacao('Informar o problema que fez a amostra <strong>'.$infosTubo->getCodAmostra() .'</strong> ser descartada -- '. TuboRN::mostrarDescricaoStaTubo($infosTubo->getObjTubo()->getTipo()) ,null, 'alert-danger');
+            $objExcecao->adicionar_validacao('Informar o problema que fez a amostra <strong>'.$infosTubo->getCodAmostra() .'</strong> ser descartada -- '. TuboRN::mostrarDescricaoTipoTubo($infosTubo->getObjTubo()->getTipo()) ,null, 'alert-danger');
         }
 
         return $infosTubo->setObsProblema($strObsProblemas);
@@ -584,6 +615,40 @@ class InfosTuboRN{
         }catch (Throwable $e){
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro no cadastramento das informacoes do tubo.', $e);
+        }
+    }
+
+
+    public function lockRegistro_utilizacaoTubo_MG( $montagemGrupo){
+        $objBanco = new Banco();
+        try{
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            //$objExcecao->lancar_validacoes();
+            foreach ($montagemGrupo as $grupo){
+
+
+
+                $objInfosTubo = new InfosTubo();
+                $objInfosTuboRN = new InfosTuboRN();
+                $objInfosTubo->setIdTubo_fk($grupo->getAmostra()->getObjTubo()->getIdTubo());
+                $objInfosTuboUltimo= $objInfosTuboRN->pegar_ultimo($objInfosTubo);
+
+                $objInfosTuboUltimo->setSituacaoTubo(InfosTuboRN::$TST_EM_UTILIZACAO);
+                $objInfosTuboUltimo->setSituacaoEtapa(InfosTuboRN::$TSP_EM_ANDAMENTO);
+
+                //$objInfosTuboRN->cadastrar($objInfosTuboUltimo);
+
+            }
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        }catch (Throwable $e){
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro na consulta das informacoes do tubo.', $e);
         }
     }
 }

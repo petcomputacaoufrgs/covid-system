@@ -52,17 +52,17 @@ switch ($_GET['action']):
         require_once '../acoes/PreparoInativacao/realizar_preparoInativacao.php';
         break;
     case 'listar_preparo_inativacao':
+    case 'remover_montagemGrupo_extracao':
         require_once '../acoes/PreparoInativacao/listar_preparoInativacao.php';
         break;
     case 'listar_preparo_lote':
+    case 'remover_montagemGrupo':
         require_once '../acoes/PreparoLote/listar_preparoLote.php';
         break;
     case 'imprimir_preparo_lote':
         require_once '../acoes/PreparoLote/imprimir_preparoLote.php';
         break;
-    case 'remover_montagemGrupo':
-        require_once '../acoes/PreparoLote/remover_montagemGrupo.php';
-        break;
+
 
     case 'realizar_extracao':
         require_once '../acoes/Extracao/realizar_extracao.php';
@@ -92,6 +92,9 @@ switch ($_GET['action']):
     case 'remover_kitExtracao':
         require_once '../acoes/KitExtracao/remover_kitExtracao.php';
         break;
+
+
+
 
     /*
      *  LAUDOS
@@ -175,6 +178,17 @@ switch ($_GET['action']):
     case 'remover_tipoLocalArmazenamento':
         require_once '../acoes/TipoLocalArmazenamento/remover_tipoLocalArmazenamento.php';
         break;
+
+    /*
+     * LOCAL ARMAZENAMENTO TEXTO
+     */
+    case 'listar_localArmazenamentoTxt':
+        require_once '../acoes/LocalArmazenamentoTexto/listar_localArmazenamentoTxt.php';
+        break;
+    case 'editar_localArmazenamentoTxt':
+        require_once '../acoes/LocalArmazenamentoTexto/editar_localArmazenamentoTxt.php';
+        break;
+
     
     /* PERFIL DO USUÁRIO */
     case 'cadastrar_perfilUsuario':
@@ -458,6 +472,59 @@ switch ($_GET['action']):
     case 'remover_etnia':
         require_once '../acoes/Etnia/remover_etnia.php';
         break;
+
+    /* PROTOCOLO */
+    case 'cadastrar_protocolo':
+    case 'editar_protocolo':
+        require_once '../acoes/Protocolo/cadastro_protocolo.php';
+        break;
+
+    case 'listar_protocolo':
+    case 'remover_protocolo':
+        require_once '../acoes/Protocolo/listar_protocolo.php';
+        break;
+
+    /* DIVISÃO PROTOCOLO */
+    case 'cadastrar_divisao_protocolo':
+    case 'editar_divisao_protocolo':
+        require_once '../acoes/DivisaoProtocolo/cadastro_divisaoProtocolo.php';
+        break;
+
+    case 'listar_divisao_protocolo':
+    case 'remover_divisao_protocolo':
+        require_once '../acoes/DivisaoProtocolo/listar_divisaoProtocolo.php';
+        break;
+
+    /* PLACA */
+    case 'cadastrar_placa':
+    case 'editar_placa':
+        require_once '../acoes/Placa/cadastro_placa.php';
+        break;
+
+    case 'listar_placa':
+    case 'remover_placa':
+        require_once '../acoes/Placa/listar_placa.php';
+        break;
+
+
+
+    /* RTqPCR */
+    case 'solicitar_montagem_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/solicitar_montar_placaRTqPCR.php';
+        break;
+
+
+    case 'listar_solicitacao_montagem_placa_RTqPCR':
+    case 'remover_solicitacao_montagem_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/listar_solicitacaoMontagemPlaca.php';
+        break;
+
+    case 'imprimir_solicitacao_montagem_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/imprimir_solicitacaoMontagemPlaca.php';
+        break;
+
+
+
     
     default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador geral.');
 endswitch;

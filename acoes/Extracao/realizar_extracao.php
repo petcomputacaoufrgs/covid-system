@@ -152,25 +152,46 @@ try {
 
 
 
+
+
     if($_GET['idLiberar'] || isset($_POST['btn_cancelar'])){
         $objCapela->setIdCapela($_GET['idCapela']);
         $objCapela = $objCapelaRN->consultar($objCapela);
         $objCapela->setSituacaoCapela(CapelaRN::$TE_LIBERADA);
         $objCapelaRN->alterar($objCapela);
+        $objPreparoLoteAuxiliar  = new PreparoLote();
+        $objPreparoLoteAuxiliar->setIdPreparoLote($_GET['idPreparoLote']);
+        $objPreparoLoteAuxiliar = $objPreparoLoteRN->consultar_lote($objPreparoLoteAuxiliar);
+        //print_r($objPreparoLoteAuxiliar);
 
-        $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
-        $objPreparoLoteRN->mudar_status_lote($objPreparoLote, LoteRN::$TE_TRANSPORTE_PREPARACAO);
+        if($objPreparoLoteAuxiliar->getObjLote()->getSituacaoLote() != LoteRN::$TE_EXTRACAO_FINALIZADA ) {
+            //$objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
+            //$objPreparoLote = $objPreparoLoteRN->consultar($objPreparoLote);
+            //$objPreparoLote->setIdCapelaFk(null);
+            $objPreparoLoteAuxiliar->setIdCapelaFk(null);
+            $objPreparoLoteRN->mudar_status_lote($objPreparoLoteAuxiliar, LoteRN::$TE_AGUARDANDO_EXTRACAO);
+        }
 
 
         header('Location: '. Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao'));
         die();
     }
 
+    if (isset($_GET['idSituacao'])){
+        if($_GET['idSituacao'] == 2){
+            $alert = Alert::alert_danger("O lote de extração já foi finalizado");
+        }
+    }
 
+    if(isset($_GET['idPreparoLote'])){
+        $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
+    }
 
     $selecionado = '';
     InterfacePagina::montar_capelas_liberadas($objCapela, $objCapelaRN, $select_capelas,CapelaRN::$TNS_MEDIA_SEGURANCA,'');
-    InterfacePagina::montar_grupos_amostras($objPreparoLote, $objPreparoLoteRN, $select_grupos,'', LoteRN::$TL_EXTRACAO);
+    //InterfacePagina::montar_grupos_amostras($objPreparoLote, $objPreparoLoteRN, $select_grupos,'', LoteRN::$TL_EXTRACAO);
+    $objLote->setSituacaoLote(LoteRN::$TE_AGUARDANDO_EXTRACAO);
+    InterfacePagina::montar_select_lotes($objLote, $objLoteRN, $select_grupos,'  ', LoteRN::$TL_EXTRACAO);
     InterfacePagina::montar_select_kitsExtracao($objKitExtracao, $objKitExtracaoRN, $select_kitExtracao,'');
 
     if(strlen($select_grupos) > 0) {
@@ -206,75 +227,102 @@ try {
 
 
         if ((isset($_GET['idCapela']) && isset($_GET['idPreparoLote'])) || isset($_POST['btn_confirmar_extracao']) || isset($_POST['btn_terminar_extracao'])) {
-            $sumir_btn_alocar = 's';
-            if(isset($_POST['btn_confirmar_extracao'])){
-                $ja_confirmou = 's';
-            }
-            $alert = Alert::alert_success("Capela de número alocada com SUCESSO");
-            $selecionado = $_GET['idCapela'];
-            $objCapela->setIdCapela($_GET['idCapela']);
-            InterfacePagina::montar_capelas_liberadas($objCapela, $objCapelaRN, $select_capelas,CapelaRN::$TNS_MEDIA_SEGURANCA,' disabled ');
-            $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
-            InterfacePagina::montar_grupos_amostras($objPreparoLote, $objPreparoLoteRN, $select_grupos,' disabled ', LoteRN::$TL_EXTRACAO);
-            $objKitExtracao->setIdKitExtracao($_GET['idKitExtracao']);
-            InterfacePagina::montar_select_kitsExtracao($objKitExtracao, $objKitExtracaoRN, $select_kitExtracao,' disabled ');
+            //garantir que não vá cadastrar outros ao mesmo tempo
+            $objPreparoLoteAuxiliar  = new PreparoLote();
+            $objPreparoLoteAuxiliar->setIdPreparoLote($_GET['idPreparoLote']);
+            $objPreparoLoteAuxiliar = $objPreparoLoteRN->consultar_lote($objPreparoLoteAuxiliar);
+            //print_r($objPreparoLoteAuxiliar);
+            if($objPreparoLoteAuxiliar->getObjLote()->getSituacaoLote() == LoteRN::$TE_EXTRACAO_FINALIZADA ) {
 
-            $arr_tubos = $objPreparoLoteRN->consultar_tubos($objPreparoLote);
-            //print_r($arr_tubos);
+                $objCapela->setIdCapela($_GET['idCapela']);
+                $objCapela = $objCapelaRN->consultar($objCapela);
+                $objCapela->setSituacaoCapela(CapelaRN::$TE_LIBERADA);
+                $objCapelaRN->alterar($objCapela);
+                header('Location: '. Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao&idSituacao=2'));
+                die();
 
-            $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
-            $objPreparoLoteRN->mudar_status_lote($objPreparoLote, LoteRN::$TE_EM_EXTRACAO);
+            }else {
 
 
-            $cont = 0;
-            $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
-            $objPreparoLoteRN->consultar($objPreparoLote);
-
-            $objLoteExtracao = new Lote();
-
-
-
-            $objPreparoLote = new PreparoLote();
-
-            $quantidadeTubos = 0;
-
-            $objTipoLocalArmazenamento->setCaractereTipo(TipoLocalArmazenamentoRN::$TL_APOS_EXTRACAO);
-            $arr_tipo = $objTipoLocalArmazenamentoRN->listar($objTipoLocalArmazenamento);
-
-            $contador = 0;
-            $style_top = 0;
-            $arr_tubos_alterados = array();
-            foreach ($arr_tubos[0]->getObjsTubos() as $tubosLote) {
-
-                $objInfosTubo->setIdTubo_fk($tubosLote->getObjTubo()->getIdTubo());
-                $objInfosTubo = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
-                //print_r($objInfosTubo);
-
-                if ($objInfosTubo->getReteste() == 'n' || $objInfosTubo->getReteste() == '') {
-                    $reteste = "NÃO";
-                } else {
-                    $reteste = "SIM";
+                $sumir_btn_alocar = 's';
+                if (isset($_POST['btn_confirmar_extracao']) || isset($_POST['btn_terminar_extracao'])) {
+                    $ja_confirmou = 's';
                 }
+                $objCapela->setIdCapela($_GET['idCapela']);
+                $objCapela = $objCapelaRN->consultar($objCapela);
+                $alert = Alert::alert_primary("Capela de número " . $objCapela->getNumero() . " alocada com SUCESSO");
+                $selecionado = $_GET['idCapela'];
 
-                $show = 'show ';
-                $style = 'style="margin-top: 10px;';
+                InterfacePagina::montar_capelas_liberadas($objCapela, $objCapelaRN, $select_capelas, CapelaRN::$TNS_MEDIA_SEGURANCA, ' disabled ');
+                $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
+                InterfacePagina::montar_grupos_amostras($objPreparoLote, $objPreparoLoteRN, $select_grupos, ' disabled ', LoteRN::$TL_EXTRACAO);
+                $objKitExtracao->setIdKitExtracao($_GET['idKitExtracao']);
+                InterfacePagina::montar_select_kitsExtracao($objKitExtracao, $objKitExtracaoRN, $select_kitExtracao, ' disabled ');
 
-                if ($style_top == 0) {
-                    $style = 'style="margin-top: -45px;';
+                $arr_tubos = $objPreparoLoteRN->consultar_tubos($objPreparoLote);
+                //print_r($arr_tubos);
 
-                }$style_top++;
+                $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
+                $objPreparoLote = $objPreparoLoteRN->consultar($objPreparoLote);
+                $objPreparoLote->setIdCapelaFk($_GET['idCapela']);
+                $objPreparoLote->setIdKitExtracaoFk($_GET['idKitExtracao']);
+                $objPreparoLote = $objPreparoLoteRN->alterar($objPreparoLote);
+                $objPreparoLoteRN->mudar_status_lote($objPreparoLote, LoteRN::$TE_EM_EXTRACAO);
 
 
-                $disabled = '  ';
-                if (isset($_GET['idCapela']) && !isset($_POST['btn_confirmar_extracao']) && !isset($_POST['btn_terminar_extracao'])) {
-                    $disabled = ' disabled ';
-                }
+                $cont = 0;
+                $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
+                $objPreparoLoteRN->consultar($objPreparoLote);
 
-                if (isset($_POST['btn_confirmar_extracao'])) {
-                    $disabled = '';
-                }
+                $objLoteExtracao = new Lote();
 
-                $show_amostras .= '
+
+                $objPreparoLote = new PreparoLote();
+
+                $quantidadeTubos = 0;
+
+                $objTipoLocalArmazenamento->setCaractereTipo(TipoLocalArmazenamentoRN::$TL_APOS_EXTRACAO);
+                $arr_tipo = $objTipoLocalArmazenamentoRN->listar($objTipoLocalArmazenamento);
+
+                $contador = 0;
+                $style_top = 0;
+                $arr_tubos_alterados = array();
+                foreach ($arr_tubos[0]->getObjsTubos() as $tubosLote) {
+
+                    $objInfosTubo->setIdTubo_fk($tubosLote->getObjTubo()->getIdTubo());
+                    $objInfosTubo = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
+                    //print_r($objInfosTubo);
+
+                    //$objLocalArmazenamentoTxt->setIdLocal($objInfosTubo->getIdLocalFk());
+                    //$objLocalArmazenamentoTxt = $objLocalArmazenamentoTxtRN->consultar($objLocalArmazenamentoTxt);
+
+                    if ($objInfosTubo->getReteste() == 'n' || $objInfosTubo->getReteste() == '') {
+                        $reteste = "NÃO";
+                    } else {
+                        $reteste = "SIM";
+                    }
+
+                    $show = 'show ';
+                    $style = 'style="margin-top: 10px;';
+
+                    if ($style_top == 0) {
+                        //$style = 'style="margin-top: -45px;';
+
+                    }
+                    $style_top++;
+
+
+                    $disabled = '  ';
+                    if (isset($_GET['idCapela']) && !isset($_POST['btn_confirmar_extracao']) && !isset($_POST['btn_terminar_extracao'])) {
+                        $disabled = ' disabled ';
+                    }
+
+                    if (isset($_POST['btn_confirmar_extracao'])) {
+                        $disabled = '';
+                    }
+
+
+                    $show_amostras .= '
                
                 <div class="accordion" id="accordionExample" ' . $style . '">
                       <div class="card">
@@ -283,7 +331,7 @@ try {
                           <h5 class="mb-0">
                             <button  style="text-decoration: none;color: #3a5261;"  class="btn btn-link" type="button" 
                             data-toggle="collapse" data-target="#collapse_' . $tubosLote->getObjTubo()->getIdTubo() . '" aria-expanded="true" aria-controls="collapseOne">
-                              <h5>AMOSTRA ' . $tubosLote->getCodigoAmostra() . '</h5>
+                              <h5>AMOSTRA ' . $tubosLote->getNickname() . '</h5>
                             </button>
                           </h5>
                         </div>
@@ -301,7 +349,7 @@ try {
                                     <div class="col-md-6">
                                         <label> Volume</label>
                                             <input type="number" class="form-control form-control-sm" id="idVolume"  ' . $disabled . ' style="text-align: center;" placeholder="" ' . $disabled . '
-                                                name="txtVolume_' . $tubosLote->getObjTubo()->getIdTubo() . '"  value="'.$objInfosTubo->getVolume().'">
+                                                name="txtVolume_' . $tubosLote->getObjTubo()->getIdTubo() . '"  value="' . $objInfosTubo->getVolume() . '">
                                     </div>
                                     
                                     <div class="col-md-6">
@@ -315,22 +363,22 @@ try {
                                     <div class="col-md-4">
                                        <label> Local de armazenamento </label>
                                             <input type="text" class="form-control form-control-sm" id="idNomeLocal" ' . $disabled . ' style="text-align: center;" placeholder=""
-                                                    name="nomeLocalArmazenamento_'.  $tubosLote->getObjTubo()->getIdTubo() . '" 
-                                                     value="'.$_POST['nomeLocalArmazenamento_'.  $tubosLote->getObjTubo()->getIdTubo()].'">
+                                                    name="nomeLocalArmazenamento_' . $tubosLote->getObjTubo()->getIdTubo() . '" 
+                                                     value="' . $_POST['nomeLocalArmazenamento_' . $tubosLote->getObjTubo()->getIdTubo()] . '">
                                     </div>
                                     
                                     <div class="col-md-4">
                                        <label> Porta </label>
                                             <input type="text" class="form-control form-control-sm" id="idNomeLocal" ' . $disabled . ' style="text-align: center;" placeholder=""
-                                                    name="txtPorta_'.  $tubosLote->getObjTubo()->getIdTubo() . '" 
-                                                     value="'.$_POST['txtPorta_'.  $tubosLote->getObjTubo()->getIdTubo()].'">
+                                                    name="txtPorta_' . $tubosLote->getObjTubo()->getIdTubo() . '" 
+                                                     value="' . $_POST['txtPorta_' . $tubosLote->getObjTubo()->getIdTubo()] . '">
                                     </div>
                                     
                                     <div class="col-md-4">
                                        <label> Prateleira </label>
                                             <input type="text" class="form-control form-control-sm" id="idNomeLocal" ' . $disabled . ' style="text-align: center;" placeholder=""
-                                                    name="txtPrateleira_'.  $tubosLote->getObjTubo()->getIdTubo() . '" 
-                                                     value="'.$_POST['txtPrateleira_'.  $tubosLote->getObjTubo()->getIdTubo()].'">
+                                                    name="txtPrateleira_' . $tubosLote->getObjTubo()->getIdTubo() . '" 
+                                                     value="' . $_POST['txtPrateleira_' . $tubosLote->getObjTubo()->getIdTubo()] . '">
                                     </div>
                                     </div>
                                     <div class="form-row" >
@@ -338,21 +386,21 @@ try {
                                             <label> Coluna </label>
                                             <input type="text" class="form-control form-control-sm" id="idColuna"  ' . $disabled . ' style="text-align: center;" placeholder=""
                                                 name="txtColuna_' . $tubosLote->getObjTubo()->getIdTubo() . '" 
-                                                 value="'.$_POST['txtColuna_' . $tubosLote->getObjTubo()->getIdTubo()].'">
+                                                 value="' . $_POST['txtColuna_' . $tubosLote->getObjTubo()->getIdTubo()] . '">
                                          </div>
                                         <div class="col-md-4">
                                             <label> Caixa </label>
                                             <input type="text" class="form-control form-control-sm" id="idVolume"  ' . $disabled . ' style="text-align: center;" placeholder=""
                                                 name="txtCaixa_' . $tubosLote->getObjTubo()->getIdTubo() . '" 
-                                                 value="'.$_POST['txtCaixa_' . $tubosLote->getObjTubo()->getIdTubo()].'">
+                                                 value="' . $_POST['txtCaixa_' . $tubosLote->getObjTubo()->getIdTubo()] . '">
                                          </div>
                                          
                                         <div class="col-md-4">
                                             
-                                            <label> Posição </label>
+                                            <label> Posição (letra+número) </label>
                                              <input type="text" class="form-control form-control-sm" id="idVolume" ' . $disabled . '  style="text-align: center;" placeholder=""
-                                                    name="txtPosicao_' .  $tubosLote->getObjTubo()->getIdTubo() . '"  
-                                                    value="'.$_POST['txtPosicao_' .   $tubosLote->getObjTubo()->getIdTubo()].'">
+                                                    name="txtPosicao_' . $tubosLote->getObjTubo()->getIdTubo() . '"  
+                                                    value="' . $_POST['txtPosicao_' . $tubosLote->getObjTubo()->getIdTubo()] . '">
                                          </div>
                                     </div>
                                 
@@ -389,123 +437,145 @@ try {
                                 
                                 ';
 
-                //tubo
+                    //tubo
+                    if (isset($_POST['btn_terminar_extracao'])) {
+
+
+                        //não remover o idLote desse
+                        $arr_infos = array();
+                        $objTubo = new Tubo();
+                        $objInfosTubo = new InfosTubo();
+                        //altera apenas o infos tubo adicionando uma coluna, como é o tubo  ele é descartado depois
+                        $objTubo->setIdTubo($tubosLote->getObjTubo()->getIdTubo());
+                        $objTubo = $objTuboRN->consultar($objTubo);
+                        $objTubo->setTipo(TuboRN::$TT_RNA);
+
+                        $objInfosTubo->setIdTubo_fk($tubosLote->getObjTubo()->getIdTubo());
+                        $objInfosTubo = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
+
+
+                        //pretende cadastrar um novo infotubo
+                        $objInfosTubo->setIdInfosTubo(null);
+                        $objInfosTubo->setCodAmostra($tubosLote->getNickname());
+                        $objInfosTubo->setEtapaAnterior(InfosTuboRN::$TP_PREPARACAO_INATIVACAO);
+                        $objInfosTubo->setEtapa(InfosTuboRN::$TP_EXTRACAO);
+                        $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
+                        $objInfosTubo->setIdTubo_fk($tubosLote->getObjTubo()->getIdTubo());
+
+                        if (isset($_POST['txtVolume_' . $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['txtVolume_' . $tubosLote->getObjTubo()->getIdTubo()] != '') {
+                            //ECHO "$".$_POST['txtVolume_' . $tubosLote->getObjTubo()->getIdTubo()]."$";
+                            $objInfosTubo->setVolume($_POST['txtVolume_' . $tubosLote->getObjTubo()->getIdTubo()]);
+                        }
+
+                        if (isset($_POST['textAreaProblema_' . $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['textAreaProblema_' . $tubosLote->getObjTubo()->getIdTubo()] != '') {
+                            $objInfosTubo->setObsProblema($_POST['textAreaProblema_' . $tubosLote->getObjTubo()->getIdTubo()]);
+                        }
+
+                        if (isset($_POST['textAreaObs_' . $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['textAreaObs_' . $tubosLote->getObjTubo()->getIdTubo()] != '') {
+                            $objInfosTubo->setObservacoes($_POST['textAreaObs_' . $tubosLote->getObjTubo()->getIdTubo()]);
+                        }
+
+                        $objLocalArmazenamentoTxt = new LocalArmazenamentoTexto();
+
+                        if (isset($_POST['txtPosicao_' . $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['txtPosicao_' . $tubosLote->getObjTubo()->getIdTubo()] != '') {
+                            $objLocalArmazenamentoTxt->setPosicao(strtoupper(Utils::getInstance()->tirarAcentos($_POST['txtPosicao_' . $tubosLote->getObjTubo()->getIdTubo()])));
+                        }
+                        if (isset($_POST['txtCaixa_' . $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['txtCaixa_' . $tubosLote->getObjTubo()->getIdTubo()] != '') {
+                            $objLocalArmazenamentoTxt->setCaixa(strtoupper(Utils::getInstance()->tirarAcentos($_POST['txtCaixa_' . $tubosLote->getObjTubo()->getIdTubo()])));
+                        }
+                        if (isset($_POST['nomeLocalArmazenamento_' . $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['nomeLocalArmazenamento_' . $tubosLote->getObjTubo()->getIdTubo()] != '') {
+                            $objLocalArmazenamentoTxt->setNome(strtoupper(Utils::getInstance()->tirarAcentos($_POST['nomeLocalArmazenamento_' . $tubosLote->getObjTubo()->getIdTubo()])));
+                        }
+
+                        if (isset($_POST['txtPorta_' . $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['txtPorta_' . $tubosLote->getObjTubo()->getIdTubo()] != '') {
+                            $objLocalArmazenamentoTxt->setPorta(strtoupper(Utils::getInstance()->tirarAcentos($_POST['txtPorta_' . $tubosLote->getObjTubo()->getIdTubo()])));
+                        }
+
+                        if (isset($_POST['txtColuna_' . $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['txtColuna_' . $tubosLote->getObjTubo()->getIdTubo()] != '') {
+                            $objLocalArmazenamentoTxt->setColuna(strtoupper(Utils::getInstance()->tirarAcentos($_POST['txtColuna_' . $tubosLote->getObjTubo()->getIdTubo()])));
+                        }
+                        if (isset($_POST['txtPrateleira_' . $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['txtColuna_' . $tubosLote->getObjTubo()->getIdTubo()] != '') {
+                            $objLocalArmazenamentoTxt->setPrateleira(strtoupper(Utils::getInstance()->tirarAcentos($_POST['txtPrateleira_' . $tubosLote->getObjTubo()->getIdTubo()])));
+                        }
+
+
+                        $objLocalArmazenamentoTxt->setIdTipoLocal($arr_tipo[0]->getIdTipoLocalArmazenamento());
+                        //$arr_local[] = $objLocalArmazenamentoTxt;
+                        //$objInfosTubo->setObjLocal($arr_local);
+                        $objInfosTubo->setObjLocal($objLocalArmazenamentoTxt);
+
+
+                        $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
+                        $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+                        if ($_POST['checkDercartada_' . $tubosLote->getObjTubo()->getIdTubo()] == 'on') {
+                            $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA);
+                        } else {
+                            $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_AGUARDANDO_SOLICITACAO_MONTAGEM_PLACA);
+                        }
+
+                        $arr_infos[0] = $objInfosTubo;
+
+                        $objInfosTubo2 = new InfosTubo();
+                        $objInfosTubo2->setObjLocal($objInfosTubo->getObjLocal());
+                        $objInfosTubo2->setIdTubo_fk($objInfosTubo->getIdTubo_fk());
+                        $objInfosTubo2->setDataHora($objInfosTubo->getDataHora());
+                        $objInfosTubo2->setReteste($objInfosTubo->getReteste());
+                        $objInfosTubo2->setCodAmostra($objInfosTubo->getCodAmostra());
+                        $objInfosTubo2->setObservacoes($objInfosTubo->getObservacoes());
+                        $objInfosTubo2->setObsProblema($objInfosTubo->getObsProblema());
+                        $objInfosTubo2->setEtapaAnterior(InfosTuboRN::$TP_EXTRACAO);
+                        $objInfosTubo2->setEtapa(InfosTuboRN::$TP_RTqPCR_SOLICITACAO__MONTAGEM_PLACA);
+                        $objInfosTubo2->setVolume($objInfosTubo->getVolume());
+                        $objInfosTubo2->setIdUsuario_fk($objInfosTubo->getIdUsuario_fk());
+                        $objInfosTubo2->setSituacaoTubo(InfosTuboRN::$TST_AGUARDANDO_SOLICITACAO_MONTAGEM_PLACA);
+                        $objInfosTubo2->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
+                        $arr_infos[1] = $objInfosTubo2;
+
+                        $objTubo->setObjInfosTubo($arr_infos);
+                        $arr_tubos_alterados[$contador] = $objTubo;
+                        $contador++;
+
+                    }
+                }
+
                 if (isset($_POST['btn_terminar_extracao'])) {
-                    //não remover o idLote desse
-                    $arr_infos = array();
-                    $objTubo = new Tubo();
-                    $objInfosTubo = new InfosTubo();
-                    //altera apenas o infos tubo adicionando uma coluna, como é o tubo  ele é descartado depois
-                    $objTubo->setIdTubo($tubosLote->getObjTubo()->getIdTubo());
-                    $objTubo =$objTuboRN->consultar($objTubo);
-                    $objTubo->setTipo(TuboRN::$TT_RNA);
 
-                    $objInfosTubo->setIdTubo_fk($tubosLote->getObjTubo()->getIdTubo());
-                    $objInfosTubo = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
+                    //print_r($arr_tubos_alterados);
 
+                    $objTuboRN->alterar_array_tubos($arr_tubos_alterados);
 
-                    //pretende cadastrar um novo infotubo
-                    $objInfosTubo->setIdInfosTubo(null);
-                    $objInfosTubo->setCodAmostra($tubosLote->getNickname());
-                    $objInfosTubo->setEtapaAnterior(InfosTuboRN::$TP_PREPARACAO_INATIVACAO);
-                    $objInfosTubo->setEtapa(InfosTuboRN::$TP_EXTRACAO);
-                    $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
-                    $objInfosTubo->setIdTubo_fk($tubosLote->getObjTubo()->getIdTubo());
+                    $objCapela->setIdCapela($_GET['idCapela']);
+                    $objCapela = $objCapelaRN->consultar($objCapela);
+                    $objCapela->setSituacaoCapela(CapelaRN::$TE_LIBERADA);
+                    $objCapelaRN->alterar($objCapela);
 
-                    if (isset($_POST['txtVolume_' . $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['txtVolume_' . $tubosLote->getObjTubo()->getIdTubo()] != '') {
-                        $objInfosTubo->setVolume($_POST['txtVolume_' . $tubosLote->getObjTubo()->getIdTubo()]);
+                    //garantir que não vá cadastrar outros ao mesmo tempo
+                    $objPreparoLoteAuxiliar  = new PreparoLote();
+                    $objPreparoLoteAuxiliar->setIdPreparoLote($_GET['idPreparoLote']);
+                    $objPreparoLoteAuxiliar = $objPreparoLoteRN->consultar_lote($objPreparoLoteAuxiliar);
+                    //print_r($objPreparoLoteAuxiliar);
+                    if($objPreparoLoteAuxiliar->getObjLote()->getSituacaoLote() == LoteRN::$TE_EXTRACAO_FINALIZADA) {
+
+                        header('Location: '. Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao&idSituacao=2'));
+                        die();
+
+                    }else {
+
+                        $objPreparoLoteAuxiliar->setDataHoraFim( date("Y-m-d H:i:s"));
+                        $objPreparoLoteRN->alterar($objPreparoLoteAuxiliar);
+
+                        //MUDOU A SITUAÇÃO DO LOTE
+                        $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
+                        $objPreparoLoteRN->mudar_status_lote($objPreparoLote, LoteRN::$TE_EXTRACAO_FINALIZADA);
+                        $sumir_btns = 's';
+                        $cadastrar_novo = 's';
+
+                        $alert = Alert::alert_success("Dados cadastrados com sucesso");
                     }
-
-                    if (isset($_POST['textAreaProblema_' . $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['textAreaProblema_' . $tubosLote->getObjTubo()->getIdTubo()] != '') {
-                        $objInfosTubo->setObsProblema($_POST['textAreaProblema_' . $tubosLote->getObjTubo()->getIdTubo()]);
-                    }
-
-                    if (isset($_POST['textAreaObs_' . $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['textAreaObs_' . $tubosLote->getObjTubo()->getIdTubo()] != '') {
-                        $objInfosTubo->setObservacoes($_POST['textAreaObs_' . $tubosLote->getObjTubo()->getIdTubo()]);
-                    }
-
-                    $objLocalArmazenamentoTxt = new LocalArmazenamentoTexto();
-
-                    if(isset($_POST['txtPosicao_' .  $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['txtPosicao_' .   $tubosLote->getObjTubo()->getIdTubo()] != ''){
-                        $objLocalArmazenamentoTxt->setPosicao($_POST['txtPosicao_'  .  $tubosLote->getObjTubo()->getIdTubo()]);
-                    }
-                    if(isset($_POST['txtCaixa_'  . $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['txtCaixa_' .$tubosLote->getObjTubo()->getIdTubo()] != ''){
-                        $objLocalArmazenamentoTxt->setCaixa($_POST['txtCaixa_' . $tubosLote->getObjTubo()->getIdTubo()]);
-                    }
-                    if(isset($_POST['nomeLocalArmazenamento_'.  $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['nomeLocalArmazenamento_'.$tubosLote->getObjTubo()->getIdTubo()] != ''){
-                        $objLocalArmazenamentoTxt->setNome($_POST['nomeLocalArmazenamento_'.  $tubosLote->getObjTubo()->getIdTubo()]);
-                    }
-
-                    if(isset($_POST['txtPorta_'.  $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['txtPorta_'.$tubosLote->getObjTubo()->getIdTubo()] != ''){
-                        $objLocalArmazenamentoTxt->setPorta($_POST['txtPorta_'.  $tubosLote->getObjTubo()->getIdTubo()]);
-                    }
-
-                    if(isset($_POST['txtColuna_'.  $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['txtColuna_'.$tubosLote->getObjTubo()->getIdTubo()] != ''){
-                        $objLocalArmazenamentoTxt->setColuna($_POST['txtColuna_'.  $tubosLote->getObjTubo()->getIdTubo()]);
-                    }
-                    if(isset($_POST['txtPrateleira_'.  $tubosLote->getObjTubo()->getIdTubo()]) && $_POST['txtColuna_'.$tubosLote->getObjTubo()->getIdTubo()] != ''){
-                        $objLocalArmazenamentoTxt->setPrateleira($_POST['txtPrateleira_'.  $tubosLote->getObjTubo()->getIdTubo()]);
-                    }
-
-
-                    $objLocalArmazenamentoTxt->setIdTipoLocal($arr_tipo[0]->getIdTipoLocalArmazenamento());
-                    //$arr_local[] = $objLocalArmazenamentoTxt;
-                    //$objInfosTubo->setObjLocal($arr_local);
-                    $objInfosTubo->setObjLocal($objLocalArmazenamentoTxt);
-
-
-                    $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
-                    $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
-                    if ($_POST['checkDercartada_' . $tubosLote->getObjTubo()->getIdTubo()] == 'on') {
-                        $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA);
-                    } else {
-                        $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_AGUARDANDO_RTqCPR);
-                    }
-
-                    $arr_infos[0] = $objInfosTubo;
-
-                    $objInfosTubo2 = new InfosTubo();
-                    $objInfosTubo2->setObjLocal($objInfosTubo->getObjLocal());
-                    $objInfosTubo2->setIdTubo_fk($objInfosTubo->getIdTubo_fk());
-                    $objInfosTubo2->setDataHora($objInfosTubo->getDataHora());
-                    $objInfosTubo2->setReteste($objInfosTubo->getReteste());
-                    $objInfosTubo2->setCodAmostra($objInfosTubo->getCodAmostra());
-                    $objInfosTubo2->setObservacoes($objInfosTubo->getObservacoes());
-                    $objInfosTubo2->setObservacoes($objInfosTubo->getObsProblema());
-                    $objInfosTubo2->setEtapaAnterior(InfosTuboRN::$TP_EXTRACAO);
-                    $objInfosTubo2->setEtapa(InfosTuboRN::$TP_RTqPCR);
-                    $objInfosTubo2->setIdUsuario_fk($objInfosTubo->getIdUsuario_fk());
-                    $objInfosTubo2->setSituacaoTubo(InfosTuboRN::$TST_AGUARDANDO_RTqCPR);
-                    $objInfosTubo2->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
-                    $arr_infos[1] = $objInfosTubo2;
-
-                    $objTubo->setObjInfosTubo($arr_infos);
-                    $arr_tubos_alterados[$contador] = $objTubo;
-                    $contador++;
-
                 }
+
+
             }
-
-            if (isset($_POST['btn_terminar_extracao'])){
-                //print_r($arr_tubos_alterados);
-                foreach ($arr_tubos_alterados as $tubo){
-                    $tubo = $objTuboRN->alterar($tubo);
-                }
-                $objCapela->setIdCapela($_GET['idCapela']);
-                $objCapela = $objCapelaRN->consultar($objCapela);
-                $objCapela->setSituacaoCapela(CapelaRN::$TE_LIBERADA);
-                $objCapelaRN->alterar($objCapela);
-
-                //MUDOU A SITUAÇÃO DO LOTE
-                $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
-                $objPreparoLoteRN->mudar_status_lote($objPreparoLote, LoteRN::$TE_EXTRACAO_FINALIZADA);
-                $sumir_btns = 's';
-
-                $alert = Alert::alert_success("Dados cadastrados com sucesso");
-            }
-
-
-
 
 
         }
@@ -536,7 +606,7 @@ echo '<!-- Modal -->
             <div class="modal-content" style="text-align: center">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">
-                    Deseja montar outro grupo de amostras? </h5>
+                    Deseja realizar outra extração? </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -545,13 +615,13 @@ echo '<!-- Modal -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"  >Close</button>
                     <button type="button"  class="btn btn-primary">
-                    <a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao&idLiberar=' . $_GET['idCapela']) . '">Tenho certeza</a></button>
+                    <a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao').'">Tenho certeza</a></button>
                 </div>
             </div>
         </div>
     </div>';
 
-echo '<div class="conteudo_grande " STYLE="margin-top: -10px;" >
+echo '<div class="conteudo_grande " STYLE="margin-top: 0px;" >
          <form method="POST">
                 <div class="form-row" >
                     <div class="col-md-12">
@@ -584,38 +654,42 @@ if($sumir_btn_alocar == 'n') {
                     </div >
                  </div >';
 }
-echo '</div>
+echo '
          </form>
       </div>';
 
 if(isset($_GET['idCapela']) && isset($_GET['idPreparoLote'])) {
     echo '<div class="conteudo_grande preparo_inativacao">
          <form method="POST">
-                <div class="form-row" >
-                    <div class="col-md-12">'
-        . $show_amostras .
-        '</div>
-                </div>
-                <div class="form-row" >';
+               
+                ';
 
     if($sumir_btns == 'n') {
+        echo '  <div class="form-row" style="height: 50px;margin-top: -40px;" >';
         if ($ja_confirmou == 'n') {
             echo '<div class="col-md-6">
-               <button class="btn btn-primary" STYLE="width: 50%;margin-lesft: 50%;" type="submit" name="btn_confirmar_extracao">INICIAR EXTRAÇÃO</button>
+               <button class="btn btn-primary" STYLE="width: 50%;margin-left: 50%;margin-bottom: 5px;" type="submit" name="btn_confirmar_extracao">INICIAR EXTRAÇÃO</button>
              </div>';
         } else {
             //if($sumir_btns == 'n') {
             echo '<div class="col-md-6">
-               <button class="btn btn-primary" STYLE="width: 50%;margin-left: 50%;" type="submit" name="btn_terminar_extracao">SALVAR DADOS</button>
+               <button class="btn btn-primary" STYLE="width: 50%;margin-left: 50%;margin-bottom: 5px;" type="submit" name="btn_terminar_extracao">SALVAR DADOS</button>
              </div>';
             //}
         }
+
         echo '<div class="col-md-6">
-                       <button class="btn btn-primary" STYLE="width: 50%;margin-left: 0%;"  type="submit" name="btn_cancelar">CANCELAR</button>
+                       <button class="btn btn-primary" STYLE="width: 50%;margin-left: 0%;margin-bottom: 5px;"  type="submit" name="btn_cancelar">CANCELAR</button>
                      </div>
                      </div>';
     }
+
     echo '
+             <div class="form-row" style="margin-top: 0px;">
+                   <div class="col-md-12">'
+                    . $show_amostras .
+                    '</div>
+                </div>
                 </form>
       </div>';
 }

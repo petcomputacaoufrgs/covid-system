@@ -17,8 +17,8 @@ class PacienteBD
 
             $INSERT = 'INSERT INTO tb_paciente (idSexo_fk,idEtnia_fk,nome,nomeMae,dataNascimento,CPF,RG,'
                 . 'obsRG,obsNomeMae,CEP,endereco,obsEndereco,obsCEP,obsCPF,passaporte,obsPassaporte,
-                    cadastroPendente,cartaoSUS,obsCartaoSUS,obsDataNascimento) '
-                . ' VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+                    cadastroPendente,cartaoSUS,obsCartaoSUS,obsDataNascimento,idMunicipio_fk,idEstado_fk,obsMunicipio) '
+                . ' VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i', $objPaciente->getIdSexo_fk());
@@ -41,11 +41,14 @@ class PacienteBD
             $arrayBind[] = array('s', $objPaciente->getCartaoSUS());
             $arrayBind[] = array('s', $objPaciente->getObsCartaoSUS());
             $arrayBind[] = array('s', $objPaciente->getObsDataNascimento());
+            $arrayBind[] = array('i', $objPaciente->getIdMunicipioFk());
+            $arrayBind[] = array('i', $objPaciente->getIdEstadoFk());
+            $arrayBind[] = array('s', $objPaciente->getObsMunicipio());
 
 
             $objBanco->executarSQL($INSERT, $arrayBind);
             $objPaciente->setIdPaciente($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando o paciente  no BD.", $ex);
         }
     }
@@ -57,8 +60,9 @@ class PacienteBD
             $UPDATE = 'UPDATE tb_paciente SET idSexo_fk = ?,idEtnia_fk = ?, nome = ?, nomeMae = ?,dataNascimento = ?, CPF = ?,'
                 . ' RG = ?, obsRG = ?, obsNomeMae = ?, CEP = ?, endereco = ?, obsEndereco = ?, obsCEP = ?, obsCPF = ?,'
                 . ' passaporte = ?,obsPassaporte = ?,cadastroPendente = ? , cartaoSUS= ?, 
-                        obsCartaoSUS =? ,obsDataNascimento =? '
+                        obsCartaoSUS =? ,obsDataNascimento =?, idMunicipio_fk =?, idEstado_fk =?, obsMunicipio= ? '
                 . 'where idPaciente = ?';
+
             $arrayBind = array();
             $arrayBind[] = array('i', $objPaciente->getIdSexo_fk());
             $arrayBind[] = array('i', $objPaciente->getIdEtnia_fk());
@@ -80,12 +84,15 @@ class PacienteBD
             $arrayBind[] = array('s', $objPaciente->getCartaoSUS());
             $arrayBind[] = array('s', $objPaciente->getObsCartaoSUS());
             $arrayBind[] = array('s', $objPaciente->getObsDataNascimento());
+            $arrayBind[] = array('i', $objPaciente->getIdMunicipioFk());
+            $arrayBind[] = array('i', $objPaciente->getIdEstadoFk());
+            $arrayBind[] = array('s', $objPaciente->getObsMunicipio());
 
             $arrayBind[] = array('i', $objPaciente->getIdPaciente());
 
             $objBanco->executarSQL($UPDATE, $arrayBind);
             return $objPaciente;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro alterando o paciente no BD.", $ex);
         }
     }
@@ -138,6 +145,24 @@ class PacienteBD
                 $arrayBind[] = array('s', $objPaciente->getCadastroPendente());
             }
 
+            if ($objPaciente->getIdMunicipioFk() != null) {
+                $WHERE .= $AND . " idMunicipio_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objPaciente->getIdMunicipioFk());
+            }
+
+            if ($objPaciente->getIdEstadoFk() != null) {
+                $WHERE .= $AND . " idEstado_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objPaciente->getIdEstadoFk());
+            }
+
+            if ($objPaciente->getObsMunicipio() != null) {
+                $WHERE .= $AND . " obsMunicipio = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPaciente->getObsMunicipio());
+            }
+
             if ($WHERE != '') {
                 $WHERE = ' where ' . $WHERE;
             }
@@ -170,11 +195,14 @@ class PacienteBD
                 $paciente->setCartaoSUS($reg['cartaoSUS']);
                 $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
                 $paciente->setObsDataNascimento($reg['obsDataNascimento']);
+                $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
+                $paciente->setIdEstadoFk($reg['idEstado_fk']);
+                $paciente->setObsMunicipio($reg['obsMunicipio']);
 
                 $array_paciente[] = $paciente;
             }
             return $array_paciente;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando o paciente no BD.", $ex);
         }
     }
@@ -213,9 +241,12 @@ class PacienteBD
             $paciente->setCartaoSUS($arr[0]['cartaoSUS']);
             $paciente->setObsCartaoSUS($arr[0]['obsCartaoSUS']);
             $paciente->setObsDataNascimento($arr[0]['obsDataNascimento']);
+            $paciente->setIdMunicipioFk($arr[0]['idMunicipio_fk']);
+            $paciente->setIdEstadoFk($arr[0]['idEstado_fk']);
+            $paciente->setObsMunicipio($arr[0]['obsMunicipio']);
 
             return $paciente;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
 
             throw new Excecao("Erro consultando o paciente no BD.", $ex);
         }
@@ -230,7 +261,7 @@ class PacienteBD
             $arrayBind = array();
             $arrayBind[] = array('i', $objPaciente->getIdPaciente());
             $objBanco->executarSQL($DELETE, $arrayBind);
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo o paciente no BD.", $ex);
         }
     }
@@ -277,6 +308,24 @@ class PacienteBD
                 $arrayBind[] = array('s', $objPaciente->getPassaporte());
             }
 
+            if ($objPaciente->getIdMunicipioFk() != null) {
+                $WHERE .= $AND . " idMunicipio_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objPaciente->getIdMunicipioFk());
+            }
+
+            if ($objPaciente->getIdEstadoFk() != null) {
+                $WHERE .= $AND . " idEstado_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objPaciente->getIdEstadoFk());
+            }
+
+            if ($objPaciente->getObsMunicipio() != null) {
+                $WHERE .= $AND . " obsMunicipio = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPaciente->getObsMunicipio());
+            }
+
 
             if ($WHERE != '') {
                 $WHERE = ' where ' . $WHERE;
@@ -314,12 +363,14 @@ class PacienteBD
                 $paciente->setCartaoSUS($reg['cartaoSUS']);
                 $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
                 $paciente->setObsDataNascimento($reg['obsDataNascimento']);
-
+                $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
+                $paciente->setIdEstadoFk($reg['idEstado_fk']);
+                $paciente->setObsMunicipio($reg['obsMunicipio']);
 
                 $arr_pacientes[] = $paciente;
             }
             return $arr_pacientes;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro pesquisando o detentor no BD.", $ex);
         }
     }
@@ -368,6 +419,9 @@ class PacienteBD
                         $paciente->setCartaoSUS($reg['cartaoSUS']);
                         $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
                         $paciente->setObsDataNascimento($reg['obsDataNascimento']);
+                        $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
+                        $paciente->setIdEstadoFk($reg['idEstado_fk']);
+                        $paciente->setObsMunicipio($reg['obsMunicipio']);
 
 
                         $arr_pacientes[] = $paciente;
@@ -375,7 +429,7 @@ class PacienteBD
                 }
             }
             return $arr_pacientes;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro pesquisando o CPF do paciente no BD.", $ex);
         }
     }
@@ -423,6 +477,9 @@ class PacienteBD
                         $paciente->setCartaoSUS($reg['cartaoSUS']);
                         $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
                         $paciente->setObsDataNascimento($reg['obsDataNascimento']);
+                        $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
+                        $paciente->setIdEstadoFk($reg['idEstado_fk']);
+                        $paciente->setObsMunicipio($reg['obsMunicipio']);
 
 
                         $arr_pacientes[] = $paciente;
@@ -430,7 +487,7 @@ class PacienteBD
                 }
             }
             return $arr_pacientes;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro pesquisando o RG do paciente no BD.", $ex);
         }
     }
@@ -479,6 +536,9 @@ class PacienteBD
                         $paciente->setCartaoSUS($reg['cartaoSUS']);
                         $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
                         $paciente->setObsDataNascimento($reg['obsDataNascimento']);
+                        $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
+                        $paciente->setIdEstadoFk($reg['idEstado_fk']);
+                        $paciente->setObsMunicipio($reg['obsMunicipio']);
 
 
                         $arr_pacientes[] = $paciente;
@@ -486,7 +546,7 @@ class PacienteBD
                 }
             }
             return $arr_pacientes;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro pesquisando o RG do paciente no BD.", $ex);
         }
     }
@@ -535,6 +595,9 @@ class PacienteBD
                         $paciente->setCartaoSUS($reg['cartaoSUS']);
                         $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
                         $paciente->setObsDataNascimento($reg['obsDataNascimento']);
+                        $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
+                        $paciente->setIdEstadoFk($reg['idEstado_fk']);
+                        $paciente->setObsMunicipio($reg['obsMunicipio']);
 
 
                         $arr_pacientes[] = $paciente;
@@ -542,7 +605,7 @@ class PacienteBD
                 }
             }
             return $arr_pacientes;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro pesquisando o RG do paciente no BD.", $ex);
         }
     }
@@ -580,7 +643,10 @@ class PacienteBD
                               tb_paciente.cadastroPendente,
                               tb_paciente.cartaoSUS,
                               tb_paciente.obsCartaoSUS,
-                              tb_paciente.obsDataNascimento," .
+                              tb_paciente.obsDataNascimento,
+                              tb_paciente.obsMunicipio,
+                              tb_paciente.idMunicipio_fk,
+                              tb_paciente.idEstado_fk," .
                 $itens_tabela . "
                               tb_amostra.idAmostra,
                               tb_amostra.idCodGAL_fk,
@@ -593,6 +659,7 @@ class PacienteBD
                               tb_amostra.motivo,
                               tb_amostra.CEP,
                               tb_amostra.codigoAmostra,
+                              tb_amostra.a_r_g,
                               tb_amostra.obsMotivo,
                               tb_amostra.obsCEPAmostra,
                               tb_amostra.obsLugarOrigem,
@@ -644,6 +711,10 @@ class PacienteBD
                 $paciente->setCartaoSUS($reg['cartaoSUS']);
                 $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
                 $paciente->setObsDataNascimento($reg['obsDataNascimento']);
+                $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
+                $paciente->setIdEstadoFk($reg['idEstado_fk']);
+                $paciente->setObsMunicipio($reg['obsMunicipio']);
+
 
                 $objAmostra = new Amostra();
                 $objAmostra->setIdAmostra($reg['idAmostra']);
@@ -687,11 +758,13 @@ class PacienteBD
             }
 
 
+
             $select_paciente_sem_amostra = 'select * from tb_paciente where idPaciente not in (select idPaciente_fk from tb_amostra) and nome like ?';
             $arrayBind1 = array();
             $arrayBind1[] = array('s', "%" . $objPaciente->getNome() . "%");
 
             $arr = $objBanco->consultarSQL($select_paciente_sem_amostra, $arrayBind1);
+
             foreach ($arr as $reg){
                 $paciente = new Paciente();
                 $paciente->setIdPaciente($reg['idPaciente']);
@@ -715,6 +788,9 @@ class PacienteBD
                 $paciente->setCartaoSUS($reg['cartaoSUS']);
                 $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
                 $paciente->setObsDataNascimento($reg['obsDataNascimento']);
+                $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
+                $paciente->setIdEstadoFk($reg['idEstado_fk']);
+                $paciente->setObsMunicipio($reg['obsMunicipio']);
                 $array_paciente[] = $paciente;
             }
 
@@ -724,9 +800,9 @@ class PacienteBD
 
             $array_paciente[] = $arr;
 
-
             return $array_paciente;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
+
             throw new Excecao("Erro listando o paciente no BD.", $ex);
         }
     }

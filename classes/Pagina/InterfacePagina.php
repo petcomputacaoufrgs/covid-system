@@ -24,6 +24,60 @@ class InterfacePagina
         return self::$instance;
     }
 
+
+    static function montar_select_protocolos(&$select_protocolos, $objProtocolo, $objProtocoloRN, $disabled, $onchange)
+    {
+        /* PROTOCOLOS */
+
+        $arr_protocolos = $objProtocoloRN->listar(new Protocolo());
+
+        $select_protocolos = '<select class="form-control selectpicker "  ' . $disabled . $onchange
+            . 'id="select-country idSel_protocolos" data-live-search="true" name="sel_protocolos">'
+            . '<option data-tokens="" value="-1" >Selecione um protocolo</option>';
+
+        foreach ($arr_protocolos as $protocolo) {
+            $selected = '';
+
+            if ($objProtocolo->getIdProtocolo() == $protocolo->getIdProtocolo()) {
+                $selected = 'selected';
+            }
+            $select_protocolos .= '<option ' . $selected .
+                '  value="' . Pagina::formatar_html($protocolo->getIdProtocolo()) .
+                '" data-tokens="' . Pagina::formatar_html($protocolo->getProtocolo()) . '">'
+                . Pagina::formatar_html($protocolo->getProtocolo()) . '</option>';
+
+        }
+        $select_protocolos .= '</select>';
+    }
+
+    static function montar_select_cidade_paciente(&$select_municipio_paciente, $objLugarOrigemPaciente, $objLugarOrigemPacienteRN, &$objEstadoOrigemPaciente, &$objPaciente, $disabled, $onchange)
+    {
+        /* MUNICÍPIO PACIENTE */
+        $selected = '';
+
+        $arr_municipios = $objLugarOrigemPacienteRN->listar($objLugarOrigemPaciente);
+       // print_r($arr_municipios);
+
+        $select_municipio_paciente = '<select class="form-control selectpicker "  ' . $disabled . $onchange
+            . 'id="select-country idSel_cidades" data-live-search="true" name="sel_municipio_paciente">'
+            . '<option data-tokens="" value="-1">Selecione o município</option>';
+
+        foreach ($arr_municipios as $lugarOrigem) {
+            $selected = '';
+
+                if ($lugarOrigem->getIdLugarOrigem() == $objPaciente->getIdMunicipioFk()) {
+                    $selected = 'selected';
+                }
+                $select_municipio_paciente .= '<option ' . $selected .
+                    '  value="' . Pagina::formatar_html($lugarOrigem->getIdLugarOrigem()) .
+                    '" data-tokens="' . Pagina::formatar_html($lugarOrigem->getNome()) . '">'
+                    . Pagina::formatar_html($lugarOrigem->getNome()).', '.$lugarOrigem->getObjEstado()->getSigla() . '</option>';
+
+        }
+        $select_municipio_paciente .= '</select>';
+    }
+
+
     static function montar_select_cidade(&$select_municipios, $objLugarOrigem, $objLugarOrigemRN, &$objEstadoOrigem, &$objAmostra, $disabled, $onchange)
     {
         /* MUNICÃPIOS */
@@ -229,6 +283,33 @@ static function montar_select_tiposAmostra(&$select_tiposAmostra, $objTipoAmostr
         $select_estados .= '</select>';
     }
 
+
+    static  function montar_select_estado_paciente(&$select_estado_paciente, $objEstadoOrigemPaciente, $objEstadoOrigemPacienteRN, &$objPaciente, $disabled, $onchange)
+    {
+        /* ESTADO DO PACIENTE */
+
+        $arr_estados = $objEstadoOrigemPacienteRN->listar($objEstadoOrigemPaciente);
+
+        $select_estado_paciente = '<select class="form-control selectpicker "  ' . $onchange
+            . ' id="select-country idSel_estados"'
+            . ' data-live-search="true" name="sel_estado_paciente">'
+            . '<option data-tokens="" value="-1" >Selecione um estado</option>';
+
+        foreach ($arr_estados as $estado) {
+            $selected = '';
+
+            if ($estado->getCod_estado() == $objPaciente->getIdEstadoFk()) {
+                $selected = 'selected';
+            }
+
+            $select_estado_paciente .= '<option ' . $selected .
+                '  value="' . Pagina::formatar_html($estado->getCod_estado()) . '" '
+                . 'data-tokens="' . Pagina::formatar_html($estado->getSigla()) . '">'
+                . Pagina::formatar_html($estado->getSigla()) . '</option>';
+        }
+        $select_estado_paciente .= '</select>';
+    }
+
 static function montar_select_perfilPaciente(&$select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, &$objAmostra, $disabled, $onchange)
     {
         /* PERFIL DO PACIENTE */
@@ -409,16 +490,22 @@ static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPacien
      * SELECTS MÚLTIPLOS
      */
 
-    static function montar_select_perfisMultiplos(&$select_perfis, &$perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, $disabled, $onchange)
+    static function montar_select_perfisMultiplos(&$select_perfis, &$perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, $disabled, $onchange,$especialsus = null)
     {
         /* SELECIONAR VÁRIOS PERFIS DE USUÁRIO */
         $objPerfilPacienteRN = new PerfilPacienteRN();
         $selected = '';
-        $arr_perfis = $objPerfilPacienteRN->listar($objPerfilPaciente);
+
+        if($especialsus == 's'){
+            $arr_perfis = $objPerfilPacienteRN->listar_nao_sus($objPerfilPaciente);
+        }else{
+            $arr_perfis = $objPerfilPacienteRN->listar($objPerfilPaciente);
+        }
+
 
         $select_perfis = '<select ' . $disabled . ' class="form-control selectpicker" onchange="' . $onchange . '" 
             multiple data-live-search="true"        name="sel_perfis[]"  id="selectpicker"  >'
-            . '<option value="0" ></option><br>';
+            . '<option value="0" ></option>';
 
         foreach ($arr_perfis as $perfil) {
             $selected = ' ';
@@ -429,9 +516,9 @@ static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPacien
                         $selected = ' selected ';
                     }
                 }
-                $select_perfis .= '<option ' . $selected . '  value="' . $perfil->getIdPerfilPaciente() . '">' . $perfil->getPerfil() . '</option><br>';
+                $select_perfis .= '<option ' . $selected . '  value="' . $perfil->getIdPerfilPaciente() . '">' . $perfil->getPerfil() . '</option>';
             } else {
-                $select_perfis .= '<option  value="' . $perfil->getIdPerfilPaciente() . '">' . $perfil->getPerfil() . '</option><br>';
+                $select_perfis .= '<option  value="' . $perfil->getIdPerfilPaciente() . '">' . $perfil->getPerfil() . '</option>';
             }
         }
         $select_perfis .= '</select>';
@@ -499,7 +586,7 @@ static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPacien
                 $select_grupos .= '<option ' . $selected .
                     '  value="' . Pagina::formatar_html($preparo->getIdPreparoLote())
                     . '" data-tokens="' . Pagina::formatar_html($preparo->getIdPreparoLote()) . '">Preparo lote: '
-                    . Pagina::formatar_html($preparo->getIdPreparoLote()) . ' - Lote: ' . Pagina::formatar_html($preparo->getObjLote()->getIdLote()) . ' com ' . Pagina::formatar_html($preparo->getObjLote()->getQntAmostrasAdquiridas()) . ' amostras</option>';
+                    . 'Lote: ' . Pagina::formatar_html($preparo->getObjLote()->getIdLote()) . ' com ' . Pagina::formatar_html($preparo->getObjLote()->getQntAmostrasAdquiridas()) . ' amostras</option>';
 
             }
         }else{
@@ -512,6 +599,49 @@ static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPacien
 
 
         $select_grupos .= '</select>';
+
+    }
+
+    static function montar_select_lotes($objLote, $objLoteRN, &$select_lotes, $readonly, $tipo)
+    {
+        $select_lotes = '<select  class="form-control selectpicker" '
+            . 'id="select-country idGrupos" data-live-search="true"  ' . $readonly
+            . 'name="sel_grupos">'
+            . '<option data-tokens="" value="-1">Selecione um grupo </option>';
+
+        /*if ($objLote == null) {
+            $objLote->setSituacaoLote(LoteRN::$TE_AGUARDANDO_PREPARACAO);
+            $objLote->setTipo(LoteRN::$TL_PREPARO);
+        }*/
+
+        $arr_lotes = $objLoteRN->listar($objLote);
+
+
+
+        //print_r($arr_lotes);
+        foreach ($arr_lotes as $lote) {
+            if($lote->getTipo() == LoteRN::$TL_PREPARO){
+                $nome = LoteRN::$TNL_ALIQUOTAMENTO;
+            }
+
+            if($lote->getTipo() == LoteRN::$TL_EXTRACAO){
+                $nome = LoteRN::$TL_EXTRACAO;
+            }
+
+            $selected = '';
+            if ($lote->getIdLote() == $objLote->getIdLote()) {
+                $selected = ' selected ';
+            }
+
+            $select_lotes .= '<option ' . $selected .
+                'value="' . Pagina::formatar_html($lote->getObjPreparo()->getIdPreparoLote())
+                . '" data-tokens="' . Pagina::formatar_html($lote->getIdLote()) . '">
+                    Lote: ' .$nome. Pagina::formatar_html($lote->getIdLote()) . ' com ' . Pagina::formatar_html($lote->getQntAmostrasAdquiridas()) . ' amostras</option>';
+
+        }
+
+
+        $select_lotes .= '</select>';
 
     }
 
@@ -563,6 +693,45 @@ static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPacien
 
     }
 
+    static function montar_select_caractereProtocolo(&$select_protocolo,$objProtocoloRN,$objProtocolo,$disabled){
+        $select_protocolo = '<select  class="form-control selectpicker" '
+            . 'id="idSeguCapela" data-live-search="true"  '.$disabled
+            . 'name="sel_caractereProtococolo">'
+            . '<option data-tokens="" value="-1">Selecione o caractere do protocolo </option>';
+
+        $arr_protocolos = $objProtocoloRN->listar($objProtocolo);
+
+        foreach ($arr_protocolos as $protocolo){
+
+            $selected = ' ';
+            if($objProtocolo->getCaractere() ==$protocolo->getCaractere() ){
+                $selected = ' selected ';
+            }
+
+            $select_protocolo .=  '<option ' . $selected .
+                '  value="' . Pagina::formatar_html($protocolo->getCaractere())
+                . '" data-tokens="' .Pagina::formatar_html($protocolo->getIndexProtocolo()). '">'
+                . $protocolo->getCaractere() .' - '.Pagina::formatar_html($protocolo->getIndexProtocolo()) .'</option>';
+
+        }
+
+        $select_protocolo .= '</select>';
+
+    }
+
+    static function montar_lista_caracteres(&$lista_caractere,$objProtocoloRN,$objProtocolo,$disabled){
+        $lista_caractere = '<ul class="list-group" >';
+
+        $arr_protocolos = $objProtocoloRN->listar($objProtocolo);
+
+        foreach ($arr_protocolos as $protocolo){
+            $lista_caractere .=  '<li class="list-group-item"><strong>'.$protocolo->getCaractere() .'</strong> - '.Pagina::formatar_html($protocolo->getIndexProtocolo()).'</li>';
+        }
+
+        $lista_caractere .= '</ul>';
+
+    }
+
     static function montar_select_localArmazenamento_bancoAmostra(&$select_locais,$objLocalArmazenamento,$objLocalArmazenamentoRN,$objTipoLocalArmazenamento,$objTipoLocalArmazenamentoRN,$disabled){
         $select_locais = '<select  class="form-control selectpicker" '
             . 'id="idSeguCapela" data-live-search="true"  '.$disabled
@@ -592,6 +761,32 @@ static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPacien
         $select_locais .= '</select>';
 
     }
+
+    static function montar_select_tipoLocalArmazenamentoTXT(&$select_tipoLocal,$objTipoLocalArmazenamentoRN,$objTipoLocalArmazenamento, $disabled, $onchange)
+    {
+        /* tipo local de armazenamento */
+
+
+        $arr_locais = $objTipoLocalArmazenamentoRN->listar($objTipoLocalArmazenamento);
+
+        $select_tipoLocal = '<select class="form-control selectpicker "  ' . $disabled . $onchange
+            . 'id="select-country idSel_tipoLocal" data-live-search="true" name="sel_tipoLocalArmazenamentoTXT">'
+            . '<option data-tokens="" ></option>';
+
+        foreach ($arr_locais as $local) {
+            $selected = '';
+            if ($objTipoLocalArmazenamento->getIdTipoLocalArmazenamento() == $local->getIdTipoLocalArmazenamento()) {
+                $selected = 'selected';
+            }
+            $select_tipoLocal .= '<option ' . $selected .
+                '  value="' . Pagina::formatar_html($local->getIdTipoLocalArmazenamento()) .
+                '" data-tokens="' . Pagina::formatar_html($local->getTipo()) . '">'
+                . Pagina::formatar_html($local->getTipo()) . '</option>';
+        }
+
+        $select_tipoLocal .= '</select>';
+    }
+
 
     static function montar_capelas_liberadas(&$objCapela, $objCapelaRN, &$select_capelas, $nivel, $disabled){
         $select_capelas = '<select  class="form-control selectpicker" '

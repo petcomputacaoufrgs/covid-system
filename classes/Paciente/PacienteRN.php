@@ -53,6 +53,21 @@ class PacienteRN {
         return $paciente->setObsNomeMae($strNomeMaeObs);
     }
 
+    private function validarObsMunicipio(Paciente $paciente, Excecao $objExcecao) {
+        $strMunicipio = trim($paciente->getObsMunicipio());
+
+        if (strlen($strMunicipio) > 150) {
+            $objExcecao->adicionar_validacao('Observações do município do paciente possui mais que 150 caracteres.',  null, 'alert-danger');
+        }
+
+        if ($strMunicipio == '' && $paciente->getIdMunicipioFk() == '') {
+            return $paciente->setObsMunicipio('Desconhecido');
+        }
+
+
+        return $paciente->setObsMunicipio($strMunicipio);
+    }
+
     private function validarCPF(Paciente $paciente, Excecao $objExcecao) {
         $strCPF = trim($paciente->getCPF());
 
@@ -329,6 +344,31 @@ class PacienteRN {
         }
     }
 
+    private function validarIdMunicipioIdEstado(Paciente $paciente, Excecao $objExcecao) {
+        if($paciente->getIdEstadoFk() != null && $paciente->getIdMunicipioFk() != null) {
+            $objLugarOrigem = new LugarOrigem();
+            $objLugarOrigemRN = new LugarOrigemRN();
+            $arr_lugar = $objLugarOrigemRN->listar($objLugarOrigem);
+
+            foreach ($arr_lugar as $lugar){
+                if($lugar->getIdLugarOrigem() == $paciente->getIdMunicipioFk()){
+                    if($paciente->getIdEstadoFk() != $lugar->getObjEstado()->getCod_estado()){
+                        return $objExcecao->adicionar_validacao('O município deve ser do estado correspondente', 'idEndereco', 'alert-danger');
+                    }
+                }
+            }
+
+
+            $strEndereco = trim($paciente->getEndereco());
+
+            if (strlen($strEndereco) > 150) {
+                $objExcecao->adicionar_validacao('O endereço possui mais que 150 caracteres.', 'idEndereco', 'alert-danger');
+            }
+
+            return $paciente->setEndereco($strEndereco);
+        }
+    }
+
     /*
      *  Cenário : Marcar cadastro como pendente
      * Quando estou na tela de dados do paciente
@@ -567,6 +607,8 @@ class PacienteRN {
             $this->validarObsPassaporte($paciente, $objExcecao);
             $this->validarObsEndereco($paciente, $objExcecao);
             $this->validarRG($paciente, $objExcecao);
+            $this->validarObsMunicipio($paciente, $objExcecao);
+            $this->validarIdMunicipioIdEstado($paciente, $objExcecao);
             
             /* VALIDAR CENÁRIO 7 e 8 */
             //$this->validarCenario_7_8($paciente, $objExcecao);
@@ -638,6 +680,8 @@ class PacienteRN {
             $this->validarObsPassaporte($paciente, $objExcecao);
             $this->validarObsEndereco($paciente, $objExcecao);
             $this->validarRG($paciente, $objExcecao);
+            $this->validarObsMunicipio($paciente, $objExcecao);
+            $this->validarIdMunicipioIdEstado($paciente, $objExcecao);
             //$this->validarCenario_7_8($paciente,$objExcecao); 
 
             $objExcecao->lancar_validacoes();

@@ -28,12 +28,46 @@ class Amostra{
     private $objTubo;
     private $idsAmostras;
     private $objLaudo;
+    private $objProtocolo;
     private $objPerfil;
+    private $objLote;
 
 
     function __construct() {
         
+        }/**
+     * @return mixed
+     */
+    public function getObjLote()
+    {
+        return $this->objLote;
+    }/**
+     * @param mixed $objLote
+     */
+    public function setObjLote($objLote)
+    {
+        $this->objLote = $objLote;
     }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjProtocolo()
+    {
+        return $this->objProtocolo;
+    }
+
+    /**
+     * @param mixed $objProtocolo
+     */
+    public function setObjProtocolo($objProtocolo)
+    {
+        $this->objProtocolo = $objProtocolo;
+    }
+
+
 
     /**
      * @return mixed

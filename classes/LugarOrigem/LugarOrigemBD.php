@@ -8,21 +8,51 @@ class LugarOrigemBD{
      public function listar(LugarOrigem $objLugarOrigem, Banco $objBanco) {
          try{
       
-            $SELECT = "SELECT * FROM tab_municipio";
+            $SELECT = "SELECT tab_municipio.cod_municipio,tab_municipio.nome,tab_municipio.cod_estado,tab_estado.sigla
+                        FROM tab_municipio, tab_estado where
+                        tab_municipio.cod_estado = tab_estado.cod_estado";
+
+             $WHERE = '';
+             $AND = 'and';
+             $arrayBind = array();
+
+             if ($objLugarOrigem->getCod_estado() != null) {
+                 $WHERE .= $AND . " cod_estado = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('i', $objLugarOrigem->getCod_estado() );
+             }
+
+             if ($objLugarOrigem->getNome() != null) {
+                 $WHERE .= $AND . " nome = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('s', $objLugarOrigem->getNome());
+             }
 
 
-            $arr = $objBanco->consultarSQL($SELECT);
+             if ($WHERE != '') {
+                 $WHERE = ' where ' . $WHERE;
+             }
 
-            $array_marca = array();
+             //echo $SELECT.$WHERE;$WHERE
+
+             $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
+
+
+            $array = array();
             foreach ($arr as $reg){
                 $objLugarOrigem = new LugarOrigem();
                 $objLugarOrigem->setIdLugarOrigem($reg['cod_municipio']);
                 $objLugarOrigem->setNome($reg['nome']);
                 $objLugarOrigem->setCod_estado($reg['cod_estado']);
 
-                $array_marca[] = $objLugarOrigem;
+                $objEstadoOrigem = new EstadoOrigem();
+                $objEstadoOrigem->setCod_estado($reg['cod_estado']);
+                $objEstadoOrigem->setSigla($reg['sigla']);
+                $objLugarOrigem->setObjEstado($objEstadoOrigem);
+
+                $array[] = $objLugarOrigem;
             }
-            return $array_marca;
+            return $array;
         } catch (Exception $ex) {
             throw new Excecao("Erro listando marca no BD.",$ex);
         }

@@ -169,12 +169,21 @@ try{
 
 
     /* ESTADO ORIGEM */
+
+    //AMOSTRA
     $objEstadoOrigem = new EstadoOrigem();
     $objEstadoOrigemRN = new EstadoOrigemRN();
+
+    //PACIENTE
+    $objEstadoOrigemPaciente = new EstadoOrigem();
+    $objEstadoOrigemPacienteRN = new EstadoOrigemRN();
 
     /* LUGAR ORIGEM */
     $objLugarOrigem = new LugarOrigem();
     $objLugarOrigemRN = new LugarOrigemRN();
+
+    $objLugarOrigemPaciente = new LugarOrigem();
+    $objLugarOrigemPacienteRN = new LugarOrigemRN();
 
     /* NÍVEL DE PRIORIDADE */
     $objNivelPrioridade = new NivelPrioridade();
@@ -234,10 +243,16 @@ try{
     $select_codsGAL = '';
     $select_perfis = '';
     $select_a_r_g = '';
+    $select_estado_paciente = '';
+    $select_municipio_paciente = '';
 
     $disabled_perfis = '';
     $aparecer_editar = 'n';
     $campoInformado ='';
+
+    InterfacePagina::montar_select_estado_paciente($select_estado_paciente, $objEstadoOrigemPaciente, $objEstadoOrigemPacienteRN, $objPaciente, '','');
+    InterfacePagina::montar_select_cidade_paciente($select_municipio_paciente, $objLugarOrigemPaciente, $objLugarOrigemPacienteRN, $objEstadoOrigemPaciente, $objPaciente, '','');
+
 
     InterfacePagina::montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
     InterfacePagina::montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
@@ -318,7 +333,10 @@ try{
 
                 $objPacienteAux->setNome($_POST['txtProcuraNome']);
                 $paciente = $objPacienteRN->procurar_paciente($objPacienteAux);
+
                 $selected_nome = ' selected ';
+                //InterfacePagina::montar_select_estado_paciente($select_estado_paciente, $objEstadoOrigemPaciente, $objEstadoOrigemPacienteRN, $paciente, '','');
+                //InterfacePagina::montar_select_cidade_paciente($select_municipio_paciente, $objLugarOrigemPaciente, $objLugarOrigemPacienteRN, $objEstadoOrigemPaciente, $paciente, '','');
 
 
                 if ($paciente == null || count($paciente) == 1) {
@@ -354,10 +372,18 @@ try{
                         }else{
                             $pendente = 'não';
                         }
+                        $styleback ='';
+                        if($p->getObjsAmostras() != null && $p->getObjsAmostras()->get_a_r_g() == 'a'){
+                            $styleback = ' style ="background: rgba(0,255,0,0.2);"';
+                        }
+                        if($p->getObjsAmostras() != null && $p->getObjsAmostras()->get_a_r_g() == 'r'){
+                            $styleback = ' style ="background: rgba(255,0,0,0.2);"';
+                        }
+                        if($p->getObjsAmostras() != null && $p->getObjsAmostras()->get_a_r_g() == 'g'){
+                            $styleback = ' style ="background: rgba(255,255,0,0.2);"';
+                        }
 
-
-
-                        $lista_pacientes .= '<tr>
+                        $lista_pacientes .= '<tr'.$styleback.'>
                                         <th scope="row">' . Pagina::formatar_html($p->getIdPaciente()) . '</th>';
                         if($p->getObjsAmostras() != null) {
                             $lista_pacientes .= '<td>' . Pagina::formatar_html($p->getObjsAmostras()->getNickname()) . '</td>';
@@ -382,7 +408,7 @@ try{
                                     <a style="color: white; text-decoration: none;" 
                                     href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_amostra&idAmostra='.$p->getObjsAmostras()->getIdAmostra().'&idPaciente='.$p->getIdPaciente()).'" 
                                     class="">
-                                    <i style="color:white;margin: 0px; padding: 0px;" class="fas fa-edit "></i><br> EDITAR</a></td>';
+                                    <i style="color:white;margin: 0px; padding: 0px;" class="fas fa-edit "></i> EDITAR</a></td>';
                         }else{
                             $lista_pacientes .=  '<td> - </td>';
                         }
@@ -498,6 +524,8 @@ try{
                     }
                     InterfacePagina::montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
                     InterfacePagina::montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
+                    InterfacePagina::montar_select_estado_paciente($select_estado_paciente, $objEstadoOrigemPaciente, $objEstadoOrigemPacienteRN, $objPaciente, '','');
+                    InterfacePagina::montar_select_cidade_paciente($select_municipio_paciente, $objLugarOrigemPaciente, $objLugarOrigemPacienteRN, $objEstadoOrigemPaciente, $objPaciente, '','');
 
                 }
             }
@@ -535,6 +563,7 @@ try{
                 if($objPaciente->getCPF() == null){
                     $objPaciente->setObsCPF($_POST['txtObsCPF']);
                 }
+
 
                 $objPaciente->setCartaoSUS($_POST['txtCartaoSUS']);
                 if($objPaciente->getCartaoSUS() == null){
@@ -577,6 +606,20 @@ try{
                     InterfacePagina::montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
 
                 }
+
+                if (isset($_POST['sel_municipio_paciente']) && $_POST['sel_municipio_paciente'] != '') {
+                    $objPaciente->setIdMunicipioFk($_POST['sel_municipio_paciente']);
+                    InterfacePagina::montar_select_cidade_paciente($select_municipio_paciente, $objLugarOrigemPaciente, $objLugarOrigemPacienteRN, $objEstadoOrigemPaciente, $objPaciente, '','');
+                }else{
+                    $objPaciente->setObsMunicipio($_POST['txtObsMunicipio']);
+                }
+
+                if (isset($_POST['sel_estado_paciente']) && $_POST['sel_estado_paciente'] != '') {
+                    $objPaciente->setIdEstadoFk($_POST['sel_estado_paciente']);
+                    InterfacePagina::montar_select_estado_paciente($select_estado_paciente, $objEstadoOrigemPaciente, $objEstadoOrigemPacienteRN, $objPaciente, '','');
+                }
+
+
 
 
                 if (isset($_POST['dtDataNascimento']) && $_POST['dtDataNascimento'] != '' && $_POST['dtDataNascimento'] != null) {
@@ -635,6 +678,7 @@ try{
                     $objAmostra->setObsMotivo($_POST['txtObsMotivo']);
                 }
 
+                $objAmostra->setNickname(strtoupper($_POST['txtNickname']));
 
 
 
@@ -724,6 +768,10 @@ try{
                 $objAmostra->setObjTubo($objTubo);
                 $objCadastroAmostra->setObjAmostra($objAmostra);
 
+                //echo "<pre>";
+                //print_r($objCadastroAmostra);
+                //echo "</pre>";
+
                 InterfacePagina::montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
                 InterfacePagina::montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
                 InterfacePagina::montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
@@ -806,9 +854,6 @@ try{
         case 'editar_amostra':
 
 
-
-
-
             $erroSUS = false;
             $errogal = false;
             $BOTAO_SALVAR = 'on';
@@ -828,7 +873,8 @@ try{
                     $objCodigoGAL = $objCodigoGAL_RN->consultar($objCodigoGAL);
                 }
 
-
+                InterfacePagina::montar_select_estado_paciente($select_estado_paciente, $objEstadoOrigemPaciente, $objEstadoOrigemPacienteRN, $objPaciente, '','');
+                InterfacePagina::montar_select_cidade_paciente($select_municipio_paciente, $objLugarOrigemPaciente, $objLugarOrigemPacienteRN, $objEstadoOrigemPaciente, $objPaciente, '','');
                 InterfacePagina::montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
                 InterfacePagina::montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
                 InterfacePagina::montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
@@ -998,6 +1044,19 @@ try{
                     $objPaciente->setIdSexo_fk($_POST['sel_sexo']);
                 }
 
+
+                if (isset($_POST['sel_municipio_paciente']) && $_POST['sel_municipio_paciente'] != '') {
+                    $objPaciente->setIdMunicipioFk($_POST['sel_municipio_paciente']);
+                    InterfacePagina::montar_select_cidade_paciente($select_municipio_paciente, $objLugarOrigemPaciente, $objLugarOrigemPacienteRN, $objEstadoOrigemPaciente, $objPaciente, '','');
+                }else{
+                    $objPaciente->setObsMunicipio($_POST['txtObsMunicipio']);
+                }
+
+                if (isset($_POST['sel_estado_paciente']) && $_POST['sel_estado_paciente'] != '') {
+                    $objPaciente->setIdEstadoFk($_POST['sel_estado_paciente']);
+                    InterfacePagina::montar_select_estado_paciente($select_estado_paciente, $objEstadoOrigemPaciente, $objEstadoOrigemPacienteRN, $objPaciente, '','');
+                }
+
                 if (isset($_POST['dtDataNascimento']) && $_POST['dtDataNascimento'] != '' && $_POST['dtDataNascimento'] != null) {
                     $objPaciente->setDataNascimento($_POST['dtDataNascimento']);
                 } else {
@@ -1038,20 +1097,61 @@ try{
                         $objAmostra->setObjTubo($objTubo);
 
                         //recém criou o tubo
-                        $objInfosTubo->setEtapa(InfosTuboRN::$TP_RECEPCAO);
-                        $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
-
                         if ($objAmostra->get_a_r_g() == 'a') {
                             $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
-                        } else if ($objAmostra->get_a_r_g() == 'r') {
+                        }
+                        if ($objAmostra->get_a_r_g() == 'r') {
                             $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO);
                         }
-
+                        $objInfosTubo->setEtapa(InfosTuboRN::$TP_RECEPCAO);
+                        $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
                         $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
                         $objInfosTubo->setReteste('n');
                         $objInfosTubo->setVolume(null);
                         $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getMatricula());
-                        $objTubo->setObjInfosTubo($objInfosTubo);
+                        $arr_infos_tubo[0] = $objInfosTubo;
+
+                        if ($objAmostra->get_a_r_g() == 'a') {
+                            //$objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
+
+                            $objInfosTuboAux = new InfosTubo();
+                            $objInfosTuboAux->setEtapa(InfosTuboRN::$TP_MONTAGEM_GRUPOS_AMOSTRAS);
+                            $objInfosTuboAux->setEtapaAnterior(InfosTuboRN::$TP_RECEPCAO);
+                            $objInfosTuboAux->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
+                            $objInfosTuboAux->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
+                            $objInfosTuboAux->setVolume(0.0);
+                            $objInfosTuboAux->setReteste(null);
+                            $objInfosTuboAux->setDataHora(date("Y-m-d H:i:s"));
+                            $objInfosTuboAux->setIdUsuario_fk(Sessao::getInstance()->getMatricula());
+                            $arr_infos_tubo[1] = $objInfosTuboAux;
+
+                        }
+
+                        if ($objAmostra->get_a_r_g() == 'r') {
+                            //$objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
+
+                            $objInfosTuboAux = new InfosTubo();
+                            $objInfosTuboAux->setEtapa(InfosTuboRN::$TP_LAUDO);
+                            $objInfosTuboAux->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
+                            $objInfosTuboAux->setEtapaAnterior(InfosTuboRN::$TP_RECEPCAO);
+                            $objInfosTuboAux->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO);
+                            $objInfosTuboAux->setDataHora(date("Y-m-d H:i:s"));
+                            $objInfosTuboAux->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+                            $objInfosTuboAux->setReteste('n');
+                            $objInfosTuboAux->setVolume(null);
+
+                            $arr_infos_tubo[1] = $objInfosTuboAux;
+
+                            $objLaudo = new Laudo();
+                            $objLaudo->setDataHoraGeracao(date("Y-m-d H:i:s"));
+                            $objLaudo->setIdUsuarioFk(Sessao::getInstance()->getIdUsuario());
+                            $objLaudo->setSituacao(LaudoRN::$SL_PENDENTE);
+                            $objLaudo->setResultado(LaudoRN::$RL_RECUSADO_RECEPCAO);
+                            $objAmostra->setObjLaudo($objLaudo);
+
+                        }
+
+                        $objTubo->setObjInfosTubo($arr_infos_tubo);
                         $objAmostra->setObjTubo($objTubo);
 
                     }
@@ -1061,13 +1161,13 @@ try{
                     $arr_infos = array();
                     $objTubo = $arr_tbs[0];
                     //echo "@@";
-                    //print_r($objTubo);
+                    print_r($objTubo);
 
                     $objInfosTubo->setIdTubo_fk($objTubo->getIdTubo());
                     //print_r($objInfosTubo);
                     $objInfosTubo = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
                     //echo "##";
-                    //print_r($objInfosTubo);
+                    print_r($objInfosTubo);
                     $objInfosTubo->setIdInfosTubo(null);
 
                     if($objInfosTubo == null){ //não encontrou nenhum info
@@ -1105,6 +1205,7 @@ try{
                         if ($objAmostra->get_a_r_g() == 'a') {
                             $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
                             $arr_infos_tubo[0] = $objInfosTubo;
+
                         }
 
                         if ($objAmostra->get_a_r_g() == 'g') { //se for aguardando então ele remove o tubo que já existia
@@ -1151,7 +1252,8 @@ try{
                 }
 
 
-
+                InterfacePagina::montar_select_estado_paciente($select_estado_paciente, $objEstadoOrigemPaciente, $objEstadoOrigemPacienteRN, $objPaciente, '','');
+                InterfacePagina::montar_select_cidade_paciente($select_municipio_paciente, $objLugarOrigemPaciente, $objLugarOrigemPacienteRN, $objEstadoOrigemPaciente, $objPaciente, '','');
                 InterfacePagina::montar_select_cidade($select_municipios, $objLugarOrigem, $objLugarOrigemRN, $objEstadoOrigem, $objAmostra, '','');
                 InterfacePagina::montar_select_etnias($select_etnias, $objEtnia, $objEtniaRN, $objPaciente, '','');
                 InterfacePagina::montar_select_sexo($select_sexos, $objSexoPaciente, $objSexoPacienteRN, $objPaciente, '','');
@@ -1164,7 +1266,7 @@ try{
         default : die('Ação [' . $_GET['action'] . '] não reconhecida pelo controlador em CadastroAmostra.php');
     }
 } catch (Throwable $ex) {
-    die($ex);
+    //die($ex);
     $aparecer = true;
     Pagina::getInstance()->processar_excecao($ex);
 }
@@ -1219,10 +1321,10 @@ echo ' <!-- Modal -->
                                     href="' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra') . '">';
 
                     if(isset($_GET['idAmostra']) && isset($_GET['idPaciente'])) {
-                      echo 'Sim, desejo voltar a tela de cadastro</a></button>
+                      echo 'OK</a></button>
                     </div>';
                 }else{
-                    echo 'Sim, desejo cadastrar</a></button>
+                    echo 'OK</a></button>
                     </div>';
                 }
 
@@ -1236,7 +1338,7 @@ if(!$aparecer && !$botaoNovo) {
 
     if ($_GET['action'] != 'editar_paciente' && $_GET['action'] != 'editar_amostra') {
         echo
-            '<div class="conteudo_grande" ' . $salvou . '>
+            '<div class="conteudo_grande" ' . $salvou . ' style="margin-top: -15px;">
         <form method="POST">
             <div class="row"> 
                 <div class="col-md-6">
@@ -1340,8 +1442,8 @@ if(!$aparecer && !$botaoNovo) {
 
 
 if($listar_pacientes == 's'){
-    echo   '<div class="conteudo_tabela" style="width:98%;margin-left: 1%;margin-right: 1%;">
-            <table class="table table-hover">
+    echo   '<div class="conteudo_tabela" style="width:98%;margin-left: 1%;margin-right: 1%;margin-top: -10px;">
+            <table class="table table-responsive table-hover">
         <thead>
             <tr>
                 <th scope="col">Nº PACIENTE </th>
@@ -1468,7 +1570,7 @@ if($listar_pacientes == 's'){
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="label_cpf">Digite o CPF:</label>
-                        <input type="text" class="form-control cep-mask" id="idCPF" placeholder="CPF"
+                        <input type="text" class="form-control " id="idCPF" placeholder="CPF"
                                onblur="validaCPF()" name="txtCPF" value="<?= $objPaciente->getCPF() ?>">
                         <div id ="feedback_cpf"></div>
                         <?php if($objPaciente->getCPF() != null){
@@ -1543,7 +1645,7 @@ if($listar_pacientes == 's'){
                 <div class="form-row">
 
                     <!-- getDadosEnderecoPorCEP(this.value) -->
-                    <div class="col-md-3 mb-4">
+                    <div class="col-md-3 mb-2">
                         <label for="CEP" >CEP:</label>
                         <input type="text" class="form-control " id="idCEP" placeholder="CEP"
                                onblur="validaCEP()" name="txtCEP" value="<?= $objPaciente->getCEP() ?>">
@@ -1595,7 +1697,37 @@ if($listar_pacientes == 's'){
 
                     </div>
 
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-1">
+                        <label for="labelEstadoColeta">Estado:</label>
+                        <?= $select_estado_paciente ?>
+                    </div>
+
+
+                    <div class="col-md-3">
+                        <label for="labelMunicípioColeta">Município:</label>
+                        <?= $select_municipio_paciente ?>
+                    </div>
+
+                    <div class="col-md-2" style="background-color: rgba(192,192,192,0.2);border-radius:5px;height: 80px;">
+                        <?php
+                        if($objPaciente->getObsMunicipio() == '' || $objPaciente->getObsMunicipio() == null){
+                            $lugarP = ' Desconhecido ';
+                        }else{
+                            $lugarP = $objPaciente->getObsMunicipio();
+                        }
+
+                        ?>
+                        <label for="labelObsLugarOrigem">Não tem município?</label>
+                        <input type="text" class="form-control" id="idObsLugarOrigem" placeholder="Desconhecido"
+                               onblur="" name="txtObsMunicipio"
+                               value="<?= $lugarP ?>">
+                        <!--<div id ="feedback_lugarOrigem"></div>-->
+
+                    </div>
+
+                </div>
+                    <div class="form-row">
+                    <div class="col-md-6 mb-3">
                         <label for="label_codGal">Digite o código Gal:</label>
                         <input type="text" class="form-control" id="idCodGAL"
                                placeholder="GAL" data-mask=""
@@ -1620,7 +1752,7 @@ if($listar_pacientes == 's'){
                     </div>
 
 
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label for="label_codGal">Digite o cartão SUS:</label>
                         <input type="text" class="form-control" id="idCartaoSUS"
                                placeholder="SUS" data-mask=""
@@ -1664,14 +1796,6 @@ if($listar_pacientes == 's'){
 
 
                 <br><br>
-                <?php
-                $aparecer = ' hidden ';
-                if($_GET['action'] == 'editar_amostra'){
-                    $aparecer = ' ';
-                }
-
-                    ?>
-
 
                 <div class="form-row">
 
@@ -1684,11 +1808,11 @@ if($listar_pacientes == 's'){
                         ?>
 
                     </div>
-                    <div class="col-md-1" <?=$aparecer?> >
-                        <label style="margin-top: 5px;">Apelido: </label>
+                    <div class="col-md-1" >
+                        <label style="margin-top: 5px;">Código: </label>
                     </div>
-                    <div class="col-md-2" <?=$aparecer?>>
-                        <input type="text" class="form-control" <?= $disabled_perfis ?> id="idDtColeta" placeholder="L000" style="border: 1px solid #3a5261;background-color: rgba(220,220,220,0.3);"
+                    <div class="col-md-2" >
+                        <input type="text" class="form-control" <?= $disabled_perfis ?> id="idDtColeta" placeholder="código" style="border: 1px solid #3a5261;background-color: rgba(220,220,220,0.3);"
                                onblur="" name="txtNickname"
                                value="<?= $objAmostra->getNickname() ?>">
                     </div>

@@ -91,7 +91,6 @@ class LoteBD{
             }
 
 
-
             if ($WHERE != '') {
                 $WHERE = ' where ' . $WHERE;
             }
@@ -99,7 +98,7 @@ class LoteBD{
             //echo $SELECT.$WHERE;$WHERE
 
             $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
-
+            //print_r($arr);
             $array = array();
             foreach ($arr as $reg){
                 $objLote = new Lote();
@@ -108,6 +107,22 @@ class LoteBD{
                 $objLote->setQntAmostrasAdquiridas($reg['qntAmostrasAdquiridas']);
                 $objLote->setSituacaoLote($reg['situacaoLote']);
                 $objLote->setTipo($reg['tipo']);
+
+                $SELECT_PREPARO = 'select * from tb_preparo_lote, tb_lote where tb_lote.idLote = tb_preparo_lote.idLote_fk and tb_lote.idLote = ?';
+
+                $arrayBind2 = array();
+                $arrayBind2[] = array('i', $reg['idLote']);
+                $arr2 = $objBanco->consultarSQL($SELECT_PREPARO, $arrayBind2);
+
+                $preparoLote = new PreparoLote();
+                $preparoLote->setIdUsuarioFk($arr2[0]['matricula']);
+                $preparoLote->setIdPreparoLote($arr2[0]['idPreparoLote']);
+                $preparoLote->setDataHoraInicio($arr2[0]['dataHoraInicio']);
+                $preparoLote->setIdLoteFk($arr2[0]['idLote_fk']);
+                $preparoLote->setDataHoraFim($arr2[0]['dataHoraFim']);
+                $preparoLote->setIdPreparoLoteFk($arr2[0]['idPreparoLote_fk']);
+                $preparoLote->setIdCapelaFk($arr2[0]['idCapela_fk']);
+                $objLote->setObjPreparo($preparoLote);
 
                 $array[] = $objLote;
             }

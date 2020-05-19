@@ -1,5 +1,7 @@
 <?php
-
+/*
+ *  Author: Carine Bertagnolli Bathaglini
+ */
 class Rel_tubo_lote{
     private $idRelTuboLote;
     private $idTubo_fk;

@@ -19,11 +19,14 @@ try{
 
     switch ($_GET['action']){
         case 'remover_recurso':
-
-            $objRecurso->setIdRecurso($_GET['idRecurso']);
-            $objRecursoRN->remover($objRecurso);
-            $alert .= Alert::alert_success("Recurso removido com sucesso");
-            break;
+            try{
+                $objRecurso->setIdRecurso($_GET['idRecurso']);
+                $objRecursoRN->remover($objRecurso);
+                $alert .= Alert::alert_success("Recurso removido com sucesso");
+                break;
+            } catch (Throwable $ex) {
+                Pagina::getInstance()->processar_excecao($ex);
+            }
     }
 
 

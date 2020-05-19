@@ -1,4 +1,5 @@
 alter table tb_amostra add nickname varchar(6)  null;
+
 --- alter table tb_laudo add situacaoLaudo char(1) not null;
 
 

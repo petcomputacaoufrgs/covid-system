@@ -12,10 +12,30 @@ class Lote{
     private $objsTubo;
     private $objsAmostras;
 
+    private $objPreparo;
+
 
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObjPreparo()
+    {
+        return $this->objPreparo;
+    }
+
+    /**
+     * @param mixed $objPreparo
+     */
+    public function setObjPreparo($objPreparo)
+    {
+        $this->objPreparo = $objPreparo;
+    }
+
+
 
     /**
      * @return mixed

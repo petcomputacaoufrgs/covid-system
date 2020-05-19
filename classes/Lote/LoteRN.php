@@ -11,6 +11,7 @@ require_once __DIR__ . '/LoteBD.php';
 class LoteRN{
 
     //situação do lote
+    public static $TE_NA_MONTAGEM = 'M';
     public static $TE_AGUARDANDO_PREPARACAO = 'R';
     public static $TE_TRANSPORTE_PREPARACAO = 'T';
     public static $TE_AGUARDANDO_EXTRACAO = 'X';
@@ -23,10 +24,17 @@ class LoteRN{
     public static $TL_PREPARO = 'P';
     public static $TL_EXTRACAO = 'E';
 
+    public static $TNL_ALIQUOTAMENTO = 'A';
+
     public static function listarValoresSituacaoLote(){
         try {
 
             $arrObjTECapela = array();
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TE_NA_MONTAGEM);
+            $objSituacao->setStrDescricao('Na montagem do grupo que vai para a preparação');
+            $arrObjTECapela[] = $objSituacao;
 
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$TE_AGUARDANDO_PREPARACAO);
@@ -149,14 +157,14 @@ class LoteRN{
                 $objExcecao->adicionar_validacao('A quantidade de amostras desejadas não foi informado', null, 'alert-danger');
             }
 
-            if ($lote->getQntAmostrasDesejadas() != 8 && $lote->getQntAmostrasDesejadas() != 16) {
+            /*if ($lote->getQntAmostrasDesejadas() != 8 && $lote->getQntAmostrasDesejadas() != 16) {
                 if ($lote->getQntAmostrasDesejadas() != 8) {
                     $objExcecao->adicionar_validacao('A quantidade de amostras não é 8 ', null, 'alert-danger');
                 }
                 if ($lote->getQntAmostrasDesejadas() != 16) {
                     $objExcecao->adicionar_validacao('A quantidade de amostras não é 16 ', null, 'alert-danger');
                 }
-            }
+            }*/
 
             return $lote->setQntAmostrasDesejadas($strQntAmostrasDesejadas);
         }
@@ -216,45 +224,58 @@ class LoteRN{
                     $objRelTuboLoteRN->cadastrar($objRelTuboLote);
                 }
                 $lote->setObjsTubo($arr_tubos);
-            }else {
+            }
+            else if($lote->getSituacaoLote() == LoteRN::$TE_NA_MONTAGEM) {
+                $objRelTuboLote->setIdLote_fk($lote->getIdLote());
+                $objRelTuboLote->setObjLote($lote);
                 if ($lote->getObjsTubo() != null) {
-
-                    $objRelTuboLote->setIdLote_fk($lote->getIdLote());
-                    $objRelTuboLote->setObjLote($lote);
-                    foreach ($lote->getObjsTubo() as $t) {
-
-                        $objInfosTubo = new InfosTubo();
+                    foreach( $lote->getObjsTubo() as $tubo) {
                         $objInfosTuboRN = new InfosTuboRN();
-
-                        $objInfosTubo->setIdTubo_fk($t->getIdTubo());
-                        $objInfosTubo = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
-
-
-
-                        $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
-                        $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
-                        $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
-                        $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
-
-                        $objInfosTuboRN->cadastrar($objInfosTubo);
-
-                        $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_TRANSPORTE_PREPARACAO);
-                        $objInfosTubo->setEtapa(InfosTuboRN::$TP_PREPARACAO_INATIVACAO);
-                        $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
-                        $objInfosTubo->setIdLote_fk($lote->getIdLote());
-                        $objInfosTubo->setEtapaAnterior(InfosTuboRN::$TP_MONTAGEM_GRUPOS_AMOSTRAS);
-                        $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
-                        $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
-
-                        $objInfosTuboRN->cadastrar($objInfosTubo);
-
-                        $objRelTuboLote->setIdTubo_fk($t->getIdTubo());
+                        $objInfosTuboRN->cadastrar($tubo->getObjInfosTubo());
+                        $objRelTuboLote->setIdTubo_fk($tubo->getIdTubo());
                         $objRelTuboLoteRN->cadastrar($objRelTuboLote);
-
-
                     }
                 }
-            }
+            }else{
+                    if ($lote->getObjsTubo() != null) {
+
+                        $objRelTuboLote->setIdLote_fk($lote->getIdLote());
+                        $objRelTuboLote->setObjLote($lote);
+                        foreach ($lote->getObjsTubo() as $t) {
+
+                            $objInfosTubo = new InfosTubo();
+                            $objInfosTuboRN = new InfosTuboRN();
+
+                            $objInfosTubo->setIdTubo_fk($t->getIdTubo());
+                            $objInfosTubo = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
+
+
+
+                            $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
+                            $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
+                            $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
+                            $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+
+                            $objInfosTuboRN->cadastrar($objInfosTubo);
+
+                            $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_TRANSPORTE_PREPARACAO);
+                            $objInfosTubo->setEtapa(InfosTuboRN::$TP_PREPARACAO_INATIVACAO);
+                            $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
+                            $objInfosTubo->setIdLote_fk($lote->getIdLote());
+                            $objInfosTubo->setEtapaAnterior(InfosTuboRN::$TP_MONTAGEM_GRUPOS_AMOSTRAS);
+                            $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
+                            $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+
+                            $objInfosTuboRN->cadastrar($objInfosTubo);
+
+                            $objRelTuboLote->setIdTubo_fk($t->getIdTubo());
+                            $objRelTuboLoteRN->cadastrar($objRelTuboLote);
+
+
+                        }
+                    }
+                }
+
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
@@ -273,7 +294,7 @@ class LoteRN{
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
 
-            $this->validarStrTipoLote($lote,$objExcecao);
+           $this->validarStrTipoLote($lote,$objExcecao);
            $this->validarQntAmostrasDesejadas($lote,$objExcecao);
            $this->validarQntAmostrasAdquiridas($lote,$objExcecao);
            $this->validarSituacaoLote($lote,$objExcecao);
@@ -281,6 +302,49 @@ class LoteRN{
            $objExcecao->lancar_validacoes();
            $objLoteBD = new LoteBD();
            $objLoteBD->alterar($lote,$objBanco);
+
+
+           if($lote->getObjsTubo() != null) {
+               //procurar pelo rel_tubo_lote
+               $objRelTuboLote = new Rel_tubo_lote();
+               $objRelTuboLoteRN = new Rel_tubo_lote_RN();
+               $objRelTuboLote->setIdLote_fk($lote->getIdLote());
+               $arr_tubos_lote = $objRelTuboLoteRN->listar($objRelTuboLote);
+
+               $remover_relac = array();
+               foreach ($arr_tubos_lote as $tubo) {
+                   $encontrou = false;
+                   foreach ($lote->getObjsTubo() as $t) {
+                       if ($t->getIdTubo() == $tubo->getIdTubo_fk()) {
+                           $encontrou = true;
+                           if ($t->getObjInfosTubo() != null) {
+                               foreach ($t->getObjInfosTubo() as $info) {
+                                   $objInfosTuboRN = new InfosTuboRN();
+                                   $objInfosTuboRN->cadastrar($info);
+                               }
+                           }
+
+                       }
+                   }
+
+                   if (!$encontrou) {
+                       $remover_relac[] = $tubo;
+                       $objInfosTubo = new InfosTubo();
+                       $objInfosTuboRN = new InfosTuboRN();
+                       $objInfosTubo->setIdTubo_fk($tubo->getIdTubo_fk());
+                       $objInfosTubo = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
+                       if ($objInfosTubo->getSituacaoTubo() == InfosTuboRN::$TST_EM_UTILIZACAO) {
+                           $objInfosTuboRN->remover($objInfosTubo);
+                       }
+
+                   }
+               }
+
+
+               foreach ($remover_relac as $reltubolote) {
+                   $objRelTuboLoteRN->remover($reltubolote);
+               }
+           }
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();

@@ -162,6 +162,13 @@ td,th{
 }
 
 
+.sucesso_rgba{
+   background-color: rgba(0,255,0,0.2);
+}
+
+.error_rgba{
+    background-color: rgba(255,0,0,0.2);
+}
 
 
 

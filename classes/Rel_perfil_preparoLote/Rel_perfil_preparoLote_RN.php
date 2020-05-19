@@ -29,7 +29,7 @@ class Rel_perfil_preparoLote_RN
 
             $objExcecao->lancar_validacoes();
             $objRel_perfil_preparoLote_BD = new Rel_perfil_preparoLote_BD();
-            if($objPreparoLote->getObjPerfil() != null) {
+            if($objPreparoLote->getObjPerfil() != null && $objPreparoLote->getIdPreparoLote() != null) {
                 foreach ($objPreparoLote->getObjPerfil() as $perfil) {
                     $rel_perfil_preparoLote->setIdPerfilPacienteFk($perfil->getIdPerfilPaciente());
                     $rel_perfil_preparoLote->setIdPreparoLoteFk($objPreparoLote->getIdPreparoLote());
@@ -42,7 +42,7 @@ class Rel_perfil_preparoLote_RN
             return $rel_perfil_preparoLote;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            $objExcecao->adicionar_validacao("Os dados não foram cadastrados", null,'alert-danger');
+            //$objExcecao->adicionar_validacao("Os dados não foram cadastrados", null,'alert-danger');
             throw new Excecao('Erro no cadastramento do relacionamento do perfil com um lote.', $e);
         }
     }

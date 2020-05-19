@@ -195,10 +195,10 @@ class LocalArmazenamentoTextoRN
         }
 
 
-        if(($LocalArmazenamentoTxt->getObjInfos()->getObsProblema() == null && $LocalArmazenamentoTxt->getNome() == null) ||
+        /*if(($LocalArmazenamentoTxt->getObjInfos()->getObsProblema() == null && $LocalArmazenamentoTxt->getNome() == null) ||
             ($LocalArmazenamentoTxt->getObjInfos()->getSituacaoTubo() != InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA && $LocalArmazenamentoTxt->getNome() == null)){
             $objExcecao->adicionar_validacao('Informe o nome do local de armazenamento da amostra <strong>'.$LocalArmazenamentoTxt->getObjInfos()->getCodAmostra().'</strong>', null,'alert-danger');
-        }
+        }*/
 
         return $LocalArmazenamentoTxt->setNome($StrNome);
     }
@@ -236,10 +236,10 @@ class LocalArmazenamentoTextoRN
     private function validarCaixa(LocalArmazenamentoTexto $LocalArmazenamentoTxt, Excecao $objExcecao){
         $StrCaixa = trim($LocalArmazenamentoTxt->getCaixa());
 
-        if(($LocalArmazenamentoTxt->getObjInfos()->getObsProblema() == null && $LocalArmazenamentoTxt->getCaixa() == null) ||
+        /*if(($LocalArmazenamentoTxt->getObjInfos()->getObsProblema() == null && $LocalArmazenamentoTxt->getCaixa() == null) ||
             ($LocalArmazenamentoTxt->getObjInfos()->getSituacaoTubo() != InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA && $LocalArmazenamentoTxt->getCaixa() == null)){
             $objExcecao->adicionar_validacao('Informe a caixa da amostra <strong>'.$LocalArmazenamentoTxt->getObjInfos()->getCodAmostra().'</strong>', null,'alert-danger');
-        }
+        }*/
 
         if(strlen($StrCaixa) > 150 ){
             $objExcecao->adicionar_validacao('A caixa possui mais de 150 caracteres - Amostra <strong>'.$LocalArmazenamentoTxt->getObjInfos()->getCodAmostra().'</strong>', null,'alert-danger');
@@ -253,14 +253,17 @@ class LocalArmazenamentoTextoRN
         if($LocalArmazenamentoTxt->getPosicao() != null) {
             $StrPosicao = trim($LocalArmazenamentoTxt->getPosicao());
 
-            if($LocalArmazenamentoTxt->getPosicao() != null && $LocalArmazenamentoTxt->getCaixa() == null) {
-                $objExcecao->adicionar_validacao('Informe a caixa onde fica essa posição- Amostra <strong>' . $LocalArmazenamentoTxt->getObjInfos()->getCodAmostra() . '</strong>',null, 'alert-danger');
-            }
 
-            if (($LocalArmazenamentoTxt->getObjInfos()->getObsProblema() == null && $LocalArmazenamentoTxt->getPosicao() == null) ||
-                //($LocalArmazenamentoTxt->getObjsInfos()->getObsProblema() == '' && $LocalArmazenamentoTxt->getPosicao() == '') ||
-                ($LocalArmazenamentoTxt->getObjInfos()->getSituacaoTubo() != InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA && $LocalArmazenamentoTxt->getPosicao() == null)) {
-                $objExcecao->adicionar_validacao('Informe a posição da amostra <strong>' . $LocalArmazenamentoTxt->getObjInfos()->getCodAmostra() . '</strong>', null, 'alert-danger');
+            /*if($LocalArmazenamentoTxt->getPosicao() != null && $LocalArmazenamentoTxt->getCaixa() == null) {
+                $objExcecao->adicionar_validacao('Informe a caixa onde fica essa posição- Amostra <strong>' . $LocalArmazenamentoTxt->getObjInfos()->getCodAmostra() . '</strong>',null, 'alert-danger');
+            }*/
+
+            if($LocalArmazenamentoTxt->getObjInfos() != null) {
+                if (($LocalArmazenamentoTxt->getObjInfos()->getObsProblema() == null && $LocalArmazenamentoTxt->getPosicao() == null) ||
+                    //($LocalArmazenamentoTxt->getObjsInfos()->getObsProblema() == '' && $LocalArmazenamentoTxt->getPosicao() == '') ||
+                    ($LocalArmazenamentoTxt->getObjInfos()->getSituacaoTubo() != InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA && $LocalArmazenamentoTxt->getPosicao() == null)) {
+                    $objExcecao->adicionar_validacao('Informe a posição da amostra <strong>' . $LocalArmazenamentoTxt->getObjInfos()->getCodAmostra() . '</strong>', null, 'alert-danger');
+                }
             }
 
 
@@ -285,6 +288,7 @@ class LocalArmazenamentoTextoRN
                 }
             }
 
+
             /*if ($LocalArmazenamentoTxt->getNome() != null && $LocalArmazenamentoTxt->getCaixa() != null) {
                 $objLocalTXT = new LocalArmazenamentoTexto();
                 $objLocalTXTRN = new LocalArmazenamentoTextoRN();
@@ -298,6 +302,9 @@ class LocalArmazenamentoTextoRN
             }*/
         }
 
+        /*if($LocalArmazenamentoTxt->getPosicao() == null || $LocalArmazenamentoTxt->getPosicao() ==''  && $LocalArmazenamentoTxt->getCaixa() != null){
+            $objExcecao->adicionar_validacao('Informar a posição na caixa para a amostra <strong>' . $LocalArmazenamentoTxt->getObjInfos()->getCodAmostra() . '</strong>', null, 'alert-danger');
+        }*/
 
         return $LocalArmazenamentoTxt->setPosicao($StrPosicao);
     }
@@ -327,6 +334,7 @@ class LocalArmazenamentoTextoRN
             $objBanco->fecharConexao();
             return $LocalArmazenamentoTxt;
         }catch (Throwable $e){
+            //die($e);
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro no cadastramento dos locais de armazenamento (txt).', $e);
         }

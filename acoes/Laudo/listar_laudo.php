@@ -22,7 +22,11 @@ try{
 
 
     $arr_laudo = $objLaudoRN->listar($objLaudo);
+    //print_r($arr_laudo);
+    //    die();
+
     foreach ($arr_laudo as $l){
+
         if($l->getSituacao() == LaudoRN::$SL_PENDENTE){
             $style = ' style="background-color:rgba(255, 255, 0, 0.2);" ';
         }
@@ -32,16 +36,44 @@ try{
 
         $html.='<tr' . $style . '>
                 <th scope="row">'.Pagina::formatar_html($l->getIdLaudo()).'</th>
-                <td>'.Pagina::formatar_html($l->getIdAmostraFk()).'</td>
-                <td>'.Pagina::formatar_html(LaudoRN::mostrarDescricaoStaLaudo($l->getSituacao())).'</td>
-                <td>'.Pagina::formatar_html(LaudoRN::mostrarDescricaoResultado($l->getResultado())).'</td>
-                <td>'.Pagina::formatar_html($l->getDataHoraGeracao()).'</td>
-                <td>'.Pagina::formatar_html($l->getDataHoraLiberacao()).'</td><td>
-                
-                ';
+                <td>'.Pagina::formatar_html($l->getObjAmostra()[0]['nickname']).'</td>';
+
+        $html.='<td>'.Pagina::formatar_html(LaudoRN::mostrarDescricaoStaLaudo($l->getSituacao())).'</td>
+                <td>'.Pagina::formatar_html(LaudoRN::mostrarDescricaoResultado($l->getResultado())).'</td>';
+
+
+        if($l->getDataHoraGeracao() != null) {
+            $liberacaoG = explode(" ",  $l->getDataHoraGeracao());
+            $dataLiberacao = explode("-", $liberacaoG[0]);
+            $diaG = $dataLiberacao[2];
+            $mesG = $dataLiberacao[1];
+            $anoG = $dataLiberacao[0];
+
+            $html.=" <td>". $diaG."/".$mesG."/".$anoG." - ".$liberacaoG[1] . "</td>";
+        }
+        ELSE{
+            $html.=" <td> - </td>";
+        }
+
+
+        if($l->getDataHoraLiberacao() != null) {
+            $liberacao = explode(" ", $l->getDataHoraLiberacao());
+            $dataLiberacao = explode("-", $liberacao[0]);
+            $diaL = $dataLiberacao[2];
+            $mesL = $dataLiberacao[1];
+            $anoL = $dataLiberacao[0];
+
+            $html.=" <td>". $diaL."/".$mesL."/".$anoL." - ".$liberacao[1] . "</td>";
+        }ELSE{
+            $html.=" <td> - </td>";
+        }
+
+
+
+
 
         if(Sessao::getInstance()->verificar_permissao('editar_laudo')){
-            $html.= '<a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_laudo&idLaudo='.Pagina::formatar_html($l->getIdLaudo())).'"><i style="color:black;margin: 0px; padding: 0px;" class="fas fa-edit "></i></a>';
+            $html.= '<td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_laudo&idLaudo='.Pagina::formatar_html($l->getIdLaudo())).'"><i style="color:black;margin: 0px; padding: 0px;" class="fas fa-edit "></i></a>';
         }
         $html .= '</td><td>';
         if(Sessao::getInstance()->verificar_permissao('imprimir_laudo')){
@@ -55,7 +87,8 @@ try{
         $html .='</td></tr>';*/
     }
 
-} catch (Exception $ex) {
+} catch (Throwable $ex) {
+    die($ex);
     Pagina::getInstance()->processar_excecao($ex);
 }
 

@@ -7,9 +7,33 @@ class LugarOrigem{
     private $idLugarOrigem;
     private $nome;
     private $cod_estado;
+
+    private $objEstado;
+
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObjEstado()
+    {
+        return $this->objEstado;
+    }
+
+    /**
+     * @param mixed $objEstado
+     */
+    public function setObjEstado($objEstado)
+    {
+        $this->objEstado = $objEstado;
+    }
+
+
+
+
+
     
     function getIdLugarOrigem() {
         return $this->idLugarOrigem;

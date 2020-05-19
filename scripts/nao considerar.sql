@@ -309,11 +309,44 @@ and tb_amostra.idCodGAL_fk = tb_codgal.idCodGAL
 
 
 
+delete from tb_tubo;
+delete from tb_infostubo;
+delete from tb_lote;
+delete from tb_preparo_lote;
+delete from tb_local_armazenamento_texto;
+delete from tb_rel_tubo_lote;
 
 
+select * from tb_perfilpaciente,tb_tubo, tb_amostra, tb_infostubo
+where tb_perfilpaciente.idPerfilPaciente = tb_amostra.idPerfilPaciente_fk
+and tb_tubo.idAmostra_fk = tb_amostra.idAmostra
+and tb_tubo.idTubo = tb_infostubo.idTubo_fk
+and tb_infostubo.situacaoTubo = 'Q'
 
 
+select distinct * from tb_amostra, tb_perfilpaciente, tb_tubo
+where tb_perfilpaciente.idPerfilPaciente = tb_amostra.idPerfilPaciente_fk
+and tb_perfilpaciente.idPerfilPaciente = 2
+and tb_tubo.idAmostra_fk = tb_amostra.idAmostra
 
+select distinct tb_amostra.idAmostra,tb_amostra.nickname, tb_tubo.idTubo,tb_tubo.tuboOriginal,tb_tubo.tipo from tb_amostra, tb_perfilpaciente, tb_tubo
+where tb_perfilpaciente.idPerfilPaciente = tb_amostra.idPerfilPaciente_fk
+and tb_perfilpaciente.idPerfilPaciente = 2
+and tb_tubo.idAmostra_fk = tb_amostra.idAmostra
+
+/* todas as amostras que não tem laudo, que são do perfil certo e que o tubo é do tipo RNA */
+select * from tb_amostra, tb_tubo, tb_perfilpaciente
+where tb_amostra.idAmostra not in (select idAmostra_fk from tb_laudo)
+and tb_amostra.idAmostra = tb_tubo.idAmostra_fk
+and tb_amostra.idPerfilPaciente_fk = tb_perfilpaciente.idPerfilPaciente
+and tb_perfilpaciente.idPerfilPaciente = 2
+and tb_tubo.tipo = 'N'
+
+/* para cada um gerar o ultimo info tubo dos tubos gerados acima e que tenha como situação do tubo o 'aguardando RTqPCR' */
+select max(tb_infostubo.idInfosTubo), tb_infostubo.situacaoTubo
+from tb_infostubo
+where tb_infostubo.idTubo_fk = 267
+and tb_infostubo.situacaoTubo = 'Q'
 
 
 

@@ -88,6 +88,7 @@ class LaudoBD
                 $WHERE .= $AND." idAmostra_fk = ?";
                 $AND = ' and ';
                 $arrayBind[] = array('i',$objLaudo->getIdAmostraFk());
+
             }
 
 
@@ -111,6 +112,14 @@ class LaudoBD
                 $objLaudo->setObservacoes($reg['observacoes']);
                 $objLaudo->setDataHoraGeracao($reg['dataHoraGeracao']);
                 $objLaudo->setDataHoraLiberacao($reg['dataHoraLiberacao']);
+
+
+                $select_amostra = "select * from tb_amostra where idAmostra = ?";
+                $arrayBind2 = array();
+                $arrayBind2[] = array('i',$reg['idAmostra_fk']);
+                $objAmostra = $objBanco->consultarSQL($select_amostra,$arrayBind2);
+
+                $objLaudo->setObjAmostra($objAmostra);
 
                 $array_laudo[] = $objLaudo;
             }

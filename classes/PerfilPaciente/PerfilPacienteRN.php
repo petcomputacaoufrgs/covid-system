@@ -234,6 +234,28 @@ class PerfilPacienteRN{
         }
     }
 
+    public function listar_nao_sus(PerfilPaciente $perfilPaciente) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objPerfilPacienteBD = new PerfilPacienteBD();
+
+            $arr = $objPerfilPacienteBD->listar_nao_sus($perfilPaciente,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando o perfil do paciente.',$e);
+        }
+    }
+
+
 
      public function pesquisar_index(PerfilPaciente $perfilPaciente) {
          $objBanco = new Banco();

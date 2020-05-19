@@ -25,6 +25,9 @@ class Paciente{
     private $cartaoSUS;
     private $cadastroPendente;
     private $obsDataNascimento;
+    private $idEstado_fk;
+    private $idMunicipio_fk;
+    private $obsMunicipio;
     
     private $objCodGAL;
     private $objsAmostras;
@@ -34,6 +37,59 @@ class Paciente{
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObsMunicipio()
+    {
+        return $this->obsMunicipio;
+    }
+
+    /**
+     * @param mixed $obsMunicipio
+     */
+    public function setObsMunicipio($obsMunicipio)
+    {
+        $this->obsMunicipio = $obsMunicipio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdEstadoFk()
+    {
+        return $this->idEstado_fk;
+    }
+
+    /**
+     * @param mixed $idEstado_fk
+     */
+    public function setIdEstadoFk($idEstado_fk)
+    {
+        $this->idEstado_fk = $idEstado_fk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdMunicipioFk()
+    {
+        return $this->idMunicipio_fk;
+    }
+
+    /**
+     * @param mixed $idMunicipio_fk
+     */
+    public function setIdMunicipioFk($idMunicipio_fk)
+    {
+        $this->idMunicipio_fk = $idMunicipio_fk;
+    }
+
+
+
+
+
 
     /**
      * @return mixed

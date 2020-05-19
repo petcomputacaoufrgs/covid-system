@@ -7,7 +7,8 @@ class EstadoOrigem{
     private $cod_estado;
     private $sigla;
     private $nome;
-    
+
+
     function __construct() {
         
     }

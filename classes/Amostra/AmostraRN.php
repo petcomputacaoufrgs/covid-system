@@ -298,14 +298,15 @@ class AmostraRN{
             $this->validarPerfilCartaoSUS($amostra, $objExcecao);
             $this->validarPerfilAmostra($amostra, $objExcecao);
             $this->validarCamposDesconhecidos($amostra, $objExcecao);
+            $this->validarNickname($amostra,$objExcecao);
 
             $objPerfilPaciente = new PerfilPaciente();
             $objPerfilPacienteRN = new PerfilPacienteRN();
             $objPerfilPaciente->setIdPerfilPaciente($amostra->getIdPerfilPaciente_fk());
             $arr_perfil = $objPerfilPacienteRN->listar($objPerfilPaciente);
             $objAmostraBD = new AmostraBD();
-            $idNickname = $objAmostraBD->alterar_nickname($amostra,$objBanco);
-            $amostra->setNickname($arr_perfil[0]->getCaractere() . ($idNickname+1));
+            //$idNickname = $objAmostraBD->alterar_nickname($amostra,$objBanco);
+            //$amostra->setNickname($arr_perfil[0]->getCaractere() . ($idNickname+1));
 
             $objExcecao->lancar_validacoes();
 
@@ -540,6 +541,27 @@ class AmostraRN{
             throw new Excecao('Erro listando amostra.', $e);
         }
     }
+
+
+    public function listar_aguardando_sol_montagem_placa_RTqCPR(Amostra $amostra) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+            $arr =  $objAmostraBD->listar_aguardando_sol_montagem_placa_RTqCPR($amostra,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+    }
     
     public function validarCadastro(Amostra $amostra) {
         try {
@@ -596,29 +618,45 @@ class AmostraRN{
             if($objAmostra->getNickname() != null) {
                 $strNickname = trim($objAmostra->getNickname());
 
+
+
+                if($objAmostra->getIdPerfilPaciente_fk() != null) {
+                    $objPerfilPaciente = new PerfilPaciente();
+                    $objPerfilPacienteRN = new PerfilPacienteRN();
+                    $objPerfilPaciente->setIdPerfilPaciente($objAmostra->getIdPerfilPaciente_fk());
+                    $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
+
+
+                    if ($objPerfilPaciente->getCaractere() != $strNickname[0]) {
+                        $objExcecao->adicionar_validacao('O primeiro catactere do código da amostra não condiz com o perfil informado', 'idObsLugarOrigem', 'alert-danger');
+                    }
+                }
+
                 if (strlen($strNickname) == 0) {
-                    $objExcecao->adicionar_validacao('O apelido da amostra precisa ser informado', 'idObsLugarOrigem', 'alert-danger');
+                    $objExcecao->adicionar_validacao('O código da amostra precisa ser informado', 'idObsLugarOrigem', 'alert-danger');
                 } else {
                     if (strlen($strNickname) > 6) {
-                        $objExcecao->adicionar_validacao('O apelido da amostra possui mais que 6 caracteres', 'idObsLugarOrigem', 'alert-danger');
+                        $objExcecao->adicionar_validacao('O código da amostra possui mais que 6 caracteres', 'idObsLugarOrigem', 'alert-danger');
                     }
                     $objAmostraBD = new AmostraBD();
                     if ($objAmostraBD->validar_nickname($objAmostra, $objBanco) != null) {
-                        $objExcecao->adicionar_validacao('O apelido da amostra já está associado a outra amostra', 'idObsLugarOrigem', 'alert-danger');
+                        $objExcecao->adicionar_validacao('O código da amostra já está associado a outra amostra', 'idObsLugarOrigem', 'alert-danger');
                     }
 
                     if(strlen($strNickname) > 0  && strlen($strNickname) <= 6){
                         for($i =0; $i<strlen($strNickname); $i++){
                             if($i == 0 && is_numeric($strNickname[0])){
-                                $objExcecao->adicionar_validacao('O apelido da amostra deve possuir como primeiro caractere uma letra', 'idObsLugarOrigem', 'alert-danger');
+                                $objExcecao->adicionar_validacao('O código da amostra deve possuir como primeiro caractere uma letra', 'idObsLugarOrigem', 'alert-danger');
                                 break;
                             }else if($i > 0 && !is_numeric($strNickname[$i])){
-                                $objExcecao->adicionar_validacao('O apelido da amostra deve possuir números a partir do 2º caractere', 'idObsLugarOrigem', 'alert-danger');
+                                $objExcecao->adicionar_validacao('O código da amostra deve possuir números a partir do 2º caractere', 'idObsLugarOrigem', 'alert-danger');
                                 break;
                             }
                         }
                     }
                 }
+            }else{
+                $objExcecao->adicionar_validacao('O código da amostra precisa ser informado', 'idObsLugarOrigem', 'alert-danger');
             }
             $objExcecao->lancar_validacoes();
 
@@ -727,6 +765,26 @@ class AmostraRN{
 
             $objAmostraBD = new AmostraBD();
             $arr =  $objAmostraBD->obter_infos($amostra,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+    }
+
+    public function obter_locais(Amostra $amostra) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+            $arr =  $objAmostraBD->obter_locais($amostra,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();

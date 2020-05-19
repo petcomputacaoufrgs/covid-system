@@ -100,15 +100,28 @@ try {
 
                     $data = $dia . '/' . $mes . '/' . $ano . ' ' . $dataHora[1];
 
+                    $html .= '<tr><th scope="row">' . Pagina::formatar_html($objAmostra->getNickname()) . '</th>';
+                    if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
+                        $html .= '<td>' . Pagina::formatar_html($info->getIdInfosTubo()) . '</td>';
+                        $html .= '<td>' . Pagina::formatar_html($tubo->getIdTubo()) . '</td>';
+                        $html .= '<td>' . Pagina::formatar_html($tubo->getIdTubo_fk()) . '</td>';
+                    }
+                    $original = '';
+                    if($tubo->getTuboOriginal() == 's'){
+                        $original = 'Sim';
+                    }else{
+                        $original = 'Não';
+                    }
 
-                        $html .= '<tr>
-                <th scope="row">' . Pagina::formatar_html($objAmostra->getNickname()) . '</th>
-                         <td>' . Pagina::formatar_html($info->getIdInfosTubo()) . '</td>
-                        <td>' . Pagina::formatar_html($tubo->getIdTubo()) . '</td>
-                        <td>' . Pagina::formatar_html($tubo->getIdTubo_fk()) . '</td>
-                         <td>' . Pagina::formatar_html($tubo->getTuboOriginal()) . '</td>
-                         <td>' . Pagina::formatar_html(TuboRN::mostrarDescricaoTipoTubo($tubo->getTipo())) . '</td>
-                        <td>' . Pagina::formatar_html($info->getReteste()) . '</td>
+                    $reteste = '';
+                    if($info->getReteste() == 's'){
+                        $reteste = 'Sim';
+                    }else{
+                        $reteste = 'Não';
+                    }
+                    $html .= '<td>' . Pagina::formatar_html($original) . '</td>';
+                    $html .= '<td>' . Pagina::formatar_html(TuboRN::mostrarDescricaoTipoTubo($tubo->getTipo())) . '</td>
+                        <td>' . Pagina::formatar_html($reteste) . '</td>
                         <td>' . Pagina::formatar_html($info->getVolume()) . '</td>
                         <td>' . Pagina::formatar_html(InfosTuboRN::retornarStaTubo($info->getSituacaoTubo())) . '</td>
                         <td>' . Pagina::formatar_html(InfosTuboRN::retornarStaEtapa($info->getSituacaoEtapa())) . '</td>
@@ -149,10 +162,10 @@ echo '  <div class="conteudo_grande">
             <div class="col-md-10" style="width: 100%;">
                 <label>Informe o código da amostra</label>
                 <input type="text" class="form-control" id="idCodAmostra" style="text-align: center;"
-                       name="txtCodAmostra"  value="">
+                       name="txtCodAmostra"  value="'.$objAmostra->getNickname().'">
             </div>
             <div class="col-md-2">
-              <button class="btn btn-primary" type="submit"  style="margin-top: 33px;width: 100%;margin-left: 0px;" name="selecionar_amostra">selecionar</button>
+              <button class="btn btn-primary" type="submit"  style="margin-top: 33px;width: 100%;margin-left: 0px;" name="selecionar_amostra">SELECIONAR</button>
             </div>
             </div>
         </form>
@@ -165,15 +178,17 @@ echo '<div id="tabela_preparos">
             <table class="table table-hover table-sm">
                 <thead>
                     <tr>
-                        <th scope="col">COD AMOSTRA</th>
-                        <th scope="col">COD INFOS</th>
+                        <th scope="col">COD AMOSTRA</th>';
+                if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
+                    echo '<th scope="col">COD INFOS</th>
                         <th scope="col">COD TUBO</th>
-                        <th scope="col">ORIGINADO PELO TUBO</th>
-                        <th scope="col">TUBO ORIGINAL</th>
+                        <th scope="col">ORIGINADO PELO TUBO</th>';
+                }
+                        echo '<th scope="col">AMOSTRA ORIGINAL</th>
                         <th scope="col">TIPO</th>
                         <th scope="col">RETESTE</th>
                         <th scope="col">VOLUME</th>
-                        <th scope="col">SITUAÇÃO TUBO</th>
+                        <th scope="col">SITUAÇÃO AMOSTRA</th>
                         <th scope="col">SITUAÇÃO ETAPA</th>
                         <th scope="col">ETAPA</th>
                         <th scope="col">ETAPA ANTERIOR</th>

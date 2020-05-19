@@ -1,0 +1,164 @@
+<?php
+/*
+ *  Author: Carine Bertagnolli Bathaglini
+ */
+require_once __DIR__ . '/../Banco/Banco.php';
+
+
+class PocoBD
+{
+    public function cadastrar(Poco $objPoco, Banco $objBanco) {
+        try{
+
+            //die("die");
+            $INSERT = 'INSERT INTO tb_poco (linha, coluna, situacao, idTubo_fk) VALUES (?,?,?,?)';
+
+            $arrayBind = array();
+            $arrayBind[] = array('s',$objPoco->getLinha());
+            $arrayBind[] = array('s',$objPoco->getColuna());
+            $arrayBind[] = array('s',$objPoco->getSituacao());
+            $arrayBind[] = array('i',$objPoco->getIdTuboFk());
+
+
+            $objBanco->executarSQL($INSERT,$arrayBind);
+            $objPoco->setIdPoco($objBanco->obterUltimoID());
+            return $objPoco;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro cadastrando o poço no BD.",$ex);
+        }
+
+    }
+
+    public function alterar(Poco $objPoco, Banco $objBanco) {
+        try{
+            $UPDATE = 'UPDATE tb_poco SET '
+                . ' linha = ?,'
+                . ' coluna = ?,'
+                . ' situacao = ?,'
+                . ' idTubo_fk = ?'
+                . '  where idPoco = ?';
+
+
+            $arrayBind = array();
+            $arrayBind[] = array('s',$objPoco->getLinha());
+            $arrayBind[] = array('s',$objPoco->getColuna());
+            $arrayBind[] = array('s',$objPoco->getSituacao());
+            $arrayBind[] = array('i',$objPoco->getIdTuboFk());
+
+            $arrayBind[] = array('i',$objPoco->getIdPoco());
+
+            $objBanco->executarSQL($UPDATE,$arrayBind);
+            return $objPoco;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro alterando o poço no BD.",$ex);
+        }
+
+    }
+
+    public function listar(Poco $objPoco, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT * FROM tb_poco";
+
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($objPoco->getSituacao() != null) {
+                $WHERE .= $AND . " situacao = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPoco->getSituacao());
+            }
+
+            if ($objPoco->getColuna() != null) {
+                $WHERE .= $AND . " coluna = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPoco->getColuna());
+            }
+
+            if ($objPoco->getLinha() != null) {
+                $WHERE .= $AND . " linha = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPoco->getLinha());
+            }
+
+            if ($objPoco->getIdTuboFk() != null) {
+                $WHERE .= $AND . " idTubo_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objPoco->getIdTuboFk() );
+            }
+
+            if ($objPoco->getIdPoco() != null) {
+                $WHERE .= $AND . " idPoco = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objPoco->getIdPoco() );
+            }
+
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
+
+            $array_poco = array();
+            foreach ($arr as $reg){
+                $poco = new Poco();
+                $poco->setIdPoco($reg['idPoco']);
+                $poco->setIdTuboFk($reg['idTubo_fk']);
+                $poco->setColuna($reg['coluna']);
+                $poco->setLinha($reg['linha']);
+                $poco->setSituacao($reg['situacao']);
+
+                $array_poco[] = $poco;
+            }
+            return $array_poco;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando os poços no BD.",$ex);
+        }
+
+    }
+
+    public function consultar(Poco $objPoco, Banco $objBanco) {
+
+        try{
+
+            $SELECT = 'SELECT * FROM tb_poco WHERE idPoco = ?';
+
+            $arrayBind = array();
+            $arrayBind[] = array('i',$objPoco->getIdPoco());
+
+            $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
+
+
+            $poco = new Poco();
+            $poco->setIdPoco($arr[0]['idPoco']);
+            $poco->setIdTuboFk($arr[0]['idTubo_fk']);
+            $poco->setColuna($arr[0]['coluna']);
+            $poco->setLinha($arr[0]['linha']);
+            $poco->setSituacao($arr[0]['situacao']);
+
+            return $poco;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro consultando o poço no BD.",$ex);
+        }
+
+    }
+
+    public function remover(Poco $objPoco, Banco $objBanco) {
+
+        try{
+
+            $DELETE = 'DELETE FROM tb_poco WHERE idPoco = ? ';
+            $arrayBind = array();
+            $arrayBind[] = array('i',$objPoco->getIdPoco());
+            $objBanco->executarSQL($DELETE, $arrayBind);
+
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro removendo o poço no BD.",$ex);
+        }
+    }
+
+
+
+}

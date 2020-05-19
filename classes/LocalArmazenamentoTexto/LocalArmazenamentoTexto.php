@@ -15,6 +15,24 @@ class LocalArmazenamentoTexto
     private $posicao;
 
     private $objInfos;
+    private $objTipoLocal;
+
+    /**
+     * @return mixed
+     */
+    public function getObjTipoLocal()
+    {
+        return $this->objTipoLocal;
+    }
+
+    /**
+     * @param mixed $objTipoLocal
+     */
+    public function setObjTipoLocal($objTipoLocal)
+    {
+        $this->objTipoLocal = $objTipoLocal;
+    }
+
 
     /**
      * @return mixed

@@ -58,12 +58,12 @@ class LaudoRN
 
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$RL_PROBLEMAS_PREPARACAO);
-            $objSituacao->setStrDescricao('RECUSADA - problemas na preparação');
+            $objSituacao->setStrDescricao('PROBLEMA - na preparação');
             $arrObjTEtapa[] = $objSituacao;
 
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$RL_PROBLEMAS_EXTRACAO);
-            $objSituacao->setStrDescricao('RECUSADA - problemas na extração');
+            $objSituacao->setStrDescricao('PROBLEMA - na extração');
             $arrObjTEtapa[] = $objSituacao;
 
 

@@ -19,11 +19,14 @@ try{
 
     switch ($_GET['action']){
         case 'remover_perfilUsuario':
-
-            $objPerfilUsuario->setIdPerfilUsuario($_GET['idPerfilUsuario']);
-            $objPerfilUsuarioRN->remover($objPerfilUsuario);
-            $alert .= Alert::alert_success("Perfil removido com sucesso");
-            break;
+            try{
+                $objPerfilUsuario->setIdPerfilUsuario($_GET['idPerfilUsuario']);
+                $objPerfilUsuarioRN->remover($objPerfilUsuario);
+                $alert .= Alert::alert_success("Perfil removido com sucesso");
+                break;
+            } catch (Throwable $ex) {
+                Pagina::getInstance()->processar_excecao($ex);
+            }
     }
 
     $objPerfilUsuario = new PerfilUsuario();

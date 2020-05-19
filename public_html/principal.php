@@ -65,7 +65,6 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
       Pagina::getInstance()->montar_menu_topo();
 
 
-
       //verificação capela
 
       ?>
@@ -104,6 +103,7 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                 . '</div>';
         }
         ?>
+
 
 
 
@@ -166,11 +166,21 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                 ?>
 
                 <?php
+                if(Sessao::getInstance()->verificar_permissao('listar_localArmazenamentoTxt')){
+                    echo '<div class="col-md-3">
+                              <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_localArmazenamentoTxt').'">LISTAR LOCAIS DE ARMAZENAMENTO </a>'
+                        . '</div>';
+                }
+                ?>
+
+                <?php
                     if(Sessao::getInstance()->verificar_permissao('listar_kitExtracao')){
                         echo '<div class="col-md-3">
                               <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_kitExtracao').'">LISTAR KITS DE EXTRAÇÃO </a>'
                             . '</div>';
                     }
+
+
                 ?>
 
 
@@ -178,21 +188,70 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
             </div>
         </div>
 
+
+        <div class="conjunto_itens">
+            <div class="row">
+
+
+                <?php
+                if(Sessao::getInstance()->verificar_permissao('listar_protocolo')){
+                    echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_protocolo').'">LISTAR PROTOCOLOS</a>'
+                        . '</div>';
+                }
+                ?>
+
+
+                <?php
+                if(Sessao::getInstance()->verificar_permissao('listar_placa')){
+                    echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_placa').'">LISTAR PLACAS</a>'
+                        . '</div>';
+                }
+                ?>
+
+                <?php
+                if(Sessao::getInstance()->verificar_permissao('solicitar_montagem_placa_RTqPCR')){
+                    echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=solicitar_montagem_placa_RTqPCR').'">SOLICITAÇÃO MONTAGEM PLACA RTqPCR</a>'
+                        . '</div>';
+                }
+                ?>
+
+                <?php
+                if(Sessao::getInstance()->verificar_permissao('listar_solicitacao_montagem_placa_RTqPCR')){
+                    echo '<div class="col-md-2">
+                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_solicitacao_montagem_placa_RTqPCR').'">LISTAR SOLICITAÇÕES MONTAGEM PLACA RTqPCR</a>'
+                        . '</div>';
+                }
+                ?>
+
+
+
+
+
+            </div>
+        </div>
 
         <div class="conjunto_itens" STYLE="margin-top: 10px;">
             <div class="row">
 
 
                 <?php
-                if(Sessao::getInstance()->verificar_permissao('listar_laudo')){
-                    echo '<div class="col-md-3">
-                              <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_laudo').'">LISTAR LAUDOS </a>'
-                        . '</div>';
-                }
+
+                    if (Sessao::getInstance()->verificar_permissao('listar_laudo')) {
+                        echo '<div class="col-md-3">
+                              <a class="btn btn-primary" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_laudo') . '">LISTAR LAUDOS </a>'
+                            . '</div>';
+                    }
+
                 ?>
 
             </div>
         </div>
+
+
+
 
         <div class="conjunto_itens">
             <div class="row">
@@ -208,7 +267,7 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                 ?>
 
                 <?php
-                // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+
                 if(Sessao::getInstance()->verificar_permissao('cadastrar_tipoLocalArmazenamento')){
                     echo '<div class="col-md-2">
                                   <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_tipoLocalArmazenamento').'">CADASTRAR TIPO LOCAL DE ARMAZENAMENTO </a>'
@@ -219,18 +278,18 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                 <?php
                 // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
                 if(Sessao::getInstance()->verificar_permissao('mostrar_localArmazenamento')){
-                    echo '<div class="col-md-2">
+                    /*echo '<div class="col-md-2">
                                   <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=mostrar_localArmazenamento').'">MOSTRAR LOCAL DE ARMAZENAMENTO </a>'
-                        . '</div>';
+                        . '</div>';*/
                 }
                 ?>
 
                 <?php
                 // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
                 if(Sessao::getInstance()->verificar_permissao('editar_caixa')){
-                    echo '<div class="col-md-2">
+                    /*echo '<div class="col-md-2">
                                   <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_caixa').'">EDITAR CAIXA </a>'
-                        . '</div>';
+                        . '</div>';*/
                 }
                 ?>
 
@@ -259,35 +318,35 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
               ?>
               
                <?php 
-                    if(Sessao::getInstance()->verificar_permissao('listar_detentor')){ 
-                          echo '<div class="col-md-2">
-                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_detentor').'">DETENTOR</a>'
-                                  . '</div>';
+                    if(Sessao::getInstance()->verificar_permissao('listar_detentor')){
+                        /* echo '<div class="col-md-2">
+                                <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_detentor').'">DETENTOR</a>'
+                                . '</div>';*/
                     } 
               ?>
               
               <?php 
                     if(Sessao::getInstance()->verificar_permissao('listar_doenca')){ 
-                          echo '<div class="col-md-2">
+                          /*echo '<div class="col-md-2">
                                   <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_doenca').'">DOENÇA</a>'
-                                  . '</div>';
+                                  . '</div>';*/
                     } 
               ?>
               
               <?php 
                     // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
                     if(Sessao::getInstance()->verificar_permissao('listar_equipamento')){ 
-                          echo '<div class="col-md-2">
+                         /* echo '<div class="col-md-2">
                                   <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_equipamento').'">EQUIPAMENTO</a>'
-                                  . '</div>';
+                                  . '</div>';*/
                     } 
               ?>
              
               <?php 
-                    if(Sessao::getInstance()->verificar_permissao('listar_marca')){ 
-                          echo '<div class="col-md-2">
-                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_marca').'">MARCA</a>'
-                                  . '</div>';
+                    if(Sessao::getInstance()->verificar_permissao('listar_marca')){
+                        /*  echo '<div class="col-md-2">
+                                 <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_marca').'">MARCA</a>'
+                                 . '</div>';*/
                     } 
               ?>
                
@@ -299,9 +358,9 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
               
                 <?php 
                     if(Sessao::getInstance()->verificar_permissao('listar_modelo')){ 
-                          echo '<div class="col-md-2">
+                        /*   echo '<div class="col-md-2">
                                   <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_modelo').'">MODELO</a>'
-                                  . '</div>';
+                                  . '</div>';*/
                     } 
               ?>
              
@@ -309,9 +368,9 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                <?php 
                     // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
                     if(Sessao::getInstance()->verificar_permissao('listar_nivelPrioridade')){ 
-                          echo '<div class="col-md-2">
+                         /*  echo '<div class="col-md-2">
                                   <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_nivelPrioridade').'">NÍVEL PRIORIDADE</a>'
-                                  . '</div>';
+                                  . '</div>';*/
                     } 
               ?>
               
@@ -357,7 +416,7 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
         </div>
         
         
-        <div class="conjunto_itens">
+        <div class="conjunto_itens" >
           <div class="row">
               
              
@@ -406,43 +465,15 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
              
           </div>
         </div>
-        
-        
-             
-        
-        
-        
-        <!--
-        <div class="conteudo">
-                <div class="row">        
-                       
-             <div class="col-md-2">
-                <h4>TIPO DE AMOSTRA</h4>
-                <ul class="navbar-nav">
-                    <li><a href="controlador.php?action=cadastrar_tipoAmostra">Cadastrar </a></li>
-                    <li><a href="controlador.php?action=listar_tipoAmostra">Listar</a></li>
-                </ul>               
-             </div>
-              
-              <div class="col-md-2">
-                <h4>LOCAL ARMAZENAMENTO</h4>
-                <ul class="navbar-nav">
-                    <li><a href="controlador.php?action=cadastrar_localArmazenamento">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=listar_localArmazenamento">Listar</a></li>
-                </ul>               
-             </div>
-              <div class="col-md-2">
-                <h4>TIPO LOCAL ARMAZENAMENTO</h4>
-                <ul class="navbar-nav">
-                    <li><a href="controlador.php?action=cadastrar_tipoLocalArmazenamento">Cadastrar</a></li>
-                    <li><a href="controlador.php?action=listar_tipoLocalArmazenamento">Listar</a></li>
-                </ul>               
-             </div>
-         
-             
-            </div>
-        </div>
-          -->
+
+
+
+
+
+
+
+
+    </body>
         
 <?php
     Pagina::getInstance()->fechar_corpo();

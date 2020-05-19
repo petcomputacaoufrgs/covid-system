@@ -3,7 +3,6 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 
-//Corresponde a etapa 2.1
 class PreparoLote
 {
     private $idPreparoLote;
@@ -11,12 +10,87 @@ class PreparoLote
     private $dataHoraInicio;
     private $dataHoraFim;
     private $idLote_fk;
+    private $idCapela_fk;
+    private $idPreparoLote_fk;
+    private $idKitExtracao_fk;
+
     private $objLote;
+    private $objLoteOriginal;
     private $objPerfil;
     private $objsTubos;
 
     private $ObjsTubosCadastro;
     private $ObjsTubosAlterados;
+
+    /**
+     * @return mixed
+     */
+    public function getObjLoteOriginal()
+    {
+        return $this->objLoteOriginal;
+    }
+
+    /**
+     * @param mixed $objLoteOriginal
+     */
+    public function setObjLoteOriginal($objLoteOriginal)
+    {
+        $this->objLoteOriginal = $objLoteOriginal;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getIdKitExtracaoFk()
+    {
+        return $this->idKitExtracao_fk;
+    }
+
+    /**
+     * @param mixed $idKitExtracao_fk
+     */
+    public function setIdKitExtracaoFk($idKitExtracao_fk)
+    {
+        $this->idKitExtracao_fk = $idKitExtracao_fk;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getIdCapelaFk()
+    {
+        return $this->idCapela_fk;
+    }
+
+    /**
+     * @param mixed $idCapela_fk
+     */
+    public function setIdCapelaFk($idCapela_fk)
+    {
+        $this->idCapela_fk = $idCapela_fk;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdPreparoLoteFk()
+    {
+        return $this->idPreparoLote_fk;
+    }
+
+    /**
+     * @param mixed $idPreparoLote_fk
+     */
+    public function setIdPreparoLoteFk($idPreparoLote_fk)
+    {
+        $this->idPreparoLote_fk = $idPreparoLote_fk;
+    }
+
+
 
     /**
      * @return mixed

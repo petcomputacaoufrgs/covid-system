@@ -19,11 +19,14 @@ try{
 
     switch ($_GET['action']){
         case 'remover_sexoPaciente':
-
-            $objSexo->setIdSexo($_GET['idSexoPaciente']);
-            $objSexoRN->remover($objSexo);
-            $alert .= Alert::alert_success("Sexo do paciente removido com sucesso");
-            break;
+            try{
+                $objSexo->setIdSexo($_GET['idSexoPaciente']);
+                $objSexoRN->remover($objSexo);
+                $alert .= Alert::alert_success("Sexo do paciente removido com sucesso");
+                break;
+            } catch (Throwable $ex) {
+                Pagina::getInstance()->processar_excecao($ex);
+            }
     }
 
     $arrSexos = $objSexoRN->listar(new Sexo());

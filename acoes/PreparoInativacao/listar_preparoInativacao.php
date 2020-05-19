@@ -64,34 +64,81 @@ try {
     $objInfosTuboRN = new InfosTuboRN();
 
 
+    $objPreparoLote = new PreparoLote();
+    $objPreparoLoteRN = new PreparoLoteRN();
+
     $alert = '';
     $html = '';
+
+    switch ($_GET['action']){
+        case 'remover_montagemGrupo_extracao':
+            try{
+                $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
+                $objPreparoLoteRN->remover($objPreparoLote);
+            }catch (Throwable $ex){
+                Pagina::getInstance()->processar_excecao($ex);
+            }
+    }
 
     $options = InterfacePagina::montar_select_pesquisa($array_colunas,$position);
 
     $botoes_aparecer = false;
 
-    $objPreparoLote = new PreparoLote();
-    $objPreparoLoteRN = new PreparoLoteRN();
-
     $arr_preparos = $objPreparoLoteRN->listar_preparos_lote($objPreparoLote,LoteRN::$TL_EXTRACAO);
+    //print_r($arr_preparos);
 
     foreach ($arr_preparos as $preparo) {
         $strTubos = '';
-        foreach ($preparo->getObjLote()->getObjsTubo() as $tubo) {
-            $strTubos .= $tubo->getIdTubo() . ",";
+        $strAmostras = '';
+        foreach($preparo->getObjLote()->getObjsTubo() as $tubo){
+            $strTubos .= $tubo->getIdTubo().",";
         }
-        //print_r($preparo);
 
-        $strTubos = substr($strTubos, 0, -1);
+        foreach($preparo->getObjLote()->getObjsAmostras() as $amostra){
+            $strAmostras .= $amostra->getNickname().",";
+        }
 
-        $html .= '<tr>
-            <th scope="row" >' . Pagina::formatar_html($preparo->getIdPreparoLote()) . '</th>
-            <td>' . Pagina::formatar_html($preparo->getObjLote()->getIdLote()) . '</td>
-            <td>' . Pagina::formatar_html(LoteRN::mostrarDescricaoSituacao($preparo->getObjLote()->getSituacaoLote())) . '</td>
-            <td>' . Pagina::formatar_html(LoteRN::mostrarDescricaoTipoLote($preparo->getObjLote()->getTipo())) . '</td>
-            <td>' . Pagina::formatar_html($strTubos) . '</td>
-            <td>' . Pagina::formatar_html($preparo->getIdUsuarioFk()) . '</td>';
+
+        $strTubos = substr($strTubos, 0,-1);
+        $strAmostras = substr($strAmostras, 0,-1);
+
+
+        $style_linha = '';
+        if($preparo->getObjLote()->getSituacaoLote() == LoteRN::$TE_EM_EXTRACAO){
+            $style_linha = ' style="background: rgba(243,108,41,0.2);"' ;
+        }
+
+
+
+        $html .= '<tr'.$style_linha.'>';
+        if($preparo->getObjLoteOriginal() != null) {
+            $html .= '    <th scope="row" >' . LoteRN::$TL_PREPARO . Pagina::formatar_html($preparo->getObjLoteOriginal()->getIdLote()) . '</th>';
+        }ELSE{
+            $html .= '<td> .. </td>';
+        }
+
+        $html .= '<td>' . LoteRN::$TL_EXTRACAO.Pagina::formatar_html($preparo->getObjLote()->getIdLote()) . '</td>';
+
+        if($preparo->getObjLote()->getSituacaoLote() == LoteRN::$TE_EXTRACAO_FINALIZADA){
+            $style = ' style="background: rgba(0,255,0,0.2);"' ;
+        }
+        if($preparo->getObjLote()->getSituacaoLote() == LoteRN::$TE_AGUARDANDO_EXTRACAO ){
+            $style = ' style="background:rgba(255,0,0,0.2);"' ;
+        }
+        if($preparo->getObjLote()->getSituacaoLote() == LoteRN::$TE_EM_EXTRACAO){
+            $style = ' style="background: rgba(243,108,41,0.2);"' ;
+        }
+        $html .= '<td'.$style.'>' . Pagina::formatar_html(LoteRN::mostrarDescricaoSituacao($preparo->getObjLote()->getSituacaoLote())) . '</td>';
+
+
+        //$html .= '   <td>' . Pagina::formatar_html(LoteRN::mostrarDescricaoTipoLote($preparo->getObjLote()->getTipo())) . '</td>';
+
+        $html .='    <td>' . Pagina::formatar_html($strAmostras) . '</td>';
+
+        if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
+            $html .='    <td>' . Pagina::formatar_html($strTubos) . '</td>';
+        }
+           $html .='   <td>' . Pagina::formatar_html($preparo->getIdUsuarioFk()) . '</td>';
 
         $dataHoraInicio = explode(" ", $preparo->getDataHoraInicio());
         $data = explode("-", $dataHoraInicio[0]);
@@ -102,19 +149,42 @@ try {
 
         $html .= '   <td>' . $diaI . '/' . $mesI . '/' . $anoI . ' - ' . $dataHoraInicio[1] . '</td>';
 
-        $dataHoraFim = explode(" ", $preparo->getDataHoraFim());
-        $data = explode("-", $dataHoraFim[0]);
+        if($preparo->getObjLote()->getSituacaoLote() == LoteRN::$TE_EXTRACAO_FINALIZADA) {
+            $dataHoraFim = explode(" ", $preparo->getDataHoraFim());
+            $data = explode("-", $dataHoraFim[0]);
 
-        $diaF = $data[2];
-        $mesF = $data[1];
-        $anoF = $data[0];
+            $diaF = $data[2];
+            $mesF = $data[1];
+            $anoF = $data[0];
 
-        $html .= '   <td>' . $diaF . '/' . $mesF . '/' . $anoF . ' - ' . $dataHoraFim[1] . '</td>';
-        $html .= '<td >';
-        if (Sessao::getInstance()->verificar_permissao('remover_montagemGrupo')) {
-            $html .= '<a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_montagemGrupo&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote())) . '"><i class="fas fa-trash-alt"></i></a>';
+            $html .= '   <td>' . $diaF . '/' . $mesF . '/' . $anoF . ' - ' . $dataHoraFim[1] . '</td>';
+        }else{
+            $html .= '  <td> - </td>';
         }
-        $html .= '</td></tr>';
+
+
+        if($preparo->getObjLote()->getSituacaoLote() == LoteRN::$TE_EM_EXTRACAO){
+           //ECHO ' controlador.php?action=realizar_extracao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote()).'&idCapela='.Pagina::formatar_html($preparo->getIdCapelaFk()).'&idKitExtracao='.Pagina::formatar_html($preparo->getIdKitExtracaoFk());
+            $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote()).'&idCapela='.Pagina::formatar_html($preparo->getIdCapelaFk()).'&idKitExtracao='.Pagina::formatar_html($preparo->getIdKitExtracaoFk()). '&idSituacao=1').'"><i class="fas fa-exclamation-triangle" style="color: #f36c29;"></i></td>';
+        }else{
+            $html .= '<td ></td>';
+        }
+
+        /*if($preparo->getObjLote()->getSituacaoLote() == LoteRN::$TE_EM_EXTRACAO) {
+            $html .= '<td><a target="_blank" href="#"><i style="color:black;margin: 0px; padding: 0px;" class="fas fa-edit"></i></a></td>';
+        }else{
+            $html .= '<td ></td>';
+        }*/
+
+
+        if (Sessao::getInstance()->verificar_permissao('imprimir_preparo_lote')) {
+            $html .= '<td><a target="_blank" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=imprimir_preparo_lote&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote())) . '"><i style="color:black;margin: 0px; padding: 0px;" class="fas fa-print"></i></a></td>';
+        }
+
+        if (Sessao::getInstance()->verificar_permissao('remover_montagemGrupo_extracao')) {
+            $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_montagemGrupo_extracao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote())) . '"><i class="fas fa-trash-alt"></i></a></td>';
+        }
+        $html .= '</tr>';
     }
 
 
@@ -131,22 +201,29 @@ Pagina::getInstance()->adicionar_css("precadastros");
 
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
-Pagina::montar_topo_listar('LISTAR PREPARO DOS GRUPOS', null, null, 'montar_preparo_extracao', 'NOVO GRUPO DE AMOSTRAS');
+Pagina::montar_topo_listar('LISTAR PREPARO DOS GRUPOS', null, null, null, null);
+Pagina::getInstance()->mostrar_excecoes();
 echo $alert;
 
 echo '<div id="tabela_preparos"  style="margin-top: -50px;">
         <div class="conteudo_tabela " >
-            <table class="table table-hover table-sm" >
+            <table class="table table-responsive table-hover table-sm" >
                 <thead>
                     <tr>
-                       <th scope="col">Nº PREPARO</th>
+                       <th scope="col">LOTE ORIGINAL</th>
+                        <!--<th scope="col">Nº PREPARO</th>-->
                         <th  scope="col">Nº LOTE</th>
                         <th  scope="col">SITUAÇÃO LOTE</th>
-                        <th  scope="col">TIPO LOTE</th>
-                        <th  scope="col">TUBOS</th>
-                        <th scope="col">ID USUÁRIO</th>
+                      
+                        <th  scope="col">AMOSTRAS</th>';
+                        if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
+                            echo '<th scope="col">TUBOS</th>';
+                        }
+                        echo '<th scope="col">ID USUÁRIO</th>
                         <th  scope="col">DATA HORA INÍCIO</th>
                         <th  scope="col">DATA HORA TÉRMINO</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
@@ -159,5 +236,4 @@ echo '<div id="tabela_preparos"  style="margin-top: -50px;">
    ';
 
 
-Pagina::getInstance()->mostrar_excecoes();
 Pagina::getInstance()->fechar_corpo();

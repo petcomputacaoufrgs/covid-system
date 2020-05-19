@@ -25,7 +25,7 @@ try {
         $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
         $objPreparoLote = $objPreparoLoteRN->consultar($objPreparoLote);
         $objPreparoLote = $objPreparoLoteRN->consultar_tubos($objPreparoLote);
-
+        //print_r($objPreparoLote);
     }
 
     //ob_clean();//Limpa o buffer de saída
@@ -40,8 +40,18 @@ try {
                     </tr>
             </table>";
 
+    if($objPreparoLote[0]->getObjsTubos()[0]->getObjLote() == LoteRN::$TE_PREPARACAO_FINALIZADA || $objPreparoLote[0]->getObjsTubos()[0]->getObjLote() == LoteRN::$TE_EXTRACAO_FINALIZADA){
+        $style = ' style="background: rgba(0,255,0,0.2);text-align: center;"' ;
+    }
+    if($objPreparoLote[0]->getObjsTubos()[0]->getObjLote()== LoteRN::$TE_TRANSPORTE_PREPARACAO || $objPreparoLote[0]->getObjsTubos()[0]->getObjLote() == LoteRN::$TE_AGUARDANDO_EXTRACAO){
+        $style = ' style="background:rgba(255,0,0,0.2);text-align: center;"' ;
+    }
+    if($objPreparoLote[0]->getObjsTubos()[0]->getObjLote()== LoteRN::$TE_EM_PREPARACAO || $objPreparoLote[0]->getObjsTubos()[0]->getObjLote() == LoteRN::$TE_EM_EXTRACAO){
+        $style = ' style="background: rgba(243,108,41,0.2);text-align: center;"' ;
+    }
+
     $html .= " <table> 
-              <tr><td></td></tr>
+              <tr><td '.$style.'>SITUAÇÃO GRUPO: ".LoteRN::mostrarDescricaoSituacao($objPreparoLote[0]->getObjsTubos()[0]->getObjLote())."</td></tr>
               <tr>
                    <td>Quantidade de amostras no grupo: " . count($objPreparoLote[0]->getObjsTubos()) . "</td>
               </tr>
@@ -49,8 +59,13 @@ try {
 
     foreach ($objPreparoLote[0]->getObjsTubos() as $amostra) {
 
-        $html .= "<tr> <td style=\"background-color: #ddd;\"> Amostra".$amostra->getCodigoAmostra()."  </td></tr>"
-            . "<tr> <td>Data Coleta: " .$amostra->getDataColeta() . "</td></tr>" .
+        $data = explode("-",$amostra->getDataColeta());
+        $dia = $data[2];
+        $mes = $data[1];
+        $ano = $data[0];
+
+        $html .= "<tr> <td style=\"background-color: #ddd;\"> Amostra ".$amostra->getCodigoAmostra()."  </td></tr>"
+            . "<tr> <td>Data Coleta: " .$dia.'/'.$mes.'/'.$ano . "</td></tr>" .
             "<tr><td> Perfil da amostra: " . PerfilPacienteRN::retornarTipoPaciente($amostra->getObjPaciente()->getCaractere()) . "</td></tr>" .
             "<tr><td><hr width=\"1\"  height=\"100\"></td></tr>";
 

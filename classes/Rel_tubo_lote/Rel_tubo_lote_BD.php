@@ -21,7 +21,7 @@ class Rel_tubo_lote_BD{
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objRelTuboLote->setIdRelTuboLote($objBanco->obterUltimoID());
 
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando o relacionamento do tubo com um dos seus lotes no BD.",$ex);
         }
 
@@ -42,7 +42,7 @@ class Rel_tubo_lote_BD{
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
 
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro alterando o relacionamento do tubo com um dos seus lotes no BD.",$ex);
         }
 
@@ -88,7 +88,7 @@ class Rel_tubo_lote_BD{
                 $array[] = $objRelTuboLote;
             }
             return $array;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando o relacionamento do tubo com um dos seus lotes no BD.",$ex);
         }
 
@@ -111,7 +111,7 @@ class Rel_tubo_lote_BD{
             $tuboLote->setIdTubo_fk($arr[0]['idTubo_fk']);
 
             return $tuboLote;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
 
             throw new Excecao("Erro consultando o relacionamento do tubo com um dos seus lotes no BD.",$ex);
         }
@@ -127,7 +127,7 @@ class Rel_tubo_lote_BD{
             $arrayBind[] = array('i',$objRelTuboLote->getIdRelTuboLote());
             $objBanco->executarSQL($DELETE, $arrayBind);
 
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo o relacionamento do tubo com um dos seus lotes no BD.",$ex);
         }
     }
@@ -141,7 +141,7 @@ class Rel_tubo_lote_BD{
             $arrayBind[] = array('i',$objRelTuboLote->getIdLote_fk());
             $objBanco->executarSQL($DELETE, $arrayBind);
 
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo o relacionamento do tubo com um dos seus lotes no BD.",$ex);
         }
     }

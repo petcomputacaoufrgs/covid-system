@@ -110,6 +110,34 @@ class PerfilPacienteBD{
         }
        
     }
+
+
+    public function listar_nao_sus(PerfilPaciente $objPerfilPaciente, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT * FROM tb_perfilpaciente where caractere != ?";
+            $arrayBind = array();
+            $arrayBind[] = array('s',PerfilPacienteRN::$TP_PACIENTES_SUS);
+            $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
+
+
+            $array_perfil = array();
+            foreach ($arr as $reg){
+                $objPerfilPaciente = new PerfilPaciente();
+                $objPerfilPaciente->setIdPerfilPaciente($reg['idPerfilPaciente']);
+                $objPerfilPaciente->setPerfil($reg['perfil']);
+                $objPerfilPaciente->setIndex_perfil($reg['index_perfil']);
+                $objPerfilPaciente->setCaractere($reg['caractere']);
+
+
+                $array_perfil[] = $objPerfilPaciente;
+            }
+            return $array_perfil;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando perfil do paciente no BD.",$ex);
+        }
+
+    }
     
     public function consultar(PerfilPaciente $objPerfilPaciente, Banco $objBanco) {
 
