@@ -50,6 +50,31 @@ class InterfacePagina
         $select_protocolos .= '</select>';
     }
 
+    static function montar_select_placas(&$select_placas, $objPlaca, $objPlacaRN, $disabled, $onchange)
+    {
+        /* PLACAS */
+
+        $arr_placas = $objPlacaRN->listar(new Placa());
+
+        $select_placas = '<select class="form-control selectpicker "  ' . $disabled . $onchange
+            . 'id="select-country idSel_placas" data-live-search="true" name="sel_placas">'
+            . '<option data-tokens="" value="-1" >Selecione uma placa</option>';
+
+        foreach ($arr_placas as $placa) {
+            $selected = '';
+
+            if ($objPlaca->getIdPlaca() == $placa->getIdPlaca()) {
+                $selected = 'selected';
+            }
+            $select_placas .= '<option ' . $selected .
+                '  value="' . Pagina::formatar_html($placa->getIdPlaca()) .
+                '" data-tokens="' . Pagina::formatar_html($placa->getPlaca()) . '">'
+                . Pagina::formatar_html($placa->getPlaca()) . '</option>';
+
+        }
+        $select_placas .= '</select>';
+    }
+
     static function montar_select_cidade_paciente(&$select_municipio_paciente, $objLugarOrigemPaciente, $objLugarOrigemPacienteRN, &$objEstadoOrigemPaciente, &$objPaciente, $disabled, $onchange)
     {
         /* MUNICÍPIO PACIENTE */

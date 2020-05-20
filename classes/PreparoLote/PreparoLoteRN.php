@@ -29,6 +29,34 @@ require_once __DIR__ . '/../../classes/Rel_tubo_lote/Rel_tubo_lote_RN.php';
 class PreparoLoteRN
 {
 
+    private function validarObsKitExtracao(PreparoLote $preparoLote,Excecao $objExcecao){
+
+        if($preparoLote->getObsKitExtracao() != null) {
+            $strObsKitExtracao = trim($preparoLote->getObsKitExtracao());
+
+            if (strlen($strObsKitExtracao) > 300) {
+                    $objExcecao->adicionar_validacao('As observações do kit de extração deve possuir no máximo 300 caracteres', null, 'alert-danger');
+            }
+
+            return $preparoLote->setObsKitExtracao($strObsKitExtracao);
+        }
+
+    }
+    private function validarFabricacaoKit(PreparoLote $preparoLote,Excecao $objExcecao){
+
+        if($preparoLote->getLoteFabricacaokitExtracao() != null) {
+            $strLoteFabricacaoKitExtracao = trim($preparoLote->getLoteFabricacaokitExtracao());
+
+            if (strlen($strLoteFabricacaoKitExtracao) > 130) {
+                $objExcecao->adicionar_validacao('O lote de fabricação do kit de extração deve possuir no máximo 130 caracteres', null, 'alert-danger');
+            }
+
+            return $preparoLote->setLoteFabricacaokitExtracao($strLoteFabricacaoKitExtracao);
+        }
+
+    }
+
+
     public function cadastrar(PreparoLote $preparoLote)
     {
         $objBanco = new Banco();
@@ -37,6 +65,9 @@ class PreparoLoteRN
             $objExcecao = new Excecao();
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
+
+            $this->validarFabricacaoKit($preparoLote,$objExcecao);
+            $this->validarObsKitExtracao($preparoLote,$objExcecao);
 
             if($preparoLote->getObjLote() != null){
                 if($preparoLote->getObjLote()->getIdLote() == null){ //cadastrar lote
@@ -109,7 +140,8 @@ class PreparoLoteRN
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
 
-
+            $this->validarFabricacaoKit($preparoLote,$objExcecao);
+            $this->validarObsKitExtracao($preparoLote,$objExcecao);
             $objExcecao->lancar_validacoes();
             $objPreparoLoteBD = new PreparoLoteBD();
             $preparoLote = $objPreparoLoteBD->alterar($preparoLote, $objBanco);

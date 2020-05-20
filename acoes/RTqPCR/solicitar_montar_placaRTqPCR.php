@@ -42,8 +42,8 @@ try {
     require_once __DIR__ . '/../../classes/Poco/Poco.php';
     require_once __DIR__ . '/../../classes/Poco/PocoRN.php';
 
-    require_once __DIR__ . '/../../classes/RelPocoPlaca/RelPocoPlaca.php';
-    require_once __DIR__ . '/../../classes/RelPocoPlaca/RelPocoPlacaRN.php';
+    require_once __DIR__ . '/../../classes/RelPocoPlaca/PocoPlaca.php';
+    require_once __DIR__ . '/../../classes/RelPocoPlaca/PocoPlacaRN.php';
 
 
 
@@ -130,6 +130,7 @@ try {
     $adicionar_qntMaxAmostras = 'n';
     $btn_selecionar_sumir = 'n';
     $sumir_btn_salvar = 'n';
+    $aparecer_btn_mapa = 'n';
 
 
     InterfacePagina::montar_select_protocolos($select_protocolos, $objProtocolo, $objProtocoloRN, $disabled, 'onchange="this.form.submit()"');
@@ -146,6 +147,12 @@ try {
             //lote já finalizado
             $alert .= Alert::alert_danger("A solicitação de montagem já foi feita");
         }
+        if($_GET['idSituacao'] == 4){
+            //solicitação removida já que não tem nenhuma amostra na placa
+            $alert = Alert::alert_warning("Nenhuma amostra foi selecionada para a placa");
+            $alert .= Alert::alert_success("Solicitação <strong>removida</strong> com sucesso");
+        }
+
     }
 
 
@@ -177,10 +184,9 @@ try {
             $objPerfilPaciente->setCaractere(PerfilPacienteRN::$TP_PACIENTES_SUS);
             $objPerfilPaciente = $objPerfilPacienteRN->listar($objPerfilPaciente);
             $perfisSelecionados = $objPerfilPaciente[0]->getIdPerfilPaciente() . ';';
-            echo $perfisSelecionados;
             InterfacePagina::montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente[0], $objPerfilPacienteRN, 'readonly="readonly"', '', null);
         } else {
-            InterfacePagina::montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, '', '', 's');
+            InterfacePagina::montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, '', '', null);
         }
     }
 
@@ -209,6 +215,7 @@ try {
         $btn_selecionar_sumir = 's';
         $objAmostra->setObjProtocolo($objProtocolo);
         $objAmostra->setObjPerfil($arr_idsPerfis);
+
         $arr_amostras = $objAmostraRN->listar_aguardando_sol_montagem_placa_RTqCPR($objAmostra);
         //echo "<pre>";
         //print_r($arr_amostras);
@@ -258,8 +265,6 @@ try {
             $objSolMontarPlaca->setObjRelPerfilPlaca($objRelPerfilPlaca);
             $objSolMontarPlaca->setObjPlaca($objPlaca);
 
-
-
             //echo '<pre>';
             //print_r( $objSolMontarPlaca);
             //echo '</pre>';
@@ -296,6 +301,7 @@ try {
             //print_r($perfis);
             $perfisSelecionados .=  $perfis->getIdPerfilFk() . ';';
         }
+        $objPerfilPaciente = new PerfilPaciente();
         InterfacePagina::montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, ' disabled ', '');
         $btn_selecionar_sumir = 's';
 
@@ -304,6 +310,12 @@ try {
         /*echo '<pre>';
         print_r($arr_solicitacoes);
         echo '</pre>';*/
+
+        if ($sumir_btn_salvar == 's') {
+
+        }
+        //$tabela_poco =
+
 
         //lista das amostras com o perfil certo, só exibir tudo
         foreach ($arr_solicitacoes[0]->getObjsAmostras() as $amostra) {
@@ -387,7 +399,12 @@ try {
             }else {
 
                 if (count($arr_amostras_escolhidas) == 0) {
-                    $alert = Alert::alert_warning("Nenhuma amostra foi selecionada para a placa");
+
+                    $objSolMontarPlaca->setIdSolicitacaoMontarPlaca($_GET['idSolicitacao']);
+                    $objSolMontarPlaca = $objSolMontarPlacaRN->remover_completamente($objSolMontarPlaca);
+                    header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=solicitar_montagem_placa_RTqPCR&idSituacao=4'));
+                    die();
+
                 } else {
                     $alert = Alert::alert_info("Foram selecionadas " . count($arr_amostras_escolhidas) . " amostras");
                 }
@@ -443,8 +460,8 @@ try {
                 $objSolMontarPlaca = $objSolMontarPlacaRN->alterar($objSolMontarPlaca);
                 $alert = Alert::alert_success("Dados cadastrados com sucesso");
                 $sumir_btn_salvar = 's';
+                $aparecer_btn_mapa = 's';
             }
-
 
             //InterfacePagina::montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, ' disabled ', '');
         }
@@ -516,6 +533,17 @@ echo $alert.'
       echo'</div>  
 </form>';
 
+        if($aparecer_btn_mapa == 's'){
+            if(Sessao::getInstance()->verificar_permissao('mostrar_poco')) {
+                echo '<div class="form-row" >
+                    <div class="col-md-12">
+                        <a target="_blank" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=mostrar_poco&idPlaca=' . $objPlaca->getIdPlaca()) . '" class="btn btn-primary"  style="width: 100%; text-align: center;">MOSTRAR POÇO</a>
+                    </div>
+                </div>';
+            }
+        }
+
+
 if($adicionar_qntMaxAmostras == 's') {
     echo '<form method="POST"  >
             <div class="form-row" >
@@ -532,15 +560,12 @@ if($adicionar_qntMaxAmostras == 's') {
                     echo '<div class="col-md-4">';
                 }
 
-                if($btn_selecionar_sumir == 's'){
-                    $disabled = ' disabled ';
-                }
                 echo '<label >Nome placa (opcional):</label>
                                 <input type="text" '.$disabled.' class="form-control" id="idTextPlaca" placeholder="nome" 
                                onblur="" name="txtNomePlaca"  value="'.Pagina::formatar_html($objPlaca->getPlaca()).'">
                                </div>';
 
-                if($objProtocolo->getCaractere() == ProtocoloRN::$TP_LACEN_IBMP  || $btn_selecionar_sumir == 's' ){
+                if($btn_selecionar_sumir == 's' ){
                     echo '<div class="col-md-8">';
                 }else{
                     echo '<div class="col-md-6">';
@@ -551,7 +576,7 @@ if($adicionar_qntMaxAmostras == 's') {
                 </div>';
 
 
-    if($objProtocolo->getCaractere() != ProtocoloRN::$TP_LACEN_IBMP && $btn_selecionar_sumir == 'n') {
+    if($btn_selecionar_sumir == 'n') {
         echo '<div class="col-md-2" >
                 <!--<button type="button" onclick="this.form.submit()" class="btn btn-primary" style="margin-left:0px;margin-top: 31px;width: 100%;"   name="enviar_perfis">SELECIONAR</button>-->
                 <button type="submit" class="btn btn-primary" style="margin-left:0px;margin-top: 31px;width: 100%;"   name="enviar_perfis">SELECIONAR</button>

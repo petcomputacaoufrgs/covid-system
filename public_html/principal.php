@@ -251,6 +251,33 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
         </div>
 
 
+        <div class="conjunto_itens">
+            <div class="row">
+                <?php
+
+                if(Sessao::getInstance()->verificar_permissao('listar_divisao_protocolo')){
+                    echo '<div class="col-md-2">
+                                  <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_divisao_protocolo').'">LISTAR DIVISÃO PROTOCOLO</a>'
+                        . '</div>';
+                }
+                ?>
+
+
+                <?php
+
+                if(Sessao::getInstance()->verificar_permissao('cadastrar_poco')){
+                    echo '<div class="col-md-2">
+                                  <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_poco').'">CADASTRAR POÇO</a>'
+                        . '</div>';
+                }
+                ?>
+
+
+
+            </div>
+        </div>
+
+
 
 
         <div class="conjunto_itens">
@@ -260,9 +287,9 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                 <?php
                 // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
                 if(Sessao::getInstance()->verificar_permissao('cadastrar_localArmazenamento')){
-                    echo '<div class="col-md-2">
+                    /*echo '<div class="col-md-2">
                                   <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_localArmazenamento').'">CADASTRAR LOCAL DE ARMAZENAMENTO </a>'
-                        . '</div>';
+                        . '</div>';*/
                 }
                 ?>
 

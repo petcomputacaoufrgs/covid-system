@@ -12,6 +12,26 @@ class Poco
     private $situacao;
     private $idTubo_fk;
 
+    private $objPlaca;
+
+    /**
+     * @return mixed
+     */
+    public function getObjPlaca()
+    {
+        return $this->objPlaca;
+    }
+
+    /**
+     * @param mixed $objPlaca
+     */
+    public function setObjPlaca($objPlaca)
+    {
+        $this->objPlaca = $objPlaca;
+    }
+
+
+
     /**
      * @return mixed
      */

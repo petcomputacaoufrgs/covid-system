@@ -114,6 +114,9 @@ class LoteBD{
                 $arrayBind2[] = array('i', $reg['idLote']);
                 $arr2 = $objBanco->consultarSQL($SELECT_PREPARO, $arrayBind2);
 
+                /*echo "<pre>";
+                print_r($arr2);
+                echo "</pre>"; */
                 $preparoLote = new PreparoLote();
                 $preparoLote->setIdUsuarioFk($arr2[0]['matricula']);
                 $preparoLote->setIdPreparoLote($arr2[0]['idPreparoLote']);

@@ -382,8 +382,21 @@ switch ($_GET['action']):
     case 'remover_amostra':
         require_once '../acoes/CadastroAmostra/remover_cadastroAmostra.php';
         break;
-    
-    
+
+    /* POÇO */
+    case 'cadastrar_poco':
+    case 'editar_poco':
+        require_once '../acoes/Poco/cadastro_poco.php';
+        break;
+
+    case 'mostrar_poco':
+        require_once '../acoes/Poco/mostrar_poco.php';
+        break;
+
+    case 'listar_poco':
+    case 'remover_poco':
+        //require_once '../acoes/SexoPacientes/listar_sexoPaciente.php';
+        break;
     
     
     /* AMOSTRA + TIPO + LOCAL */

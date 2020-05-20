@@ -57,8 +57,21 @@ class DivisaoProtocoloBD
 
             $SELECT = "SELECT * FROM tb_divisao_protocolo";
 
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
 
-            $arr = $objBanco->consultarSQL($SELECT);
+            if ($divisaoProtocolo->getIdProtocoloFk() != null) {
+                $WHERE .= $AND . " idProtocolo_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $divisaoProtocolo->getIdProtocoloFk());
+            }
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
 
             $array_divisao_protocolo = array();
             foreach ($arr as $reg) {
@@ -66,6 +79,62 @@ class DivisaoProtocoloBD
                 $divisaoProtocolo->setIdDivisaoProtocolo($reg['idDivisaoProtocolo']);
                 $divisaoProtocolo->setIdProtocoloFk($reg['idProtocolo_fk']);
                 $divisaoProtocolo->setNomeDivisao($reg['nomeDivisao']);
+
+                $array_divisao_protocolo[] = $divisaoProtocolo;
+            }
+            return $array_divisao_protocolo;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando os protocolos no BD.", $ex);
+        }
+
+    }
+
+    public function listar_completo(DivisaoProtocolo $divisaoProtocolo, Banco $objBanco)
+    {
+        try {
+
+            $SELECT = "SELECT * FROM tb_divisao_protocolo";
+
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($divisaoProtocolo->getIdProtocoloFk() != null) {
+                $WHERE .= $AND . " idProtocolo_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $divisaoProtocolo->getIdProtocoloFk());
+            }
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
+
+            $array_divisao_protocolo = array();
+            foreach ($arr as $reg) {
+                $divisaoProtocolo = new DivisaoProtocolo();
+                $divisaoProtocolo->setIdDivisaoProtocolo($reg['idDivisaoProtocolo']);
+                $divisaoProtocolo->setIdProtocoloFk($reg['idProtocolo_fk']);
+                $divisaoProtocolo->setNomeDivisao($reg['nomeDivisao']);
+
+                if($reg['idProtocolo_fk'] != null){
+                    $SELECT_PROTOCOLO = 'SELECT * FROM tb_protocolo WHERE idProtocolo = ?';
+
+                    $arrayBindProtocolo = array();
+                    $arrayBindProtocolo[] = array('i',$reg['idProtocolo_fk']);
+
+                    $arr = $objBanco->consultarSQL($SELECT_PROTOCOLO,$arrayBindProtocolo);
+
+                    $protocolo = new Protocolo();
+                    $protocolo->setIdProtocolo($arr[0]['idProtocolo']);
+                    $protocolo->setProtocolo($arr[0]['protocolo']);
+                    $protocolo->setIndexProtocolo($arr[0]['index_protocolo']);
+                    $protocolo->setNumMaxAmostras($arr[0]['numMax_amostras']);
+                    $protocolo->setCaractere($arr[0]['caractere']);
+                    $protocolo->setNumDivisoes($arr[0]['numDivisoes']);
+                    $divisaoProtocolo->setObjProtocolo($protocolo);
+                }
 
                 $array_divisao_protocolo[] = $divisaoProtocolo;
             }

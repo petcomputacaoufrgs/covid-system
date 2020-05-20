@@ -3,6 +3,9 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 require_once __DIR__ . '/../Banco/Banco.php';
+
+require_once __DIR__ . '/../DivisaoProtocolo/DivisaoProtocolo.php';
+require_once __DIR__ . '/../DivisaoProtocolo/DivisaoProtocoloRN.php';
 class ProtocoloBD
 {
     public function cadastrar(Protocolo $objProtocolo, Banco $objBanco) {
@@ -62,9 +65,6 @@ class ProtocoloBD
             $SELECT = "SELECT * FROM tb_protocolo";
 
 
-
-
-
             $arr = $objBanco->consultarSQL($SELECT);
 
             $array_protocolo = array();
@@ -76,6 +76,25 @@ class ProtocoloBD
                 $protocolo->setNumMaxAmostras($reg['numMax_amostras']);
                 $protocolo->setCaractere($reg['caractere']);
                 $protocolo->setNumDivisoes($reg['numDivisoes']);
+
+                $SELECT = 'SELECT * FROM tb_divisao_protocolo WHERE idProtocolo_fk = ?';
+
+                $arrayBind = array();
+                $arrayBind[] = array('i', $reg['idProtocolo']);
+
+                $arr_divs = $objBanco->consultarSQL($SELECT, $arrayBind);
+                if(count($arr_divs) > 0) {
+                    $arr_divs_protocolo = array();
+                    foreach ($arr_divs as $divisao) {
+                        $divisaoProtocolo = new DivisaoProtocolo();
+                        $divisaoProtocolo->setIdDivisaoProtocolo($divisao['idDivisaoProtocolo']);
+                        $divisaoProtocolo->setIdProtocoloFk($divisao['idProtocolo_fk']);
+                        $divisaoProtocolo->setNomeDivisao($divisao['nomeDivisao']);
+                        $arr_divs_protocolo[] = $divisaoProtocolo;
+                    }
+                    $protocolo->setObjDivisao($arr_divs_protocolo);
+                }
+
 
                 $array_protocolo[] = $protocolo;
             }

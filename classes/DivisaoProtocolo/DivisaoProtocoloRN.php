@@ -4,9 +4,8 @@
  */
 
 require_once __DIR__ . '/../Excecao/Excecao.php';
-require_once __DIR__ . '/ProtocoloBD.php';
+require_once __DIR__ . '/DivisaoProtocoloBD.php';
 
-require_once __DIR__ . '/../Situacao/Situacao.php';
 
 class DivisaoProtocoloRN
 {
@@ -32,6 +31,10 @@ class DivisaoProtocoloRN
         }
     }
 
+    private function validarIdProtocoloNomeDivisao(DivisaoProtocolo $objDivisaoProtocolo,Excecao $objExcecao){
+       //validar se já não tem o nome da divisão para o mesmo protocolo
+    }
+
 
     public function cadastrar(DivisaoProtocolo $objDivisaoProtocolo) {
         $objBanco = new Banco();
@@ -44,6 +47,7 @@ class DivisaoProtocoloRN
 
             $this->validarIdProtocolo($objDivisaoProtocolo,$objExcecao);
             $this->validarNomeDivisao($objDivisaoProtocolo,$objExcecao);
+            $this->validarIdProtocoloNomeDivisao($objDivisaoProtocolo,$objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objDivisaoProtocoloBD = new DivisaoProtocoloBD();
@@ -68,6 +72,7 @@ class DivisaoProtocoloRN
 
             $this->validarIdProtocolo($objDivisaoProtocolo,$objExcecao);
             $this->validarNomeDivisao($objDivisaoProtocolo,$objExcecao);
+            $this->validarIdProtocoloNomeDivisao($objDivisaoProtocolo,$objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objDivisaoProtocoloBD = new DivisaoProtocoloBD();
@@ -135,6 +140,27 @@ class DivisaoProtocoloRN
             $objDivisaoProtocoloBD = new DivisaoProtocoloBD();
 
             $arr = $objDivisaoProtocoloBD->listar($objDivisaoProtocolo,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando a divisão do protocolo.',$e);
+        }
+    }
+
+    public function listar_completo(DivisaoProtocolo $objDivisaoProtocolo) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objDivisaoProtocoloBD = new DivisaoProtocoloBD();
+
+            $arr = $objDivisaoProtocoloBD->listar_completo($objDivisaoProtocolo,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();

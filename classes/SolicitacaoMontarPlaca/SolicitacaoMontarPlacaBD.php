@@ -341,6 +341,29 @@ class SolicitacaoMontarPlacaBD
                 $objBanco->executarSQL($DELETE_TUBO_PLACA,$arrayBindTUBO_LOTE);
             }
 
+            //deletar relacao poço placa
+            $SELECT_POCO_PLACA = 'SELECT * FROM tb_pocos_placa WHERE idPlaca_fk = ?';
+
+            $arrayBind1 = array();
+            $arrayBind1[] = array('i',$objSolMontarPlaca->getIdPlacaFk());
+            $array_pocos_placa = $objBanco->consultarSQL($SELECT_POCO_PLACA,$arrayBind1);
+
+            foreach ($array_pocos_placa as $pocoplaca){
+                $DELETE_POCO = 'DELETE FROM tb_poco WHERE idPoco = ? ';
+                $arrayBindPoco = array();
+                $arrayBindPoco[] = array('i',$pocoplaca['idPoco_fk']);
+                $objBanco->executarSQL($DELETE_POCO, $arrayBindPoco);
+
+                $DELETE_POCO_PLACA = 'DELETE FROM tb_pocos_placa WHERE idPocosPlaca = ? ';
+                $arrayBindPocoPlaca = array();
+                $arrayBindPocoPlaca[] = array('i',$pocoplaca['idPocosPlaca']);
+                $objBanco->executarSQL($DELETE_POCO_PLACA, $arrayBindPocoPlaca);
+            }
+
+
+
+
+
 
             $DELETE_SOLICITACAO = 'DELETE FROM tb_solicitacao_montagem_placa_rtqpcr WHERE idSolicitacaoMontarPlaca = ? ';
             $arrayBindPREPARO_LOTE = array();

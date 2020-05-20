@@ -1,3 +1,9 @@
+     insert into tb_recurso (nome,s_n_menu,etapa) values ('realizar_extracao','n','REALIZAR EXTRAÇÃO');
+
+insert into tb_rel_perfilusuario_recurso (idPerfilUsuario_fk,idRecurso_fk) VALUES
+   ((SELECT idPerfilUsuario from tb_perfilusuario where index_perfil = 'ADMINISTRADOR'),
+     (select idRecurso from tb_recurso where nome = 'realizar_extracao'));
+
      insert into tb_recurso (nome,s_n_menu,etapa) values ('imprimir_montagem_placa_RTqPCR','n','IMPRIMIR A SOLICITAÇÃO DE MONTAGEM DA PLACA');
 
 insert into tb_rel_perfilusuario_recurso (idPerfilUsuario_fk,idRecurso_fk) VALUES
@@ -81,3 +87,9 @@ insert into tb_rel_perfilusuario_recurso (idPerfilUsuario_fk,idRecurso_fk) VALUE
 insert into tb_rel_perfilusuario_recurso (idPerfilUsuario_fk,idRecurso_fk) VALUES
    ((SELECT idPerfilUsuario from tb_perfilusuario where index_perfil = 'ADMINISTRADOR'),
      (select idRecurso from tb_recurso where nome = 'remover_divisao_protocolo'));
+
+      insert into tb_recurso (nome,s_n_menu,etapa) values ('cadastrar_poco','n','CADASTRAR POÇO');
+
+insert into tb_rel_perfilusuario_recurso (idPerfilUsuario_fk,idRecurso_fk) VALUES
+   ((SELECT idPerfilUsuario from tb_perfilusuario where index_perfil = 'ADMINISTRADOR'),
+     (select idRecurso from tb_recurso where nome = 'cadastrar_poco'));

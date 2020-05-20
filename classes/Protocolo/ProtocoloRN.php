@@ -128,11 +128,33 @@ class ProtocoloRN
 
             $objExcecao->lancar_validacoes();
             $objProtocoloBD = new ProtocoloBD();
-            $objProtocolo = $objProtocoloBD->alterar($objProtocolo,$objBanco);
+            $protocolo = $objProtocoloBD->alterar($objProtocolo,$objBanco);
+
+
+            if($objProtocolo->getObjDivisao() != null){
+
+                /* DIVISÃO PROTOCOLO */
+                $objDivisaoProtocoloRN = new DivisaoProtocoloRN();
+
+                if(is_array($objProtocolo->getObjDivisao())){
+                    foreach ($objProtocolo->getObjDivisao() as $divisao){
+                        if($divisao->getIdDivisaoProtocolo() == null){ //cadastrar
+                            $objDivisaoProtocoloRN->cadastrar($divisao);
+                        }else{ //alterar
+                            $objDivisaoProtocoloRN->alterar($divisao);
+                        }
+                    }
+
+                }else if($objProtocolo->getObjDivisao()->getIdDivisaoProtocolo() == null){ //cadastrar
+
+                }else{ //alterar
+
+                }
+            }
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $objProtocolo;
+            return $protocolo;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando o protocolo.', $e);
@@ -172,7 +194,20 @@ class ProtocoloRN
             $this->validar_existe_placa_com_o_protocolo($objProtocolo, $objExcecao);
             $objExcecao->lancar_validacoes();
 
+            $objDivisaoProtocolo = new DivisaoProtocolo();
+            $objDivisaoProtocoloRN = new DivisaoProtocoloRN();
+            $objDivisaoProtocolo->setIdProtocoloFk($objProtocolo->getIdProtocolo());
+            $arr_divs = $objDivisaoProtocoloRN->listar($objDivisaoProtocolo);
+            if(count($arr_divs) > 0){
+                foreach ($arr_divs as $divisao){
+                    $objDivisaoProtocoloRN->remover($divisao);
+                }
+            }
+
             $arr =  $objProtocoloBD->remover($objProtocolo,$objBanco);
+
+
+
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;

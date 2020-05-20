@@ -267,6 +267,10 @@ try {
         $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
         $objPreparoLote = $objPreparoLoteRN->consultar($objPreparoLote);
         $todas_infos = $objPreparoLoteRN->obter_todas_infos($objPreparoLote);
+
+        //ordenar conforme o nickname
+
+
         /*echo '<pre>';
         print_r($todas_infos);
         echo '</pre>';*/

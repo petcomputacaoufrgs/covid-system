@@ -12,6 +12,25 @@ class Protocolo
     private $caractere;
     private $numDivisoes;
 
+    private $objDivisao;
+
+    /**
+     * @return mixed
+     */
+    public function getObjDivisao()
+    {
+        return $this->objDivisao;
+    }
+
+    /**
+     * @param mixed $objDivisao
+     */
+    public function setObjDivisao($objDivisao)
+    {
+        $this->objDivisao = $objDivisao;
+    }
+
+
     /**
      * @return mixed
      */

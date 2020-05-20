@@ -176,11 +176,17 @@ try {
         if(strlen($select_grupos) > 0) {
 
             if (isset($_POST['btn_alocarCapela']) && !isset($_GET['idCapela'])) {
+
                 if ($_POST['sel_grupos'] != -1 && $_POST['sel_nivelSegsCapela'] != -1) {
                     $alert .= Alert::alert_warning("Selecione aqui");
                     $objCapela->setIdCapela($_POST['sel_nivelSegsCapela']);
+
                     $objCapela->setNivelSeguranca(CapelaRN::$TNS_ALTA_SEGURANCA);
                     $objCapelaRN->bloquear_registro($objCapela);
+
+                    //echo $_POST['sel_grupos']."#";
+                    //echo $_POST['sel_nivelSegsCapela']."#";
+                    //die("123");
                     header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao&idCapela=' . $_POST['sel_nivelSegsCapela'] . '&idPreparoLote=' . $_POST['sel_grupos']));
                     die();
                 } else if ($_POST['sel_grupos'] != -1 && $_POST['sel_nivelSegsCapela'] == -1) {
@@ -190,6 +196,7 @@ try {
                 } else {
                     $alert .= Alert::alert_warning("Selecione uma capela e um grupo de amostras");
                 }
+
 
             }
 
@@ -234,6 +241,7 @@ try {
                 $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
                 $objPreparoLote = $objPreparoLoteRN->consultar($objPreparoLote);
                 $objPreparoLote->setIdCapelaFk($_GET['idCapela']);
+
                 $objPreparoLote = $objPreparoLoteRN->alterar($objPreparoLote);
 
 
@@ -559,7 +567,8 @@ try {
                                         $strIdLocal = 'nomeLocalArmazenamento_' . $nometubo . '_' . $i . '_' . $tubosLote->getObjTubo()->getIdTubo();
                                         $show_amostras .= '
                                              <label> Local de armazenamento </label>
-                                            <input type="text" class="form-control form-control-sm"   style="text-align: center;" placeholder=""
+                                            <input type="text" class="form-control form-control-sm"   style="text-align: center;" 
+                                            placeholder=""
                                                     name="' . $strIdLocal . '" 
                                                     id ="' . $strIdLocal . '" 
                                                      value="' . $_POST[$strIdLocal] . '">';
@@ -568,7 +577,7 @@ try {
 
                                     } else {
                                         $show_amostras .= '<label> Próxima Etapa </label>
-                                                <input type="text" class="form-control form-control-sm" id="idVolume"  disabled style="text-align: center;" placeholder=""
+                                                <input type="text" class="form-control form-control-sm"   disabled style="text-align: center;" placeholder=""
                                                     name="txtExtracao_' . $tubosLote->getObjTubo()->getIdTubo() . '"  value="EXTRAÇÃO">';
                                     }
 
@@ -591,14 +600,14 @@ try {
 
                                     $show_amostras .= '           <div class="col-md-2" style="padding: 10px;"' . $hidden . '>
                                              <label> Posição </label>
-                                             <input type="text" class="form-control form-control-sm" id="idVolume"   style="text-align: center;" placeholder=""
+                                             <input type="text" class="form-control form-control-sm"   style="text-align: center;" placeholder=""
                                                     name="txtPosicao_' . $nometubo . '_' . $i . '_' . $tubosLote->getObjTubo()->getIdTubo() . '"  
                                                     value="' . $_POST['txtPosicao_' . $nometubo . '_' . $i . '_' . $tubosLote->getObjTubo()->getIdTubo()] . '">
                                              </div>';
 
                                     $show_amostras .= '<div class="col-md-1" style="padding: 10px;">
                                          <label> Volume </label>
-                                            <input type="number" class="form-control form-control-sm" id="idVolume"   style="text-align: center;" placeholder=""
+                                            <input type="number" class="form-control form-control-sm"   style="text-align: center;" placeholder=""
                                                 name="txtVolume_' . $nometubo . '_' . $i . '_' . $tubosLote->getObjTubo()->getIdTubo() . '"  
                                                 value="' . $volume . '"> <!--$objInfosTuboNovo->getVolume().-->
                                          </div>

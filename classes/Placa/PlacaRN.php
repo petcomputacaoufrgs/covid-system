@@ -214,6 +214,25 @@ class PlacaRN
             throw new Excecao('Erro consultando o placa.',$e);
         }
     }
+    public function consultar_completo(Placa $objPlaca) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objPlacaBD = new PlacaBD();
+            $arr =  $objPlacaBD->consultar_completo($objPlaca,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro consultando o placa.',$e);
+        }
+    }
 
     public function remover(Placa $objPlaca) {
         $objBanco = new Banco();

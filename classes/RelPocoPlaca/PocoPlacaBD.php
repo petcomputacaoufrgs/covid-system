@@ -13,8 +13,8 @@ class PocoPlacaBD
             $INSERT = 'INSERT INTO tb_pocos_placa (idPlaca_fk, idPoco_fk) VALUES (?,?)';
 
             $arrayBind = array();
-            $arrayBind[] = array('i',$objPocoPlaca->getIdPocoFk());
             $arrayBind[] = array('i',$objPocoPlaca->getIdPlacaFk());
+            $arrayBind[] = array('i',$objPocoPlaca->getIdPocoFk());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -58,7 +58,7 @@ class PocoPlacaBD
             $arrayBind = array();
 
             if ($objPocoPlaca->getIdPlacaFk() != null) {
-                $WHERE .= $AND . " idPlaca_fk";
+                $WHERE .= $AND . " idPlaca_fk = ?";
                 $AND = ' and ';
                 $arrayBind[] = array('i', $objPocoPlaca->getIdPlacaFk() );
             }
@@ -102,7 +102,6 @@ class PocoPlacaBD
             $arrayBind[] = array('i',$objPocoPlaca->getIdPocosPlaca());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
-
 
             $pocoPlaca = new PocoPlaca();
             $pocoPlaca->setIdPocosPlaca($arr[0]['idPocosPlaca']);

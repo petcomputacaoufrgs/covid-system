@@ -95,7 +95,7 @@ class PocoRN
 
 
 
-    public function cadastrar(Poco $objPoco, $totalmente) {
+    public function cadastrar(Poco $objPoco, $totalmente = null) {
         $objBanco = new Banco();
         try {
 
@@ -107,12 +107,21 @@ class PocoRN
             if($totalmente == 's') {
                 $quantidade = 8;
                 $letras = range('A', chr(ord('A') + $quantidade));
+                $arr_pocos = array();
                 for ($i = 1; $i <= 12; $i++) {
                     $objPoco->setColuna($i);
-                    for ($j = 0; $j <= 7; $j++) {
+                    for ($j = 1; $j <= 8; $j++) {
                         $objPoco->setLinha($letras[$j]);
                         $objPoco->setSituacao(PocoRN::$STA_LIBERADO);
-                        $objPocoBD->cadastrar($objPoco, $objBanco);
+                        $poco = $objPocoBD->cadastrar($objPoco, $objBanco);
+                        if($objPoco->getObjPlaca() != null){
+                            $objPocoPlaca = new PocoPlaca();
+                            $objPocoPlacaRN = new PocoPlacaRN();
+                            $objPocoPlaca->setIdPlacaFk($objPoco->getObjPlaca()->getIdPlaca());
+                            $objPocoPlaca->setIdPocoFk($poco->getIdPoco());
+                            $objPocoPlacaRN->cadastrar($objPocoPlaca);
+                        }
+
                     }
                 }
             }else {
@@ -126,7 +135,7 @@ class PocoRN
             }
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $objPoco;
+            return $poco;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando o poço.', $e);

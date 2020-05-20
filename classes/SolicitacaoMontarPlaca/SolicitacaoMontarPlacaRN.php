@@ -5,6 +5,9 @@
 require_once __DIR__ . '/../Excecao/Excecao.php';
 require_once __DIR__ . '/SolicitacaoMontarPlacaBD.php';
 
+require_once __DIR__ . '/../Poco/Poco.php';
+require_once __DIR__ . '/../Poco/PocoRN.php';
+
 class SolicitacaoMontarPlacaRN
 {
 
@@ -80,6 +83,7 @@ class SolicitacaoMontarPlacaRN
                 if($objSolMontarPlaca->getObjPlaca()->getIdPlaca() == null) {
                     $objPlacaRN = new PlacaRN();
                     $objplaca = $objPlacaRN->cadastrar($objSolMontarPlaca->getObjPlaca());
+
                 }
 
                 $objSolMontarPlaca->setObjPlaca($objplaca);
@@ -127,6 +131,10 @@ class SolicitacaoMontarPlacaRN
                 if($objSolMontarPlaca->getObjPlaca()->getIdPlaca() != null) {
                     $objPlacaRN = new PlacaRN();
                     $objplaca = $objPlacaRN->alterar($objSolMontarPlaca->getObjPlaca());
+                    $objPoco = new Poco();
+                    $objPocoRN = new PocoRN();
+                    $objPoco->setObjPlaca($objplaca);
+                    $objPocoRN->cadastrar($objPoco,'s');
                 }
 
                 $objSolMontarPlaca->setObjPlaca($objplaca);

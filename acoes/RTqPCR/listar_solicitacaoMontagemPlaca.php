@@ -202,6 +202,17 @@ try {
         }
 
 
+        if (Sessao::getInstance()->verificar_permissao('mostrar_poco')) {
+            if($solicitacao->getSituacaoSolicitacao() == SolicitacaoMontarPlacaRN::$TS_FINALIZADA ) {
+                $html .= '<td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=mostrar_poco&idSolicitacao=' . Pagina::formatar_html($solicitacao->getIdSolicitacaoMontarPlaca()).'&idPlaca=' . Pagina::formatar_html($solicitacao->getObjPlaca()->getIdPlaca())) . '"><i class="fas fa-th" style="color:black;"></i></a></td>';
+            }else{
+                $html .= '<td></td>';
+            }
+        }else{
+            $html .= '<td></td>';
+        }
+
+
         if (Sessao::getInstance()->verificar_permissao('imprimir_solicitacao_montagem_placa_RTqPCR')) {
             $html .= '<td><a target="_blank" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=imprimir_solicitacao_montagem_placa_RTqPCR&idSolicitacao=' . Pagina::formatar_html($solicitacao->getIdSolicitacaoMontarPlaca()) ) . '"><i style="color:black;margin: 0px; padding: 0px;" class="fas fa-print"></i></a></td>';
         }else{
@@ -235,7 +246,7 @@ Pagina::getInstance()->adicionar_css("precadastros");
 
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
-Pagina::montar_topo_listar('LISTAR PREPARO DOS GRUPOS', null, null, 'montar_preparo_extracao', 'NOVO GRUPO DE AMOSTRAS');
+Pagina::montar_topo_listar('LISTAR PREPARO DOS GRUPOS', null, null, null, null);
 Pagina::getInstance()->mostrar_excecoes();
 echo $alert;
 
@@ -257,6 +268,7 @@ echo '<div id="tabela_preparos" style="margin-top: -50px;">
                         <th scope="col">ID USUÁRIO</th>
                         <th  scope="col">DATA HORA INÍCIO</th>
                         <th  scope="col">DATA HORA TÉRMINO</th>
+                        <th scope="col"></th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                         <th scope="col"></th>

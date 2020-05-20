@@ -14,6 +14,26 @@ class Placa
     private $objProtocolo;
     private $objsAmostras;
     private $objsTubos;
+    private $objsPocosPlacas;
+
+    /**
+     * @return mixed
+     */
+    public function getObjsPocosPlacas()
+    {
+        return $this->objsPocosPlacas;
+    }
+
+    /**
+     * @param mixed $objsPocosPlacas
+     */
+    public function setObjsPocosPlacas($objsPocosPlacas)
+    {
+        $this->objsPocosPlacas = $objsPocosPlacas;
+    }
+
+
+
 
     /**
      * @return mixed

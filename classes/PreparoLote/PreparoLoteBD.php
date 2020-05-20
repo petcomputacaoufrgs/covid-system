@@ -25,8 +25,10 @@ class PreparoLoteBD{
                             dataHoraFim,
                             idCapela_fk,
                             idPreparoLote_fk,
-                            idKitExtracao_fk                            
-                            ) VALUES (?,?,?,?,?,?,?)';
+                            idKitExtracao_fk,
+                            obsKitExtracao,
+                            loteFabricacaoKitExtracao                            
+                            ) VALUES (?,?,?,?,?,?,?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objPreparoLote->getIdUsuarioFk());
@@ -36,6 +38,8 @@ class PreparoLoteBD{
             $arrayBind[] = array('i',$objPreparoLote->getIdCapelaFk());
             $arrayBind[] = array('i',$objPreparoLote->getIdPreparoLoteFk());
             $arrayBind[] = array('i',$objPreparoLote->getIdKitExtracaoFk());
+            $arrayBind[] = array('s',$objPreparoLote->getObsKitExtracao());
+            $arrayBind[] = array('s',$objPreparoLote->getLoteFabricacaokitExtracao());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -56,7 +60,9 @@ class PreparoLoteBD{
                 . ' dataHoraFim = ?,'
                 . ' idCapela_fk = ?,'
                 . ' idPreparoLote_fk = ?,'
-                . ' idKitExtracao_fk = ?'
+                . ' idKitExtracao_fk = ?,'
+                . ' obsKitExtracao = ?,'
+                . ' loteFabricacaoKitExtracao = ?'
                 . '  where idPreparoLote = ?';
 
 
@@ -68,6 +74,8 @@ class PreparoLoteBD{
             $arrayBind[] = array('i',$objPreparoLote->getIdCapelaFk());
             $arrayBind[] = array('i',$objPreparoLote->getIdPreparoLoteFk());
             $arrayBind[] = array('i',$objPreparoLote->getIdKitExtracaoFk());
+            $arrayBind[] = array('s',$objPreparoLote->getObsKitExtracao());
+            $arrayBind[] = array('s',$objPreparoLote->getLoteFabricacaokitExtracao());
 
             $arrayBind[] = array('i',$objPreparoLote->getIdPreparoLote());
 
@@ -130,6 +138,8 @@ class PreparoLoteBD{
                 $objPreparoLote->setIdPreparoLoteFk($reg['idPreparoLote_fk']);
                 $objPreparoLote->setIdCapelaFk($reg['idCapela_fk']);
                 $objPreparoLote->setIdKitExtracaoFk($reg['idKitExtracao_fk']);
+                $objPreparoLote->setObsKitExtracao($reg['obsKitExtracao']);
+                $objPreparoLote->setLoteFabricacaokitExtracao($reg['loteFabricacaoKitExtracao']);
 
                 $array[] = $objPreparoLote;
             }
@@ -160,6 +170,8 @@ class PreparoLoteBD{
             $preparoLote->setIdPreparoLoteFk($arr[0]['idPreparoLote_fk']);
             $preparoLote->setIdCapelaFk($arr[0]['idCapela_fk']);
             $preparoLote->setIdKitExtracaoFk($arr[0]['idKitExtracao_fk']);
+            $preparoLote->setObsKitExtracao($arr[0]['obsKitExtracao']);
+            $preparoLote->setLoteFabricacaokitExtracao($arr[0]['loteFabricacaoKitExtracao']);
 
             return $preparoLote;
         } catch (Throwable $ex) {
@@ -204,6 +216,8 @@ class PreparoLoteBD{
             $preparoLote->setIdPreparoLoteFk($arr[0]['idPreparoLote_fk']);
             $preparoLote->setIdCapelaFk($arr[0]['idCapela_fk']);
             $preparoLote->setIdKitExtracaoFk($arr[0]['idKitExtracao_fk']);
+            $preparoLote->setObsKitExtracao($arr[0]['obsKitExtracao']);
+            $preparoLote->setLoteFabricacaokitExtracao($arr[0]['loteFabricacaoKitExtracao']);
 
             $objLote = new Lote();
             $objLote->setIdLote($arr[0]['idLote']);
@@ -256,6 +270,8 @@ class PreparoLoteBD{
                 $objPreparoLote->setIdLoteFk($reg['idLote_fk']);
                 $objPreparoLote->setDataHoraFim($reg['dataHoraFim']);
                 $objPreparoLote->setDataHoraInicio($reg['dataHoraInicio']);
+                $objPreparoLote->setObsKitExtracao($reg['obsKitExtracao']);
+                $objPreparoLote->setLoteFabricacaokitExtracao($reg['loteFabricacaoKitExtracao']);
 
 
                 $objLote = new Lote();
@@ -440,6 +456,8 @@ class PreparoLoteBD{
                 $preparoLote->setIdPreparoLoteFk($arr['idPreparoLote_fk']);
                 $preparoLote->setIdCapelaFk($arr['idCapela_fk']);
                 $preparoLote->setIdKitExtracaoFk($arr['idKitExtracao_fk']);
+                $preparoLote->setObsKitExtracao($arr['obsKitExtracao']);
+                $preparoLote->setLoteFabricacaokitExtracao($arr['loteFabricacaoKitExtracao']);
 
                 //print_r($preparoLote);
                 //echo "\n";
@@ -527,11 +545,15 @@ class PreparoLoteBD{
 
         try{
 
-            $SELECT1 = 'SELECT * FROM tb_preparo_lote, tb_lote, tb_rel_tubo_lote where 
+            $SELECT1 = 'SELECT *                         
+                        FROM tb_preparo_lote,tb_tubo, tb_lote, tb_rel_tubo_lote,tb_amostra where 
                         tb_preparo_lote.idPreparoLote = ?
                          and tb_preparo_lote.idLote_fk = tb_lote.idLote 
                          AND tb_rel_tubo_lote.idLote_fk = tb_lote.idLote 
-                    
+                         and tb_amostra.idAmostra = tb_tubo.idAmostra_fk
+                         and tb_rel_tubo_lote.idTubo_fk = tb_tubo.idTubo
+                         order by substr(tb_amostra.nickname,1,1), cast(substr(tb_amostra.nickname,2) as int)
+                         
                         ';
 
             $arrayBind1 = array();
@@ -547,6 +569,8 @@ class PreparoLoteBD{
             $preparoLote->setIdPreparoLoteFk($array[0]['idPreparoLote_fk']);
             $preparoLote->setIdCapelaFk($array[0]['idCapela_fk']);
             $preparoLote->setIdKitExtracaoFk($array[0]['idKitExtracao_fk']);
+            $preparoLote->setObsKitExtracao($array[0]['obsKitExtracao']);
+            $preparoLote->setLoteFabricacaokitExtracao($array[0]['loteFabricacaoKitExtracao']);
 
             $objLote = new Lote();
             $objLote->setQntAmostrasAdquiridas($array[0]['qntAmostrasAdquiridas']);
@@ -554,6 +578,27 @@ class PreparoLoteBD{
             $objLote->setTipo($array[0]['tipo']);
             $objLote->setSituacaoLote($array[0]['situacaoLote']);
             $objLote->setIdLote($array[0]['idLote']);
+
+            $arr_amostras = array();
+            foreach ($array as $arr) {
+
+                $objTubo = new Tubo();
+                $objTubo->setIdTubo($arr['idTubo_fk']);
+                $arr_tubos[] = $objTubo;
+
+
+                $objAmostra = new Amostra();
+                $objAmostra->setIdAmostra($arr['idAmostra']);
+                $objAmostra->setCodigoAmostra($arr['codigoAmostra']);
+                $objAmostra->setDataColeta($arr['dataColeta']);
+                $objAmostra->setNickname($arr['nickname']);
+                $objAmostra->setObjTubo($objTubo);
+                $arr_amostras[] = $objAmostra;
+
+
+            }
+            $objLote->setObjsAmostras($arr_amostras);
+            $objLote->setObjsTubo($arr_tubos);
 
             $SELECT_PERFIS = 'SELECT * FROM tb_preparo_lote,tb_rel_perfil_preparolote,tb_perfilpaciente 
                                 where tb_preparo_lote.idPreparoLote = ? 
@@ -572,33 +617,7 @@ class PreparoLoteBD{
             }
             $preparoLote->setObjPerfil($arr_perfis);
 
-            foreach ($array as $arr) {
 
-                $objTubo = new Tubo();
-                $objTubo->setIdTubo($arr['idTubo_fk']);
-                $arr_tubos[] = $objTubo;
-
-
-                //foreach ($arr_tubos as $tubo){
-                $selectAmostras = 'select * from tb_amostra, tb_tubo where tb_amostra.idAmostra = tb_tubo.idAmostra_fk
-                and tb_tubo.idTubo = ?';
-
-                $arrayBind2 = array();
-                $arrayBind2[] = array('i', $objTubo->getIdTubo());
-                $array = $objBanco->consultarSQL($selectAmostras,$arrayBind2);
-
-                $objAmostra = new Amostra();
-                $objAmostra->setIdAmostra($array[0]['idAmostra']);
-                $objAmostra->setCodigoAmostra($array[0]['codigoAmostra']);
-                $objAmostra->setDataColeta($array[0]['dataColeta']);
-                $objAmostra->setNickname($array[0]['nickname']);
-                $objAmostra->setObjTubo($objTubo);
-                $arr_amostras[] = $objAmostra;
-
-
-            }
-            $objLote->setObjsAmostras($arr_amostras);
-            $objLote->setObjsTubo($arr_tubos);
             $preparoLote->setObjLote($objLote);
 
             return $preparoLote;

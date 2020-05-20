@@ -9,6 +9,29 @@ class PocoPlaca
     private $idPlaca_fk;
     private $idPoco_fk;
 
+    private $objPoco;
+
+    /**
+     * @return mixed
+     */
+    public function getObjPoco()
+    {
+        return $this->objPoco;
+    }
+
+    /**
+     * @param mixed $objPoco
+     */
+    public function setObjPoco($objPoco)
+    {
+        $this->objPoco = $objPoco;
+    }
+
+
+
+
+
+
     /**
      * @return mixed
      */

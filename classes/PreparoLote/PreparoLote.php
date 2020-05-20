@@ -13,6 +13,8 @@ class PreparoLote
     private $idCapela_fk;
     private $idPreparoLote_fk;
     private $idKitExtracao_fk;
+    private $obsKitExtracao;
+    private $loteFabricacaokitExtracao;
 
     private $objLote;
     private $objLoteOriginal;
@@ -21,6 +23,41 @@ class PreparoLote
 
     private $ObjsTubosCadastro;
     private $ObjsTubosAlterados;
+
+    /**
+     * @return mixed
+     */
+    public function getObsKitExtracao()
+    {
+        return $this->obsKitExtracao;
+    }
+
+    /**
+     * @param mixed $obsKitExtracao
+     */
+    public function setObsKitExtracao($obsKitExtracao)
+    {
+        $this->obsKitExtracao = $obsKitExtracao;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLoteFabricacaokitExtracao()
+    {
+        return $this->loteFabricacaokitExtracao;
+    }
+
+    /**
+     * @param mixed $loteFabricacaokitExtracao
+     */
+    public function setLoteFabricacaokitExtracao($loteFabricacaokitExtracao)
+    {
+        $this->loteFabricacaokitExtracao = $loteFabricacaokitExtracao;
+    }
+
+
+
 
     /**
      * @return mixed

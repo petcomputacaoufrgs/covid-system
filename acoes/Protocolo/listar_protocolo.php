@@ -7,13 +7,23 @@ try{
     require_once __DIR__.'/../../classes/Sessao/Sessao.php';
     require_once __DIR__.'/../../classes/Pagina/Pagina.php';
     require_once __DIR__.'/../../classes/Excecao/Excecao.php';
+
     require_once __DIR__.'/../../classes/Protocolo/Protocolo.php';
     require_once __DIR__.'/../../classes/Protocolo/ProtocoloRN.php';
 
+    require_once __DIR__ . '/../../classes/DivisaoProtocolo/DivisaoProtocolo.php';
+    require_once __DIR__ . '/../../classes/DivisaoProtocolo/DivisaoProtocoloRN.php';
+
     Sessao::getInstance()->validar();
 
+    /* PROTOCOLO */
     $objProtocolo = new Protocolo();
     $objProtocoloRN = new ProtocoloRN();
+
+    /* DIVISÃO PROTOCOLO */
+    $objDivisaoProtocolo = new DivisaoProtocolo();
+    $objDivisaoProtocoloRN = new DivisaoProtocoloRN();
+
     $html = '';
     $alert = '';
 
@@ -33,12 +43,19 @@ try{
     $arrProtocolo = $objProtocoloRN->listar(new Protocolo());
     foreach ($arrProtocolo as $p){
 
+        $strDivisoes = '';
+        foreach($p->getObjDivisao() as $divisao){
+            $strDivisoes .= $divisao->getNomeDivisao().",";
+        }
+
+        $strDivisoes = substr($strDivisoes, 0,-1);
 
         $html.='<tr>
                     <th scope="row">'.Pagina::formatar_html($p->getIdProtocolo()).'</th>
                         <td>'.Pagina::formatar_html($p->getProtocolo()).'</td>
             
-                        <td>'.Pagina::formatar_html($p->getNumMaxAmostras()).'</td>';
+                        <td>'.Pagina::formatar_html($p->getNumMaxAmostras()).'</td>
+                        <td>'.Pagina::formatar_html($strDivisoes).'</td>';
 
         if(Sessao::getInstance()->verificar_permissao('editar_protocolo')) {
             $html .= '<td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_protocolo&idProtocolo='.Pagina::formatar_html($p->getIdProtocolo())).'"><i class="fas fa-edit "></i></a></td>';
@@ -71,6 +88,7 @@ echo $alert.'
                         <th scope="col">#ID</th>
                         <th scope="col">PROTOCOLO</th>
                         <th scope="col">Nº MÁX DE AMOSTRAS</th>
+                        <th scope="col">DIVISÕES</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>

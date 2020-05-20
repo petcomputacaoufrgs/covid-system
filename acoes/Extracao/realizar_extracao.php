@@ -149,7 +149,8 @@ try {
 
     $select_kitExtracao = '';
     $sumir_btns = 'n';
-
+    $objPreparoLoteORIGINAL = new PreparoLote();
+    $disabled_inputs = '';
 
 
 
@@ -202,6 +203,11 @@ try {
                 $objCapela->setIdCapela($_POST['sel_nivelSegsCapela']);
                 $objCapela->setNivelSeguranca(CapelaRN::$TNS_MEDIA_SEGURANCA);
                 $objCapelaRN->bloquear_registro($objCapela);
+                $objPreparoLote->setIdPreparoLote($_POST['sel_grupos']);
+                $objPreparoLote = $objPreparoLoteRN->consultar($objPreparoLote);
+                $objPreparoLote->setObsKitExtracao($_POST['txtObsKit']);
+                $objPreparoLote->setLoteFabricacaokitExtracao($_POST['txtLoteFabricacaoKit']);
+                $objPreparoLoteRN->alterar($objPreparoLote);
                 header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao&idCapela=' . $_POST['sel_nivelSegsCapela'] . '&idPreparoLote=' . $_POST['sel_grupos'] . '&idKitExtracao=' . $_POST['sel_kitsExtracao']));
                 die();
             }
@@ -264,8 +270,11 @@ try {
 
                 $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
                 $objPreparoLote = $objPreparoLoteRN->consultar($objPreparoLote);
+                $objPreparoLoteORIGINAL = $objPreparoLoteRN->consultar($objPreparoLote);
+                $disabled_inputs = ' disabled ';
                 $objPreparoLote->setIdCapelaFk($_GET['idCapela']);
                 $objPreparoLote->setIdKitExtracaoFk($_GET['idKitExtracao']);
+
                 $objPreparoLote = $objPreparoLoteRN->alterar($objPreparoLote);
                 $objPreparoLoteRN->mudar_status_lote($objPreparoLote, LoteRN::$TE_EM_EXTRACAO);
 
@@ -287,6 +296,13 @@ try {
                 $contador = 0;
                 $style_top = 0;
                 $arr_tubos_alterados = array();
+
+                $arr_JSCopiarLocal = array();
+                $arr_JSCopiarCaixa = array();
+                $arr_JSCopiarPorta = array();
+                $arr_JSCopiarColuna = array();
+                $arr_JSCopiarPrateleira = array();
+                $primeiro = true;
                 foreach ($arr_tubos[0]->getObjsTubos() as $tubosLote) {
 
                     $objInfosTubo->setIdTubo_fk($tubosLote->getObjTubo()->getIdTubo());
@@ -359,52 +375,79 @@ try {
                                     </div>
                                 </div>
                                 
-                                <div class="form-row" >
-                                    <div class="col-md-4">
+                                <div class="form-row" >';
+                            $strIdLocalArmazenamento = 'nomeLocalArmazenamento_' . $tubosLote->getObjTubo()->getIdTubo();
+                          $show_amostras .= '  <div class="col-md-4">
                                        <label> Local de armazenamento </label>
-                                            <input type="text" class="form-control form-control-sm" id="idNomeLocal" ' . $disabled . ' style="text-align: center;" placeholder=""
-                                                    name="nomeLocalArmazenamento_' . $tubosLote->getObjTubo()->getIdTubo() . '" 
-                                                     value="' . $_POST['nomeLocalArmazenamento_' . $tubosLote->getObjTubo()->getIdTubo()] . '">
-                                    </div>
-                                    
-                                    <div class="col-md-4">
+                                            <input type="text" class="form-control form-control-sm"  ' . $disabled . ' style="text-align: center;" placeholder=""
+                                                    name="'.$strIdLocalArmazenamento. '" 
+                                                     value="' . $_POST[$strIdLocalArmazenamento] . '"
+                                                     id="'.$strIdLocalArmazenamento.'">
+                                    </div>';
+                                $arr_JSCopiarLocal[] = $strIdLocalArmazenamento;
+
+                           $strIdPorta = 'txtPorta_' . $tubosLote->getObjTubo()->getIdTubo();
+                           $show_amostras .= '        <div class="col-md-4">
                                        <label> Porta </label>
-                                            <input type="text" class="form-control form-control-sm" id="idNomeLocal" ' . $disabled . ' style="text-align: center;" placeholder=""
-                                                    name="txtPorta_' . $tubosLote->getObjTubo()->getIdTubo() . '" 
-                                                     value="' . $_POST['txtPorta_' . $tubosLote->getObjTubo()->getIdTubo()] . '">
-                                    </div>
-                                    
-                                    <div class="col-md-4">
+                                            <input type="text" class="form-control form-control-sm" ' . $disabled . ' style="text-align: center;" placeholder=""
+                                                    name="'.$strIdPorta.'" 
+                                                     value="' . $_POST[$strIdPorta] . '"
+                                                     id="'.$strIdPorta.'">
+                                    </div>';
+                        $arr_JSCopiarPorta[] = $strIdPorta;
+
+                    $strIdPrateleira = 'txtPrateleira_' . $tubosLote->getObjTubo()->getIdTubo();
+                    $show_amostras .= ' <div class="col-md-4">
                                        <label> Prateleira </label>
-                                            <input type="text" class="form-control form-control-sm" id="idNomeLocal" ' . $disabled . ' style="text-align: center;" placeholder=""
-                                                    name="txtPrateleira_' . $tubosLote->getObjTubo()->getIdTubo() . '" 
-                                                     value="' . $_POST['txtPrateleira_' . $tubosLote->getObjTubo()->getIdTubo()] . '">
+                                            <input type="text" class="form-control form-control-sm" ' . $disabled . ' style="text-align: center;" placeholder=""
+                                                    name="'.$strIdPrateleira . '" 
+                                                     value="' . $_POST[$strIdPrateleira] . '"
+                                                     id="'.$strIdPrateleira.'">
                                     </div>
-                                    </div>
-                                    <div class="form-row" >
+                                    </div>';
+                    $arr_JSCopiarPrateleira[] = $strIdPrateleira;
+
+                    $strIdColuna = 'txtColuna_' . $tubosLote->getObjTubo()->getIdTubo();
+                    $show_amostras .= '  <div class="form-row" >
                                     <div class="col-md-4">
                                             <label> Coluna </label>
-                                            <input type="text" class="form-control form-control-sm" id="idColuna"  ' . $disabled . ' style="text-align: center;" placeholder=""
-                                                name="txtColuna_' . $tubosLote->getObjTubo()->getIdTubo() . '" 
-                                                 value="' . $_POST['txtColuna_' . $tubosLote->getObjTubo()->getIdTubo()] . '">
-                                         </div>
-                                        <div class="col-md-4">
+                                            <input type="text" class="form-control form-control-sm"  ' . $disabled . ' style="text-align: center;" placeholder=""
+                                                name="'.$strIdColuna . '" 
+                                                 value="' . $_POST[$strIdColuna] . '"
+                                                 id="'.$strIdColuna.'">
+                                         </div>';
+                    $arr_JSCopiarColuna[] = $strIdColuna;
+
+                    $strIdCaixa = 'txtCaixa_' . $tubosLote->getObjTubo()->getIdTubo();
+                    $show_amostras .= '<div class="col-md-4">
                                             <label> Caixa </label>
-                                            <input type="text" class="form-control form-control-sm" id="idVolume"  ' . $disabled . ' style="text-align: center;" placeholder=""
-                                                name="txtCaixa_' . $tubosLote->getObjTubo()->getIdTubo() . '" 
-                                                 value="' . $_POST['txtCaixa_' . $tubosLote->getObjTubo()->getIdTubo()] . '">
-                                         </div>
-                                         
-                                        <div class="col-md-4">
+                                            <input type="text" class="form-control form-control-sm"   ' . $disabled . ' style="text-align: center;" placeholder=""
+                                                name="'.$strIdCaixa . '" 
+                                                 value="' . $_POST[$strIdCaixa] . '"
+                                                 id="'.$strIdCaixa.'">
+                                         </div>';
+                    $arr_JSCopiarCaixa[] = $strIdCaixa;
+                    
+
+                    $show_amostras .= '      <div class="col-md-4">
                                             
                                             <label> Posição (letra+número) </label>
-                                             <input type="text" class="form-control form-control-sm" id="idVolume" ' . $disabled . '  style="text-align: center;" placeholder=""
+                                             <input type="text" class="form-control form-control-sm"  ' . $disabled . '  style="text-align: center;" placeholder=""
                                                     name="txtPosicao_' . $tubosLote->getObjTubo()->getIdTubo() . '"  
                                                     value="' . $_POST['txtPosicao_' . $tubosLote->getObjTubo()->getIdTubo()] . '">
                                          </div>
-                                    </div>
+                                    </div>';
+                    if($primeiro && isset($_POST['btn_confirmar_extracao'])) {
+                        $show_amostras .= '<div class="form-row">
+                                        <div class="col-md-12">
+                                            <button style="padding:5px;background-color: #3a5261; color: white;font-size:12px;border: 2px solid white;border-radius: 5px;"  
+                                                type="button" onclick="copiar()">COPIAR LOCAL DE ARMAZENAMENTO PARA TODAS AS AMOSTRAS</button>
+                                        </div>
+                                    </div>';
+                        $primeiro = false;
+                    }
                                 
-                                <div class="form-row" style="margin-bottom: 30px;">
+                    $show_amostras .= '<div class="form-row" style="margin-bottom: 30px;">
                                     <div class="col-md-2">
                                         <div class="custom-control custom-checkbox mr-sm-2" style="margin-top: 10px;margin-left: 5px;">
                
@@ -595,6 +638,44 @@ Pagina::getInstance()->adicionar_css("precadastros");
 if($cadastrar_novo  == 's') {
     Pagina::getInstance()->adicionar_javascript("popUp");
 }
+echo "\n".'<script type="text/javascript">
+
+    function copiar(){
+      //alert(\'COPIANDO\');
+    ';
+
+
+    for($i=1;$i<count($arr_JSCopiarLocal); $i++){
+        echo "\n".'document.getElementById(\''.$arr_JSCopiarLocal[$i].'\').value = document.getElementById(\''.$arr_JSCopiarLocal[0].'\').value;';
+
+    }
+
+    for($i=1;$i<count($arr_JSCopiarPorta); $i++){
+        echo "\n".'document.getElementById(\''.$arr_JSCopiarPorta[$i].'\').value = document.getElementById(\''.$arr_JSCopiarPorta[0].'\').value;';
+
+    }
+
+    for($i=1;$i<count($arr_JSCopiarCaixa); $i++){
+        echo "\n".'document.getElementById(\''.$arr_JSCopiarCaixa[$i].'\').value = document.getElementById(\''.$arr_JSCopiarCaixa[0].'\').value;';
+
+    }
+
+    for($i=1;$i<count($arr_JSCopiarPrateleira); $i++){
+        echo "\n".'document.getElementById(\''.$arr_JSCopiarPrateleira[$i].'\').value = document.getElementById(\''.$arr_JSCopiarPrateleira[0].'\').value;';
+
+    }
+
+    for($i=1;$i<count($arr_JSCopiarColuna); $i++){
+        echo "\n".'document.getElementById(\''.$arr_JSCopiarColuna[$i].'\').value = document.getElementById(\''.$arr_JSCopiarColuna[0].'\').value;';
+
+    }
+
+
+
+echo '
+   }
+
+</script>';
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
 echo $alert;
@@ -634,6 +715,19 @@ echo '<div class="conteudo_grande " STYLE="margin-top: 0px;" >
                     <label>Escolha um dos kits</label>'
                     .$select_kitExtracao.
                     '</div>
+                    </div>
+                 <div class="form-row" >
+                    <div class="col-md-6">
+                        <label for="">Informe o lote de fabricação do kit de extração (opcional)</label>
+                        <input type="text" class="form-control"  '.$disabled_inputs.'
+                               name="txtLoteFabricacaoKit" required value="'.Pagina::formatar_html($objPreparoLoteORIGINAL->getLoteFabricacaokitExtracao()).'">
+                     </div>
+                     <div class="col-md-6">
+                        <label for="">Observações do kit de extração (opcional)</label>
+                        <textarea id="idTxtAreaObs" '.$disabled_inputs.'
+                                  name="txtObsKit" rows="1" cols="100" class="form-control"
+                                  >'.Pagina::formatar_html($objPreparoLoteORIGINAL->getObsKitExtracao()).'</textarea>
+                     </div>
                 </div>
                 <div class="form-row" >
                     <div class="col-md-6">

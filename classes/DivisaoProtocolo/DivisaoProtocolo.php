@@ -10,6 +10,26 @@ class DivisaoProtocolo
     private $idProtocolo_fk;
     private $nomeDivisao;
 
+    private $objProtocolo;
+
+    /**
+     * @return mixed
+     */
+    public function getObjProtocolo()
+    {
+        return $this->objProtocolo;
+    }
+
+    /**
+     * @param mixed $objProtocolo
+     */
+    public function setObjProtocolo($objProtocolo)
+    {
+        $this->objProtocolo = $objProtocolo;
+    }
+
+
+
     /**
      * @return mixed
      */
