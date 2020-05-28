@@ -100,18 +100,25 @@ try {
         //print_r($preparo);
         $strTubos = '';
         $strAmostras = '';
+        $contador = 0;
         foreach ($preparo->getObjLote()->getObjsTubo() as $tubo) {
             $strTubos .= $tubo->getIdTubo() . ",";
+            $contador++;
+            if ($contador == 8) {
+                $contador = 0;
+                $strTubos .= "\n";
+            }
         }
 
-        $cont = 0;
+        $contador = 0;
         foreach ($preparo->getObjLote()->getObjsAmostras() as $amostra) {
-            if ($cont == 5) {
-                $cont = 0;
+
+            $strAmostras .= $amostra->getNickname() . ",";
+            $contador++;
+            if ($contador == 8) {
+                $contador = 0;
                 $strAmostras .= "\n";
             }
-            $strAmostras .= $amostra->getNickname() . ",";
-            $cont++;
         }
 
 
@@ -144,9 +151,9 @@ try {
 
         $html .= '<td>' . Pagina::formatar_html(LoteRN::mostrarDescricaoTipoLote($preparo->getObjLote()->getTipo())) . '</td>';
         if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
-            $html .= '    <td>' . Pagina::formatar_html($strTubos) . '</td>';
+            $html .= '    <td style="white-space: pre-wrap;">' . Pagina::formatar_html($strTubos) . '</td>';
         }
-        $html .= '    <td>' . Pagina::formatar_html($strAmostras) . '</td>';
+        $html .= '    <td style="white-space: pre-wrap;">' . Pagina::formatar_html($strAmostras) . '</td>';
         $html .= '    <td>' . Pagina::formatar_html($preparo->getIdUsuarioFk()) . '</td>';
 
         $dataHoraInicio = explode(" ", $preparo->getDataHoraInicio());
@@ -172,10 +179,19 @@ try {
         }
 
         //echo 'controlador.php?action=realizar_preparo_inativacao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote()).'&idCapela='. Pagina::formatar_html($preparo->getIdCapelaFk()).'&idSituacao=1'."\n";
+
         if ($preparo->getObjLote()->getSituacaoLote() == LoteRN::$TE_EM_PREPARACAO) {
-            $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote()) . '&idCapela=' . Pagina::formatar_html($preparo->getIdCapelaFk())) . '&idSituacao=1"><i class="fas fa-exclamation-triangle" style="color: #f36c29;"></i></td>';
+            if (Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao')) {
+                $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote()) . '&idCapela=' . Pagina::formatar_html($preparo->getIdCapelaFk())) . '&idSituacao=1"><i class="fas fa-exclamation-triangle" style="color: #f36c29;"></i></td>';
+            }else{
+                $html .= '<td ></td>';
+            }
         } else if ($preparo->getObjLote()->getSituacaoLote() == LoteRN::$TE_NA_MONTAGEM) {
-            $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote())) .'"><i class="fas fa-exclamation-triangle" style="color: #f36c29;"></i></td>';
+            if (Sessao::getInstance()->verificar_permissao('montar_preparo_extracao')) {
+                $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote())) . '"><i class="fas fa-exclamation-triangle" style="color: #f36c29;"></i></td>';
+            }else{
+                $html .= '<td ></td>';
+            }
         } else{
             $html .= '<td ></td>';
         }

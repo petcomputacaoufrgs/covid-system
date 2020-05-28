@@ -26,6 +26,10 @@ require_once __DIR__ . '/../../classes/Rel_perfil_preparoLote/Rel_perfil_preparo
 require_once __DIR__ . '/../../classes/Rel_tubo_lote/Rel_tubo_lote.php';
 require_once __DIR__ . '/../../classes/Rel_tubo_lote/Rel_tubo_lote_RN.php';
 
+
+require_once __DIR__ . '/../../classes/RelTuboPlaca/RelTuboPlaca.php';
+require_once __DIR__ . '/../../classes/RelTuboPlaca/RelTuboPlacaRN.php';
+
 class PreparoLoteRN
 {
 
@@ -163,6 +167,90 @@ class PreparoLoteRN
         }
     }
 
+
+    public function alterar_extracao(PreparoLote $objPreparoLote)
+    {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $this->validarFabricacaoKit($objPreparoLote,$objExcecao);
+            $this->validarObsKitExtracao($objPreparoLote,$objExcecao);
+
+            $objExcecao->lancar_validacoes();
+            $objPreparoLoteBD = new PreparoLoteBD();
+            $preparoLote = $objPreparoLoteBD->alterar($objPreparoLote, $objBanco);
+
+
+            //alterar capela
+            if($objPreparoLote->getObjCapela() != null){
+                $objCapelaRN = new CapelaRN();
+                $objCapelaRN->bloquear_registro($objPreparoLote->getObjCapela());
+            }
+
+            //alterar infos tubo
+            if($objPreparoLote->getObjLote()->getObjsAmostras() != null){
+                foreach($objPreparoLote->getObjLote()->getObjsAmostras() as $amostra){
+
+                    $tubo  = $amostra->getObjTubo();
+                    $infotubo  = $amostra->getObjTubo()->getObjInfosTubo();
+                    if($infotubo->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA) {
+                        //verificar se não está em nenhuma placa
+                        $objRelTuboPlaca = new RelTuboPlaca();
+                        $objRelTuboPlacaRN = new RelTuboPlacaRN();
+                        $objRelTuboPlaca->setIdTuboFk($infotubo->getIdTubo_fk());
+                        $arr = $objRelTuboPlacaRN->listar($objRelTuboPlaca);
+                        if (count($arr) > 0) {
+                            $objExcecao->adicionar_validacao('A amostra não pode ser descartada pois está associada a uma placa de RTqPCR', null, 'alert-danger');
+                        }
+
+                        //verificar no lote
+                        $objLote = new Lote();
+                        $objLoteRN = new LoteRN();
+                        $objLote->setIdLote($objPreparoLote->getIdLoteFk());
+                        $objLote = $objLoteRN->consultar($objLote);
+                        $objLote->setQntAmostrasAdquiridas(($objLote->getQntAmostrasAdquiridas() - 1));
+                        //caso tenha deletado a última amostra do lote
+                        if ($objLote->getQntAmostrasAdquiridas() == 0) {
+                            //deletar todo o lote preparo lote rel perfil preparo lote...
+                            $objPreparoLoteRN = new PreparoLoteRN();
+                            $objPreparoLoteRN->remover_completamente($objPreparoLote);
+                            $objExcecao->adicionar_validacao('Por não possuir mais amostras o lote foi eliminado', null, 'alert-danger');
+                        } else {
+                            $objLote = $objLoteRN->alterar($objLote);
+                        }
+
+                        $objRelTuboLote = new Rel_tubo_lote();
+                        $objRelTuboLoteRN = new Rel_tubo_lote_RN();
+                        $objRelTuboLote->setIdLote_fk($objPreparoLote->getIdLoteFk());
+                        $objRelTuboLote->setIdTubo_fk($tubo->getIdTubo());
+                        $arr_tubo_lote = $objRelTuboLoteRN->listar($objRelTuboLote);
+
+                        $objRelTuboLote->setIdRelTuboLote($arr_tubo_lote[0]->getIdRelTuboLote());
+                        $objRelTuboLoteRN->remover($objRelTuboLote);
+
+
+                        $objExcecao->lancar_validacoes();
+                    }else{
+                        $objInfosTuboRN = new InfosTuboRN();
+                        $objInfosTuboRN->alterar($infotubo);
+                    }
+                }
+                
+            }
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $preparoLote;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro alterando o perfil do preparo do lote.', $e);
+        }
+    }
+
     public function consultar(PreparoLote $preparoLote)
     {
         $objBanco = new Banco();
@@ -237,7 +325,20 @@ class PreparoLoteRN
 
                 $arr = $preparoLote[0]->getObjsTubos();
 
+                $objInfosTuboAuxiliar = new InfosTubo();
+                $objInfosTuboAuxiliarRN = new InfosTuboRN();
+
+                $objInfosTuboAuxiliar->setIdLote_fk($preparoLote[0]->getIdLoteFk());
+                $arr_infos = $objInfosTuboAuxiliarRN->listar($objInfosTuboAuxiliar);
+
+                foreach ($arr_infos as $info){
+                    $info->setIdLote_fk(null);
+                    $objInfosTuboAuxiliarRN->alterar($info);
+
+                }
+
                 for ($i = 0; $i < count($arr); $i++) {
+
 
                     $objInfosTubo = new InfosTubo();
                     $objInfosTuboRN = new InfosTuboRN();
@@ -257,6 +358,8 @@ class PreparoLoteRN
 
                 }
 
+                $objLote->setIdLote($preparoLote[0]->getIdLoteFk());
+                $objLoteRN->remover($objLote);
 
                 $objRelTuboLote = new Rel_tubo_lote();
                 $objRelTuboLoteRN = new Rel_tubo_lote_RN();
@@ -269,10 +372,11 @@ class PreparoLoteRN
                 $objRel_Perfil_preparoLoteRN->remover_peloIdPreparo($objRel_Perfil_preparoLote);
 
 
+
+
                 $objPreparoLoteBD->remover($objPreparoLote, $objBanco);
 
-                $objLote->setIdLote($preparoLote[0]->getIdLoteFk());
-                $objLoteRN->remover($objLote);
+
         }
             $objExcecao->lancar_validacoes();
             $objBanco->confirmarTransacao();
@@ -442,7 +546,7 @@ class PreparoLoteRN
         }
     }
 
-    public function obter_todas_infos(PreparoLote $preparoLote)
+    public function obter_todas_infos(PreparoLote $preparoLote,$str=null)
     {
         $objBanco = new Banco();
         try {
@@ -451,9 +555,11 @@ class PreparoLoteRN
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
 
+
             $objExcecao->lancar_validacoes();
             $objPreparoLoteBD = new PreparoLoteBD();
-            $arr = $objPreparoLoteBD->obter_todas_infos($preparoLote, $objBanco);
+
+            $arr = $objPreparoLoteBD->obter_todas_infos($preparoLote, $str,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();

@@ -43,6 +43,7 @@ class PocoRN
                 return $a->getStrDescricao();
             }
         }
+        return false;
     }
 
 
@@ -78,17 +79,10 @@ class PocoRN
     }
 
     private function validarSituacao(Poco $objPoco,Excecao $objExcecao){
-        $arr = self::listarTipoSituacaoPoco();
-        $encontrou = false;
-        foreach ($arr as $a){
-            if($a->getStrTipo() == $objPoco->getSituacao() ){
-                $encontrou = true;
-            }
-        }
 
-        if(!$encontrou){
-            $objExcecao->adicionar_validacao('A situação informada para o pocço é inválida',null,'alert-danger');
-        }
+        /*if(!self::mostrar_descricao_situacao_poco($objPoco->getSituacao())){
+            $objExcecao->adicionar_validacao('A situação informada para o poço é inválida',null,'alert-danger');
+        }*/
 
 
     }
@@ -102,29 +96,122 @@ class PocoRN
             $objExcecao = new Excecao();
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
-
             $objPocoBD = new PocoBD();
-            if($totalmente == 's') {
+            if($totalmente == 's'){
+                if ($objPoco->getObjPlaca()->getObjProtocolo()->getNumDivisoes() == 1) {
+                $incremento_na_placa_original = 0;
+                } else if ($objPoco->getObjPlaca()->getObjProtocolo()->getNumDivisoes() == 2) {
+                    $incremento_na_placa_original = 6;
+                } else if ($objPoco->getObjPlaca()->getObjProtocolo()->getNumDivisoes() == 3) {
+                    $incremento_na_placa_original = 4;
+                } else if ($objPoco->getObjPlaca()->getObjProtocolo()->getNumDivisoes() == 4) {
+                    $incremento_na_placa_original = 3;
+                }
+
+            //$error = false;
+            //$arr_errors = array();
+
+            $quantidade = 8;
+            $letras = range('A', chr(ord('A') + $quantidade));
+
+            $cols = (12 / count($objPoco->getObjPlaca()->getObjProtocolo()->getObjDivisao()));
+
+            $tubo_placa = 0;
+            $posicoes_array = 0;
+            $cont = 1;
+            $objPlaca = $objPoco->getObjPlaca();
+
+            for ($j = 1; $j <= 12; $j++) {
+                for ($i = 1; $i <= 8; $i++) {
+
+                    if ($objPlaca->getObjsAmostras()[$tubo_placa] != null) {
+                        //$posicao_tubo[$posicoes_array] = array('valor'=>$objPlaca->getObjsTubos()[$tubo_placa]->getIdTuboFk(),'x' => $i, 'y' => $j);
+                        $posicao_tubo[$i][$j] = $objPlaca->getObjsAmostras()[$tubo_placa]->getNickname();
+
+                        if ($objPlaca->getObjProtocolo()->getNumDivisoes() == 3) {
+                            $posicao_tubo[$i][$j + $incremento_na_placa_original] = $objPlaca->getObjsAmostras()[$tubo_placa]->getNickname();
+                            $posicao_tubo[$i][$j + (2 * $incremento_na_placa_original)] = $objPlaca->getObjsAmostras()[$tubo_placa]->getNickname();
+                        }
+                    } else {
+
+                        if ($cont == 1) {
+                            //$posicao_tubo[$posicoes_array] = array('valor'=>'C+','x' => $i, 'y' => $j);
+                            $posicao_tubo[$i][$j] = 'C+';
+
+                            if ($objPlaca->getObjProtocolo()->getNumDivisoes() == 3) {
+                                $posicao_tubo[$i][$j + $incremento_na_placa_original] = 'C+';
+                                $posicao_tubo[$i][$j + (2 * $incremento_na_placa_original)] = 'C+';
+                            }
+                        }
+                        if ($cont == 2) {
+                            //$posicao_tubo[$posicoes_array] = array('valor'=>'C-','x' => $i, 'y' => $j);
+                            $posicao_tubo[$i][$j] = 'C-';
+                            if ($objPlaca->getObjProtocolo()->getNumDivisoes() == 3) {
+                                $posicao_tubo[$i][$j + $incremento_na_placa_original] = 'C-';
+                                $posicao_tubo[$i][$j + (2 * $incremento_na_placa_original)] = 'C-';
+                            }
+                        }
+                        if ($cont == 3 || $cont == 4) {
+                            //$posicao_tubo[$posicoes_array] = array('valor'=>'BR','x' => $i, 'y' => $j);
+                            $posicao_tubo[$i][$j] = 'BR';
+                            if ($objPlaca->getObjProtocolo()->getNumDivisoes() == 3) {
+                                $posicao_tubo[$i][$j + $incremento_na_placa_original] = 'BR';
+                                $posicao_tubo[$i][$j + (2 * $incremento_na_placa_original)] = 'BR';
+                            }
+                        }
+
+                        if ($cont > 4) {
+                            break;
+                        }
+                        $cont++;
+                    }
+                    $tubo_placa++;
+                    $posicoes_array++;
+
+
+                }
+            }
+
+
+            for ($j = 1; $j <= 12; $j++){
+                for ($i = 1; $i <= 8; $i++){
+                    $objPoco->setColuna($j);
+                    $objPoco->setLinha($letras[$i-1]);
+                    $objPoco->setConteudo($posicao_tubo[$i][$j]);
+                    if($posicao_tubo[$i][$j] != '' && $posicao_tubo[$i][$j] != null){
+                        $objPoco->setSituacao(PocoRN::$STA_OCUPADO);
+                    }else{
+                        $objPoco->setSituacao(PocoRN::$STA_LIBERADO);
+                    }
+                    $poco = $objPocoBD->cadastrar($objPoco, $objBanco);
+
+                    if($objPoco->getObjPlaca() != null){
+                        $objPocoPlaca = new PocoPlaca();
+                        $objPocoPlacaRN = new PocoPlacaRN();
+                        $objPocoPlaca->setIdPlacaFk($objPoco->getObjPlaca()->getIdPlaca());
+                        $objPocoPlaca->setIdPocoFk($poco->getIdPoco());
+                        $objPocoPlacaRN->cadastrar($objPocoPlaca);
+                    }
+                }
+            }
+
+
+            /*if($totalmente == 's') {
                 $quantidade = 8;
                 $letras = range('A', chr(ord('A') + $quantidade));
                 $arr_pocos = array();
                 for ($i = 1; $i <= 12; $i++) {
                     $objPoco->setColuna($i);
                     for ($j = 1; $j <= 8; $j++) {
-                        $objPoco->setLinha($letras[$j]);
-                        $objPoco->setSituacao(PocoRN::$STA_LIBERADO);
+                        $objPoco->setLinha($letras[$j-1]);
+
                         $poco = $objPocoBD->cadastrar($objPoco, $objBanco);
-                        if($objPoco->getObjPlaca() != null){
-                            $objPocoPlaca = new PocoPlaca();
-                            $objPocoPlacaRN = new PocoPlacaRN();
-                            $objPocoPlaca->setIdPlacaFk($objPoco->getObjPlaca()->getIdPlaca());
-                            $objPocoPlaca->setIdPocoFk($poco->getIdPoco());
-                            $objPocoPlacaRN->cadastrar($objPocoPlaca);
-                        }
+
+
 
                     }
                 }
-            }else {
+            }*/}else {
 
                 $this->validarColuna($objPoco,$objExcecao);
                 $this->validarLinha($objPoco,$objExcecao);
@@ -227,6 +314,31 @@ class PocoRN
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o poço.',$e);
+        }
+    }
+
+    public function alterar_conteudo(Poco $objPoco) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $this->validarColuna($objPoco,$objExcecao);
+            $this->validarLinha($objPoco,$objExcecao);
+            $this->validarSituacao($objPoco,$objExcecao);
+
+            $objExcecao->lancar_validacoes();
+            $objPocoBD = new PocoBD();
+            $objPoco = $objPocoBD->alterar_conteudo($objPoco,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $objPoco;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro alterando o poço.', $e);
         }
     }
 }

@@ -86,11 +86,38 @@ class Pagina {
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse text-center" id="navbarsExample11">
-                    <ul class="navbar-nav">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra').'">Cadastro Amostra</a>
-                        </li>
-                        <!--<li class="nav-item">
+                    <ul class="navbar-nav">';
+        if (Sessao::getInstance()->verificar_permissao('cadastrar_amostra')) {
+            echo '<li class="nav-item active">
+                            <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra') . '">Cadastro Amostra</a>
+                        </li>';
+        }
+
+        if (Sessao::getInstance()->verificar_permissao('montar_preparo_extracao')) {
+            echo '   <li class="nav-item active">
+                            <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao') . '">Montar grupo preparação</a>
+                        </li>';
+        }
+
+        if (Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao')) {
+            echo '           <li class="nav-item active">
+                            <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao') . '">Realizar Preparação/Inativação</a>
+                        </li>';
+        }
+
+        if (Sessao::getInstance()->verificar_permissao('realizar_extracao')) {
+            echo '          <li class="nav-item active">
+                            <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao') . '">Realizar Extração</a>
+                        </li>';
+        }
+
+        if (Sessao::getInstance()->verificar_permissao('solicitar_montagem_placa_RTqPCR')) {
+            echo ' <li class="nav-item active">
+                            <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=solicitar_montagem_placa_RTqPCR') . '">Solicitação Montagem Placa RTqPCR</a>
+                        </li>';
+        }
+
+        echo '               <!--<li class="nav-item">
                             <a class="nav-link" href="#">Preparo e Armazenamento</a>
                         </li>
                         <li class="nav-item">
@@ -141,10 +168,14 @@ class Pagina {
                         <link rel="icon" type="text/css" href="docs/img/coronavirus.png"><!--<i class="fas fa-virus"></i>-->
                         <!--<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />-->
                         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+                        
+                        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
                         <!-- Font Awesome --><!-- NÃO REMOVER SENÃO NÃO APARECEM OS ÍCONES -->
                         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
+
+                        <script src="../../public_html/css/bootstrap-combined.min.css"></script>
+                        
                         <!-- HTML5Shiv -->
                         <!--[if lt IE 9]>
                           <script src="js/html5shiv.min.js"></script>
@@ -177,10 +208,15 @@ class Pagina {
                         <!--<link rel="stylesheet" type="text/css" href="css/style.css">-->
                         
                         <style>
+                        
+                       
+                        
                         /* Barra de rolagem */
                         ::-webkit-scrollbar {width:9px;height:auto;background: #fff;border-bottom:none;}
                         ::-webkit-scrollbar-button:vertical {height:2px;display:block;} 
                         ::-webkit-scrollbar-thumb:vertical {background-color: #3a5261; -webkit-border-radius: 1px;}
+                        ::-webkit-scrollbar-button:horizontal {height:2px;display:block;}
+                        ::-webkit-scrollbar-thumb:horizontal {background-color: #3a5261; -webkit-border-radius: 1px;}
                          
                         .fas{
                             color:#3a5261;
@@ -215,7 +251,10 @@ class Pagina {
                        
                         html,body{
                                 height: 100%;
-                                overflow-x: hidden;
+                                
+                                overflow-x: hidden; 
+                                /*white-space: nowrap;*/
+                        
                         }
 
                         /*body{
@@ -315,16 +354,17 @@ class Pagina {
     public static function montar_topo_listar($titulo=null ,$link1 =null, $novo1= null,$link2= null,$novo2=null) {
         echo '<div class="topo_listar">
                 <div class="row">
-                    <div class="col-md-6"><h3>'.$titulo.'</h3></div>
-                    <div class="col-md-3">';
+                    <div class="col-md-6" ><h3>'.$titulo.'</h3></div>
+                    <div class="col-md-3" >';
                       if(Sessao::getInstance()->verificar_permissao($link1)){ //só aparece o botão de cadastro para alguns perfis
                           echo '<a class="btn btn-primary " 
+                            style="width:108%;margin-left: 0px; border-left: 1px solid white;" 
                             href="' . Sessao::getInstance()->assinar_link('controlador.php?action='.$link1). '">'.$novo1.'</a> ';
                       }
                     echo '</div>
                     <div class="col-md-3">';
                       if(Sessao::getInstance()->verificar_permissao($link2)){ //só aparece o botão de cadastro para alguns perfis
-                          echo '<a class="btn btn-primary " 
+                          echo '<a class="btn btn-primary" style="width:100%;border-left:1px solid white;" 
                             href="' . Sessao::getInstance()->assinar_link('controlador.php?action='.$link2). '">'.$novo2.'</a> ';
                       }
                     echo '</div>

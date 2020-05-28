@@ -121,7 +121,7 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
     if (isset($_GET['idColunaSelecionada']) && isset($_POST['bt_pesquisar_palavra'])) {
 
         if ($array_colunas[$_GET['idColunaSelecionada']] == 'CÓDIGO') {
-            $objAmostra->setCodigoAmostra($_POST['txtSearch']);
+            $objAmostra->setNickname($_POST['txtSearch']);
             $arrAmostras_pesquisa = $objAmostraRN->listar($objAmostra);
             if (empty($arrAmostras_pesquisa)) {
                 //$arrAmostras_pesquisa = array('ERROR' => "Nenhuma lixeira encontrada com este ID");
@@ -212,7 +212,7 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
                     }
 
                     $html .= '<tr' . $style . '>
-                    <th scope="row">' . Pagina::formatar_html($r->getCodigoAmostra()) . '</th>
+                    <th scope="row">' . Pagina::formatar_html($r->getNickname()) . '</th>
                             <td>' . Pagina::formatar_html($result) . '</td>
                             <td>' . Pagina::formatar_html($data) . '</td>'
                         //<td>' . Pagina::formatar_html($etapa) . '</td>
@@ -391,7 +391,7 @@ require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
             }
 
             $html .= '<tr' . $style . '>
-                    <th scope="row">' . Pagina::formatar_html($r->getCodigoAmostra()) . '</th>
+                    <th scope="row">' . Pagina::formatar_html($r->getNickname()) . '</th>
                             <td>' . Pagina::formatar_html($objPaciente->getNome()) . '</td>
                             <td>' . Pagina::formatar_html($result) . '</td>
                             <td>' . Pagina::formatar_html($data) . '</td>'

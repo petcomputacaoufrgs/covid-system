@@ -121,7 +121,7 @@ class AmostraBD{
        
     }
     
-     public function listar(Amostra $objAmostra, Banco $objBanco) {
+     public function listar(Amostra $objAmostra,$numLimite=null, Banco $objBanco) {
          try{
       
             $SELECT = "SELECT * FROM tb_amostra";
@@ -214,7 +214,7 @@ class AmostraBD{
     }
 
 
-    public function listar_aguardando_sol_montagem_placa_RTqCPR(Amostra $amostra, Banco $objBanco) {
+    public function listar_aguardando_sol_montagem_placa_RTqCPR(Amostra $amostra,$numLimite=null,$arr_amostras_int=null, Banco $objBanco) {
         try{
 
             if($amostra->getObjPerfil() != null) {
@@ -225,7 +225,8 @@ class AmostraBD{
                 }
                 $interrogacoes = substr($interrogacoes, 0, -1);
 
-                /* para cada um gerar o ultimo info tubo dos tubos gerados acima e que tenha como situação do tubo o 'aguardando RTqPCR' */
+                /* para cada um gerar o ultimo info tubo dos tubos gerados acima e que tenha como situação
+                do tubo o 'aguardando RTqPCR' */
                 $select2 = '   select distinct tb_infostubo.idTubo_fk 
                                     from tb_infostubo
                                     WHERE tb_infostubo.situacaoTubo = ?
@@ -235,7 +236,8 @@ class AmostraBD{
                 $arrayBind2[] = array('s', InfosTuboRN::$TP_RTqPCR_SOLICITACAO__MONTAGEM_PLACA);
 
                 $info = $objBanco->consultarSQL($select2, $arrayBind2);
-
+                //print_r($info);
+                //die("10");
                 foreach ($info as $i) {
                     $objTubo = new Tubo();
                     $objTubo->setIdTubo($i['idTubo_fk']);
@@ -249,7 +251,8 @@ class AmostraBD{
                     //print_r($infos_completos);
                     //echo "</pre>";
 
-                    if($infos_completos[0]['etapa'] == InfosTuboRN::$TP_RTqPCR_SOLICITACAO__MONTAGEM_PLACA && $infos_completos[0]['situacaoEtapa'] == InfosTuboRN::$TSP_AGUARDANDO) {
+                    if($infos_completos[0]['etapa'] == InfosTuboRN::$TP_RTqPCR_SOLICITACAO__MONTAGEM_PLACA
+                        && $infos_completos[0]['situacaoEtapa'] == InfosTuboRN::$TSP_AGUARDANDO) {
 
                         $SELECT_AMOSTRA = 'SELECT * from tb_amostra,tb_tubo where tb_amostra.idPerfilPaciente_fk in (' . $interrogacoes . ') 
                                         and tb_tubo.idAmostra_fk = tb_amostra.idAmostra
@@ -259,54 +262,81 @@ class AmostraBD{
                         $arrayBindA = array();
 
                         for ($i = 0; $i < count($amostra->getObjPerfil()); $i++) {
-                            $arrayBindA[] = array('i', intval($amostra->getObjPerfil()[$i]));
+                            $arrayBindA[] = array('i', $amostra->getObjPerfil()[$i]->getIdPerfilPaciente());
                         }
                         $arrayBindA[] = array('i', $objTubo->getIdTubo());
                         //$arrayBindA[] = array('i', $amostra->getObjProtocolo()->getNumMaxAmostras());
                         $amostra_arr = $objBanco->consultarSQL($SELECT_AMOSTRA, $arrayBindA);
-
-                        /*echo "<pre>";
-                        print_r($amostra_arr);
-                        echo "</pre>";*/
-                        if(count($amostra_arr) > 0) {
-
-                            $objAmostra = new Amostra();
-                            $objAmostra->setIdAmostra($amostra_arr[0]['idAmostra']);
-                            $objAmostra->setIdPaciente_fk($amostra_arr[0]['idPaciente_fk']);
-                            $objAmostra->setIdCodGAL_fk($amostra_arr[0]['idCodGAL_fk']);
-                            $objAmostra->setIdNivelPrioridade_fk($amostra_arr[0]['idNivelPrioridade_fk']);
-                            $objAmostra->setIdPerfilPaciente_fk($amostra_arr[0]['idPerfilPaciente_fk']);
-                            $objAmostra->setIdEstado_fk($amostra_arr[0]['cod_estado_fk']);
-                            $objAmostra->setIdLugarOrigem_fk($amostra_arr[0]['cod_municipio_fk']);
-                            $objAmostra->setObservacoes($amostra_arr[0]['observacoes']);
-                            $objAmostra->setDataColeta($amostra_arr[0]['dataColeta']);
-                            $objAmostra->set_a_r_g($amostra_arr[0]['a_r_g']);
-                            $objAmostra->setHoraColeta($amostra_arr[0]['horaColeta']);
-                            $objAmostra->setMotivoExame($amostra_arr[0]['motivo']);
-                            $objAmostra->setCEP($amostra_arr[0]['CEP']);
-                            $objAmostra->setCodigoAmostra($amostra_arr[0]['codigoAmostra']);
-                            $objAmostra->setObsCEP($amostra_arr[0]['obsCEPAmostra']);
-                            $objAmostra->setObsHoraColeta($amostra_arr[0]['obsHoraColeta']);
-                            $objAmostra->setObsLugarOrigem($amostra_arr[0]['obsLugarOrigem']);
-                            $objAmostra->setObsMotivo($amostra_arr[0]['obsMotivo']);
-                            $objAmostra->setNickname($amostra_arr[0]['nickname']);
+                        //echo "<pre>";
+                        //print_r($infos_completos);
+                        //echo "</pre>";
 
 
-                            $objTubo = new Tubo();
-                            $objTubo->setIdTubo($amostra_arr[0]['idTubo']);
-                            $objTubo->setIdTubo_fk($amostra_arr[0]['idTubo_fk']);
-                            $objTubo->setIdAmostra_fk($amostra_arr[0]['idAmostra_fk']);
-                            $objTubo->setTuboOriginal($amostra_arr[0]['tuboOriginal']);
-                            $objTubo->setTipo($amostra_arr[0]['tipo']);
-                            $objAmostra->setObjTubo($objTubo);
-                            $objAmostra->setObjProtocolo($amostra->getObjProtocolo());
+
+                        $encontrou = false;
+                        if(count($arr_amostras_int) > 0) {
+                            foreach ($arr_amostras_int as $amostraINT){
+                                if($amostraINT->getIdAmostra() == $amostra_arr[0]['idAmostra']){
+                                    $encontrou = true;
+                                    $arr_amostras[] = $amostraINT;
+                                }
+                            }
 
 
-                            $arr_amostras[] = $objAmostra;
+                        }
+
+                        if(!$encontrou) {
+                            /*echo "<pre>";
+                            print_r($amostra_arr);
+                            echo "</pre>";*/
+                            if (count($amostra_arr) > 0) {
+
+                                $objAmostra = new Amostra();
+                                $objAmostra->setIdAmostra($amostra_arr[0]['idAmostra']);
+                                $objAmostra->setIdPaciente_fk($amostra_arr[0]['idPaciente_fk']);
+                                $objAmostra->setIdCodGAL_fk($amostra_arr[0]['idCodGAL_fk']);
+                                $objAmostra->setIdNivelPrioridade_fk($amostra_arr[0]['idNivelPrioridade_fk']);
+                                $objAmostra->setIdPerfilPaciente_fk($amostra_arr[0]['idPerfilPaciente_fk']);
+                                $objAmostra->setIdEstado_fk($amostra_arr[0]['cod_estado_fk']);
+                                $objAmostra->setIdLugarOrigem_fk($amostra_arr[0]['cod_municipio_fk']);
+                                $objAmostra->setObservacoes($amostra_arr[0]['observacoes']);
+                                $objAmostra->setDataColeta($amostra_arr[0]['dataColeta']);
+                                $objAmostra->set_a_r_g($amostra_arr[0]['a_r_g']);
+                                $objAmostra->setHoraColeta($amostra_arr[0]['horaColeta']);
+                                $objAmostra->setMotivoExame($amostra_arr[0]['motivo']);
+                                $objAmostra->setCEP($amostra_arr[0]['CEP']);
+                                $objAmostra->setCodigoAmostra($amostra_arr[0]['codigoAmostra']);
+                                $objAmostra->setObsCEP($amostra_arr[0]['obsCEPAmostra']);
+                                $objAmostra->setObsHoraColeta($amostra_arr[0]['obsHoraColeta']);
+                                $objAmostra->setObsLugarOrigem($amostra_arr[0]['obsLugarOrigem']);
+                                $objAmostra->setObsMotivo($amostra_arr[0]['obsMotivo']);
+                                $objAmostra->setNickname($amostra_arr[0]['nickname']);
+
+
+                                $objTubo = new Tubo();
+                                $objTubo->setIdTubo($amostra_arr[0]['idTubo']);
+                                $objTubo->setIdTubo_fk($amostra_arr[0]['idTubo_fk']);
+                                $objTubo->setIdAmostra_fk($amostra_arr[0]['idAmostra_fk']);
+                                $objTubo->setTuboOriginal($amostra_arr[0]['tuboOriginal']);
+                                $objTubo->setTipo($amostra_arr[0]['tipo']);
+                                $objAmostra->setObjTubo($objTubo);
+                                $objAmostra->setObjProtocolo($amostra->getObjProtocolo());
+
+
+                                $arr_amostras[] = $objAmostra;
+                                if (count($arr_amostras) >= $numLimite) {
+                                    //echo "<pre>";
+                                    //print_r($arr_amostras);
+                                    //echo "</pre>";
+                                    //die("30");
+                                    return $arr_amostras;
+                                }
+                            }
                         }
                     }
                 }
             }
+            //die("40");
             //die();
 
 
@@ -683,6 +713,132 @@ class AmostraBD{
         }
     }
 
+    public function listar_com_perfil(Amostra $objAmostra,$caractere=null,$perfilouamostra=null, $limite=null,Banco $objBanco) {
+        try{
+
+            if($caractere == 'P' || $objAmostra->getObjPerfil() != null) {
+                $interrogacoes = '';
+                foreach ($objAmostra->getObjPerfil() as $perfil) {
+                    $interrogacoes .= "?,";
+                }
+                $interrogacoes = substr($interrogacoes, 0, -1);
+
+                $SELECT = "SELECT * FROM tb_amostra,tb_perfilpaciente 
+                        where tb_amostra.idPerfilPaciente_fk = tb_perfilpaciente.idPerfilPaciente
+                        and tb_perfilpaciente.idPerfilPaciente in (" . $interrogacoes . ") 
+                       ";
+
+                $arrayBind = array();
+                foreach ($objAmostra->getObjPerfil() as $perfil) {
+                    $arrayBind[] = array('i', $perfil->getIdPerfilPaciente());
+                }
+
+            }
+            if($caractere == 'A'){
+                $interrogacoes = '';
+                $amostrasselecionadas = explode(";", $perfilouamostra);
+                //print_r($amostrasselecionadas);
+                array_pop($amostrasselecionadas);
+                $interrogacoes = '';
+                for ($i=0; $i<count($amostrasselecionadas); $i++) {
+                    $interrogacoes .= "?,";
+                }
+                $interrogacoes = substr($interrogacoes, 0, -1);
+                $SELECT = "select * from tb_amostra where idAmostra in (" . $interrogacoes . ")";
+                $arrayBind = array();
+                for ($i=0; $i<count($amostrasselecionadas); $i++) {
+                    //echo $amostrasselecionadas[$i];
+                    $arrayBind[] = array('i', $amostrasselecionadas[$i]);
+                }
+
+                /*echo "<pre>";
+                print_r($arrayBind);
+                echo "</pre>";*/
+
+            }
+
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
+
+            /*echo "<pre>";
+            print_r($arr);
+            echo "</pre>";*/
+
+            $array_paciente = array();
+            foreach ($arr as $reg){
+
+                $select_tubo = "select * from tb_tubo where idAmostra_fk = ?";
+                $arrayBind2 = array();
+                $arrayBind2[] = array('i', $reg['idAmostra']);
+                $arr_tubos = $objBanco->consultarSQL($select_tubo, $arrayBind2);
+                //print_r($arr_tubos);
+
+                foreach ($arr_tubos as $tubo){
+                    $objInfosTubo = new InfosTubo();
+                    $objInfosTubo->setIdTubo_fk($tubo['idTubo']);
+                    $objInfosTuboRN = new InfosTuboRN();
+                    $info = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
+                    if($info->getSituacaoTubo() == InfosTuboRN::$TST_SEM_UTILIZACAO &&
+                       $info->getSituacaoEtapa() == InfosTuboRN::$TSP_AGUARDANDO &&
+                       $info->getEtapa() == InfosTuboRN::$TP_MONTAGEM_GRUPOS_AMOSTRAS){
+
+                        //print_r($info);
+
+                        $objAmostra = new Amostra();
+                        $objAmostra->setIdAmostra($reg['idAmostra']);
+                        $objAmostra->setIdPaciente_fk($reg['idPaciente_fk']);
+                        $objAmostra->setIdCodGAL_fk($reg['idCodGAL_fk']);
+                        $objAmostra->setIdNivelPrioridade_fk($reg['idNivelPrioridade_fk']);
+                        $objAmostra->setIdPerfilPaciente_fk($reg['idPerfilPaciente_fk']);
+                        $objAmostra->setIdEstado_fk($reg['cod_estado_fk']);
+                        $objAmostra->setIdLugarOrigem_fk($reg['cod_municipio_fk']);
+                        $objAmostra->setObservacoes($reg['observacoes']);
+                        $objAmostra->setDataColeta($reg['dataColeta']);
+                        $objAmostra->set_a_r_g($reg['a_r_g']);
+                        $objAmostra->setHoraColeta($reg['horaColeta']);
+                        $objAmostra->setMotivoExame($reg['motivo']);
+                        $objAmostra->setCEP($reg['CEP']);
+                        $objAmostra->setCodigoAmostra($reg['codigoAmostra']);
+                        $objAmostra->setObsCEP($reg['obsCEPAmostra']);
+                        $objAmostra->setObsHoraColeta($reg['obsHoraColeta']);
+                        $objAmostra->setObsLugarOrigem($reg['obsLugarOrigem']);
+                        $objAmostra->setObsMotivo($reg['obsMotivo']);
+                        $objAmostra->setNickname($reg['nickname']);
+
+                        $objPerfilPaciente = new PerfilPaciente();
+                        $objPerfilPaciente->setIdPerfilPaciente($reg['idPerfilPaciente']);
+                        $objPerfilPaciente->setPerfil($reg['perfil']);
+                        $objPerfilPaciente->setIndex_perfil($reg['index_perfil']);
+                        $objPerfilPaciente->setCaractere($reg['caractere']);
+                        $objAmostra->setObjPerfil($objPerfilPaciente);
+
+                        $objTubo = new Tubo();
+                        $objTubo->setIdTubo($tubo['idTubo']);
+                        $objTubo->setIdTubo_fk($tubo['idTubo_fk']);
+                        $objTubo->setIdAmostra_fk($tubo['idAmostra_fk']);
+                        $objTubo->setTuboOriginal($tubo['tuboOriginal']);
+                        $objTubo->setTipo($tubo['tipo']);
+                        $objAmostra->setObjTubo($objTubo);
+                        $array_paciente[] = $objAmostra;
+                        if($limite != null) {
+                            if (count($array_paciente) >= $limite) {
+                                return $array_paciente;
+                            }
+                        }
+
+                    }
+                }
+            }
+
+
+
+            return $array_paciente;
+        } catch (Throwable $ex) {
+            //die($ex);
+            throw new Excecao("Erro listando a amostra no BD.",$ex);
+        }
+
+    }
+
     public function alterar_nickname(Amostra $objAmostra, Banco $objBanco){
         $SELECT = 'SELECT nickname FROM tb_amostra where idPerfilPaciente_fk = ? order by nickname desc limit 1 for update';
 
@@ -694,6 +850,196 @@ class AmostraBD{
             return substr($registro[0]['nickname'], 1);
         }else{
             return 0;
+        }
+
+
+
+    }
+
+    public function validar_amostras($array_amostras,$array_perfis, Banco $objBanco){
+        try{
+
+            $arr_amostras_retorno = array();
+            foreach ($array_amostras as $nickname) {
+                $SELECT = "SELECT * FROM tb_amostra,tb_tubo 
+                            where tb_amostra.nickname = ? 
+                            and tb_amostra.idAmostra = tb_tubo.idAmostra_fk ";
+
+                $arrayBind = array();
+                $arrayBind[] = array('s', $nickname);
+                $arr = $objBanco->consultarSql($SELECT, $arrayBind);
+
+                foreach ($arr as $tubo) {
+                    $select_max_infostubo = "
+                    select * from tb_infostubo,tb_tubo,tb_amostra 
+                    WHERE idInfostubo = (select max(tb_infostubo.idInfosTubo) from tb_infostubo, tb_tubo 
+                                                                              where tb_infostubo.idTubo_fk = tb_tubo.idTubo 
+                                                                              and tb_tubo.idTubo = ? ) 
+                    and tb_infostubo.idTubo_fk = tb_tubo.idTubo 
+                    and tb_tubo.idAmostra_fk = tb_amostra.idAmostra ";
+
+                    $arrayBind = array();
+                    $arrayBind[] = array('i', $tubo['idTubo']);
+                    $array_completo = $objBanco->consultarSql($select_max_infostubo, $arrayBind);
+
+
+                    foreach ($array_completo as $completo) {
+                        if ($completo['etapa'] == InfosTuboRN::$TP_MONTAGEM_GRUPOS_AMOSTRAS &&
+                            $completo['situacaoEtapa'] == InfosTuboRN::$TSP_AGUARDANDO &&
+                            $completo['situacaoTubo'] == InfosTuboRN::$TST_SEM_UTILIZACAO) {
+
+                            $objAmostra = new Amostra();
+                            $objAmostra->setIdAmostra($completo['idAmostra']);
+                            $objAmostra->setIdPaciente_fk($completo['idPaciente_fk']);
+                            $objAmostra->setIdCodGAL_fk($completo['idCodGAL_fk']);
+                            $objAmostra->setIdNivelPrioridade_fk($completo['idNivelPrioridade_fk']);
+                            $objAmostra->setIdPerfilPaciente_fk($completo['idPerfilPaciente_fk']);
+                            $objAmostra->setIdEstado_fk($completo['cod_estado_fk']);
+                            $objAmostra->setIdLugarOrigem_fk($completo['cod_municipio_fk']);
+                            $objAmostra->setObservacoes($completo['observacoes']);
+                            $objAmostra->setDataColeta($completo['dataColeta']);
+                            $objAmostra->set_a_r_g($completo['a_r_g']);
+                            $objAmostra->setHoraColeta($completo['horaColeta']);
+                            $objAmostra->setMotivoExame($completo['motivo']);
+                            $objAmostra->setCEP($completo['CEP']);
+                            $objAmostra->setCodigoAmostra($completo['codigoAmostra']);
+                            $objAmostra->setObsCEP($completo['obsCEPAmostra']);
+                            $objAmostra->setObsHoraColeta($completo['obsHoraColeta']);
+                            $objAmostra->setObsLugarOrigem($completo['obsLugarOrigem']);
+                            $objAmostra->setObsMotivo($completo['obsMotivo']);
+                            $objAmostra->setNickname($completo['nickname']);
+
+                            $objTubo = new Tubo();
+                            $objTubo->setIdTubo($completo['idTubo']);
+                            $objTubo->setIdTubo_fk($completo['idTubo_fk']);
+                            $objTubo->setIdAmostra_fk($completo['idAmostra_fk']);
+                            $objTubo->setTuboOriginal($completo['tuboOriginal']);
+                            $objTubo->setTipo($completo['tipo']);
+
+
+                            $objInfosTubo = new InfosTubo();
+                            $objInfosTubo->setIdInfosTubo($completo['idInfosTubo']);
+                            $objInfosTubo->setIdUsuario_fk($completo['idUsuario_fk']);
+                            $objInfosTubo->setIdPosicao_fk($completo['idPosicao_fk']);
+                            $objInfosTubo->setIdTubo_fk($completo['idTubo_fk']);
+                            $objInfosTubo->setIdLote_fk($completo['idLote_fk']);
+                            $objInfosTubo->setEtapa($completo['etapa']);
+                            $objInfosTubo->setEtapaAnterior($completo['etapaAnterior']);
+                            $objInfosTubo->setDataHora($completo['dataHora']);
+                            $objInfosTubo->setReteste($completo['reteste']);
+                            $objInfosTubo->setVolume($completo['volume']);
+                            $objInfosTubo->setObsProblema($completo['obsProblema']);
+                            $objInfosTubo->setObservacoes($completo['observacoes']);
+                            $objInfosTubo->setSituacaoEtapa($completo['situacaoEtapa']);
+                            $objInfosTubo->setSituacaoTubo($completo['situacaoTubo']);
+                            $objInfosTubo->setIdLocalFk($completo['idLocal_fk']);
+                            $objTubo->setObjInfosTubo($objInfosTubo);
+                            $objAmostra->setObjTubo($objTubo);
+                            $arr_amostras_retorno[] = $objAmostra;
+                        }
+                    }
+
+                }
+            }
+
+            return $arr_amostras_retorno;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro validando as amostras.",$ex);
+        }
+
+
+
+    }
+
+    public function validar_amostras_solicitacao($array_amostras,$array_perfis, Banco $objBanco){
+        try{
+
+            $arr_amostras_retorno = array();
+            foreach ($array_amostras as $nickname) {
+                $SELECT = "SELECT * FROM tb_amostra,tb_tubo 
+                            where tb_amostra.nickname = ? 
+                            and tb_amostra.idAmostra = tb_tubo.idAmostra_fk ";
+
+                $arrayBind = array();
+                $arrayBind[] = array('s', $nickname);
+                $arr = $objBanco->consultarSql($SELECT, $arrayBind);
+
+                foreach ($arr as $tubo) {
+                    $select_max_infostubo = "
+                    select * from tb_infostubo,tb_tubo,tb_amostra 
+                    WHERE idInfostubo = (select max(tb_infostubo.idInfosTubo) from tb_infostubo, tb_tubo 
+                                                                              where tb_infostubo.idTubo_fk = tb_tubo.idTubo 
+                                                                              and tb_tubo.idTubo = ? ) 
+                    and tb_infostubo.idTubo_fk = tb_tubo.idTubo 
+                    and tb_tubo.idAmostra_fk = tb_amostra.idAmostra ";
+
+                    $arrayBind = array();
+                    $arrayBind[] = array('i', $tubo['idTubo']);
+                    $array_completo = $objBanco->consultarSql($select_max_infostubo, $arrayBind);
+
+
+                    foreach ($array_completo as $completo) {
+                        if ($completo['etapa'] == InfosTuboRN::$TP_RTqPCR_SOLICITACAO__MONTAGEM_PLACA &&
+                            $completo['situacaoEtapa'] == InfosTuboRN::$TSP_AGUARDANDO &&
+                            $completo['situacaoTubo'] == InfosTuboRN::$TST_AGUARDANDO_SOLICITACAO_MONTAGEM_PLACA) {
+
+                            $objAmostra = new Amostra();
+                            $objAmostra->setIdAmostra($completo['idAmostra']);
+                            $objAmostra->setIdPaciente_fk($completo['idPaciente_fk']);
+                            $objAmostra->setIdCodGAL_fk($completo['idCodGAL_fk']);
+                            $objAmostra->setIdNivelPrioridade_fk($completo['idNivelPrioridade_fk']);
+                            $objAmostra->setIdPerfilPaciente_fk($completo['idPerfilPaciente_fk']);
+                            $objAmostra->setIdEstado_fk($completo['cod_estado_fk']);
+                            $objAmostra->setIdLugarOrigem_fk($completo['cod_municipio_fk']);
+                            $objAmostra->setObservacoes($completo['observacoes']);
+                            $objAmostra->setDataColeta($completo['dataColeta']);
+                            $objAmostra->set_a_r_g($completo['a_r_g']);
+                            $objAmostra->setHoraColeta($completo['horaColeta']);
+                            $objAmostra->setMotivoExame($completo['motivo']);
+                            $objAmostra->setCEP($completo['CEP']);
+                            $objAmostra->setCodigoAmostra($completo['codigoAmostra']);
+                            $objAmostra->setObsCEP($completo['obsCEPAmostra']);
+                            $objAmostra->setObsHoraColeta($completo['obsHoraColeta']);
+                            $objAmostra->setObsLugarOrigem($completo['obsLugarOrigem']);
+                            $objAmostra->setObsMotivo($completo['obsMotivo']);
+                            $objAmostra->setNickname($completo['nickname']);
+
+                            $objTubo = new Tubo();
+                            $objTubo->setIdTubo($completo['idTubo']);
+                            $objTubo->setIdTubo_fk($completo['idTubo_fk']);
+                            $objTubo->setIdAmostra_fk($completo['idAmostra_fk']);
+                            $objTubo->setTuboOriginal($completo['tuboOriginal']);
+                            $objTubo->setTipo($completo['tipo']);
+
+
+                            $objInfosTubo = new InfosTubo();
+                            $objInfosTubo->setIdInfosTubo($completo['idInfosTubo']);
+                            $objInfosTubo->setIdUsuario_fk($completo['idUsuario_fk']);
+                            $objInfosTubo->setIdPosicao_fk($completo['idPosicao_fk']);
+                            $objInfosTubo->setIdTubo_fk($completo['idTubo_fk']);
+                            $objInfosTubo->setIdLote_fk($completo['idLote_fk']);
+                            $objInfosTubo->setEtapa($completo['etapa']);
+                            $objInfosTubo->setEtapaAnterior($completo['etapaAnterior']);
+                            $objInfosTubo->setDataHora($completo['dataHora']);
+                            $objInfosTubo->setReteste($completo['reteste']);
+                            $objInfosTubo->setVolume($completo['volume']);
+                            $objInfosTubo->setObsProblema($completo['obsProblema']);
+                            $objInfosTubo->setObservacoes($completo['observacoes']);
+                            $objInfosTubo->setSituacaoEtapa($completo['situacaoEtapa']);
+                            $objInfosTubo->setSituacaoTubo($completo['situacaoTubo']);
+                            $objInfosTubo->setIdLocalFk($completo['idLocal_fk']);
+                            $objTubo->setObjInfosTubo($objInfosTubo);
+                            $objAmostra->setObjTubo($objTubo);
+                            $arr_amostras_retorno[] = $objAmostra;
+                        }
+                    }
+
+                }
+            }
+
+            return $arr_amostras_retorno;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro validando as amostras.",$ex);
         }
 
 

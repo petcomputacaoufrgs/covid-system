@@ -399,6 +399,7 @@ class InfosTuboRN{
             $objExcecao->adicionar_validacao('As observações do problema em infos tubo possuem mais de 150 caracteres na amostra <strong>'.$infosTubo->getCodAmostra() .'</strong> ' ,'idVolume', 'alert-danger');
         }
 
+        //print_r($infosTubo->getSituacaoTubo());
         if($infosTubo->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA && strlen($strObsProblemas) == 0){
 
             $objExcecao->adicionar_validacao('Informar o problema que fez a amostra <strong>'.$infosTubo->getCodAmostra() .'</strong> ser descartada -- '. TuboRN::mostrarDescricaoTipoTubo($infosTubo->getObjTubo()->getTipo()) ,null, 'alert-danger');
@@ -440,7 +441,7 @@ class InfosTuboRN{
 
             $objExcecao->lancar_validacoes();
             $objInfosTuboBD = new infosTuboBD();
-            $objInfosTubo = $objInfosTuboBD->cadastrar($infosTubo,$objBanco);
+            $infosTubo = $objInfosTuboBD->cadastrar($infosTubo,$objBanco);
 
             /*if($infosTubo->getObjLocal() != null && $objInfosTubo->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA){
                 $objExcecao->adicionar_validacao('A amostra <strong>'.$infosTubo->getCodAmostra() .'</strong> foi descartada no meio da etapa. Logo, ela não deve ter um local de armazenamento -- '. TuboRN::mostrarDescricaoStaTubo($infosTubo->getObjTubo()->getTipo()) ,null, 'alert-danger');
@@ -484,6 +485,17 @@ class InfosTuboRN{
             $objExcecao->lancar_validacoes();
             $objInfosTuboBD = new infosTuboBD();
             $infosTubo = $objInfosTuboBD->alterar($infosTubo,$objBanco);
+
+            if($infosTubo->getObjLocal() != null){
+                if($infosTubo->getObjLocal()->getIdLocal() != null) { //local já existe
+                    $objLocalRN = new LocalArmazenamentoTextoRN();
+                    $objLocalRN->alterar($infosTubo->getObjLocal());
+                }
+                if($infosTubo->getObjLocal()->getIdLocal() == null) { //local já existe
+                    $objLocalRN = new LocalArmazenamentoTextoRN();
+                    $objLocalRN->cadastrar($infosTubo->getObjLocal());
+                }
+            }
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();

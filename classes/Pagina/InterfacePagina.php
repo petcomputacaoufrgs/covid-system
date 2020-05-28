@@ -50,6 +50,48 @@ class InterfacePagina
         $select_protocolos .= '</select>';
     }
 
+    static function montar_select_multiplas_amostras(&$select_amostras, $perfisSelecionados,$objAmostra, $objAmostraRN,&$amostrasSelecionadas,&$arr_amostras_selecionadas,$disabled=null,$limite=null)
+    {
+        /* PROTOCOLOS */
+        if($amostrasSelecionadas == '') {
+            $arr_amostras = $objAmostraRN->listar_com_perfil($objAmostra,'P',$perfisSelecionados,$limite);
+        }else{
+            $arr_amostras = $objAmostraRN->listar_com_perfil($objAmostra,'A',$amostrasSelecionadas,$limite);
+        }
+
+        $select_amostras = '<select ' . $disabled . ' class="form-control selectpicker"  
+            multiple data-live-search="true"        name="sel_mult_amostras[]"  id="selectpicker"  >'
+            . '<option value="0" ></option>';
+        echo "<pre>";
+        //print_r($arr_amostras);
+        echo "</pre>";
+        foreach ($arr_amostras as $amostra) {
+            $selected = ' ';
+            if ($perfisSelecionados != '') {
+                $rec = explode(";", $perfisSelecionados);
+                foreach ($rec as $r) {
+                    if ($amostra->getIdPerfilPaciente_fk() == $r) {
+                        $selected = ' selected ';
+                    }
+                }
+                $select_amostras .= '<option ' . $selected . '  value="' . $amostra->getIdAmostra() . '">' . $amostra->getNickname()  . '</option>';
+            }else if ($amostrasSelecionadas != '') {
+                $rec = explode(";", $amostrasSelecionadas);
+                foreach ($rec as $r) {
+                    if ($amostra->getIdAmostra() == $r) {
+                        $selected = ' selected ';
+                        $arr_amostras_selecionadas[] = $amostra;
+                    }
+
+                }
+                $select_amostras .= '<option ' . $selected . '  value="' . $amostra->getIdAmostra() . '">' . $amostra->getNickname()  . '</option>';
+            } else {
+                $select_amostras .= '<option  value="' . $amostra->getIdAmostra() . '">' . $amostra->getNickname() .'Perfil: '.$amostra->getObjPerfil()->getPerfil(). '</option>';
+            }
+        }
+        $select_amostras .= '</select>';
+    }
+
     static function montar_select_placas(&$select_placas, $objPlaca, $objPlacaRN, $disabled, $onchange)
     {
         /* PLACAS */
@@ -617,8 +659,7 @@ static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPacien
         }else{
             $select_grupos .=' <option selected '.
                     '  value="' . Pagina::formatar_html($objPreparoLote->getIdPreparoLote())
-                    . '" data-tokens="' . Pagina::formatar_html($objPreparoLote->getIdPreparoLote()) . '">Preparo lote: '
-                    . Pagina::formatar_html($objPreparoLote->getIdPreparoLote()) .'</option>';
+                    . '" data-tokens="' . Pagina::formatar_html($objPreparoLote->getIdPreparoLote()) . '">Preparo Lote: ' . Pagina::formatar_html($objPreparoLote->getIdPreparoLote()) .'</option>';
 
         }
 

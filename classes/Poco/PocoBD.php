@@ -11,13 +11,14 @@ class PocoBD
         try{
 
             //die("die");
-            $INSERT = 'INSERT INTO tb_poco (linha, coluna, situacao, idTubo_fk) VALUES (?,?,?,?)';
+            $INSERT = 'INSERT INTO tb_poco (linha, coluna, situacao, idTubo_fk,conteudo) VALUES (?,?,?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('s',$objPoco->getLinha());
             $arrayBind[] = array('s',$objPoco->getColuna());
             $arrayBind[] = array('s',$objPoco->getSituacao());
             $arrayBind[] = array('i',$objPoco->getIdTuboFk());
+            $arrayBind[] = array('s',$objPoco->getConteudo());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
@@ -35,7 +36,8 @@ class PocoBD
                 . ' linha = ?,'
                 . ' coluna = ?,'
                 . ' situacao = ?,'
-                . ' idTubo_fk = ?'
+                . ' idTubo_fk = ?,'
+                . ' conteudo = ?'
                 . '  where idPoco = ?';
 
 
@@ -44,16 +46,19 @@ class PocoBD
             $arrayBind[] = array('s',$objPoco->getColuna());
             $arrayBind[] = array('s',$objPoco->getSituacao());
             $arrayBind[] = array('i',$objPoco->getIdTuboFk());
+            $arrayBind[] = array('s',$objPoco->getConteudo());
 
             $arrayBind[] = array('i',$objPoco->getIdPoco());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
             return $objPoco;
         } catch (Throwable $ex) {
+            die($ex);
             throw new Excecao("Erro alterando o poço no BD.",$ex);
         }
 
     }
+
 
     public function listar(Poco $objPoco, Banco $objBanco) {
         try{
@@ -109,6 +114,7 @@ class PocoBD
                 $poco->setColuna($reg['coluna']);
                 $poco->setLinha($reg['linha']);
                 $poco->setSituacao($reg['situacao']);
+                $poco->setConteudo($reg['conteudo']);
 
                 $array_poco[] = $poco;
             }
@@ -137,6 +143,7 @@ class PocoBD
             $poco->setColuna($arr[0]['coluna']);
             $poco->setLinha($arr[0]['linha']);
             $poco->setSituacao($arr[0]['situacao']);
+            $poco->setConteudo($arr[0]['conteudo']);
 
             return $poco;
         } catch (Throwable $ex) {
@@ -157,6 +164,33 @@ class PocoBD
         } catch (Throwable $ex) {
             throw new Excecao("Erro removendo o poço no BD.",$ex);
         }
+    }
+
+    public function alterar_conteudo(Poco $objPoco, Banco $objBanco) {
+        try{
+
+            $SELECT_POCO = 'select idPoco from tb_pocos_placa,tb_poco where tb_pocos_placa.idPlaca_fk = ? 
+                            and tb_poco.linha=? 
+                            and tb_poco.coluna = ? 
+                            and tb_pocos_placa.idPoco_fk = tb_poco.idPoco';
+            $arrayBind = array();
+            $arrayBind[] = array('i',$objPoco->getObjPlaca()->getIdPlaca());
+            $arrayBind[] = array('s',$objPoco->getLinha());
+            $arrayBind[] = array('s',$objPoco->getColuna());
+
+            $arr = $objBanco->consultarSQL($SELECT_POCO,$arrayBind);
+
+            print_r($arr);
+            $objPoco->setIdPoco($arr[0]['idPoco']);
+
+            $objPocoBD = new PocoBD();
+            $objPoco  = $objPocoBD->alterar($objPoco,$objBanco);
+
+            return $objPoco;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro alterando o poço no BD.",$ex);
+        }
+
     }
 
 

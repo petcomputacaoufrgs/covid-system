@@ -276,6 +276,7 @@ class PlacaBD
                 $poco->setColuna($p[0]['coluna']);
                 $poco->setLinha($p[0]['linha']);
                 $poco->setSituacao($p[0]['situacao']);
+                $poco->setConteudo($p[0]['conteudo']);
                 $pocoPlaca->setObjPoco($poco);
 
                 $array_poco_placa[] = $pocoPlaca;
@@ -302,6 +303,84 @@ class PlacaBD
 
         } catch (Throwable $ex) {
             throw new Excecao("Erro removendo a placa no BD.",$ex);
+        }
+    }
+
+    public function solicitar_quantidade(Placa $objPlaca,$colunaMin=null, $colunaMax=null,$info_completa=null, Banco $objBanco) {
+
+        try{
+            $add_select = '';
+            if($colunaMin != null && $colunaMax != null){
+                $add_select = ' and tb_poco.coluna >= ?
+                                and tb_poco.coluna <= ?';
+            }
+
+            $select_quantidades = 'select distinct count(*), tb_poco.conteudo from tb_placa, tb_poco, tb_pocos_placa 
+                        where tb_placa.idPlaca = ? 
+                        and tb_pocos_placa.idPlaca_fk = tb_placa.idPlaca 
+                        and tb_poco.idPoco = tb_pocos_placa.idPoco_fk  
+                        and tb_poco.situacao = ? 
+                        and tb_poco.conteudo != ? 
+                        and tb_poco.conteudo != ? 
+                        and tb_poco.conteudo != ? '.
+                        $add_select.'
+                        group by tb_poco.conteudo having count(*) >=1  ';
+            $arrayBind = array();
+            $arrayBind[] = array('i',$objPlaca->getIdPlaca());
+            $arrayBind[] = array('s',PocoRN::$STA_OCUPADO);
+            $arrayBind[] = array('s','C-');
+            $arrayBind[] = array('s','C+');
+            $arrayBind[] = array('s','BR');
+            if($colunaMin != null && $colunaMax != null){
+                $arrayBind[] = array('i',$colunaMin);
+                $arrayBind[] = array('i',$colunaMax);
+            }
+            $arr = $objBanco->consultarSql($select_quantidades, $arrayBind);
+
+
+            if(!$info_completa){
+                return $arr;
+            }
+
+
+            if($info_completa){
+                $select_info = 'select distinct tb_poco.conteudo,tb_poco.linha, tb_poco.coluna 
+                from tb_placa, tb_poco, tb_pocos_placa 
+                where tb_placa.idPlaca = ? 
+                and tb_pocos_placa.idPlaca_fk = tb_placa.idPlaca 
+                and tb_poco.idPoco = tb_pocos_placa.idPoco_fk 
+                and tb_poco.situacao = ? 
+                and tb_poco.conteudo != ? 
+                and tb_poco.conteudo != ? 
+                and tb_poco.conteudo != ? 
+                and tb_poco.coluna >= ? 
+                and tb_poco.coluna <= ? ';
+                $arr_complementar = $objBanco->consultarSql($select_info, $arrayBind);
+
+
+                $arr_retorno = array();
+                $arr_retorno[0] = $arr;
+                foreach ($arr as $a){
+                    if($a['count(*)'] > 1){
+                        foreach ($arr_complementar as $info){
+                            if($info['conteudo'] == $a['conteudo']){
+                                $arrinfos[] = array("conteudo" => $a['conteudo'],"linha" =>$info['linha'],"coluna" => $info['coluna']);
+                            }
+                        }
+
+                    }
+
+                }
+                $arr_retorno[1] = $arrinfos;
+
+            }
+
+
+
+
+            return $arr_retorno;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro consultando a quantidade de cada amostra na placa de poços no BD.",$ex);
         }
     }
 
@@ -349,5 +428,83 @@ class PlacaBD
         }
 
     }
+
+
+    public function consultar_tubos_inexistentes(Placa $objPlaca,$colunaMin=null, $colunaMax=null, Banco $objBanco) {
+
+        try{
+            $nicknames = array();
+
+            $select_quantidades = 'select tb_rel_tubo_placa.idTubo_fk from tb_rel_tubo_placa 
+            where tb_rel_tubo_placa.idTubo_fk not in 
+                ( select tb_rel_tubo_placa.idTubo_fk 
+                from tb_pocos_placa,tb_rel_tubo_placa ,tb_poco, tb_amostra,tb_placa,tb_tubo 
+                where tb_pocos_placa.idPoco_fk = tb_poco.idPoco 
+                and tb_amostra.nickname = tb_poco.conteudo 
+                and tb_pocos_placa.idPlaca_fk = tb_placa.idPlaca 
+                and tb_placa.idPlaca = ? 
+                and tb_amostra.idAmostra = tb_tubo.idAmostra_fk 
+                and tb_tubo.idTubo = tb_rel_tubo_placa.idTubo_fk 
+                and tb_rel_tubo_placa.idPlaca_fk = ? 
+                and tb_poco.coluna >= ? and tb_poco.coluna <= ?) 
+            and tb_rel_tubo_placa.idPlaca_fk = ?  ';
+
+            $arrayBind = array();
+            $arrayBind[] = array('i',$objPlaca->getIdPlaca());
+            $arrayBind[] = array('i',$objPlaca->getIdPlaca());
+            $arrayBind[] = array('i',$colunaMin);
+            $arrayBind[] = array('i',$colunaMax);
+            $arrayBind[] = array('i',$objPlaca->getIdPlaca());
+
+            $arr = $objBanco->consultarSql($select_quantidades, $arrayBind);
+
+            foreach ($arr as $t){
+                $select_amostra = 'select tb_amostra.nickname from tb_amostra,tb_tubo where tb_tubo.idTubo = ?
+                and tb_amostra.idAmostra = tb_tubo.idAmostra_fk';
+                $arrayBind = array();
+                $arrayBind[] = array('i',$t['idTubo_fk']);
+                $amostra = $objBanco->consultarSql($select_amostra, $arrayBind);
+
+                $nicknames[] = $amostra[0];
+            }
+
+            return $nicknames;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro consultando a quantidade de cada amostra na placa de poços no BD.",$ex);
+        }
+    }
+
+
+    public function remover_amostras(Placa $objPlaca, Banco $objBanco) {
+
+        try{
+            foreach ($objPlaca->getObjsAmostras() as $amostra) {
+                $select = 'SELECT * FROM tb_poco,tb_placa,tb_pocos_placa 
+                        where tb_poco.conteudo = ? 
+                        and tb_pocos_placa.idPoco_fk = tb_poco.idPoco 
+                        and tb_pocos_placa.idPlaca_fk = tb_placa.idPlaca 
+                        and tb_placa.idPlaca = ? ';
+
+                $arrayBind = array();
+                $arrayBind[] = array('s', $amostra->getNickname());
+                $arrayBind[] = array('i', $objPlaca->getIdPlaca());
+                $arr = $objBanco->consultarSql($select, $arrayBind);
+
+                foreach ($arr as $reg){
+                    $update = 'update tb_poco set conteudo = null where idPoco = ?';
+                    $arrayBindPoco = array();
+                    $arrayBindPoco[] = array('i',$reg['idPoco']);
+                    $objBanco->executarSql($update, $arrayBindPoco);
+
+                }
+            }
+
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro removendo o poço no BD.",$ex);
+        }
+    }
+
+
+
 
 }

@@ -20,7 +20,7 @@ class UsuarioBD{
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objUsuario->setIdUsuario($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando usuário no BD.",$ex);
         }
         
@@ -42,7 +42,7 @@ class UsuarioBD{
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
 
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro alterando usuário no BD.",$ex);
         }
        
@@ -82,7 +82,7 @@ class UsuarioBD{
                 $array_usuario[] = $objUsuario;
             }
             return $array_usuario;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando usuário no BD.",$ex);
         }
        
@@ -106,7 +106,7 @@ class UsuarioBD{
             $usuario->setSenha($arr[0]['senha']);
 
             return $usuario;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
        
             throw new Excecao("Erro consultando usuário no BD.",$ex);
         }
@@ -122,7 +122,7 @@ class UsuarioBD{
             $arrayBind[] = array('i',$objUsuario->getIdUsuario());
             $objBanco->executarSQL($DELETE, $arrayBind);
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo usuário no BD.",$ex);
         }
     }
@@ -152,7 +152,7 @@ class UsuarioBD{
             return $array_usuario;
 
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
        
             throw new Excecao("Erro validando cadastro do usuário no BD.",$ex);
         }

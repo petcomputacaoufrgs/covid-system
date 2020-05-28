@@ -20,9 +20,46 @@ class PreparoLote
     private $objLoteOriginal;
     private $objPerfil;
     private $objsTubos;
-
+    private $objCapela;
     private $ObjsTubosCadastro;
     private $ObjsTubosAlterados;
+    private $extracao_invalida;
+
+    /**
+     * @return mixed
+     */
+    public function getExtracaoInvalida()
+    {
+        return $this->extracao_invalida;
+    }
+
+    /**
+     * @param mixed $extracao_invalida
+     */
+    public function setExtracaoInvalida($extracao_invalida)
+    {
+        $this->extracao_invalida = $extracao_invalida;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjCapela()
+    {
+        return $this->objCapela;
+    }
+
+    /**
+     * @param mixed $objCapela
+     */
+    public function setObjCapela($objCapela)
+    {
+        $this->objCapela = $objCapela;
+    }
+
+
 
     /**
      * @return mixed

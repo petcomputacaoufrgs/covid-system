@@ -154,20 +154,20 @@ try {
     $nome_botao_alocar ='';
 
 
-    switch ($_GET['action']) {
+    switch ($_GET['action']){
         case 'realizar_extracao':
             $nome_botao_alocar = 'SALVAR';
-            if ($_GET['idLiberar'] || isset($_POST['btn_cancelar'])) {
+            if($_GET['idLiberar'] || isset($_POST['btn_cancelar'])){
                 $objCapela->setIdCapela($_GET['idCapela']);
                 $objCapela = $objCapelaRN->consultar($objCapela);
                 $objCapela->setSituacaoCapela(CapelaRN::$TE_LIBERADA);
                 $objCapelaRN->alterar($objCapela);
-                $objPreparoLoteAuxiliar = new PreparoLote();
+                $objPreparoLoteAuxiliar  = new PreparoLote();
                 $objPreparoLoteAuxiliar->setIdPreparoLote($_GET['idPreparoLote']);
                 $objPreparoLoteAuxiliar = $objPreparoLoteRN->consultar_lote($objPreparoLoteAuxiliar);
                 //print_r($objPreparoLoteAuxiliar);
 
-                if ($objPreparoLoteAuxiliar->getObjLote()->getSituacaoLote() != LoteRN::$TE_EXTRACAO_FINALIZADA) {
+                if($objPreparoLoteAuxiliar->getObjLote()->getSituacaoLote() != LoteRN::$TE_EXTRACAO_FINALIZADA ) {
                     //$objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
                     //$objPreparoLote = $objPreparoLoteRN->consultar($objPreparoLote);
                     //$objPreparoLote->setIdCapelaFk(null);
@@ -176,28 +176,28 @@ try {
                 }
 
 
-                header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao'));
+                header('Location: '. Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao'));
                 die();
             }
 
-            if (isset($_GET['idSituacao'])) {
-                if ($_GET['idSituacao'] == 2) {
+            if (isset($_GET['idSituacao'])){
+                if($_GET['idSituacao'] == 2){
                     $alert = Alert::alert_danger("O lote de extração já foi finalizado");
                 }
             }
 
-            if (isset($_GET['idPreparoLote'])) {
+            if(isset($_GET['idPreparoLote'])){
                 $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
             }
 
             $selecionado = '';
-            InterfacePagina::montar_capelas_liberadas($objCapela, $objCapelaRN, $select_capelas, CapelaRN::$TNS_MEDIA_SEGURANCA, '');
+            InterfacePagina::montar_capelas_liberadas($objCapela, $objCapelaRN, $select_capelas,CapelaRN::$TNS_MEDIA_SEGURANCA,'');
             //InterfacePagina::montar_grupos_amostras($objPreparoLote, $objPreparoLoteRN, $select_grupos,'', LoteRN::$TL_EXTRACAO);
             $objLote->setSituacaoLote(LoteRN::$TE_AGUARDANDO_EXTRACAO);
-            InterfacePagina::montar_select_lotes($objLote, $objLoteRN, $select_grupos, '  ', LoteRN::$TL_EXTRACAO);
-            InterfacePagina::montar_select_kitsExtracao($objKitExtracao, $objKitExtracaoRN, $select_kitExtracao, '');
+            InterfacePagina::montar_select_lotes($objLote, $objLoteRN, $select_grupos,'  ', LoteRN::$TL_EXTRACAO);
+            InterfacePagina::montar_select_kitsExtracao($objKitExtracao, $objKitExtracaoRN, $select_kitExtracao,'');
 
-            if (strlen($select_grupos) > 0) {
+            if(strlen($select_grupos) > 0) {
 
                 if (isset($_POST['btn_alocarCapela']) && !isset($_GET['idCapela'])) {
                     if ($_POST['sel_grupos'] != -1 && $_POST['sel_nivelSegsCapela'] != -1 && $_POST['sel_kitsExtracao'] != -1) {
@@ -627,300 +627,32 @@ try {
             }
             break;
         case 'editar_extracao':
-
             $nome_botao_alocar = 'EDITAR';
             $sumir_btns = 's';
 
-            $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
-            //$objPreparoLote = $objPreparoLoteRN->obter_todas_infos($objPreparoLote);
-            $objCapela->setIdCapela($_GET['idCapela']);
-            $objCapela->setNivelSeguranca(CapelaRN::$TNS_MEDIA_SEGURANCA);
-            $objKitExtracao->setIdKitExtracao($_GET['idKitExtracao']);
+
+            if(!isset($_POST['btn_alocarCapela'])) {
+
+                $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
+                $objPreparoLote = $objPreparoLoteRN->obter_todas_infos($objPreparoLote);
+                $objCapela->setIdCapela($objPreparoLote->getIdCapelaFk());
+                $objCapela->setNivelSeguranca(CapelaRN::$TNS_MEDIA_SEGURANCA);
+                $objKitExtracao->setIdKitExtracao($objPreparoLote->getIdKitExtracaoFk());
+            }
             InterfacePagina::montar_capelas_liberadas($objCapela, $objCapelaRN, $select_capelas, CapelaRN::$TNS_MEDIA_SEGURANCA, '  ');
             InterfacePagina::montar_grupos_amostras($objPreparoLote, $objPreparoLoteRN, $select_grupos, ' disabled ', LoteRN::$TL_EXTRACAO);
             InterfacePagina::montar_select_kitsExtracao($objKitExtracao, $objKitExtracaoRN, $select_kitExtracao, ' ');
 
 
-            $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
-            $objPreparoLote = $objPreparoLoteRN->obter_todas_infos($objPreparoLote,'E');
-            InterfacePagina::montar_grupos_amostras($objPreparoLote, $objPreparoLoteRN, $select_grupos, ' disabled ', LoteRN::$TL_EXTRACAO);
+            //echo "<pre>";
+            //print_r($objPreparoLote);
+            //echo "</pre>";
 
-            /*echo "<pre>";
-            print_r($objPreparoLote);
-            echo "</pre>";*/
+            if(isset($_POST['btn_alocarCapela'])){
 
-            $arr_JSCopiarLocal = array();
-            $arr_JSCopiarCaixa = array();
-            $arr_JSCopiarPorta = array();
-            $arr_JSCopiarColuna = array();
-            $arr_JSCopiarPrateleira = array();
-            $primeiro = true;
-            $contador = 0;
-            $show_amostras = '';
-
-            foreach ($objPreparoLote->getObjLote()->getObjsAmostras() as $amostras) {
-
-                $show = 'show ';
-                $style = 'style="margin-top: 10px;';
-
-                $disabled = '  ';
-
-                if (isset($_POST['btn_confirmar_extracao']) || $_GET['action'] == 'editar_extracao') {
-                    $disabled = '';
-                }
-
-                $strIdTubo = $amostras->getObjTubo()->getIdTubo();
-
-                if($amostras->getObjTubo()->getExtracaoInvalida()){
-                    $disabled =  ' disabled ';
-                }
-
-                $local = $amostras->getObjTubo()->getObjInfosTubo()->getObjLocal();
-                $infotubo = $amostras->getObjTubo()->getObjInfosTubo();
-
-                if ($infotubo->getReteste() == 's') {
-                    $reteste = 'SIM';
-                } else {
-                    $reteste = 'NÃO';
-                }
-
-                if ($infotubo->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA) {
-                    $checked = ' checked ';
-                }
-
-                if($local == null){
-                    $strNomeLocal = '';
-                    $strNomePorta = '';
-                    $strNomePrateleira = '';
-                    $strNomeColuna = '';
-                    $strNomeCaixa = '';
-                    $strNomePosicao = '';
-                }else {
-
-                    if ($local->getNome() == null) {
-                        $strNomeLocal = '';
-                    } else {
-                        $strNomeLocal = $local->getNome();
-                    }
-
-                    if ($local->getPorta() == null) {
-                        $strNomePorta = '';
-                    } else {
-                        $strNomePorta = $local->getPorta();
-                    }
-
-                    if ($local->getPrateleira() == null) {
-                        $strNomePrateleira = '';
-                    } else {
-                        $strNomePrateleira = $local->getPrateleira();
-                    }
-
-                    if ($local->getCaixa() == null) {
-                        $strNomeCaixa = '';
-                    } else {
-                        $strNomeCaixa = $local->getCaixa();
-                    }
-
-                    if ($local->getColuna() == null) {
-                        $strNomeColuna = '';
-                    } else {
-                        $strNomeColuna = $local->getColuna();
-                    }
-
-                    if ($local->getPosicao() == null) {
-                        $strNomePosicao = '';
-                    } else {
-                        $strNomePosicao = $local->getPosicao();
-                    }
-                }
-
-
-
-                $show_amostras .= '
-                   
-                    <div class="accordion" id="accordionExample" ' . $style . '">
-                          <div class="card">
-                          
-                            <div class="card-header" id="heading_' . $strIdTubo . '">
-                              <h5 class="mb-0">
-                                <button  style="text-decoration: none;color: #3a5261;"  class="btn btn-link" type="button" 
-                                data-toggle="collapse" data-target="#collapse_' . $strIdTubo . '" aria-expanded="true" aria-controls="collapseOne">
-                                  <h5>AMOSTRA ' . $amostras->getNickname() . '</h5>
-                                </button>
-                              </h5>
-                            </div>
-                        
-                            <div id="collapse_' . $strIdTubo . '" class="collapse ' . $show . ' " 
-                            aria-labelledby="heading_' . $strIdTubo . '" data-parent="#accordionExample">
-                              <div class="card-body">
-                                    <div class="form-row" >
-                                         <div class="col-md-12" style="background-color: #3a5261;padding: 5px;font-size: 13px;font-weight: bold; color: whitesmoke;">
-                                            AMOSTRA INATIVADA
-                                         </div>
-                                    </div>
-                                    <div class="form-row" >
-                                        
-                                        <div class="col-md-6">
-                                            <label> Volume</label>
-                                                <input type="number" class="form-control form-control-sm" id="idVolume"  ' . $disabled . ' style="text-align: center;" placeholder="" ' . $disabled . '
-                                                    name="txtVolume_' . $strIdTubo . '"  value="' . $infotubo->getVolume() . '">
-                                        </div>
-                                        
-                                        <div class="col-md-6">
-                                            <label> Reteste</label>
-                                                <input type="text" class="form-control form-control-sm" id="idReteste"  disabled style="text-align: center;" placeholder=""' . $disabled . '
-                                                    name="txtReteste_' . $strIdTubo . '"  value="' . $reteste . '">
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-row" >';
-                $strIdLocalArmazenamento = 'nomeLocalArmazenamento_' . $strIdTubo;
-                $show_amostras .= '  <div class="col-md-4">
-                                           <label> Local de armazenamento </label>
-                                                <input type="text" class="form-control form-control-sm"  ' . $disabled . ' style="text-align: center;" placeholder=""
-                                                        name="' . $strIdLocalArmazenamento . '" 
-                                                         value="' . $strNomeLocal . '"
-                                                         id="' . $strIdLocalArmazenamento . '">
-                                        </div>';
-                $arr_JSCopiarLocal[] = $strIdLocalArmazenamento;
-
-                $strIdPorta = 'txtPorta_' . $strIdTubo;
-                $show_amostras .= '        <div class="col-md-4">
-                                           <label> Porta </label>
-                                                <input type="text" class="form-control form-control-sm" ' . $disabled . ' style="text-align: center;" placeholder=""
-                                                        name="' . $strIdPorta . '" 
-                                                         value="' . $strNomePorta . '"
-                                                         id="' . $strIdPorta . '">
-                                        </div>';
-                $arr_JSCopiarPorta[] = $strIdPorta;
-
-                $strIdPrateleira = 'txtPrateleira_' . $strIdTubo;
-                $show_amostras .= ' <div class="col-md-4">
-                                           <label> Prateleira </label>
-                                                <input type="text" class="form-control form-control-sm" ' . $disabled . ' style="text-align: center;" placeholder=""
-                                                        name="' . $strIdPrateleira . '" 
-                                                         value="' . $strNomePrateleira . '"
-                                                         id="' . $strIdPrateleira . '">
-                                        </div>
-                                        </div>';
-                $arr_JSCopiarPrateleira[] = $strIdPrateleira;
-
-                $strIdColuna = 'txtColuna_' . $strIdTubo;
-                $show_amostras .= '  <div class="form-row" >
-                                        <div class="col-md-4">
-                                                <label> Coluna </label>
-                                                <input type="text" class="form-control form-control-sm"  ' . $disabled . ' style="text-align: center;" placeholder=""
-                                                    name="' . $strIdColuna . '" 
-                                                     value="' . $strNomeColuna . '"
-                                                     id="' . $strIdColuna . '">
-                                             </div>';
-                $arr_JSCopiarColuna[] = $strIdColuna;
-
-                $strIdCaixa = 'txtCaixa_' . $strIdTubo;
-                $show_amostras .= '<div class="col-md-4">
-                                                <label> Caixa </label>
-                                                <input type="text" class="form-control form-control-sm"   ' . $disabled . ' style="text-align: center;" placeholder=""
-                                                    name="' . $strIdCaixa . '" 
-                                                     value="' . $strNomeCaixa . '"
-                                                     id="' . $strIdCaixa . '">
-                                             </div>';
-                $arr_JSCopiarCaixa[] = $strIdCaixa;
-
-
-                $show_amostras .= '      <div class="col-md-4">
-                                                
-                                                <label> Posição (letra+número) </label>
-                                                 <input type="text" class="form-control form-control-sm"  ' . $disabled . '  style="text-align: center;" placeholder=""
-                                                        name="txtPosicao_' . $strIdTubo . '"  
-                                                        value="' . $strNomePosicao . '">
-                                             </div>
-                                        </div>';
-                if ( ($primeiro && isset($_POST['btn_confirmar_extracao'])) || $_GET['action'] == 'editar_extracao') {
-                    $show_amostras .= '<div class="form-row">
-                                            <div class="col-md-12">
-                                                <button style="padding:5px;background-color: #3a5261; color: white;font-size:12px;border: 2px solid white;border-radius: 5px;"  
-                                                    type="button" onclick="copiar()">COPIAR LOCAL DE ARMAZENAMENTO PARA TODAS AS AMOSTRAS</button>
-                                            </div>
-                                        </div>';
-                    $primeiro = false;
-                }
-
-                $show_amostras .= '<div class="form-row" style="margin-bottom: 30px;">
-                                        <div class="col-md-2">
-                                            <div class="custom-control custom-checkbox mr-sm-2" style="margin-top: 10px;margin-left: 5px;">
-                   
-                                            <input type="checkbox" ' . $checked . ' class="custom-control-input" id="customDercartada_' . $strIdTubo . '" ' . $disabled . '
-                                            name="checkDercartada_' . $strIdTubo . '">
-                                            <label class="custom-control-label" for="customDercartada_' . $strIdTubo . '">Precisou ser descartado no meio da extração</label>
-                                          </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label> Informe se teve algum problema</label>
-                                                <textarea class="form-control form-control-sm" id="exampleFormControlTextarea1" ' . $disabled . '
-                                                name="textAreaProblema_' . $strIdTubo . '" rows="1">' . $infotubo->getObsProblema() . '</textarea>
-                                        </div>
-                                        
-                                        <div class="col-md-6">
-                                            <label> Observações adicionais</label>
-                                               <textarea class="form-control form-control-sm" id="exampleFormControlTextarea1" ' . $disabled . '
-                                               name="textAreaObs_' . $strIdTubo . '" rows="1">' . $infotubo->getObservacoes() . '</textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>';
-
-                if (isset($_POST['btn_editar'])) {
-
-                  /*echo "<pre>";
-                    echo "obs =" . $_POST['textAreaObs_' . $strIdTubo];
-                    echo "  problema =" . $_POST['textAreaProblema_' . $strIdTubo];
-                    echo "  check =" . $_POST['checkDercartada_' . $strIdTubo];
-                    echo "  local =" . $_POST[$strIdLocalArmazenamento];
-                    echo "  porta =" . $_POST[$strIdPorta];
-                    echo "  prateleira =" . $_POST[$strIdPrateleira];
-                    echo "  coluna =" . $_POST[$strIdColuna];
-                    echo "  caixa =" . $_POST[$strIdCaixa];
-                    echo "  posição =" . $_POST['txtPosicao_' . $strIdTubo];
-                    echo "</pre>";*/
-
-                    if(!$amostras->getObjTubo()->getExtracaoInvalida()) {
-                        if (is_null($local)) {
-                            $local = new LocalArmazenamentoTexto();
-                        }
-
-                        $local->setNome($_POST[$strIdLocalArmazenamento]);
-
-                        $local->setColuna($_POST[$strIdColuna]);
-                        $local->setPorta($_POST[$strIdPorta]);
-                        $local->setPrateleira($_POST[$strIdPrateleira]);
-                        $local->setCaixa($_POST[$strIdCaixa]);
-                        $local->setPosicao($_POST['txtPosicao_' . $strIdTubo]);
-
-                        $infotubo->setReteste($_POST['txtReteste_' . $strIdTubo]);
-                        $infotubo->setVolume($_POST['txtVolume_' . $strIdTubo]);
-                        $infotubo->setObjTubo($amostras->getObjTubo());
-                        if (isset($_POST['checkDercartada_' . $strIdTubo]) && $_POST['checkDercartada_' . $strIdTubo] == 'on') {
-                            $infotubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA);
-                        }
-                        $infotubo->setObjLocal($local);
-
-                        $arr_alteracoes[] = $infotubo;
-
-                        $arr_amostras[] = $amostras;
-
-                        /*echo "<pre>";
-                        print_r($arr_alteracoes);
-                        echo "</pre>";*/
-                    }
-
-                }
-            }
-
-            if (isset($_POST['btn_editar'])) {
-
-                if ($_GET['idCapela'] != $_POST['sel_nivelSegsCapela']) {
+                $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
+                $objPreparoLote = $objPreparoLoteRN->consultar($objPreparoLote);
+                if($_GET['idCapela'] != $_POST['sel_nivelSegsCapela']){
                     $objCapela->setIdCapela($_GET['idCapela']);
                     $objCapela = $objCapelaRN->consultar($objCapela);
                     $objCapela->setSituacaoCapela(CapelaRN::$TE_LIBERADA);
@@ -928,33 +660,26 @@ try {
                 }
                 $objCapela->setIdCapela($_POST['sel_nivelSegsCapela']);
                 $objCapela->setNivelSeguranca(CapelaRN::$TNS_MEDIA_SEGURANCA);
-                $objPreparoLote->setObjCapela($objCapela);
                 InterfacePagina::montar_capelas_liberadas($objCapela, $objCapelaRN, $select_capelas, CapelaRN::$TNS_MEDIA_SEGURANCA, '  ');
+                $objCapelaRN->bloquear_registro($objCapela);
 
                 $objPreparoLote->setIdKitExtracaoFk($_POST['sel_kitsExtracao']);
+                $objKitExtracao->setIdKitExtracao($_POST['sel_kitsExtracao']);
+                InterfacePagina::montar_select_kitsExtracao($objKitExtracao, $objKitExtracaoRN, $select_kitExtracao, ' ');
                 $objPreparoLote->setObsKitExtracao($_POST['txtObsKit']);
                 $objPreparoLote->setLoteFabricacaokitExtracao($_POST['txtLoteFabricacaoKit']);
-                $objPreparoLote->setObjsTubos($arr_alteracoes);
-                $objLoteAux = $objPreparoLote->getObjLote();
-                $objLote->setObjsAmostras($arr_amostras);
-                $objPreparoLote->setObjLote($objLote);
+                $objPreparoLote = $objPreparoLoteRN->alterar($objPreparoLote);
 
-
-
-                /*echo "<pre>";
-                print_r($objPreparoLote);
-                echo "</pre>";*/
-
-                //$objPreparoLoteNovo = $objPreparoLoteRN->alterar($objPreparoLote);*/
-                $objPreparoLote = $objPreparoLoteRN->alterar_extracao($objPreparoLote);
-
-                header('Location: '. Sessao::getInstance()->assinar_link('controlador.php?action=editar_extracao&idPreparoLote=' . Pagina::formatar_html($objPreparoLote->getIdPreparoLote()).'&idCapela='.Pagina::formatar_html($objPreparoLote->getIdCapelaFk()).'&idKitExtracao='.Pagina::formatar_html($objPreparoLote->getIdKitExtracaoFk())));
-                die();
+                $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
+                $objPreparoLote = $objPreparoLoteRN->obter_todas_infos($objPreparoLote);
+                InterfacePagina::montar_grupos_amostras($objPreparoLote, $objPreparoLoteRN, $select_grupos, ' disabled ', LoteRN::$TL_EXTRACAO);
 
             }
 
 
-                break;
+
+
+            break;
         default : die('Ação [' . $_GET['action'] . '] não reconhecida pelo controlador em solicitacaoMontagemPlacaRTqPCR.php');
 
     }
@@ -963,7 +688,7 @@ try {
 
 
 } catch (Throwable $ex) {
-    die($ex);
+    //die($ex);
     $show_collap = 's';
     Pagina::getInstance()->processar_excecao($ex);
 }
@@ -981,30 +706,30 @@ echo "\n".'<script type="text/javascript">
     ';
 
 
-    for($i=1;$i<count($arr_JSCopiarLocal); $i++){
-        echo "\n".'document.getElementById(\''.$arr_JSCopiarLocal[$i].'\').value = document.getElementById(\''.$arr_JSCopiarLocal[0].'\').value;';
+for($i=1;$i<count($arr_JSCopiarLocal); $i++){
+    echo "\n".'document.getElementById(\''.$arr_JSCopiarLocal[$i].'\').value = document.getElementById(\''.$arr_JSCopiarLocal[0].'\').value;';
 
-    }
+}
 
-    for($i=1;$i<count($arr_JSCopiarPorta); $i++){
-        echo "\n".'document.getElementById(\''.$arr_JSCopiarPorta[$i].'\').value = document.getElementById(\''.$arr_JSCopiarPorta[0].'\').value;';
+for($i=1;$i<count($arr_JSCopiarPorta); $i++){
+    echo "\n".'document.getElementById(\''.$arr_JSCopiarPorta[$i].'\').value = document.getElementById(\''.$arr_JSCopiarPorta[0].'\').value;';
 
-    }
+}
 
-    for($i=1;$i<count($arr_JSCopiarCaixa); $i++){
-        echo "\n".'document.getElementById(\''.$arr_JSCopiarCaixa[$i].'\').value = document.getElementById(\''.$arr_JSCopiarCaixa[0].'\').value;';
+for($i=1;$i<count($arr_JSCopiarCaixa); $i++){
+    echo "\n".'document.getElementById(\''.$arr_JSCopiarCaixa[$i].'\').value = document.getElementById(\''.$arr_JSCopiarCaixa[0].'\').value;';
 
-    }
+}
 
-    for($i=1;$i<count($arr_JSCopiarPrateleira); $i++){
-        echo "\n".'document.getElementById(\''.$arr_JSCopiarPrateleira[$i].'\').value = document.getElementById(\''.$arr_JSCopiarPrateleira[0].'\').value;';
+for($i=1;$i<count($arr_JSCopiarPrateleira); $i++){
+    echo "\n".'document.getElementById(\''.$arr_JSCopiarPrateleira[$i].'\').value = document.getElementById(\''.$arr_JSCopiarPrateleira[0].'\').value;';
 
-    }
+}
 
-    for($i=1;$i<count($arr_JSCopiarColuna); $i++){
-        echo "\n".'document.getElementById(\''.$arr_JSCopiarColuna[$i].'\').value = document.getElementById(\''.$arr_JSCopiarColuna[0].'\').value;';
+for($i=1;$i<count($arr_JSCopiarColuna); $i++){
+    echo "\n".'document.getElementById(\''.$arr_JSCopiarColuna[$i].'\').value = document.getElementById(\''.$arr_JSCopiarColuna[0].'\').value;';
 
-    }
+}
 
 
 
@@ -1038,11 +763,7 @@ echo '<!-- Modal -->
         </div>
     </div>';
 
-
-if($_GET['action'] == 'realizar_extracao') {
-
-
-    echo '<div class="conteudo_grande " STYLE="margin-top: 0px;" >
+echo '<div class="conteudo_grande " STYLE="margin-top: 0px;" >
          <form method="POST">
                 <div class="form-row" >
                     <div class="col-md-12">
@@ -1053,140 +774,78 @@ if($_GET['action'] == 'realizar_extracao') {
                 <div class="form-row" >
                 <div class="col-md-12"> 
                     <label>Escolha um dos kits</label>'
-        . $select_kitExtracao .
-        '</div>
+    .$select_kitExtracao.
+    '</div>
                     </div>
                  <div class="form-row" >
                     <div class="col-md-6">
                         <label for="">Informe o lote de fabricação do kit de extração (opcional)</label>
-                        <input type="text" class="form-control"  ' . $disabled_inputs . '
-                               name="txtLoteFabricacaoKit"  value="' . Pagina::formatar_html($objPreparoLoteORIGINAL->getLoteFabricacaokitExtracao()) . '">
+                        <input type="text" class="form-control"  '.$disabled_inputs.'
+                               name="txtLoteFabricacaoKit"  value="'.Pagina::formatar_html($objPreparoLoteORIGINAL->getLoteFabricacaokitExtracao()).'">
                      </div>
                      <div class="col-md-6">
                         <label for="">Observações do kit de extração (opcional)</label>
-                        <textarea id="idTxtAreaObs" ' . $disabled_inputs . '
+                        <textarea id="idTxtAreaObs" '.$disabled_inputs.'
                                   name="txtObsKit" rows="1" cols="100" class="form-control"
-                                  >' . Pagina::formatar_html($objPreparoLoteORIGINAL->getObsKitExtracao()) . '</textarea>
+                                  >'.Pagina::formatar_html($objPreparoLoteORIGINAL->getObsKitExtracao()).'</textarea>
                      </div>
                 </div>
                 <div class="form-row" >
                     <div class="col-md-6">
                         <label>Escolha uma capela de média segurança</label>'
-        . $select_capelas .
-        '</div>
+    .$select_capelas.
+    '</div>
               
                    <div class="col-md-6"> 
                     <label>Escolha um grupo de amostras de extração</label>'
-        . $select_grupos .
-        '</div>
+    .$select_grupos.
+    '</div>
                     
                 </div>';
-    if ($sumir_btn_alocar == 'n') {
-        echo '<div class="form-row" >
+if($sumir_btn_alocar == 'n') {
+    echo '<div class="form-row" >
                     <div class="col-md-12" >
-                        <button class="btn btn-primary"  type = "submit"style = "width: 25%; margin-left: 35%;" name = "btn_alocarCapela" > ' . $nome_botao_alocar . ' </button >
+                        <button class="btn btn-primary"  type = "submit"style = "width: 25%; margin-left: 35%;" name = "btn_alocarCapela" > '.$nome_botao_alocar.' </button >
                     </div >
                  </div >';
-    }
-    echo '
+}
+echo '
          </form>
       </div>';
 
-    if (isset($_GET['idCapela']) && isset($_GET['idPreparoLote'])) {
-        echo '<div class="conteudo_grande preparo_inativacao">
+if(isset($_GET['idCapela']) && isset($_GET['idPreparoLote'])) {
+    echo '<div class="conteudo_grande preparo_inativacao">
          <form method="POST">
                
                 ';
 
-        if ($sumir_btns == 'n') {
-            echo '  <div class="form-row" style="height: 50px;margin-top: -40px;" >';
-            if ($ja_confirmou == 'n') {
-                echo '<div class="col-md-6">
+    if($sumir_btns == 'n') {
+        echo '  <div class="form-row" style="height: 50px;margin-top: -40px;" >';
+        if ($ja_confirmou == 'n') {
+            echo '<div class="col-md-6">
                <button class="btn btn-primary" STYLE="width: 50%;margin-left: 50%;margin-bottom: 5px;" type="submit" name="btn_confirmar_extracao">INICIAR EXTRAÇÃO</button>
              </div>';
-            } else {
-                //if($sumir_btns == 'n') {
-                echo '<div class="col-md-6">
+        } else {
+            //if($sumir_btns == 'n') {
+            echo '<div class="col-md-6">
                <button class="btn btn-primary" STYLE="width: 50%;margin-left: 50%;margin-bottom: 5px;" type="submit" name="btn_terminar_extracao">SALVAR DADOS</button>
              </div>';
-                //}
-            }
+            //}
+        }
 
-            echo '<div class="col-md-6">
+        echo '<div class="col-md-6">
                        <button class="btn btn-primary" STYLE="width: 50%;margin-left: 0%;margin-bottom: 5px;"  type="submit" name="btn_cancelar">CANCELAR</button>
                      </div>
                      </div>';
-        }
+    }
 
-        echo '
+    echo '
              <div class="form-row" style="margin-top: 0px;">
                    <div class="col-md-12">'
-            . $show_amostras .
-            '</div>
+        . $show_amostras .
+        '</div>
                 </div>
                 </form>
-      </div>';
-    }
-}
-
-if($_GET['action'] == 'editar_extracao'){
-    echo '<div class="conteudo_grande " STYLE="margin-top: 0px;" >
-         <form method="POST">
-                <div class="form-row" >
-                    <div class="col-md-12">
-                        <input type="text" class="form-control" id="idDataHoraLogin" hidden style="text-align: center;"
-                               name="dtHoraLoginInicio" required value="' . $_SESSION['DATA_LOGIN'] . '">
-                     </div>
-                     </div>
-                <div class="form-row" >
-                    <div class="col-md-12"> 
-                        <label>Escolha um dos kits</label>'
-                            . $select_kitExtracao .
-                            '
-                    </div>
-                </div>
-                <div class="form-row" >
-                    <div class="col-md-6">
-                        <label for="">Informe o lote de fabricação do kit de extração (opcional)</label>
-                        <input type="text" class="form-control"  ' . $disabled_inputs . '
-                               name="txtLoteFabricacaoKit"  value="' . Pagina::formatar_html($objPreparoLote->getLoteFabricacaokitExtracao()) . '">
-                     </div>
-                     <div class="col-md-6">
-                        <label for="">Observações do kit de extração (opcional)</label>
-                        <textarea id="idTxtAreaObs" ' . $disabled_inputs . '
-                                  name="txtObsKit" rows="1" cols="100" class="form-control"
-                                  >' . Pagina::formatar_html($objPreparoLote->getObsKitExtracao()) . '</textarea>
-                     </div>
-                </div>
-                <div class="form-row" >
-                    <div class="col-md-6">
-                        <label>Escolha uma capela de média segurança</label>'
-                        . $select_capelas .
-                    '</div>
-           
-                   <div class="col-md-6"> 
-                        <label>Escolha um grupo de amostras de extração</label>'
-                        . $select_grupos .
-                   '</div>    
-                </div>';
-
-        echo '
-             <div class="form-row" style="margin-top: 0px;">
-                 <div class="col-md-12">
-                    <small style="color: red;"> Amostras desativadas são amostras que já seguiram a diante no processo. Logo, seus locais não são editáveis nessa etapa.</small>
-                </div>
-                <div class="col-md-12">'
-                    . $show_amostras .
-                '</div>
-            </div>';
-    
-        echo '<div class="form-row" >
-                    <div class="col-md-12" >
-                        <button class="btn btn-primary"  type = "submit" style = "width: 25%; margin-left: 35%;" name="btn_editar" > EDITAR LOTE EXTRAÇÃO </button >
-                    </div >
-                 </div >';
-    echo '
-         </form>
       </div>';
 }
 

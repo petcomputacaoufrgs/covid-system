@@ -34,9 +34,16 @@ class Utils{
 
     }
 
-    static function random_color() {
+    static function random_color($opacidade) {
+
+
         $letters = '0123456789ABCDEF';
         $color = '#';
+
+        if($opacidade == 80){
+            $color .= 'CC';
+        }
+
         for($i = 0; $i < 6; $i++) {
             $index = rand(0,15);
             $color .= $letters[$index];

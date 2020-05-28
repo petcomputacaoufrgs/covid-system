@@ -11,6 +11,11 @@ class PlacaRN
 {
     public static $STA_SOLICITACAO_MONTAGEM = 'S';
     public static $STA_AGUARDANDO_MIX = 'X';
+    public static $STA_NO_MIX = 'M';
+    public static $STA_AGUARDANDO_RTqPCR = 'Q';
+    public static $STA_INVALIDA = 'I';
+    public static $STA_MIX_FINALIZDO = 'F';
+
 
     public static function listarValoresStaPlaca(){
         try {
@@ -24,9 +29,28 @@ class PlacaRN
 
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$STA_AGUARDANDO_MIX);
-            $objSituacao->setStrDescricao('Aguardando Mix');
+            $objSituacao->setStrDescricao('Aguardando MixRTqPCR');
             $arrObjTEtapa[] = $objSituacao;
 
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$STA_NO_MIX);
+            $objSituacao->setStrDescricao('No MixRTqPCR');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$STA_MIX_FINALIZDO);
+            $objSituacao->setStrDescricao('MixRTqPCR finalizado');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$STA_INVALIDA);
+            $objSituacao->setStrDescricao('Inválida');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$STA_AGUARDANDO_RTqPCR);
+            $objSituacao->setStrDescricao('Aguardando RTqPCR');
+            $arrObjTEtapa[] = $objSituacao;
 
             return $arrObjTEtapa;
 
@@ -188,7 +212,7 @@ class PlacaRN
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $objPlaca;
+            return $placa;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando o placa.', $e);
@@ -234,6 +258,46 @@ class PlacaRN
         }
     }
 
+    public function solicitar_quantidade(Placa $objPlaca,$colunaMin=null, $colunaMax=null, $infoCompleta=null) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objPlacaBD = new PlacaBD();
+            $arr =  $objPlacaBD->solicitar_quantidade($objPlaca,$colunaMin,$colunaMax,$infoCompleta,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro consultando o placa.',$e);
+        }
+    }
+
+    public function consultar_tubos_inexistentes(Placa $objPlaca,$colunaMin=null, $colunaMax=null) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objPlacaBD = new PlacaBD();
+            $arr =  $objPlacaBD->consultar_tubos_inexistentes($objPlaca,$colunaMin,$colunaMax,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro consultando o placa.',$e);
+        }
+    }
+
     public function remover(Placa $objPlaca) {
         $objBanco = new Banco();
         try {
@@ -244,10 +308,45 @@ class PlacaRN
             $objExcecao->lancar_validacoes();
             $objPlacaBD = new PlacaBD();
 
-            $this->validar_existe_placa_com_o_placa($objPlaca, $objExcecao);
+            //$this->validar_existe_RTqPCR_com_a_placa($objPlaca, $objExcecao);
             $objExcecao->lancar_validacoes();
 
             $arr =  $objPlacaBD->remover($objPlaca,$objBanco);
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro removendo o placa.', $e);
+        }
+    }
+
+    public function remover_amostras(Placa $objPlaca) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objPlacaBD = new PlacaBD();
+
+           if($objPlaca->getObjsTubos() == null){
+               $objExcecao->adicionar_validacao("Para remover as amostras é preciso que os tubos sejam informados",null,'alert-danger');
+           }else{
+
+               $objTuboPlacaRN = new RelTuboPlacaRN();
+               $objTuboPlacaRN->remover_arr($objPlaca->getObjsTubos());
+           }
+
+            if($objPlaca->getObjsAmostras() == null){
+                $objExcecao->adicionar_validacao("Para remover as amostras é preciso que as mesmas sejam informadas",null,'alert-danger');
+            }else{
+                $arr =  $objPlacaBD->remover_amostras($objPlaca,$objBanco);
+            }
+
+            $objExcecao->lancar_validacoes();
+
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;

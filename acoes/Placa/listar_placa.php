@@ -7,17 +7,20 @@ try{
     require_once __DIR__.'/../../classes/Sessao/Sessao.php';
     require_once __DIR__.'/../../classes/Pagina/Pagina.php';
     require_once __DIR__.'/../../classes/Excecao/Excecao.php';
+
     require_once __DIR__.'/../../classes/Placa/Placa.php';
     require_once __DIR__.'/../../classes/Placa/PlacaRN.php';
 
+
     Sessao::getInstance()->validar();
+
 
     $objPlaca = new Placa();
     $objPlacaRN = new PlacaRN();
     $html = '';
     $alert = '';
 
-    switch ($_GET['action']){
+    /*switch ($_GET['action']){
         case 'remover_placa':
             try{
                 $objPlaca->setIdPlaca($_GET['idPlaca']);
@@ -27,7 +30,7 @@ try{
             } catch (Throwable $ex) {
                 Pagina::getInstance()->processar_excecao($ex);
             }
-    }
+    }*/
 
 
     $arrPlaca = $objPlacaRN->listar(new Placa());
@@ -44,9 +47,9 @@ try{
             $html .= '<td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_placa&idPlaca='.Pagina::formatar_html($p->getIdPlaca())).'"><i class="fas fa-edit "></i></a></td>';
         }
 
-        if(Sessao::getInstance()->verificar_permissao('remover_placa')) {
+        /*if(Sessao::getInstance()->verificar_permissao('remover_placa')) {
             $html .= '<td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_placa&idPlaca='.Pagina::formatar_html($p->getIdPlaca())).'"><i class="fas fa-trash-alt"></a></td>';
-        }
+        }*/
 
         $html .= ' </tr>';
     }

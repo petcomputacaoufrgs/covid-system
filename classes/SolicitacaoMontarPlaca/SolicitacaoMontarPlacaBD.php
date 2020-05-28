@@ -1,5 +1,8 @@
 <?php
-
+/*
+ *  Author: Carine Bertagnolli Bathaglini
+ */
+require_once __DIR__ . '/../Banco/Banco.php';
 
 class SolicitacaoMontarPlacaBD
 {
@@ -62,7 +65,7 @@ class SolicitacaoMontarPlacaBD
     public function listar(SolicitacaoMontarPlaca $objSolMontarPlaca, Banco $objBanco) {
         try{
 
-            $SELECT = "SELECT * FROM tb_solicitacao_montagem_placa_rtqpcr";
+            $SELECT = "SELECT * FROM tb_solicitacao_montagem_placa_rtqpcr ";
 
             $WHERE = '';
             $AND = '';
@@ -75,7 +78,7 @@ class SolicitacaoMontarPlacaBD
             }
 
             if ($objSolMontarPlaca->getIdSolicitacaoMontarPlaca() != null) {
-                $WHERE .= $AND . " idSolicitacaoMontarPlaca = ?";
+                $WHERE .= $AND . "  idSolicitacaoMontarPlaca = ?";
                 $AND = ' and ';
                 $arrayBind[] = array('i', $objSolMontarPlaca->getIdSolicitacaoMontarPlaca());
             }
@@ -93,8 +96,9 @@ class SolicitacaoMontarPlacaBD
             }
 
             //echo $SELECT.$WHERE;$WHERE
+            $order_by = ' order by  idSolicitacaoMontarPlaca desc ';
 
-            $arr2 = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
+            $arr2 = $objBanco->consultarSQL($SELECT . $WHERE.$order_by, $arrayBind);
 
             $array = array();
             foreach ($arr2 as $reg){
@@ -301,6 +305,8 @@ class SolicitacaoMontarPlacaBD
     public function remover_completamente(SolicitacaoMontarPlaca $objSolMontarPlaca, Banco $objBanco) {
 
         try{
+
+
             // PERFIS ASSOCIADOS A SOLICITACAO
             $SELECT_IDS_PERFIL = 'select tb_rel_perfil_placa.idRelPerfilPlaca from tb_placa, tb_rel_perfil_placa where 
                                     tb_rel_perfil_placa.idPlaca_fk = ?
@@ -308,6 +314,7 @@ class SolicitacaoMontarPlacaBD
             $arrayBind1 = array();
             $arrayBind1[] = array('i',$objSolMontarPlaca->getIdPlacaFk());
             $array_perfis = $objBanco->consultarSQL($SELECT_IDS_PERFIL,$arrayBind1);
+
 
             foreach ($array_perfis as $perfil){
                 $DELETE_PERFIL_PLACA = 'DELETE FROM tb_rel_perfil_placa WHERE idRelPerfilPlaca = ? ';
@@ -322,6 +329,11 @@ class SolicitacaoMontarPlacaBD
             $arrayBindTUBO = array();
             $arrayBindTUBO[] = array('i',$objSolMontarPlaca->getIdPlacaFk());
             $array_tubos = $objBanco->consultarSQL($SELECT_IDS_TUBOS,$arrayBindTUBO);
+
+            //echo "<pre>";
+            //print_r($array_tubos);
+            //echo "</pre>";
+
             foreach ($array_tubos as $tubo){
 
                 $objInfosTubo = new InfosTubo();
@@ -348,22 +360,24 @@ class SolicitacaoMontarPlacaBD
             $arrayBind1[] = array('i',$objSolMontarPlaca->getIdPlacaFk());
             $array_pocos_placa = $objBanco->consultarSQL($SELECT_POCO_PLACA,$arrayBind1);
 
-            foreach ($array_pocos_placa as $pocoplaca){
-                $DELETE_POCO = 'DELETE FROM tb_poco WHERE idPoco = ? ';
-                $arrayBindPoco = array();
-                $arrayBindPoco[] = array('i',$pocoplaca['idPoco_fk']);
-                $objBanco->executarSQL($DELETE_POCO, $arrayBindPoco);
+            if(count($array_pocos_placa) > 0) {
 
-                $DELETE_POCO_PLACA = 'DELETE FROM tb_pocos_placa WHERE idPocosPlaca = ? ';
-                $arrayBindPocoPlaca = array();
-                $arrayBindPocoPlaca[] = array('i',$pocoplaca['idPocosPlaca']);
-                $objBanco->executarSQL($DELETE_POCO_PLACA, $arrayBindPocoPlaca);
+                //echo "<pre>";
+                //print_r($array_pocos_placa);
+                //echo "</pre>";
+
+                foreach ($array_pocos_placa as $pocoplaca) {
+                    $DELETE_POCO = 'DELETE FROM tb_poco WHERE idPoco = ? ';
+                    $arrayBindPoco = array();
+                    $arrayBindPoco[] = array('i', $pocoplaca['idPoco_fk']);
+                    $objBanco->executarSQL($DELETE_POCO, $arrayBindPoco);
+
+                    $DELETE_POCO_PLACA = 'DELETE FROM tb_pocos_placa WHERE idPocosPlaca = ? ';
+                    $arrayBindPocoPlaca = array();
+                    $arrayBindPocoPlaca[] = array('i', $pocoplaca['idPocosPlaca']);
+                    $objBanco->executarSQL($DELETE_POCO_PLACA, $arrayBindPocoPlaca);
+                }
             }
-
-
-
-
-
 
             $DELETE_SOLICITACAO = 'DELETE FROM tb_solicitacao_montagem_placa_rtqpcr WHERE idSolicitacaoMontarPlaca = ? ';
             $arrayBindPREPARO_LOTE = array();
@@ -376,10 +390,8 @@ class SolicitacaoMontarPlacaBD
             $arrayBindLOTE[] = array('i',$objSolMontarPlaca->getIdPlacaFk());
             $objBanco->executarSQL($DELETE_PLACA,$arrayBindLOTE);
 
-
-
-
         } catch (Throwable $ex) {
+
             throw new Excecao("Erro removendo a solicitação de montagem da placa completamente no BD.",$ex);
         }
     }

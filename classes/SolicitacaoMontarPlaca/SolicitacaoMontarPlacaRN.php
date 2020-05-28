@@ -232,12 +232,14 @@ class SolicitacaoMontarPlacaRN
             $objExcecao->lancar_validacoes();
             $objSolMontarPlacaBD = new SolicitacaoMontarPlacaBD();
 
-            $arr =  $objSolMontarPlacaBD->remover_completamente($objSolMontarPlaca,$objBanco);
+            $objSolMontarPlacaBD->remover_completamente($objSolMontarPlaca,$objBanco);
+
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $arr;
+
         } catch (Throwable $e) {
+
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro na listagem da solicitação de montagem da placa do RTqPCR.',$e);
         }

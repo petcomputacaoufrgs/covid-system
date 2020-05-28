@@ -40,6 +40,9 @@ try {
     require_once __DIR__ . '/../../classes/SolicitacaoMontarPlaca/SolicitacaoMontarPlaca.php';
     require_once __DIR__ . '/../../classes/SolicitacaoMontarPlaca/SolicitacaoMontarPlacaRN.php';
 
+    require_once __DIR__.'/../../classes/MixRTqPCR/MixRTqPCR.php';
+    require_once __DIR__.'/../../classes/MixRTqPCR/MixRTqPCR_RN.php';
+
     Sessao::getInstance()->validar();
     $utils = new Utils();
 
@@ -104,8 +107,14 @@ try {
     $objSolMontarPlaca = new SolicitacaoMontarPlaca();
     $objSolMontarPlacaRN = new SolicitacaoMontarPlacaRN();
 
+    /*
+     *  MIX
+     */
+    $objMix = new MixRTqPCR();
+    $objMixRN = new MixRTqPCR_RN();
+
     $alert = '';
-    switch ($_GET['action']){
+    /*switch ($_GET['action']){
         case 'remover_solicitacao_montagem_placa_RTqPCR':
             try{
                 $objSolMontarPlaca->setIdSolicitacaoMontarPlaca($_GET['idSolicitacao']);
@@ -119,18 +128,18 @@ try {
             }catch (Throwable $ex){
                 Pagina::getInstance()->processar_excecao($ex);
             }
-    }
+    }*/
 
 
-
-    $arr_solicitacoes = $objSolMontarPlacaRN->listar(new SolicitacaoMontarPlaca());
+    $arr_mix = $objMixRN->listar(new MixRTqPCR(),null,true);
+    //$arr_solicitacoes = $objSolMontarPlacaRN->listar(new SolicitacaoMontarPlaca());
     /*echo '<pre>';
            print_r($arr_solicitacoes);
            echo '</pre>';*/
 
 
-    foreach ($arr_solicitacoes as $solicitacao) {
-
+    foreach ($arr_mix as $mix) {
+        $solicitacao = $mix->getObjSolicitacao();
 
         $strTubos = '';
         $strAmostras = '';
@@ -165,36 +174,24 @@ try {
 
 
         $html .= '<tr' . $style_linha . '>           
-            <th scope="row" >' . Pagina::formatar_html($solicitacao->getIdSolicitacaoMontarPlaca()) . '</th>';
+            <th scope="row" >' . Pagina::formatar_html($mix->getIdMixPlaca()) . '</th>';
+
+        $html .= '<td>' . Pagina::formatar_html($solicitacao->getIdSolicitacaoMontarPlaca()) . '</td>';
 
 
-        if ($solicitacao->getSituacaoSolicitacao() == SolicitacaoMontarPlacaRN::$TS_FINALIZADA) {
-            $style = ' style="background: rgba(0,255,0,0.2);"';
-        }
-
-        if ($solicitacao->getSituacaoSolicitacao() == SolicitacaoMontarPlacaRN::$TS_EM_ANDAMENTO) {
-            $style = ' style="background: rgba(243,108,41,0.2);"';
-        }
-        $html .= '<td' . $style . '>' . Pagina::formatar_html(SolicitacaoMontarPlacaRN::mostrarDescricaoSituacaoSolicitacao($solicitacao->getSituacaoSolicitacao())) . '</td>';
-
+        $html .= '<td>' . Pagina::formatar_html(MixRTqPCR_RN::mostrar_descricao_staMix($mix->getSituacaoMix())) . '</td>';
+        
         $html .= '<td>' . Pagina::formatar_html($solicitacao->getObjPlaca()->getIdPlaca()) . '</td>';
-        $html .= '<td>' . Pagina::formatar_html($solicitacao->getObjPlaca()->getPlaca()) . '</td>';
 
-        $background_placa = '';
-        if($solicitacao->getObjPlaca()->getSituacaoPlaca() == PlacaRN::$STA_INVALIDA){
-            $background_placa = ' style="background: rgba(255,0,0,0.2);"';
-        }
 
-        $html .= '<td'.$background_placa.'>' . Pagina::formatar_html(PlacaRN::mostrar_descricao_staPlaca($solicitacao->getObjPlaca()->getSituacaoPlaca())) . '</td>';
-
-        $html .= '<td>' . Pagina::formatar_html($solicitacao->getObjPlaca()->getObjProtocolo()->getProtocolo()) . '</td>';
         if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
-            $html .= '    <td style="white-space: pre-wrap;"> ' . Pagina::formatar_html($strTubos) . '</td>';
+            $html .= '    <td style="white-space: pre-wrap;">' . Pagina::formatar_html($strTubos) . '</td>';
         }
         $html .= '    <td style="white-space: pre-wrap;">' . Pagina::formatar_html($strAmostras) . '</td>';
-        $html .= '    <td >' . Pagina::formatar_html($solicitacao->getIdUsuarioFk()) . '</td>';
 
-        $dataHoraInicio = explode(" ", $solicitacao->getDataHoraInicio());
+        $html .= '    <td>' . Pagina::formatar_html($mix->getIdUsuarioFk()) . '</td>';
+
+        $dataHoraInicio = explode(" ", $mix->getDataHoraInicio());
         $data = explode("-", $dataHoraInicio[0]);
 
         $diaI = $data[2];
@@ -203,66 +200,42 @@ try {
 
         $html .= '   <td>' . $diaI . '/' . $mesI . '/' . $anoI . ' - ' . $dataHoraInicio[1] . '</td>';
 
-        if ($solicitacao->getSituacaoSolicitacao() == SolicitacaoMontarPlacaRN::$TS_FINALIZADA) {
-            $dataHoraFim = explode(" ", $solicitacao->getDataHoraFim());
-            $data = explode("-", $dataHoraFim[0]);
 
-            $diaF = $data[2];
-            $mesF = $data[1];
-            $anoF = $data[0];
+        $dataHoraFim = explode(" ", $mix->getDataHoraFim());
+        $data = explode("-", $dataHoraFim[0]);
 
-            $html .= '   <td>' . $diaF . '/' . $mesF . '/' . $anoF . ' - ' . $dataHoraFim[1] . '</td>';
-        } else {
-            $html .= '<td> </td>';
-        }
+        $diaF = $data[2];
+        $mesF = $data[1];
+        $anoF = $data[0];
+
+        $html .= '   <td>' . $diaF . '/' . $mesF . '/' . $anoF . ' - ' . $dataHoraFim[1] . '</td>';
+
 
         //echo 'controlador.php?action=solicitar_montagem_placa_RTqPCR&idSolicitacao=' . Pagina::formatar_html($solicitacao->getIdSolicitacaoMontarPlaca()) . '&idProtocolo=' . Pagina::formatar_html($solicitacao->getObjPlaca()->getIdProtocoloFk()) . '&idPlaca=' . Pagina::formatar_html($solicitacao->getObjPlaca()->getIdPlaca()) . '&idSituacao=1';
         if ($solicitacao->getSituacaoSolicitacao() == SolicitacaoMontarPlacaRN::$TS_EM_ANDAMENTO) {
             $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=solicitar_montagem_placa_RTqPCR&idSolicitacao=' . Pagina::formatar_html($solicitacao->getIdSolicitacaoMontarPlaca()) . '&idProtocolo=' . Pagina::formatar_html($solicitacao->getObjPlaca()->getIdProtocoloFk()) . '&idPlaca=' . Pagina::formatar_html($solicitacao->getObjPlaca()->getIdPlaca())) . '&idSituacao=1"><i class="fas fa-exclamation-triangle" style="color: #f36c29;"></i></td>';
-        }else{
-            $html.='<td></td>';
         }
 
 
         if (Sessao::getInstance()->verificar_permissao('mostrar_poco')) {
             if($solicitacao->getSituacaoSolicitacao() == SolicitacaoMontarPlacaRN::$TS_FINALIZADA ) {
-                $html .= '<td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=mostrar_poco&idSolicitacao=' . Pagina::formatar_html($solicitacao->getIdSolicitacaoMontarPlaca()) . '&idPlaca=' . Pagina::formatar_html($solicitacao->getObjPlaca()->getIdPlaca())) . '"><i class="fas fa-eye" style="color: black;"></i></a></td>';
-            }else{
-                $html.='<td></td>';
-            }
-        }else{
-            $html.='<td></td>';
-        }
-
-        if (Sessao::getInstance()->verificar_permissao('mix_placa_RTqPCR')) {
-            if($solicitacao->getSituacaoSolicitacao() == SolicitacaoMontarPlacaRN::$TS_FINALIZADA ) {
                 $color = ' style="color:black;" ';
                 if($solicitacao->getObjPlaca()->getSituacaoPlaca() == PlacaRN::$STA_INVALIDA){
                     $color = ' style="color:red;" ';
                 }
-                $html .= '<td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=mix_placa_RTqPCR&idSolicitacao=' . Pagina::formatar_html($solicitacao->getIdSolicitacaoMontarPlaca()) . '&idPlaca=' . Pagina::formatar_html($solicitacao->getObjPlaca()->getIdPlaca())) . '"><i class="fas fa-th" '.$color.'"></i></a></td>';
-            }else{
-                $html.='<td></td>';
+                $html .= '<td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=mostrar_poco&idSolicitacao=' . Pagina::formatar_html($solicitacao->getIdSolicitacaoMontarPlaca()) . '&idPlaca=' . Pagina::formatar_html($solicitacao->getObjPlaca()->getIdPlaca())) . '"><i class="fas fa-th"'.$color.'"></i></a></td>';
             }
-        }else{
-            $html.='<td></td>';
         }
 
 
         if (Sessao::getInstance()->verificar_permissao('imprimir_solicitacao_montagem_placa_RTqPCR')) {
             $html .= '<td><a target="_blank" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=imprimir_solicitacao_montagem_placa_RTqPCR&idSolicitacao=' . Pagina::formatar_html($solicitacao->getIdSolicitacaoMontarPlaca()) ) . '"><i style="color:black;margin: 0px; padding: 0px;" class="fas fa-print"></i></a></td>';
-        }else{
-            $html.='<td></td>';
         }
 
         if (Sessao::getInstance()->verificar_permissao('remover_solicitacao_montagem_placa_RTqPCR')) {
             if($solicitacao->getSituacaoSolicitacao() != SolicitacaoMontarPlacaRN::$TS_FINALIZADA ) {
                 $html .= '<td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_solicitacao_montagem_placa_RTqPCR&idSolicitacao=' . Pagina::formatar_html($solicitacao->getIdSolicitacaoMontarPlaca())) . '"><i class="fas fa-trash-alt"></i></a></td>';
-            }else{
-                $html.='<td></td>';
             }
-        }else{
-            $html.='<td></td>';
         }
 
 
@@ -286,22 +259,21 @@ Pagina::montar_topo_listar('LISTAR SOLICITAÇÕES DE MONTAGEM DAS PLACAS RTqPCR'
 Pagina::getInstance()->mostrar_excecoes();
 echo $alert;
 
-echo '<div id="tabela_preparos" style="margin-top: -50px;" >
+echo '<div id="tabela_preparos" style="margin-top: -50px;">
         <div class="conteudo_tabela " >
             <table class="table table-hover table-responsive table-sm"  >
                 <thead>
                     <tr>
-                        <th  scope="col">SOLICITAÇÃO</th>
-                        <th  scope="col">SITUAÇÃO DA SOLICITAÇÃO</th>
-                        <th  scope="col">Nº PLACA</th>
-                        <th  scope="col">NOME PLACA</th>
-                        <th  scope="col">SITUAÇÃO PLACA</th>
-                        <th  scope="col">PROTOCOLO</th>';
+                        <th  scope="col">MIX</th>
+                        <th  scope="col">ID DA SOLICITAÇÃO DE ORIGEM</th>
+                        <th  scope="col">SITUAÇÃO MIX</th>
+                        <th  scope="col">Nº PLACA</th>';
 
-                        if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
-                            echo '<th  scope="col">TUBOS</th>';
-                        }
-                        echo '<th  scope="col">AMOSTRAS</th>
+
+if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
+    echo '<th  scope="col">TUBOS</th>';
+}
+echo '<th  scope="col">AMOSTRAS</th>
                         <th scope="col">ID USUÁRIO</th>
                         <th  scope="col">DATA HORA INÍCIO</th>
                         <th  scope="col">DATA HORA TÉRMINO</th>';
@@ -309,7 +281,7 @@ if ($solicitacao->getSituacaoSolicitacao() == SolicitacaoMontarPlacaRN::$TS_EM_A
 if (Sessao::getInstance()->verificar_permissao('mostrar_poco')) { echo '<th scope="col"></th>';}
 if (Sessao::getInstance()->verificar_permissao('imprimir_solicitacao_montagem_placa_RTqPCR')) {echo '<th scope="col"></th>';}
 if (Sessao::getInstance()->verificar_permissao('remover_solicitacao_montagem_placa_RTqPCR')) {echo '<th scope="col"></th>';}
-                      echo ' <!--<th scope="col"></th>-->
+echo ' <!--<th scope="col"></th>-->
                     </tr>
                 </thead>
                 <tbody>'

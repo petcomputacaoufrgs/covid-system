@@ -94,6 +94,28 @@ class RelTuboPlacaRN
         }
     }
 
+    public function remover_arr($arr_relacionamento) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $objExcecao->lancar_validacoes();
+            $objRelTuboPlacaBD = new RelTuboPlacaBD();
+
+            $arr =  $objRelTuboPlacaBD->remover_arr($arr_relacionamento,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro na remoção do relacionamento dos tubos com uma placa.', $e);
+        }
+    }
+
     public function listar(RelTuboPlaca $objRelTuboPlaca) {
         $objBanco = new Banco();
         try {

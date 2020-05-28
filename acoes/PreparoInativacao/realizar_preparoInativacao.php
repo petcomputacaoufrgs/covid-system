@@ -7,7 +7,7 @@ try {
     require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
     require_once __DIR__ . '/../../classes/Capela/Capela.php';
     require_once __DIR__ . '/../../classes/Capela/CapelaRN.php';
-    require_once _DIR__ . '/../../classes/Pagina/InterfacePagina.php';
+    require_once __DIR__ . '/../../classes/Pagina/InterfacePagina.php';
 
     require_once __DIR__ . '/../../classes/Amostra/Amostra.php';
     require_once __DIR__ . '/../../classes/Amostra/AmostraRN.php';
@@ -1089,7 +1089,7 @@ try {
 
 
 } catch (Throwable $ex) {
-    die($ex);
+    //die($ex);
     $show_collap = 's';
     Pagina::getInstance()->processar_excecao($ex);
 }

@@ -84,18 +84,31 @@ try {
 
     $botoes_aparecer = false;
 
+
+
     $arr_preparos = $objPreparoLoteRN->listar_preparos_lote($objPreparoLote,LoteRN::$TL_EXTRACAO);
     //print_r($arr_preparos);
 
     foreach ($arr_preparos as $preparo) {
         $strTubos = '';
         $strAmostras = '';
+        $contador = 0;
         foreach($preparo->getObjLote()->getObjsTubo() as $tubo){
             $strTubos .= $tubo->getIdTubo().",";
+            $contador++;
+            if($contador == 8){
+                $strTubos .= "\n";
+                $contador = 0;
+            }
         }
 
         foreach($preparo->getObjLote()->getObjsAmostras() as $amostra){
             $strAmostras .= $amostra->getNickname().",";
+            $contador++;
+            if($contador == 8){
+                $strAmostras .= "\n";
+                $contador = 0;
+            }
         }
 
 
@@ -133,10 +146,10 @@ try {
 
         //$html .= '   <td>' . Pagina::formatar_html(LoteRN::mostrarDescricaoTipoLote($preparo->getObjLote()->getTipo())) . '</td>';
 
-        $html .='    <td>' . Pagina::formatar_html($strAmostras) . '</td>';
+        $html .='    <td style="white-space: pre-wrap;">' . Pagina::formatar_html($strAmostras) . '</td>';
 
         if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
-            $html .='    <td>' . Pagina::formatar_html($strTubos) . '</td>';
+            $html .='    <td style="white-space: pre-wrap;">' . Pagina::formatar_html($strTubos) . '</td>';
         }
            $html .='   <td>' . Pagina::formatar_html($preparo->getIdUsuarioFk()) . '</td>';
 
@@ -164,17 +177,25 @@ try {
 
 
         if($preparo->getObjLote()->getSituacaoLote() == LoteRN::$TE_EM_EXTRACAO){
-           //ECHO ' controlador.php?action=realizar_extracao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote()).'&idCapela='.Pagina::formatar_html($preparo->getIdCapelaFk()).'&idKitExtracao='.Pagina::formatar_html($preparo->getIdKitExtracaoFk());
-            $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote()).'&idCapela='.Pagina::formatar_html($preparo->getIdCapelaFk()).'&idKitExtracao='.Pagina::formatar_html($preparo->getIdKitExtracaoFk()). '&idSituacao=1').'"><i class="fas fa-exclamation-triangle" style="color: #f36c29;"></i></td>';
+            if (Sessao::getInstance()->verificar_permissao('realizar_extracao')) {
+                //ECHO ' controlador.php?action=realizar_extracao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote()).'&idCapela='.Pagina::formatar_html($preparo->getIdCapelaFk()).'&idKitExtracao='.Pagina::formatar_html($preparo->getIdKitExtracaoFk());
+                $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote()) . '&idCapela=' . Pagina::formatar_html($preparo->getIdCapelaFk()) . '&idKitExtracao=' . Pagina::formatar_html($preparo->getIdKitExtracaoFk()) . '&idSituacao=1') . '"><i class="fas fa-exclamation-triangle" style="color: #f36c29;"></i></td>';
+            }else{
+                $html .= '<td ></td>';
+            }
         }else{
             $html .= '<td ></td>';
         }
 
-        /*if($preparo->getObjLote()->getSituacaoLote() == LoteRN::$TE_EM_EXTRACAO) {
-            $html .= '<td><a target="_blank" href="#"><i style="color:black;margin: 0px; padding: 0px;" class="fas fa-edit"></i></a></td>';
-        }else{
-            $html .= '<td ></td>';
-        }*/
+        //if($preparo->getExtracaoInvalida() == null) {
+            if (Sessao::getInstance()->verificar_permissao('editar_extracao') && $preparo->getObjLote()->getSituacaoLote() == LoteRN::$TE_EXTRACAO_FINALIZADA) {
+                $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_extracao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote()) . '&idCapela=' . Pagina::formatar_html($preparo->getIdCapelaFk()) . '&idKitExtracao=' . Pagina::formatar_html($preparo->getIdKitExtracaoFk()) . '&idSituacao=1') . '"><i class="fas fa-edit" style="color: black;"></i></td>';
+            } else {
+                $html .= '<td ></td>';
+            }
+        //}else{
+        //    $html .= '<td ></td>';
+        //}
 
 
         if (Sessao::getInstance()->verificar_permissao('imprimir_preparo_lote')) {
@@ -196,12 +217,12 @@ try {
 }
 
 
-Pagina::abrir_head("Listar Grupos");
+Pagina::abrir_head("Listar Grupos Extração");
 Pagina::getInstance()->adicionar_css("precadastros");
 
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
-Pagina::montar_topo_listar('LISTAR PREPARO DOS GRUPOS', null, null, null, null);
+Pagina::montar_topo_listar('LISTAR GRUPOS DE EXTRAÇÃO', null, null, null, null);
 Pagina::getInstance()->mostrar_excecoes();
 echo $alert;
 

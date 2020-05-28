@@ -46,7 +46,7 @@ class MontagemGrupoBD
             and tb_infostubo.situacaoTubo = ?
             and tb_perfilpaciente.idPerfilPaciente in (' . $interrogacoes . ')
             and tb_perfilpaciente.idPerfilPaciente = tb_amostra.idPerfilPaciente_fk 
-                    order by tb_amostra.dataColeta LIMIT ?';
+                    order by tb_amostra.idAmostra LIMIT ?';
                 $arrayBind = array();
                 foreach ($arr as $a) {
                     $arrayBind[] = array('i', $a['max(idInfosTubo)']);
@@ -91,7 +91,7 @@ class MontagemGrupoBD
                     and tb_perfilpaciente.idPerfilPaciente = tb_amostra.idPerfilPaciente_fk
                     and tb_tubo.idTubo = tb_infostubo.idTubo_fk
                     and tb_tubo.idTubo in (' . $interrogacoes . ')
-                    order by tb_amostra.nickname
+                    order by tb_amostra.idAmostra
                      ';
 
                     $arrayBind = array();

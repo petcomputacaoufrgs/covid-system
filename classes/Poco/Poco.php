@@ -11,8 +11,27 @@ class Poco
     private $coluna;
     private $situacao;
     private $idTubo_fk;
+    private $conteudo;
 
     private $objPlaca;
+
+    /**
+     * @return mixed
+     */
+    public function getConteudo()
+    {
+        return $this->conteudo;
+    }
+
+    /**
+     * @param mixed $conteudo
+     */
+    public function setConteudo($conteudo)
+    {
+        $this->conteudo = $conteudo;
+    }
+
+
 
     /**
      * @return mixed

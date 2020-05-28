@@ -35,6 +35,7 @@ try {
 
     require_once __DIR__ . '/../../classes/PerfilPaciente/PerfilPaciente.php';
     require_once __DIR__ . '/../../classes/PerfilPaciente/PerfilPacienteRN.php';
+    require_once __DIR__ . '/../../classes/PerfilPaciente/PerfilPacienteINT.php';
 
     require_once __DIR__ . '/../../classes/MontagemGrupo/MontagemGrupo.php';
     require_once __DIR__ . '/../../classes/MontagemGrupo/MontagemGrupoRN.php';
@@ -115,6 +116,8 @@ try {
     $perfis_nome = array();
     $alert = '';
     $perfisSelecionados = '';
+    $amostrasSelecionadas = '';
+    $select_amostras= '';
     $capela_liberada = 'n';
     $liberar_prioridade = 'n';
     $liberar_popUp = 'n';
@@ -123,6 +126,7 @@ try {
     $button_selecionar = 's';
     $cadastrar_novo = 'n';
     $btn_imprimir = 'n';
+    $sumir_btn_enviar_perfil_manual = 'n';
 
     $qntSelecionada = 0;
     $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -130,45 +134,109 @@ try {
     $objPerfilPaciente = new PerfilPaciente();
     $arrPerfis = $objPerfilPacienteRN->listar($objPerfilPaciente);
 
-
+    $sumir_btn_enviar_amostras_manual = 'n';
     $objMontagemGrupo = new MontagemGrupo();
     $objMontagemGrupoRN = new MontagemGrupoRN();
 
     $cancelar_md12 = 'n';
-    $alert .= Alert::alert_info("As amostras serão ordenadas pelo seu código");
+    if(isset($_GET['idTipoMontagem']) && $_GET['idTipoMontagem'] == 2) {
+        $alert .= Alert::alert_info("As amostras serão ordenadas pelo seu código");
+    }
 
 
-    $btn = '';
     $sumir_btn_cancelar = 'n';
 
     InterfacePagina::montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, '', '', null);
+
     $msgPopUp ='';
     $sumir_btn_confirmar = 'n';
     $sumir_btn_confirmar_novamente = 's';
 
-   if(isset($_POST['btn_cancelar'])){
-       $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
-       $objPreparoLote = $objPreparoLoteRN->consultar($objPreparoLote);
-       $objPreparoLote = $objPreparoLoteRN->remover_completamente($objPreparoLote);
-       header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao'));
+    if(isset($_POST['btn_cancelar']) ){
+        $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
+        $objPreparoLote = $objPreparoLoteRN->consultar($objPreparoLote);
+        $objPreparoLote = $objPreparoLoteRN->remover_completamente($objPreparoLote);
+        header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao'));
 
-   }
+    }
 
-    if (isset($_POST['enviar_perfil'])) { //se enviou o perfil e a prioridade
-        $_SESSION['DATA_SAIDA'] = date("Y-m-d H:i:s");
+    switch ($_GET['idTipoMontagem']){
+        case 1: //manual
+            //PerfilPacienteINT::montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, null,null, null);
+            $codigo = '<div class="conteudo_grande" style="margin-top: -10px;">
+                          <form method="POST">
+                                <div class="form-row" >
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control" id="idDataHoraLogin" hidden style="text-align: center;"
+                                               name="dtHoraLoginInicio" required value="' . $_SESSION['DATA_LOGIN'] . '">
+                                    </div>
+                                </div>
+                                <div class="form-row" >';
+            $codigo .= '         <div class="col-md-12">
+                                         <label for="label_perfisAmostras">Selecione um perfil de amostra</label>
+                                                '. $select_perfis .'
+                                     </div>';
 
-        if (isset($_POST['enviar_perfil'])) {
-            $btn = 'selecionar';
-            $sumir_btn_confirmar = 'n';
-        }
-        if (isset($_POST['btn_confirmar'])) {
-            $btn = 'confirmar';
-            //$sumir_btn_confirmar = 's';
-        }
-        if (isset($_POST['btn_confirmar_novamente'])) {
-            $btn = 'confirmar_novamente';
-        }
+            $codigo .= '        </div>';
 
+
+            $tabela = '<div class="form-row" > 
+                                <div class="col-md-12" >
+                                        <table class="table table-bordered table-hover table-sortable" id="tab_logic">
+                                            <thead>
+                                                <tr style="border: 1px solid white;">
+                                                    <th class="text-center" colspan="2" >
+                                                        Código da amostra
+                                                    </th>
+                                                    
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr id="addr0" data-id="0" class="hidden" >
+                                                    <td data-name="name" >
+                                                        <input type="text" name="codigo0"  placeholder="código" class="form-control" value="'.$_POST['codigo0'].'"/>
+                                                    </td>
+                                                    
+                                                    <td data-name="del" >
+                                                        <button name="del0" style="color: white;margin-left: -50px;" class="btn btn-danger glyphicon glyphicon-remove row-remove"><span aria-hidden="true"><i class="fas fa-times" style="color: white;"></i></span></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>                               
+                                <a id="add_row" class="btn btn-primary float-right" style="color: white;"><i class="fas fa-plus" style="color: white;"></i> ADICIONAR AMOSTRA</a>
+                             </div>
+                           </div>
+                            
+                            ';
+            $codigo .= $tabela;
+            $codigo .= '    <div class="form-row" > 
+                                <div class="col-md-12" >
+                                        <input class="btn btn-primary" style="margin-left:10px;width: 100%;" type="submit"  name="btn_enviar_perfil_manual" value="SELECIONAR" />
+                                </div>
+                             </div>';
+            $codigo .= '    </form>
+                        </div>
+                        ';
+
+
+            /*if($_POST['btn_enviar_perfil_manual']){
+                echo "aqui2";
+                echo $_POST['codigo0'];
+                echo $_POST['name1'];
+                echo $_POST['codigo1'];
+
+            }*/
+
+
+            break;
+        case 2: //automático
+            break;
+        default:
+            break;
+    }
+
+    /*if (isset($_POST['enviar_perfil']) || isset($_POST['enviar_perfil_manual']) || isset($_POST['enviar_amostras_manual'])) { //se enviou o perfil e a prioridade
 
         if (!isset($_POST['sel_perfis']) && $_POST['sel_perfis'] == null && !isset($_POST['numQntAmostras']) && $_POST['numQntAmostras'] == 0) { //não enviou nenhum dos dois
             $alert .= Alert::alert_danger("Informe o perfil e a quantidade de amostras");
@@ -190,6 +258,7 @@ try {
                 $alert .= Alert::alert_danger("Informe o perfil da amostra");
             } else if (isset($_POST['sel_perfis']) && $_POST['sel_perfis'] != null) {
                 $paciente_sus = 'n';
+                $perfil = array();
                 for ($i = 0; $i < count($_POST['sel_perfis']); $i++) {
                     $perfisSelecionados .= $_POST['sel_perfis'][$i] . ';';
                     $arr_idsPerfis[] = $_POST['sel_perfis'][$i];
@@ -202,71 +271,133 @@ try {
                 }
 
                 InterfacePagina::montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, '', '');
-
-                if (count($perfil) > 1 && $paciente_sus == 's') {
-                    $alert .= Alert::alert_danger("Você selecionou o perfil PACIENTES SUS e este perfil deve ser tratado sozinho");
-                } else if ($erro_qntAmostras == 'n') { //chegou até aqui então está tudo certo
-
-                    $objMontagemGrupo->setArrIdsPerfis($arr_idsPerfis);
-                    $objMontagemGrupo->setQntAmostras($qntSelecionada);
-                    $arr_grupo = $objMontagemGrupoRN->listar_completo($objMontagemGrupo); //listou todas as amostras
-                    //print_r($arr_grupo);
-                    //die();
-
-                    //lock de registro para setar todos como em utilização
-                    //$objInfosTuboRN->lockRegistro_utilizacaoTubo_MG($arr_grupo);
-                    $tubos = array();
-                    foreach ($arr_grupo as $grupo) {
-                        $objInfosTubo = new InfosTubo();
-                        $objInfosTuboRN = new InfosTuboRN();
-                        $objTubo = new Tubo();
-                        $objInfosTubo->setIdTubo_fk($grupo->getAmostra()->getObjTubo()->getIdTubo());
-                        $objTubo->setIdTubo($grupo->getAmostra()->getObjTubo()->getIdTubo());
-                        $objInfosTuboUltimo = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
-
-                        $objInfosTuboUltimo->setIdInfosTubo(null);
-                        $objInfosTuboUltimo->setObservacoes(null);
-                        $objInfosTuboUltimo->setObsProblema(null);
-                        $objInfosTuboUltimo->setSituacaoTubo(InfosTuboRN::$TST_EM_UTILIZACAO);
-                        $objInfosTuboUltimo->setSituacaoEtapa(InfosTuboRN::$TSP_EM_ANDAMENTO);
-                        $objTubo->setObjInfosTubo($objInfosTuboUltimo);
-                        $tubos[] = $objTubo;
-
+                if (isset($_POST['enviar_perfil_manual'])) {
+                    //esperar até o selecionar as amostras
+                    $objAmostra->setObjPerfil($perfil);
+                    //$arr_amostras = $objAmostraRN->listar_com_perfil($objAmostra,'P',null,$qntSelecionada);
+                    //echo $qntSelecionada;
+                    InterfacePagina::montar_select_multiplas_amostras($select_amostras,$perfisSelecionados, $objAmostra, $objAmostraRN,$amostrasSelecionadas,$arr_amostras,null,$qntSelecionada);
+                    $html_inputs = '';
+                    for($i=0; $i<$qntSelecionada; $i++) {
+                        $strTxtCodigo = 'txtCodAmostra_'.$i;
+                        $html_inputs .= ' <div class="form-row" >
+                                            <div class="col-md-2" style="margin-left: 1%;padding:0px;text-align:center;border: 1px solid red;">
+                                                <label style="padding-top:0px;margin-top: 5px;"><h5>'.($i+1).'ª amostra:</h5></label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" class="form-control" id="idDataHoraLogin"  style="text-align: center;"
+                                                       name="'.$strTxtCodigo.'" required value="' . $_POST[$strTxtCodigo] . '">
+                                            </div>
+                                          </div>';
                     }
 
-                    if(count($tubos) > 0) {
-                        $objLote->setTipo(LoteRN::$TL_PREPARO);
-                        $objLote->setObjsTubo($tubos);
-                        $objLote->setSituacaoLote(LoteRN::$TE_NA_MONTAGEM);
-                        $objLote->setQntAmostrasDesejadas($qntSelecionada);
-                        $objLote->setQntAmostrasAdquiridas(count($tubos));
+                }
+                    //die("10");
+                    if (count($perfil) > 1 && $paciente_sus == 's') {
+                        $alert .= Alert::alert_danger("Você selecionou o perfil PACIENTES SUS e este perfil deve ser tratado sozinho");
+                    } else if ($erro_qntAmostras == 'n') {
+                        $sumir_btn_enviar_perfil_manual = 's';//chegou até aqui então está tudo certo
 
-                        $objPreparoLote->setObjLote($objLote);
+                        if(isset($_POST['enviar_amostras_manual'])){
+                            $sumir_btn_enviar_perfil_manual = 's';
+                            $perfisSelecionados = '';
 
-                        $objPreparoLote->setIdUsuarioFk(Sessao::getInstance()->getIdUsuario());
-                        $objPreparoLote->setDataHoraFim(date("Y-m-d H:i:s"));
-                        $objPreparoLote->setDataHoraInicio($_POST['dtHoraLoginInicio']);
-                        $objPreparoLote->setObjPerfil($perfil);
+                            for ($i = 0; $i < count($_POST['sel_mult_amostras']); $i++) {
+                                $amostrasSelecionadas .= $_POST['sel_mult_amostras'][$i] . ';';
+                            }
+                            InterfacePagina::montar_select_multiplas_amostras($select_amostras,$perfisSelecionados, $objAmostra, $objAmostraRN,$amostrasSelecionadas,$arr_amostras);
+                            $sumir_btn_enviar_amostras_manual = 's';
+                        }
 
-                        $objRel_Perfil_preparoLote->setObjPreparoLote($objPreparoLote);
-                        $objRel_Perfil_preparoLote->setObjPerfilPaciente($perfil);
-                        $objRel_Perfil_preparoLote = $objRel_Perfil_preparoLoteRN->cadastrar($objRel_Perfil_preparoLote);
+                        if(isset($_GET['idTipoMontagem']) && $_GET['idTipoMontagem'] == 2 ) {
+                            $objMontagemGrupo->setArrIdsPerfis($arr_idsPerfis);
+                            $objMontagemGrupo->setQntAmostras($qntSelecionada);
+                            $arr_grupo = $objMontagemGrupoRN->listar_completo($objMontagemGrupo);
 
-                        header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao&idPreparoLote=' . $objRel_Perfil_preparoLote->getObjPreparoLote()->getIdPreparoLote()));
-                        die();
-                    }else{
-                        $alert = Alert::alert_warning("Nenhuma amostrafoi encontrada com esse(s) perfil(s)");
+                            $tubos = array();
+                            foreach ($arr_grupo as $grupo) {
+                                $objInfosTubo = new InfosTubo();
+                                $objInfosTuboRN = new InfosTuboRN();
+                                $objTubo = new Tubo();
+                                $objInfosTubo->setIdTubo_fk($grupo->getAmostra()->getObjTubo()->getIdTubo());
+                                $objTubo->setIdTubo($grupo->getAmostra()->getObjTubo()->getIdTubo());
+                                $objInfosTuboUltimo = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
+
+                                $objInfosTuboUltimo->setIdInfosTubo(null);
+                                $objInfosTuboUltimo->setObservacoes(null);
+                                $objInfosTuboUltimo->setObsProblema(null);
+                                $objInfosTuboUltimo->setSituacaoTubo(InfosTuboRN::$TST_EM_UTILIZACAO);
+                                $objInfosTuboUltimo->setSituacaoEtapa(InfosTuboRN::$TSP_EM_ANDAMENTO);
+                                $objTubo->setObjInfosTubo($objInfosTuboUltimo);
+                                $tubos[] = $objTubo;
+
+                            }
+                        }else{
+                            //if(isset($_POST['enviar_amostras_manual'])) {
+
+
+                                $tubos = array();
+                                foreach ($arr_amostras as $amostra) {
+                                    $tubo = $amostra->getObjTubo();
+                                    $objInfosTubo = new InfosTubo();
+                                    $objInfosTuboRN = new InfosTuboRN();
+                                    $objTubo = new Tubo();
+                                    $objInfosTubo->setIdTubo_fk($tubo->getIdTubo());
+                                    $objTubo->setIdTubo($tubo->getIdTubo());
+                                    $objInfosTuboUltimo = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
+
+                                    $objInfosTuboUltimo->setIdInfosTubo(null);
+                                    $objInfosTuboUltimo->setObservacoes(null);
+                                    $objInfosTuboUltimo->setObsProblema(null);
+                                    $objInfosTuboUltimo->setSituacaoTubo(InfosTuboRN::$TST_EM_UTILIZACAO);
+                                    $objInfosTuboUltimo->setSituacaoEtapa(InfosTuboRN::$TSP_EM_ANDAMENTO);
+                                    $objTubo->setObjInfosTubo($objInfosTuboUltimo);
+                                    $tubos[] = $objTubo;
+
+                                }
+                            //}
+
+                        }
+
+                        //die();
+                        if (count($tubos) > 0) {
+                            $objLote->setTipo(LoteRN::$TL_PREPARO);
+                            $objLote->setObjsTubo($tubos);
+                            $objLote->setSituacaoLote(LoteRN::$TE_NA_MONTAGEM);
+                            $objLote->setQntAmostrasDesejadas($qntSelecionada);
+                            $objLote->setQntAmostrasAdquiridas(count($tubos));
+
+                            $objPreparoLote->setObjLote($objLote);
+
+                            $objPreparoLote->setIdUsuarioFk(Sessao::getInstance()->getIdUsuario());
+                            $objPreparoLote->setDataHoraFim(date("Y-m-d H:i:s"));
+                            $objPreparoLote->setDataHoraInicio($_POST['dtHoraLoginInicio']);
+                            $objPreparoLote->setObjPerfil($perfil);
+
+                            $objRel_Perfil_preparoLote->setObjPreparoLote($objPreparoLote);
+                            $objRel_Perfil_preparoLote->setObjPerfilPaciente($perfil);
+                            $objRel_Perfil_preparoLote = $objRel_Perfil_preparoLoteRN->cadastrar($objRel_Perfil_preparoLote);
+
+                            header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao&idPreparoLote=' . $objRel_Perfil_preparoLote->getObjPreparoLote()->getIdPreparoLote()));
+                            die();
+                        } else {
+                            if(isset($_GET['idTipoMontagem']) && $_GET['idTipoMontagem'] == 2 ) {  $alert = Alert::alert_warning("Nenhuma amostra foi encontrada com esse(s) perfil(s)"); }
+                            if(isset($_GET['idTipoMontagem']) && $_GET['idTipoMontagem'] == 1 &&  isset($_POST['enviar_amostras_manual'])) {  $alert = Alert::alert_warning("Nenhuma amostra foi encontrada com esse(s) perfil(s)"); }
+                        }
                     }
                 }
-            }
-        }
-    }
 
+        }
+    }*/
+
+
+
+    //depois que salvou o preparo do lote
     if(isset($_GET['idPreparoLote'])) {
         $alert .= Alert::alert_success("Cadastro parcial realizado");
         $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
         $objPreparoLote = $objPreparoLoteRN->consultar($objPreparoLote);
-        $todas_infos = $objPreparoLoteRN->obter_todas_infos($objPreparoLote);
+        $todas_infos = $objPreparoLoteRN->obter_todas_infos($objPreparoLote,null);
 
         //ordenar conforme o nickname
 
@@ -287,7 +418,7 @@ try {
         InterfacePagina::montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, ' readonly ', '');
 
 
-        if (count($todas_infos) >= $qntSelecionada) {
+        if ($quantidade >= $todas_infos->getObjLote()->getQntAmostrasDesejadas()) {
             $alert = Alert::alert_success("Foi encontrada uma quantidade de amostras maior/igual ao desejado");
             $quantidade = $todas_infos->getObjLote()->getQntAmostrasDesejadas();
         } else {
@@ -356,7 +487,7 @@ try {
                                   style="width: 50px;" aria-label="Checkbox for following text input">
                                 </div>
                               </div>
-                              <input type="text" disabled  class="form-control" value="Amostra ' . TuboRN::mostrarDescricaoTipoTubo($amostra->getObjTubo()->getTipo()) . ' ' . $amostra->getNickname() . ' - Data coleta: ' . $dia . '/' . $mes . '/' . $ano . '">
+                              <input type="text" disabled  class="form-control" value="Amostra ' . TuboRN::mostrarDescricaoTipoTubo($amostra->getObjTubo()->getTipo()) . ' ' . $amostra->getNickname() . ' - Data coleta: ' . $dia . '/' . $mes . '/' . $ano .'">
                         </div>
                         </div>';
             }
@@ -427,11 +558,6 @@ try {
                 $objPreparoLote->setObjPerfil($todas_infos->getObjPerfil());
 
 
-                //echo "<pre>";
-               // print_r($objPreparoLote);
-                //echo "</pre>";
-                //DIE();
-
                 $objPreparoLoteRN = new PreparoLoteRN();
                 $objPreparoLote = $objPreparoLoteRN->alterar($objPreparoLote);
 
@@ -463,14 +589,13 @@ Pagina::getInstance()->adicionar_css("precadastros");
 if($cadastrar_novo  == 's') {
     Pagina::getInstance()->adicionar_javascript("popUp");
 }
+Pagina::getInstance()->adicionar_javascript("tabelaDinamica");
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
+Pagina::montar_topo_listar("CRIAR GRUPO DE AMOSTRAS",null,null, "listar_preparo_lote", 'LISTAR GRUPOS');
+Pagina::getInstance()->mostrar_excecoes();
 
-if(!isset($_GET['idPreparoLote'])) {
-    Pagina::montar_topo_listar("CRIAR GRUPO DE AMOSTRAS",null,null, "listar_preparo_lote", 'LISTAR GRUPOS');
-    Pagina::getInstance()->mostrar_excecoes();
-}
-echo $alert;
+
 
 echo '<!-- Modal -->
     <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -496,10 +621,9 @@ echo '<!-- Modal -->
         </div>
     </div>';
 
-
-//if(!isset($_GET['idPreparoLote'])) {
-echo '
-        <div class="conteudo_grande" style="margin-top: -10px;">
+if(!isset($_GET['idTipoMontagem']) && !isset($_GET['idPreparoLote'])){
+    echo '
+        <div class="conteudo_grande" style="margin-top: -20px;">
             <form method="POST" name="inicio">
             <div class="form-row" >
             
@@ -508,84 +632,127 @@ echo '
                            name="dtHoraLoginInicio" required value="' . $_SESSION['DATA_LOGIN'] . '">
                 </div>
             </div>
-             <div class="form-row" >';
-
-
-if ($button_selecionar == 'n') {
-    $col_md = 'col-md-10';
-    $readonly = ' readonly="true" ';
-
-} else {
-    $col_md = 'col-md-8';
-    $readonly = '';
+             <div class="form-row" >
+                  <div class="col-md-6" >
+                        <a  class="btn btn-primary" STYLE="margin-left:0px;width:100%;margin-top: 17px;font-size: 20px;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao&idTipoMontagem=1').'"><i style="color:white;" class="fas fa-cogs fa-3x"></i><br>ESCOLHA MANUAL</a>
+                        <!--<button class="btn btn-primary" style="margin-left:0px;margin-top: 31px;width: 100%;" type="submit"  name="btn_manual">ESCOLHA MANUAL</button>-->
+                  </div>
+                   <div class="col-md-6" >
+                        <a  class="btn btn-primary" STYLE="margin-left:0px;width:100%;margin-top: 17px;font-size: 20px;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao&idTipoMontagem=2').'"><i  style="color:white;" class="fas fa-laptop-code fa-3x"></i><br>ESCOLHA AUTOMÁTICA</a>
+                        <!--<button class="btn btn-primary" style="margin-left:0px;margin-top: 31px;width: 100%;" type="submit"  name="btn_automatico">ESCOLHA AUTOMÁTICA</button>-->
+                  </div>
+             </div>
+             </form>
+        </div>
+                    ';
 }
 
-echo '<div class="' . $col_md . '">
+echo $codigo;
+
+
+
+
+/*
+if(isset($_GET['idTipoMontagem']) || isset($_GET['idPreparoLote'])) {
+    echo $alert;
+    echo '
+        <div class="conteudo_grande" style="margin-top: -10px;">
+            <form method="POST" name="inicio">
+            <div class="form-row" >
+
+                <div class="col-md-12">
+                    <input type="text" class="form-control" id="idDataHoraLogin" hidden style="text-align: center;"
+                           name="dtHoraLoginInicio" required value="' . $_SESSION['DATA_LOGIN'] . '">
+                </div>
+            </div>
+             <div class="form-row" >';
+
+    if ($button_selecionar == 'n') {
+        $col_md = 'col-md-10';
+        $readonly = ' readonly="true" ';
+
+    } else if (isset($_GET['idTipoMontagem']) && $_GET['idTipoMontagem'] == 1) {
+        $col_md = 'col-md-8';
+        if($sumir_btn_enviar_perfil_manual == 's') $col_md = 'col-md-10';
+    } else {
+        $col_md = 'col-md-8';
+        $readonly = '';
+    }
+
+    echo '<div class="' . $col_md . '">
              <label for="label_perfisAmostras">Selecione um perfil de amostra</label>'
-    . $select_perfis .
-    '</div>
+        . $select_perfis .
+        '</div>
           ';
-
-echo '<div class="col-md-2">
+    echo '<div class="col-md-2">
             <label for="label_perfisAmostras">Amostras</label>
-            <input type="number" ' . $readonly . ' class="form-control" id="idQntAmostras" placeholder="quantidade" 
+            <input type="number" ' . $readonly . ' class="form-control" id="idQntAmostras" placeholder="quantidade"
                 name="numQntAmostras"  value="' . $qntSelecionada . '">
-            </div>';
+            </div>
+            ';
+
+    if (isset($_GET['idTipoMontagem']) && $_GET['idTipoMontagem'] == 1) {
+        if($sumir_btn_enviar_perfil_manual == 'n') {
+            echo '
+                 <div class="col-md-2" >
+                     <button class="btn btn-primary" style="margin-left:10px;margin-top: 31px;width: 100%;" type="submit"  name="enviar_perfil_manual">SELECIONAR</button>
+                 </div>
+              </div>';
+        }else{
+            echo '</div>';
+        }
+
+        if($sumir_btn_enviar_perfil_manual == 's'){
+
+            //echo $html_inputs;
 
 
-if ($button_selecionar == 's') {
-    echo '<div class="col-md-2" >
+            if($sumir_btn_enviar_amostras_manual == 'n') {
+                echo '
+             <div class="col-md-12" >
+                 <button class="btn btn-primary" style="margin-left:0px;margin-top: 31px;width: 100%;"
+                 type="submit"  name="enviar_amostras_manual">SELECIONAR</button>
+             </div>';
+            }
+          // echo '</div>';
+        }
+    } else {
+
+        if ($button_selecionar == 's') {
+            echo '<div class="col-md-2" >
                         <button class="btn btn-primary" style="margin-left:0px;margin-top: 31px;width: 100%;" type="submit"  name="enviar_perfil">SELECIONAR</button>
                       </div>
                     ';
-}
-echo ' </div> ';
+        }
+    }
+    echo ' </div> ';
 
-if ($button_selecionar == 'n') {
-
-
-    if ($sumir_btn_confirmar == 'n') {
-        echo '  <div class="form-row" >';
-        echo '    <div class="col-md-6" style="margin-top: -10px;" >
-                        <button class="btn btn-primary" style="margin-left:0px;margin-top: 20px;width: 100%;" 
+    if ($button_selecionar == 'n') {
+        if ($sumir_btn_confirmar == 'n') {
+            echo '  <div class="form-row" >';
+            echo '    <div class="col-md-6" style="margin-top: -10px;" >
+                        <button class="btn btn-primary" style="margin-left:0px;margin-top: 20px;width: 100%;"
                         type="submit" name="btn_confirmar" >SELECIONAR AMOSTRAS</button>
                         </div>';
-
-        /* if ($sumir_btn_confirmar_novamente == 'n' && $sumir_btn_confirmar = 's') {
-             echo '  <div class="form-row" >';
-             echo '<div class="col-md-6"  style="margin-top: -10px;" >
-                         <button class="btn btn-primary" style="margin-left:0px;margin-top: 31px;width: 100%;"
-                     type="submit" name="btn_confirmar_novamente" > CONFIRMAR NOVAMENTE</button>
-                 </div>';
-         }*/
-
-
-        echo '<div class="col-md-6"  style="margin-top: -10px;">
+            echo '<div class="col-md-6"  style="margin-top: -10px;">
                     <button type="submit" style="width:100%; margin-top: 20px;margin-left:0%;color:white;text-decoration: none;" class="btn btn-primary"   name="btn_cancelar" > Cancelar</button>
                   </div>';
-        echo '</div>';
-    }
+            echo '</div>';
+        }
 
-    /*if ($btn_imprimir == 's') {
-
-        echo '<div class="col-md-12"  style="margin-top: -10px;" >
-                    <button class="btn btn-primary"   style="width:100%; margin-top: 20px;margin-left:0%;color:white;text-decoration: none;"
-                type="submit" name="btn_imprimir" > IMPRIMIR</button>
-            </div>';
-        echo '</div>';
-    }*/
-
-
-    echo '  <div class="form-row" >
+        echo '  <div class="form-row" >
                    <div class="col-md-12">
                     ' . $html . '
                     </div>
                   </div>';
 
+    }
+
+    echo '
+            </form>';
 }
 
-echo '
-            </form>';
+*/
 echo '<!-- Modal -->
     <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -606,57 +773,5 @@ echo '<!-- Modal -->
             </div>
         </div>
     </div>';
-
-/*}else if(isset($_GET['idPreparoLote'])){
-    echo '<div class="conteudo_grande">
-                <div class="form-row" >
-                   <div class="col-md-12">'
-                    .$collapse.
-                   '</div>
-                </div>
-            </div>';
-
-}*/
-
-/* if($button_selecionar == 's' && $sumir_btn_cancelar = 'n') {
-     echo
-     '<div class="conteudo_grande">
-         <form method="POST">
-             <div class="form-row" >
-                 <div class="col-md-12">
-                     <button type="button" class="btn btn-primary" style="margin-left:25%;margin-top: -30px;width: 50%;"
-                         data-toggle="modal"  data-target="" name="btn_cancelar" > Cancelar</button>
-                 </div>
-             </div>
-         </form>
-     </div>';
- }*/
-
-/*
-
-//echo '<div class="conteudo_grande">'.$collapse.'</div>';
-
-
-/*echo'
-    <div class="modal fade" id="cancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Tem certeza que dejesa cancelar o cadastro? </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                Ao cancelar, nenhum dado será cadastrado no banco.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"  >Close</button>
-                    <button type="button"  class="btn btn-primary"><a href="'. Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra').'">Tenho certeza</a></button>
-                </div>
-            </div>
-        </div>
-    </div>';*/
-
 
 Pagina::getInstance()->fechar_corpo();

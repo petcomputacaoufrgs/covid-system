@@ -121,10 +121,76 @@ class RelTuboPlacaBD
     public function remover(RelTuboPlaca $objRelTuboPlaca, Banco $objBanco) {
 
         try{
+                $DELETE = 'DELETE FROM tb_rel_tubo_placa WHERE idRelTuboPlaca = ? ';
+                $arrayBind = array();
+                $arrayBind[] = array('i', $objRelTuboPlaca->getIdRelTuboPlaca());
 
-            $DELETE = 'DELETE FROM tb_rel_tubo_placa WHERE idRelTuboPlaca = ? ';
+            $objBanco->executarSQL($DELETE, $arrayBind);
+
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro removendo o relacionamento dos tubos com uma placa no BD.",$ex);
+        }
+    }
+
+    public function remover_arr($array, Banco $objBanco) {
+
+        try{
+
+            foreach ($array as $a) {
+                $select_max = "select max(tb_infostubo.idInfostubo) from tb_infostubo, tb_tubo where tb_infostubo.idTubo_fk = tb_tubo.idTubo 
+                and tb_tubo.idTubo = ?";
+                $arrayBind = array();
+                $arrayBind[] = array('i', $a->getIdTuboFk());
+                $max_info = $objBanco->consultarSql($select_max, $arrayBind);
+
+                $select_info = "select * from tb_infostubo where idInfostubo = ?";
+                $arrayBind = array();
+                $arrayBind[] = array('i',$max_info[0]['max(tb_infostubo.idInfostubo)']);
+                $arr = $objBanco->consultarSql($select_info, $arrayBind);
+
+
+                $objInfosTubo = new InfosTubo();
+                $objInfosTuboRN = new InfosTuboRN();
+                $objInfosTubo->setIdUsuario_fk($arr[0]['idUsuario_fk']);
+                $objInfosTubo->setIdPosicao_fk($arr[0]['idPosicao_fk']);
+                $objInfosTubo->setIdTubo_fk($arr[0]['idTubo_fk']);
+                $objInfosTubo->setIdLote_fk($arr[0]['idLote_fk']);
+                $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
+                $objInfosTubo->setReteste($arr[0]['reteste']);
+                $objInfosTubo->setVolume($arr[0]['volume']);
+                $objInfosTubo->setObsProblema($arr[0]['obsProblema']);
+                $objInfosTubo->setObservacoes($arr[0]['observacoes']);
+                $objInfosTubo->setIdLocalFk($arr[0]['idLocal_fk']);
+
+                $objInfosTubo->setEtapaAnterior(InfosTuboRN::$TP_RTqPCR_SOLICITACAO__MONTAGEM_PLACA);
+                $objInfosTubo->setEtapa(InfosTuboRN::$TP_RTqPCR_MIX_PLACA);
+                $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
+                $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_EM_ANDAMENTO);
+                $objInfosTubo = $objInfosTuboRN->cadastrar($objInfosTubo);
+
+                $objInfosTubo->setEtapaAnterior(InfosTuboRN::$TP_EXTRACAO);
+                $objInfosTubo->setEtapa(InfosTuboRN::$TP_RTqPCR_SOLICITACAO__MONTAGEM_PLACA);
+                $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_AGUARDANDO_SOLICITACAO_MONTAGEM_PLACA);
+                $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
+                $objInfosTuboRN->cadastrar($objInfosTubo);
+
+            }
+
+
+            //die();
+
+            $interrogacoes = '';
+            foreach ($array as $a){
+                $interrogacoes .= '?,';
+            }
+            $interrogacoes = substr($interrogacoes,0,-1);
+
+            $DELETE = 'DELETE FROM tb_rel_tubo_placa WHERE idRelTuboPlaca in ('.$interrogacoes.')';
             $arrayBind = array();
-            $arrayBind[] = array('i',$objRelTuboPlaca->getIdRelTuboPlaca());
+            foreach ($array as $a) {
+                $arrayBind[] = array('i', $a->getIdRelTuboPlaca());
+            }
+
             $objBanco->executarSQL($DELETE, $arrayBind);
 
         } catch (Throwable $ex) {

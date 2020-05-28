@@ -171,6 +171,15 @@ td,th{
 }
 
 
+.tabela_poco{
+    /*border:1px solid red;*/
+}
+
+.tabela_poco tr td{
+    /*border:1px solid red;*/
+    padding: 2px;
+}
+
 
 .conteudo_tabela a{
     color: black;

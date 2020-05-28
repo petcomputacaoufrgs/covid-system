@@ -439,6 +439,7 @@ class PreparoLoteBD{
                         where tb_preparo_lote.idLote_fk = tb_lote.idLote 
                         and tb_lote.tipo = ?
                         AND tb_usuario.idUsuario = tb_preparo_lote.idUsuario_fk
+                        ORDER BY  tb_preparo_lote.idPreparoLote DESC
                         ';
 
             $arrayBind1 = array();
@@ -534,14 +535,14 @@ class PreparoLoteBD{
 
             return $arr_preparos;
         } catch (Throwable $ex) {
-            die($ex);
+            //die($ex);
             throw new Excecao("Erro consultando o lote no BD.",$ex);
         }
 
     }
 
 
-    public function obter_todas_infos(PreparoLote $objPreparoLote,Banco $objBanco) {
+    public function obter_todas_infos(PreparoLote $objPreparoLote,$str = null,Banco $objBanco) {
 
         try{
 
@@ -552,16 +553,16 @@ class PreparoLoteBD{
                          AND tb_rel_tubo_lote.idLote_fk = tb_lote.idLote 
                          and tb_amostra.idAmostra = tb_tubo.idAmostra_fk
                          and tb_rel_tubo_lote.idTubo_fk = tb_tubo.idTubo
-                         order by substr(tb_amostra.nickname,1,1), cast(substr(tb_amostra.nickname,2) as int)
+                         order by substr(tb_amostra.nickname,1,1), cast(substr(tb_amostra.nickname,2) as int), tb_amostra.idAmostra
                          
                         ';
-
+            //order by substr(tb_amostra.nickname,1,1), cast(substr(tb_amostra.nickname,2) as int),
             $arrayBind1 = array();
             $arrayBind1[] = array('i',$objPreparoLote->getIdPreparoLote());
             $array = $objBanco->consultarSQL($SELECT1,$arrayBind1);
 
             $preparoLote = new PreparoLote();
-            $preparoLote->setIdUsuarioFk($array[0]['idUsuario']);
+            $preparoLote->setIdUsuarioFk($array[0]['idUsuario_fk']);
             $preparoLote->setIdPreparoLote($array[0]['idPreparoLote']);
             $preparoLote->setDataHoraInicio($array[0]['dataHoraInicio']);
             $preparoLote->setIdLoteFk($array[0]['idLote_fk']);
@@ -583,17 +584,100 @@ class PreparoLoteBD{
             foreach ($array as $arr) {
 
                 $objTubo = new Tubo();
-                $objTubo->setIdTubo($arr['idTubo_fk']);
-                $arr_tubos[] = $objTubo;
-
+                $objTubo->setIdTubo($arr['idTubo']);
+                $objTubo->setIdTubo_fk($arr['idTubo_fk']);
+                $objTubo->setIdAmostra_fk($arr['idAmostra_fk']);
+                $objTubo->setTuboOriginal($arr['tuboOriginal']);
+                $objTubo->setTipo($arr['tipo']);
 
                 $objAmostra = new Amostra();
                 $objAmostra->setIdAmostra($arr['idAmostra']);
                 $objAmostra->setCodigoAmostra($arr['codigoAmostra']);
                 $objAmostra->setDataColeta($arr['dataColeta']);
                 $objAmostra->setNickname($arr['nickname']);
+
+
+
+                $SELECT_ID_ULTIMO_INFOTUBO = 'SELECT max(idInfosTubo) from tb_infostubo where idTubo_fk = ? LIMIT 1';
+                $arrayBindIDINFO = array();
+                $arrayBindIDINFO[] = array('i', $arr['idTubo']);
+                $id_ultimo_info = $objBanco->consultarSQL($SELECT_ID_ULTIMO_INFOTUBO, $arrayBindIDINFO);
+
+
+                if($id_ultimo_info[0]['max(idInfosTubo)'] != null) {
+                    $SELECT_ULTIMO_INFOTUBO = 'SELECT * from tb_infostubo where idInfosTubo = ?';
+                    $arrayBindINFO = array();
+                    $arrayBindINFO[] = array('i', $id_ultimo_info[0]['max(idInfosTubo)']);
+                    $ultimo_info = $objBanco->consultarSQL($SELECT_ULTIMO_INFOTUBO, $arrayBindINFO);
+
+                    //última linha do info tubo é o final da extração
+                    if($ultimo_info[0]['etapa'] != InfosTuboRN::$TP_RTqPCR_SOLICITACAO__MONTAGEM_PLACA){
+                        if($str != null){
+                            $objTubo->setExtracaoInvalida(true);
+
+                        }
+                    }
+
+                    if($ultimo_info[0]['etapaAnterior'] != InfosTuboRN::$TP_EXTRACAO){
+                        if($str != null){
+                            $objTubo->setExtracaoInvalida(true);
+
+                        }
+                    }
+
+                    if($ultimo_info[0]['situacaoEtapa'] != InfosTuboRN::$TSP_AGUARDANDO ){
+                        if($str != null){
+                            $objTubo->setExtracaoInvalida(true);
+
+                        }
+                    }
+
+
+
+                    $objInfosTubo = new InfosTubo();
+                    $objInfosTubo->setIdInfosTubo($ultimo_info[0]['idInfosTubo']);
+                    $objInfosTubo->setIdUsuario_fk($ultimo_info[0]['idUsuario_fk']);
+                    $objInfosTubo->setIdPosicao_fk($ultimo_info[0]['idPosicao_fk']);
+                    $objInfosTubo->setIdTubo_fk($ultimo_info[0]['idTubo_fk']);
+                    $objInfosTubo->setIdLote_fk($ultimo_info[0]['idLote_fk']);
+                    $objInfosTubo->setEtapa($ultimo_info[0]['etapa']);
+                    $objInfosTubo->setEtapaAnterior($ultimo_info[0]['etapaAnterior']);
+                    $objInfosTubo->setDataHora($ultimo_info[0]['dataHora']);
+                    $objInfosTubo->setReteste($ultimo_info[0]['reteste']);
+                    $objInfosTubo->setVolume($ultimo_info[0]['volume']);
+                    $objInfosTubo->setObsProblema($ultimo_info[0]['obsProblema']);
+                    $objInfosTubo->setObservacoes($ultimo_info[0]['observacoes']);
+                    $objInfosTubo->setSituacaoEtapa($ultimo_info[0]['situacaoEtapa']);
+                    $objInfosTubo->setSituacaoTubo($ultimo_info[0]['situacaoTubo']);
+                    $objInfosTubo->setIdLocalFk($ultimo_info[0]['idLocal_fk']);
+
+                    if($ultimo_info[0]['idLocal_fk'] != null) {
+                        $SELECT_LOCAL = 'SELECT *  FROM tb_local_armazenamento_texto WHERE idLocal = ?';
+
+                        $arrayBindLOCAL = array();
+                        $arrayBindLOCAL[] = array('i', $ultimo_info[0]['idLocal_fk']);
+
+                        $local = $objBanco->consultarSQL($SELECT_LOCAL, $arrayBindLOCAL);
+
+                        $localTxt = new LocalArmazenamentoTexto();
+                        $localTxt->setIdLocal($local[0]['idLocal']);
+                        $localTxt->setNome($local[0]['nome']);
+                        $localTxt->setIdTipoLocal($local[0]['idTipoLocal']);
+                        $localTxt->setPorta($local[0]['porta']);
+                        $localTxt->setPrateleira($local[0]['prateleira']);
+                        $localTxt->setColuna($local[0]['coluna']);
+                        $localTxt->setCaixa($local[0]['caixa']);
+                        $localTxt->setPosicao($local[0]['posicao']);
+                        $objInfosTubo->setObjLocal($localTxt);
+                    }
+                    $objTubo->setObjInfosTubo($objInfosTubo);
+                }
+
+                $arr_tubos[] = $objTubo;
                 $objAmostra->setObjTubo($objTubo);
                 $arr_amostras[] = $objAmostra;
+
+
 
 
             }
@@ -619,10 +703,10 @@ class PreparoLoteBD{
 
 
             $preparoLote->setObjLote($objLote);
-
+            //die("2222");
             return $preparoLote;
         } catch (Throwable $ex) {
-            die($ex);
+
             throw new Excecao("Erro consultando o lote no BD.",$ex);
         }
 

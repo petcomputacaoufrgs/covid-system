@@ -46,7 +46,7 @@ switch ($_GET['action']):
 
      /* ETAPA 2 */
     case 'montar_preparo_extracao':
-        require_once '../acoes/PreparoLote/realizar_montagemGrupo.php';
+        require_once '../acoes/PreparoLote/realizar_montagemGrupo2.php';
         break;
     case 'realizar_preparo_inativacao':
         require_once '../acoes/PreparoInativacao/realizar_preparoInativacao.php';
@@ -65,6 +65,7 @@ switch ($_GET['action']):
 
 
     case 'realizar_extracao':
+    case 'editar_extracao':
         require_once '../acoes/Extracao/realizar_extracao.php';
         break;
 
@@ -532,12 +533,24 @@ switch ($_GET['action']):
         require_once '../acoes/RTqPCR/listar_solicitacaoMontagemPlaca.php';
         break;
 
+    case 'remover_amostras_da_placa':
+        require_once '../acoes/PocoPlaca/remover_amostraPlaca.php';
+        break;
+
     case 'imprimir_solicitacao_montagem_placa_RTqPCR':
         require_once '../acoes/RTqPCR/imprimir_solicitacaoMontagemPlaca.php';
         break;
 
+    case 'mix_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/mix_placaRTqPCR.php';
+        break;
+
+    case 'listar_mix_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/listar_mix_placa_RTqPCR.php';
+        break;
 
 
-    
+
+
     default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador geral.');
 endswitch;

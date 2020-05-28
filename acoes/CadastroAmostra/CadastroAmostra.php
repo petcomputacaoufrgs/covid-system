@@ -1442,7 +1442,7 @@ if(!$aparecer && !$botaoNovo) {
 
 
 if($listar_pacientes == 's'){
-    echo   '<div class="conteudo_tabela" style="width:98%;margin-left: 1%;margin-right: 1%;margin-top: -10px;">
+    echo   '<div class="conteudo_grande" style="width: 97%; margin-left: 6%;margin-top: -10px;" >
             <table class="table table-responsive table-hover">
         <thead>
             <tr>
@@ -1518,7 +1518,7 @@ if($listar_pacientes == 's'){
                                     <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
                                 </div>
                                 <div class="col-auto my-1" >
-                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                    <input style="height: 35px; width: 100%; margin-left: 0px;margin-top: 2px;"
                                            type="text" class="form-control" id="idObsNomeMae" placeholder="Desconhecido"
                                            onblur="validaObsNomeMae()" name="txtObsNomeMae" value="<?= $objPaciente->getObsNomeMae() ?>">
                                     <div id ="feedback_obsNomeMae"></div>
@@ -1542,7 +1542,7 @@ if($listar_pacientes == 's'){
                                     <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
                                 </div>
                                 <div class="col-auto my-1" >
-                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                    <input style="height: 35px; width: 100%; margin-left:0px;margin-top: 2px;"
                                            type="text" class="form-control" id="idObsDtNascimento" placeholder="Desconhecido"
                                            onblur="validaObsDtNascimento()" name="txtObsDataNascimento" value="<?= Pagina::formatar_html($objPaciente->getObsDataNascimento()) ?>">
                                     <div id ="feedback_dtNascimento"></div>
@@ -1582,7 +1582,7 @@ if($listar_pacientes == 's'){
                                     <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
                                 </div>
                                 <div class="col-auto my-1" >
-                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                    <input style="height: 35px; width: 100%; margin-left: 0px;margin-top: 2px;"
                                            type="text" class="form-control" id="idObsCPF" placeholder="Desconhecido"
                                            onblur="validaObsCPF()" name="txtObsCPF" value="<?= $objPaciente->getObsCPF() ?>">
                                     <div id ="feedback_obsCPF"></div>
@@ -1605,7 +1605,7 @@ if($listar_pacientes == 's'){
                                     <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
                                 </div>
                                 <div class="col-auto my-1" >
-                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                    <input style="height: 35px; width: 100%; margin-left: 0px;margin-top: 2px;"
                                            type="text" class="form-control" id="idObsRG" placeholder="Desconhecido"
                                            onblur="validaObsRG()" name="txtObsRG" value="<?= $objPaciente->getObsRG() ?>">
                                     <div id ="feedback_obsRG"></div>
@@ -1630,7 +1630,7 @@ if($listar_pacientes == 's'){
                                     <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
                                 </div>
                                 <div class="col-auto my-1" >
-                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                    <input style="height: 35px; width: 100%; margin-left: 0px;margin-top: 2px;"
                                            type="text" class="form-control" id="idObsPassaporte" placeholder="Desconhecido"
                                            onblur="validaObsPassaporte()" name="txtObsPassaporte" value="<?= $objPaciente->getObsPassaporte() ?>">
                                     <div id ="feedback_obsPassaporte"></div>
@@ -1660,7 +1660,7 @@ if($listar_pacientes == 's'){
                                     <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
                                 </div>
                                 <div class="col-auto my-1" >
-                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                    <input style="height: 35px; width: 100%; margin-left: 0px;margin-top: 2px;"
                                            type="text" class="form-control" id="idObsCEP" placeholder="Desconhecido"
                                            onblur="validaObsCEP()" name="txtObsCEP" value="<?= $objPaciente->getObsCEP() ?>">
                                     <div id ="feedback_obsCEP"></div>
@@ -1685,7 +1685,7 @@ if($listar_pacientes == 's'){
                                     <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
                                 </div>
                                 <div class="col-auto my-1" >
-                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                    <input style="height: 35px; width: 100%; margin-left: 0px;margin-top: 2px;"
                                            type="text" class="form-control" id="idObsEndereco" placeholder="Desconhecido"
                                            onblur="validaObsEndereco()" name="txtObsEndereco" value="<?= $objPaciente->getObsEndereco() ?>">
                                     <div id ="feedback_obsEndereco"></div>
@@ -1742,7 +1742,7 @@ if($listar_pacientes == 's'){
                                     <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Observações:</label>
                                 </div>
                                 <div class="col-auto my-1" >
-                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                    <input style="height: 35px; width: 100%; margin-left: 0px;margin-top: 2px;"
                                            type="text" class="form-control" id="idObsCodGAL" placeholder="Observações"
                                            onblur="validaObsCodGAL()" name="txtObsCodGAL" value="<?= $objCodigoGAL->getObsCodGAL() ?>">
                                     <div id ="feedback_obsCodGAL"></div>
@@ -1767,7 +1767,7 @@ if($listar_pacientes == 's'){
                                     <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
                                 </div>
                                 <div class="col-auto my-1" >
-                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                    <input style="height: 35px; width: 100%; margin-left: 0px;margin-top: 2px;"
                                            type="text" class="form-control" id="idObsCartaoSUS" placeholder="Desconhecido"
                                            onblur="validaObsCartaoSUS()" name="txtObsCartaoSUS" value="<?= $objPaciente->getObsCartaoSUS() ?>">
                                     <div id ="feedback_cartaoSUS"></div>
@@ -1849,7 +1849,7 @@ if($listar_pacientes == 's'){
                                     <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
                                 </div>
                                 <div class="col-auto my-1" >
-                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                    <input style="height: 35px; width: 100%; margin-left: 0px;margin-top: 2px;"
                                            type="text" class="form-control" id="idObsHoraColeta" placeholder="desconhecido"
                                            onblur="validaObsHoraColeta()" name="txtObsHoraColeta" value="<?= $objAmostra->getObsHoraColeta() ?>">
                                     <div id ="feedback_obsHoraColeta"></div>
@@ -1877,7 +1877,7 @@ if($listar_pacientes == 's'){
                                     <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
                                 </div>
                                 <div class="col-auto my-1" >
-                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                    <input style="height: 35px; width: 100%; margin-left: 0px;margin-top: 2px;"
                                            type="text" class="form-control" id="idObsCartaoSUS" placeholder="Desconhecido"
                                            onblur="validaObsCartaoSUS()" name="txtObsCartaoSUS"
                                            value="<?= $objAmostra->getObsMotivo() ?>">
@@ -1912,7 +1912,7 @@ if($listar_pacientes == 's'){
                                     <label style="margin-top: 10px;margin-left: 10px;" for="label_motivo">Motivo da ausência:</label>
                                 </div>
                                 <div class="col-auto my-1" >
-                                    <input style="height: 35px; width: 100%; margin-left: 20px;margin-top: 2px;"
+                                    <input style="height: 35px; width: 100%; margin-left: 0px;margin-top: 2px;"
                                            class="form-control" id="idObsCEPAmostra" placeholder="desconhecido"
                                            onblur="validaCEPAmostra()" name="txtObsCEPAmostra" value="<?= $objAmostra->getObsCEP() ?>">
                                     <div id ="feedback_CEPAmostra"></div>

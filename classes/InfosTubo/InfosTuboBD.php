@@ -118,6 +118,12 @@ class InfosTuboBD{
                 $AND = ' and ';
                 $arrayBind[] = array('i', $objInfosTubo->getIdTubo_fk());
             }
+
+             if ($objInfosTubo->getIdLote_fk() != null) {
+                 $WHERE .= $AND . " idLote_fk = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('i', $objInfosTubo->getIdLote_fk());
+             }
             
 
              if ($objInfosTubo->getSituacaoTubo() != null) {

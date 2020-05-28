@@ -12,6 +12,24 @@ class Tubo{
     private $objLocal;
 
     private $lote;
+    private $extracaoInvalida;
+
+    /**
+     * @return mixed
+     */
+    public function getExtracaoInvalida()
+    {
+        return $this->extracaoInvalida;
+    }
+
+    /**
+     * @param mixed $extracaoInvalida
+     */
+    public function setExtracaoInvalida($extracaoInvalida)
+    {
+        $this->extracaoInvalida = $extracaoInvalida;
+    }
+
 
 
     

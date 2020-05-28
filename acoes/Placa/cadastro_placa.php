@@ -47,21 +47,22 @@ try{
             break;
 
         case 'editar_placa':
-            if(!isset($_POST['salvar_placa'])){ //enquanto não enviou o formulário com as alterações
-                $objPlaca->setIdPlaca($_GET['idPlaca']);
-                $objPlaca = $objPlacaRN->consultar($objPlaca);
-                $objProtocolo->setIdProtocolo($objPlaca->getIdProtocoloFk());
-                InterfacePagina::montar_select_protocolos($select_protocolos, $objProtocolo, $objProtocoloRN, $disabled, $onchange);
-            }
+            $objPlaca->setIdPlaca($_GET['idPlaca']);
+            $objPlaca = $objPlacaRN->consultar($objPlaca);
+            $objProtocolo->setIdProtocolo($objPlaca->getIdProtocoloFk());
+            InterfacePagina::montar_select_protocolos($select_protocolos, $objProtocolo, $objProtocoloRN, $disabled, $onchange);
+
 
             if(isset($_POST['salvar_placa'])){ //se enviou o formulário com as alterações
                 $objPlaca->setIdPlaca($_GET['idPlaca']);
+                //$objPlaca = $objPlacaRN->consultar($objPlaca);
                 $objPlaca->setPlaca($_POST['txtPlaca']);
                 $objPlaca->setIndexPlaca(strtoupper($objUtils->tirarAcentos($_POST['txtPlaca'])));
                 $objPlaca->setIdProtocoloFk($_POST['sel_protocolos']);
-                $objPlaca->setSituacaoPlaca(PlacaRN::$STA_SOLICITACAO_MONTAGEM);
+                //$objPlaca->setSituacaoPlaca(PlacaRN::$STA_AGUARDANDO_MIX);
 
-                $objPlacaRN->alterar($objPlaca);
+
+                $objPlaca = $objPlacaRN->alterar($objPlaca);
                 $alert .= Alert::alert_success("A placa foi alterada");
             }
             break;
@@ -71,6 +72,7 @@ try{
     InterfacePagina::montar_select_protocolos($select_protocolos, $objProtocolo, $objProtocoloRN, $disabled, $onchange);
 
 } catch (Throwable $ex) {
+    //die($ex);
     Pagina::getInstance()->processar_excecao($ex);
 }
 

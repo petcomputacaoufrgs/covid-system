@@ -49,7 +49,7 @@ try {
 ?>
 
 <?php
-Pagina::abrir_head("Cadastrar Tipos de Amostras");
+Pagina::abrir_head("Cadastrar Tipo de Amostras");
 ?>
 <link rel="stylesheet" type="text/css" href="css/precadastros.css">
 <?php Pagina::fechar_head(); ?>
