@@ -329,6 +329,13 @@ class PreparoLoteBD{
 
                 }
 
+                //PERFIL(IS) DO PREPARO
+                $objPerfilPreparoLote = new Rel_perfil_preparoLote();
+                $objPerfilPreparoLoteRN = new Rel_perfil_preparoLote_RN();
+                $objPerfilPreparoLote->setIdPreparoLoteFk($preparoLote->getIdPreparoLote());
+                $arr_perfis = $objPerfilPreparoLoteRN->listar($objPerfilPreparoLote);
+                $preparoLote->setObjPerfil($arr_perfis);
+
                 // USUÁRIO ----------------------
                 $objUsuario = new Usuario();
                 $objUsuarioRN = new UsuarioRN();

@@ -263,14 +263,18 @@ try {
             $html .= '    <td style="white-space: pre-wrap;">' . Pagina::formatar_html($strTubos) . '</td>';
         }
         $html .= '    <td style="white-space: pre-wrap;">' . Pagina::formatar_html($strAmostras) . '</td>';
-        $html .= '    <td style="white-space: pre-wrap;">' . Pagina::formatar_html($preparo->getObjCapela()->getNumero()) . '</td>';
+
+        if($preparo->getObjCapela() != null) { $html .= '    <td style="white-space: pre-wrap;">' . Pagina::formatar_html($preparo->getObjCapela()->getNumero()) . '</td>';
+        }else { $html .= '    <td style="white-space: pre-wrap;"> - </td>'; }
 
 
-        $idResp = '';
-        if($preparo->getIdResponsavel()){
-            $idResp = '('.$preparo->getIdResponsavel().')';
-        }
-        $html .= '    <td>' . Pagina::formatar_html($preparo->getNomeResponsavel())." ".$idResp . '</td>';
+        if($preparo->getNomeResponsavel() != null || $preparo->getIdResponsavel() != null) {
+            $idResp = '';
+            if ($preparo->getIdResponsavel()) {
+                $idResp = '(' . $preparo->getIdResponsavel() . ')';
+            }
+            $html .= '    <td>' . Pagina::formatar_html($preparo->getNomeResponsavel()) . " " . $idResp . '</td>';
+        }else { $html .= '    <td> - </td>'; }
 
         $html .= '    <td>' . Pagina::formatar_html($preparo->getObjUsuario()->getMatricula()) . '</td>';
 
@@ -293,7 +297,7 @@ try {
 
             $html .= '   <td>' . $diaF . '/' . $mesF . '/' . $anoF . ' - ' . $dataHoraFim[1] . '</td>';
         } else {
-            $html .= '<td> </td>';
+            $html .= '<td> - </td>';
         }
 
         //echo 'controlador.php?action=realizar_preparo_inativacao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote()) . '&idCapela=' . Pagina::formatar_html($preparo->getIdCapelaFk()) . '&idSituacao=1'."\n";

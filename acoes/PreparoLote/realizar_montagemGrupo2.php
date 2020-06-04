@@ -162,19 +162,16 @@ try {
 
     if(isset($_POST['btn_cancelar']) ){
         $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
-        //$objPreparoLote = $objPreparoLoteRN->preparoLote_completo($objPreparoLote,null,true,true,true);
         $_SESSION['COVID19']['INFOSTUBO'] = true;
         $objPreparoLote = $objPreparoLoteRN->preparoLote_completo($objPreparoLote);
         $_SESSION['COVID19']['INFOSTUBO'] = false;
-
-
+        /*
         echo "<pre>";
         print_r($objPreparoLote);
         echo "</pre>";
-
-        die();
-        $objPreparoLote = $objPreparoLoteRN->remover_completamente2($objPreparoLote);
-        //header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao'));
+        */
+        $objPreparoLote = $objPreparoLoteRN->preparoLote_remover($objPreparoLote);
+        header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao'));
         die();
     }
 

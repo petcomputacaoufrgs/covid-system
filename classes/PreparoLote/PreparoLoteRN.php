@@ -664,7 +664,6 @@ class PreparoLoteRN
             throw new Excecao('Erro consultando o perfil do preparo do lote.', $e);
         }
     }
-
     public function preparoLote_completo(PreparoLote $preparoLote)
     {
         $objBanco = new Banco();
@@ -675,6 +674,63 @@ class PreparoLoteRN
 
             $objPreparoLoteBD = new PreparoLoteBD();
             $arr = $objPreparoLoteBD->preparoLote_completo($preparoLote, $objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro consultando o perfil do preparo do lote.', $e);
+        }
+    }
+    public function preparoLote_remover(PreparoLote $objPreparoLote)
+    {
+        $objBanco = new Banco();
+        try {
+
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            if($objPreparoLote->getObjLote()->getTipo() == LoteRN::$TL_PREPARO) {
+                /*
+                echo "<pre>";
+                print_r($objPreparoLote->getObjPerfil());
+                echo "</pre>";
+                */
+                $objPerfilPreparoLoteRN = new Rel_perfil_preparoLote_RN();
+                foreach ($objPreparoLote->getObjPerfil() as $perfil){
+                    $objPerfilPreparoLoteRN->remover($perfil);
+                    //print_r($perfil);
+                }
+
+                $objRelTuboLoteRN = new Rel_tubo_lote_RN();
+                $objInfosTuboRN = new InfosTuboRN();
+                foreach ($objPreparoLote->getObjLote()->getObjRelTuboLote() as $tuboLote) {
+                    /*
+                    echo "<pre>";
+                    print_r($tuboLote);
+                    echo "</pre>";
+                    */
+                    $objRelTuboLoteRN->remover($tuboLote);
+                    foreach ($tuboLote->getObjTubo() as $amostra) {
+                        $tamInfos = count($amostra->getObjTubo()->getObjInfosTubo());
+                        $infosTubo = $amostra->getObjTubo()->getObjInfosTubo()[$tamInfos - 1];
+                        $objInfosTuboRN->remover($infosTubo);
+                        /*
+                        echo "<pre>";
+                        print_r($infosTubo);
+                        echo "</pre>";
+                        */
+                    }
+                }
+            }
+
+
+            $objLoteRN = new LoteRN();
+            $objLoteRN->remover($objPreparoLote->getObjLote());
+
+            $objPreparoLoteBD = new PreparoLoteBD();
+            $arr = $objPreparoLoteBD->remover($objPreparoLote, $objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();

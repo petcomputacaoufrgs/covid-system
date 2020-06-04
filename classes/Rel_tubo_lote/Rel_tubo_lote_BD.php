@@ -176,8 +176,6 @@ class Rel_tubo_lote_BD{
                 $objTuboRN = new TuboRN();
 
 
-                echo $_SESSION['COVID19']['INFOSTUBO'];
-                ECHO "$";
                 $objTubo->setIdTubo($reg['idTubo_fk']);
                 $objTubo = $objTuboRN->listar_completo($objTubo,null,$_SESSION['COVID19']['INFOSTUBO']);
                 $objRelTuboLote->setObjTubo($objTubo);
