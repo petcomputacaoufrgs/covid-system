@@ -94,6 +94,71 @@ class RelTuboPlacaBD
 
     }
 
+    public function listar_completo($relTuboPlaca, Banco $objBanco) {
+        try{
+
+            if(is_array($relTuboPlaca)){
+
+            }else{
+
+            }
+
+            $SELECT = "SELECT * FROM tb_rel_tubo_placa";
+
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($relTuboPlaca->getIdRelTuboPlaca() != null) {
+                $WHERE .= $AND . " idRelTuboPlaca = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $relTuboPlaca->getIdRelTuboPlaca());
+            }
+
+            if ($relTuboPlaca->getIdTuboFk() != null) {
+                $WHERE .= $AND . " idTubo_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $relTuboPlaca->getIdTuboFk());
+            }
+
+            if ($relTuboPlaca->getIdPlacaFk() != null) {
+                $WHERE .= $AND . " idPlaca_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $relTuboPlaca->getIdPlacaFk());
+            }
+
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
+
+            $array = array();
+            foreach ($arr as $reg){
+                $tuboPlaca = new RelTuboPlaca();
+                $tuboPlaca->setIdRelTuboPlaca($reg['idRelTuboPlaca']);
+                $tuboPlaca->setIdPlacaFk($reg['idPlaca_fk']);
+                $tuboPlaca->setIdTuboFk($reg['idTubo_fk']);
+
+                $objTubo = new Tubo();
+                $objTuboRN = new TuboRN();
+
+                $objTubo->setIdTubo($reg['idTubo_fk']);
+                $objTubo = $objTuboRN->listar_completo($objTubo,null,true);
+
+                $tuboPlaca->setObjTubo($objTubo);
+
+                $array[] = $tuboPlaca;
+            }
+            return $array;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando o relacionamento dos tubos com uma placa no BD.",$ex);
+        }
+
+    }
+
+
     public function consultar(RelTuboPlaca $objRelTuboPlaca, Banco $objBanco) {
 
         try{

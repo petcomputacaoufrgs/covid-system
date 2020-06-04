@@ -118,7 +118,7 @@ class LoteBD{
                 print_r($arr2);
                 echo "</pre>"; */
                 $preparoLote = new PreparoLote();
-                $preparoLote->setIdUsuarioFk($arr2[0]['matricula']);
+                $preparoLote->setIdUsuarioFk($arr2[0]['idUsuario_fk']);
                 $preparoLote->setIdPreparoLote($arr2[0]['idPreparoLote']);
                 $preparoLote->setDataHoraInicio($arr2[0]['dataHoraInicio']);
                 $preparoLote->setIdLoteFk($arr2[0]['idLote_fk']);
@@ -178,6 +178,79 @@ class LoteBD{
         }
     }
 
+
+    /**** EXTRAS ****/
+    public function listar_completo($objLote, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT * FROM tb_lote";
+
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($objLote->getIdLote() != null) {
+                $WHERE .= $AND . " idLote = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objLote->getIdLote());
+            }
+
+            if ($objLote->getSituacaoLote() != null) {
+                $WHERE .= $AND . " situacaoLote = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objLote->getSituacaoLote());
+            }
+
+            if ($objLote->getQntAmostrasDesejadas()!= null) {
+                $WHERE .= $AND . " qntAmostrasDesejadas = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objLote->getQntAmostrasDesejadas());
+            }
+
+            if ($objLote->getQntAmostrasAdquiridas()!= null) {
+                $WHERE .= $AND . " qntAmostrasAdquiridas = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objLote->getQntAmostrasAdquiridas());
+            }
+
+            if ($objLote->getTipo()!= null) {
+                $WHERE .= $AND . " tipo = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objLote->getTipo());
+            }
+
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            //echo $SELECT.$WHERE;$WHERE
+
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
+            //print_r($arr);
+            $array = array();
+            foreach ($arr as $reg){
+                $objLote = new Lote();
+                $objLote->setIdLote($reg['idLote']);
+                $objLote->setQntAmostrasDesejadas($reg['qntAmostrasDesejadas']);
+                $objLote->setQntAmostrasAdquiridas($reg['qntAmostrasAdquiridas']);
+                $objLote->setSituacaoLote($reg['situacaoLote']);
+                $objLote->setTipo($reg['tipo']);
+
+                $objRelTuboLote = new Rel_tubo_lote();
+                $objRelTuboLoteRN = new Rel_tubo_lote_RN();
+                $objRelTuboLote->setIdLote_fk($reg['idLote']);
+                $arr_tubos_lote = $objRelTuboLoteRN->listar_completo($objRelTuboLote);
+                $objLote->setObjRelTuboLote($arr_tubos_lote);
+
+                $array[] = $objLote;
+            }
+            return $array;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando o lote no BD.",$ex);
+        }
+
+    }
 
     public function consultar_perfis(Lote $objLote, Banco $objBanco) {
         try{

@@ -9,15 +9,36 @@ class Lote{
     private $qntAmostrasAdquiridas;
     private $situacaoLote;
     private $tipo;
+
+    private $objRelTuboLote;
+
     private $objsTubo;
     private $objsAmostras;
-
     private $objPreparo;
+
 
 
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObjRelTuboLote()
+    {
+        return $this->objRelTuboLote;
+    }
+
+    /**
+     * @param mixed $objRelTuboLote
+     */
+    public function setObjRelTuboLote($objRelTuboLote)
+    {
+        $this->objRelTuboLote = $objRelTuboLote;
+    }
+
+
 
     /**
      * @return mixed

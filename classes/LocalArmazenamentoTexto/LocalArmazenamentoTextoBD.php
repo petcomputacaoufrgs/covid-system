@@ -152,7 +152,7 @@ class LocalArmazenamentoTextoBD
             }
             return $array_localTXT;
         } catch (Throwable $ex) {
-            die($ex);
+            //die($ex);
             throw new Excecao("Erro listando o local de armazenamento (txt) no BD.",$ex);
         }
 

@@ -39,6 +39,14 @@
    
 }
 
+.tooltip_obs{
+    color: black;
+    border: none;
+}
+.tooltip_obs:hover{
+    color: black;
+    border: none;
+}
 
 .conteudo_grande{
     /*background-color: black;*/
@@ -272,6 +280,14 @@ td,th{
     overflow-x: scroll;
 }
 
+
+.icon{
+    color: white;
+}
+
+.icon:hover{
+    color: #3a5261;
+}
 
 /* Media Queries
 -----------------*/

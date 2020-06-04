@@ -117,6 +117,13 @@ class Pagina {
                         </li>';
         }
 
+        if (Sessao::getInstance()->verificar_permissao('mix_placa_RTqPCR')) {
+            echo ' <li class="nav-item active">
+                            <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=mix_placa_RTqPCR') . '">Mix da Placa RTqPCR</a>
+                        </li>';
+        }
+
+
         echo '               <!--<li class="nav-item">
                             <a class="nav-link" href="#">Preparo e Armazenamento</a>
                         </li>
@@ -371,5 +378,35 @@ class Pagina {
                 </div>
             </div>';
                 
+    }
+
+    public static function montar_topo_pesquisar($input_1=null,$input_2=null) {
+        echo '<div class="conteudo_grande" style="width:100%;margin-left: 5px;margin-top: -10px;">
+                <form method="post" id="formPesquisa">
+                    <div class="form-row">
+                        <input type="hidden" id="hdnPagina" name="hdnPagina" value="1">
+                        <div class="col-md-4" >
+                              <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text"><i class="fas fa-search"></i></div>
+                                </div>
+                                '.$input_1.'
+                              </div>
+                        </div>';
+        //if(isset($_POST['sel_pesquisa_coluna']) || $aparecer) {
+            echo '  <div class="col-md-4" >
+                            ' . $input_2 . '
+                        </div>
+                        <div class="col-md-2" >
+                            <input style="width: 100%;" type="submit" class="btn btn-outline-add" name="btn_pesquisar" value="PESQUISAR">
+                        </div>
+                        <div class="col-md-2" >
+                            <input style="width: 100%;" type="button" class="btn btn-outline-add" onclick="window.location.href=window.location.href" name="btn_resetar" value="LIMPAR">
+                        </div>';
+       // }
+        echo '              </div>';
+          echo '        </form>
+            </div>';
+
     }
 }

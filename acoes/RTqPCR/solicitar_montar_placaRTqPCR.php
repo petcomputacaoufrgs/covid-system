@@ -261,7 +261,7 @@ try {
          if(isset($_POST['enviar_perfis'])) {
 
 
-            if($_GET['idTipoSolicitacao'] == Tipo::$TIPO_MANUAL || $_GET['idTipoSolicitacao'] == Tipo::$TIPO_HIBRIDO){
+            //if($_GET['idTipoSolicitacao'] == Tipo::$TIPO_MANUAL || $_GET['idTipoSolicitacao'] == Tipo::$TIPO_HIBRIDO ||){
                 //procurar pelas amostras e ver se estão na etapa certa
                 //print_r($arr_posts);
                 $arr_perfis = explode(';',$perfisSelecionados);
@@ -274,16 +274,22 @@ try {
                     $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
                     $perfil[] = $objPerfilPaciente;
                 }
+
                 $objAmostra->setObjPerfil($perfil);
-                $arr_amostrasAux = $objAmostraRN->validar_amostras_solicitacao($arr_posts,$perfil);
+
+             if($_GET['idTipoSolicitacao'] == Tipo::$TIPO_MANUAL || $_GET['idTipoSolicitacao'] == Tipo::$TIPO_HIBRIDO) {
+                 $arr_amostrasAux = $objAmostraRN->validar_amostras_solicitacao($arr_posts, $perfil);
+             }
                 $btn_qnt_sumir = 's';
                 $btn_selecionar_sumir = 's';
 
-            }
+               // print_r($objAmostra);
+               // die();
 
 
              if($_GET['idTipoSolicitacao'] == Tipo::$TIPO_AUTOMATICO){
                  $arr_amostras = $objAmostraRN->listar_aguardando_sol_montagem_placa_RTqCPR($objAmostra,$objProtocolo->getNumMaxAmostras(),null);
+                 //print_r($arr_amostras);
              }
              if($_GET['idTipoSolicitacao'] == Tipo::$TIPO_HIBRIDO){
                  $arr_amostras = $objAmostraRN->listar_aguardando_sol_montagem_placa_RTqCPR($objAmostra,$objProtocolo->getNumMaxAmostras(), $arr_amostrasAux);
@@ -522,12 +528,14 @@ try {
                     $objInfosTuboAux = new InfosTubo();
                     $objInfosTuboAux->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
                     $objInfosTuboAux->setIdTubo_fk($arr_amostras_escolhidas[$i]->getObjTubo()->getIdTubo());
-                    $objInfosTuboAux->setEtapaAnterior(InfosTuboRN::$TP_MONTAGEM_GRUPOS_AMOSTRAS);
+                    $objInfosTuboAux->setEtapaAnterior(InfosTuboRN::$TP_RTqPCR_SOLICITACAO__MONTAGEM_PLACA);
                     $objInfosTuboAux->setEtapa(InfosTuboRN::$TP_RTqPCR_MIX_PLACA);
                     $objInfosTuboAux->setIdLote_fk(null);
                     $objInfosTuboAux->setIdLocalFk(null);
                     $objInfosTuboAux->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
                     $objInfosTuboAux->setSituacaoTubo(InfosTuboRN::$TST_AGUARDANDO_MIX_PLACA);
+                    $objInfosTuboAux->setVolume($objInfosTubo->getVolume());
+                    $objInfosTuboAux->setReteste($objInfosTubo->getReteste());
                     $objInfosTuboAux->setDataHora(date("Y-m-d H:i:s"));
                     $arr_infos[1] = $objInfosTuboAux;
                     $objTubo->setObjInfosTubo($arr_infos);

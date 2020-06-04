@@ -239,12 +239,10 @@ switch ($_GET['action']):
         break;
     
     case 'listar_usuario':
+    case 'remover_usuario':
         require_once '../acoes/Usuario/listar_usuario.php';
         break;
-    
-    case 'remover_usuario':
-        require_once '../acoes/Usuario/remover_usuario.php';
-        break;
+
     
     /* RECURSO */
     case 'cadastrar_recurso':
@@ -375,8 +373,7 @@ switch ($_GET['action']):
         break;
     
     case 'listar_amostra':
-       // require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
-        require_once '../acoes/CadastroAmostra/listar_cadastroIntermediario.php';
+        require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
         break;
 
     
@@ -547,6 +544,24 @@ switch ($_GET['action']):
 
     case 'listar_mix_placa_RTqPCR':
         require_once '../acoes/RTqPCR/listar_mix_placa_RTqPCR.php';
+        break;
+
+    case 'imprimir_mix_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/imprimir_mix_placa_RTqPCR.php';
+        break;
+
+
+    case 'montar_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/montagem_placaRTqPCR.php';
+        break;
+
+    case 'listar_montagem_placa_RTqPCR':
+    case 'remover_montagem_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/listar_montagem_placa_RTqPCR.php';
+        break;
+
+    case 'imprimir_montagem_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/imprimir_montagem_placa_RTqPCR.php';
         break;
 
 

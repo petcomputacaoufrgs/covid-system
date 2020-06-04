@@ -1167,7 +1167,7 @@ try{
                     //print_r($objInfosTubo);
                     $objInfosTubo = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
                     //echo "##";
-                    print_r($objInfosTubo);
+                    //print_r($objInfosTubo);
                     $objInfosTubo->setIdInfosTubo(null);
 
                     if($objInfosTubo == null){ //não encontrou nenhum info
@@ -1442,8 +1442,8 @@ if(!$aparecer && !$botaoNovo) {
 
 
 if($listar_pacientes == 's'){
-    echo   '<div class="conteudo_grande" style="width: 97%; margin-left: 6%;margin-top: -10px;" >
-            <table class="table table-responsive table-hover">
+    echo   '<div class="conteudo_grande" style="margin-top: -10px;" >
+            <table class="table  table-hover">
         <thead>
             <tr>
                 <th scope="col">Nº PACIENTE </th>

@@ -136,4 +136,25 @@ class RelTuboPlacaRN
             throw new Excecao('Erro na listagem do relacionamento dos tubos com uma placa.',$e);
         }
     }
+
+    public function listar_completo($relTuboPlaca) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $objExcecao->lancar_validacoes();
+            $objRelTuboPlacaBD = new RelTuboPlacaBD();
+
+            $arr =  $objRelTuboPlacaBD->listar_completo($relTuboPlaca,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro na listagem completa do relacionamento dos tubos com uma placa.',$e);
+        }
+    }
 }

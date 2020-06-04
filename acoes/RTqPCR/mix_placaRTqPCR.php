@@ -23,12 +23,18 @@ try{
 
     require_once __DIR__ . '/../../classes/SolicitacaoMontarPlaca/SolicitacaoMontarPlaca.php';
     require_once __DIR__ . '/../../classes/SolicitacaoMontarPlaca/SolicitacaoMontarPlacaRN.php';
+    require_once __DIR__ . '/../../classes/SolicitacaoMontarPlaca/SolicitacaoMontarPlacaINT.php';
 
     require_once  __DIR__.'/../../utils/Utils.php';
 
     require_once __DIR__.'/../../classes/MixRTqPCR/MixRTqPCR.php';
     require_once __DIR__.'/../../classes/MixRTqPCR/MixRTqPCR_RN.php';
 
+    require_once __DIR__ . '/../../classes/RelPerfilPlaca/RelPerfilPlaca.php';
+    require_once __DIR__ . '/../../classes/RelPerfilPlaca/RelPerfilPlacaRN.php';
+
+    require_once __DIR__ . '/../../classes/LocalArmazenamentoTexto/LocalArmazenamentoTexto.php';
+    require_once __DIR__ . '/../../classes/LocalArmazenamentoTexto/LocalArmazenamentoTextoRN.php';
 
     Sessao::getInstance()->validar();
     date_default_timezone_set('America/Sao_Paulo');
@@ -74,6 +80,7 @@ try{
     $objRelTuboPlacaRN = new RelTuboPlacaRN();
 
 
+
     /*
      *  MIX
      */
@@ -82,12 +89,72 @@ try{
 
     $select_placas = '';
     $arr_pocos = array();
+    $select_solicitacoes = '';
     //$disabled = ' disabled ';
 
     InterfacePagina::montar_select_placas($select_placas, $objPlaca, $objPlacaRN, '', '');
 
 
-    if (isset($_GET['idPlaca'])) {
+    $objSolMontarPlaca->setSituacaoSolicitacao(SolicitacaoMontarPlacaRN::$TS_FINALIZADA);
+    $objPlaca->setSituacaoPlaca(PlacaRN::$STA_AGUARDANDO_MIX);
+    $objSolMontarPlaca->setObjPlaca($objPlaca);
+    SolicitacaoMontarPlacaINT::montar_select_solicitacoes($select_solicitacao, $objSolMontarPlaca, $objSolMontarPlacaRN,null, true);
+
+
+    if(isset($_POST['sel_solicitacao']) && !isset($_GET['idSolicitacao'])){
+        $objSolMontarPlaca->setIdSolicitacaoMontarPlaca($_POST['sel_solicitacao']);
+        $arr_solicitacao = $objSolMontarPlacaRN->listar($objSolMontarPlaca);
+
+        $objPlaca = $arr_solicitacao[0]->getObjPlaca();
+        $objPlaca->setSituacaoPlaca(PlacaRN::$STA_NO_MIX);
+
+        /*echo "<pre>";
+        print_r($arr_solicitacao[0]);
+        echo "</pre>";
+        */
+
+        $contador = 0;
+        foreach ($arr_solicitacao[0]->getObjsAmostras() as $amostra){
+            $objTubo = $amostra->getObjTubo();
+            $objInfosTubo = $amostra->getObjTubo()->getObjInfosTubo();
+
+            $objInfosNovo = new InfosTubo();
+            $objInfosNovo = $objInfosTubo;
+
+            $objInfosNovo->setIdInfosTubo(null);
+            $objInfosNovo->setEtapa(InfosTuboRN::$TP_RTqPCR_MIX_PLACA);
+            $objInfosNovo->setSituacaoEtapa(InfosTuboRN::$TSP_EM_ANDAMENTO);
+            $objInfosNovo->setSituacaoTubo(InfosTuboRN::$TST_EM_UTILIZACAO);
+            $objInfosNovo->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+            $objInfosNovo->setDataHora(date("Y-m-d H:i:s"));
+            $arr_infos[$contador++] = $objInfosNovo;
+
+        }
+
+        /*echo "<pre>";
+        print_r($arr_infos);
+        echo "</pre>";*/
+
+        $objMix->setArrObjInfosTubo($arr_infos);
+        $objMix->setObjPlaca($objPlaca);
+
+        $objMix->setIdPlacaFk($objPlaca->getIdPlaca());
+        $objMix->setIdSolicitacaoFk($arr_solicitacao[0]->getIdSolicitacaoMontarPlaca());
+        $objMix->setDataHoraInicio($_SESSION['DATA_LOGIN']);
+        $objMix->setDataHoraFim(date("Y-m-d H:i:s"));
+        $objMix->setIdUsuarioFk(Sessao::getInstance()->getIdUsuario());
+        $objMix->setSituacaoMix(MixRTqPCR_RN::$STA_EM_ANDAMENTO);
+        $objMix = $objMixRN->cadastrar($objMix);
+
+        header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=mix_placa_RTqPCR&idSolicitacao=' . $arr_solicitacao[0]->getIdSolicitacaoMontarPlaca(). '&idPlaca=' . $objPlaca->getIdPlaca().'&idMix='.$objMix->getIdMixPlaca()));
+        die();
+
+    }
+
+    if (isset($_GET['idPlaca']) && isset($_GET['idSolicitacao']) && isset($_GET['idMix'])) {
+        $objSolMontarPlaca->setIdSolicitacaoMontarPlaca(intval($_GET['idSolicitacao']));
+        $objSolMontarPlaca->setObjPlaca(null);
+        SolicitacaoMontarPlacaINT::montar_select_solicitacoes($select_solicitacao, $objSolMontarPlaca, $objSolMontarPlacaRN,true, null);
 
         $objPlaca->setIdPlaca($_GET['idPlaca']);
         $objPlaca = $objPlacaRN->consultar_completo($objPlaca); // busca tudo em 1 consulta
@@ -204,34 +271,9 @@ try{
             $objPlacaAux = $objPlacaRN->consultar($objPlacaAux);
             $objPlacaAux->setSituacaoPlaca(PlacaRN::$STA_INVALIDA);
 
-            if(isset($_GET['idMix'])){
-                $objMix->setIdMixPlaca($_GET['idMix']);
-                $objMix = $objMixRN->consultar($objMix);
-                $objMix->setSituacaoMix(MixRTqPCR_RN::$STA_INVALIDA);
-                $objMix = $objMixRN->alterar($objMix);
-
-            }
-
             $objPlacaRN->alterar($objPlacaAux);
 
 
-        }else if(!$error_qnt ){
-            $objPlacaAux = new Placa();
-            $objPlacaAux->setIdPlaca($_GET['idPlaca']);
-            $objPlacaAux = $objPlacaRN->consultar($objPlacaAux);
-            $objPlacaAux->setSituacaoPlaca(PlacaRN::$STA_AGUARDANDO_MIX);
-
-
-            if(isset($_GET['idMix'])){
-                $objMix->setIdMixPlaca($_GET['idMix']);
-                $objMix = $objMixRN->consultar($objMix);
-                $objMix->setSituacaoMix(MixRTqPCR_RN::$STA_TRANSPORTE_MONTAGEM);
-                $objMix = $objMixRN->alterar($objMix);
-
-                $objPlacaAux->setSituacaoPlaca(PlacaRN::$STA_MIX_FINALIZDO);
-            }
-
-            $objPlacaRN->alterar($objPlacaAux);
         }
 
 
@@ -396,51 +438,8 @@ try{
         // Sessao::getInstance()->getIdUsuario();
         if (isset($_POST['btn_editar_poco']) && count($arr_errors) == 0) {
 
-            if(!isset($_GET['idMix'])){
-                $objMix->setIdPlacaFk($_GET['idPlaca']);
-                $objMix->setIdSolicitacaoFk($_GET['idSolicitacao']);
-                $arr_mix = $objMixRN->listar($objMix, 1);
-
-                if (count($arr_mix) > 0) {
-                    $objMix->setDataHoraInicio($_SESSION['DATA_LOGIN']);
-                    $objMix->setDataHoraFim(date("Y-m-d H:i:s"));
-                    $objMix->setIdSolicitacaoFk($_GET['idSolicitacao']);
-                    $objMix->setIdPlacaFk($_GET['idPlaca']);
-                    //echo Sessao::getInstance()->getIdUsuario();
-                    $objMix->setIdUsuarioFk(Sessao::getInstance()->getIdUsuario());
-                    $objMix->setSituacaoMix($objPlaca->getSituacaoPlaca());
-                    $objMix = $objMixRN->alterar($objMix);
-                } else {
-                    $objMix->setDataHoraInicio($_SESSION['DATA_LOGIN']);
-                    $objMix->setDataHoraFim(date("Y-m-d H:i:s"));
-                    $objMix->setIdSolicitacaoFk($_GET['idSolicitacao']);
-                    $objMix->setIdPlacaFk($_GET['idPlaca']);
-                    $objMix->setIdUsuarioFk(Sessao::getInstance()->getIdUsuario());
-                    if ($objPlaca->getSituacaoPlaca() == PlacaRN::$STA_INVALIDA) {
-                        $objMix->setSituacaoMix(MixRTqPCR_RN::$STA_INVALIDA);
-                    }
-                    $objMix->setSituacaoMix(MixRTqPCR_RN::$STA_TRANSPORTE_MONTAGEM);
-                    $objMix = $objMixRN->cadastrar($objMix);
-                }
-            }
-            print_r($objMix);
-            echo 'controlador.php?action=mix_placa_RTqPCR&idSolicitacao=' . $_GET['idSolicitacao'] . '&idPlaca=' . $objPlaca->getIdPlaca().'&idMix='.$objMix->getIdMixPlaca();
+            header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=mix_placa_RTqPCR&idSolicitacao=' . $_GET['idSolicitacao'] . '&idPlaca=' . $objPlaca->getIdPlaca().'&idMix='.$_GET['idMix']));
             die();
-            header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=mix_placa_RTqPCR&idSolicitacao=' . $_GET['idSolicitacao'] . '&idPlaca=' . $objPlaca->getIdPlaca().'&idMix='.$objMix->getIdMixPlaca()));
-            die();
-        }
-
-        if(isset($_POST['btn_editar_poco'])){
-            /*$objMix->setIdPlacaFk($_GET['idPlaca']);
-            $arr_mix =
-            $objMix->getDataHoraInicio($_SESSION['DATA_LOGIN']);
-            $objMix->getDataHoraInicio(date("Y-m-d H:i:s"));
-            $objMix->setIdSolicitacaoFk($_GET['idSolicitacao']);
-            $objMix->setIdPlacaFk($_GET['idPlaca']);
-            $objMix->setSituacaoMix($objPlaca->getSituacaoPlaca());
-            $objMixRN->cadastrar($objMix);*/
-
-
         }
 
     }
@@ -448,6 +447,86 @@ try{
     if(isset($_POST['btn_remover'])){
         header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_amostras_da_placa&idSolicitacao=' . $_GET['idSolicitacao'] . '&idPlaca=' . $objPlaca->getIdPlaca()));
         die();
+    }
+
+    if(isset($_POST['btn_salvar_mix'])){
+        $objSolMontarPlaca->setIdSolicitacaoMontarPlaca($_GET['idSolicitacao']);
+        $objSolMontarPlaca = $objSolMontarPlacaRN->consultar($objSolMontarPlaca);
+
+        if($objPlaca->getSituacaoPlaca() != PlacaRN::$STA_INVALIDA ) {
+            $objMix->setIdMixPlaca($_GET['idMix']);
+            $objMix = $objMixRN->consultar($objMix);
+
+            if ($objMix->getSituacaoMix() != MixRTqPCR_RN::$STA_TRANSPORTE_MONTAGEM) {
+
+                $objMix->setSituacaoMix(MixRTqPCR_RN::$STA_TRANSPORTE_MONTAGEM);
+
+                $objSolMontarPlaca->setIdSolicitacaoMontarPlaca($_POST['sel_solicitacao']);
+                $arr_solicitacao = $objSolMontarPlacaRN->listar($objSolMontarPlaca);
+
+                $objPlaca = $arr_solicitacao[0]->getObjPlaca();
+                $objPlaca->setSituacaoPlaca(PlacaRN::$STA_MIX_FINALIZADO);
+
+                //echo "<pre>";
+                //print_r($arr_solicitacao[0]);
+                //echo "</pre>";
+
+
+                $contador = 0;
+                foreach ($arr_solicitacao[0]->getObjsAmostras() as $amostra) {
+                    $objTubo = $amostra->getObjTubo();
+                    $objInfosTubo = $amostra->getObjTubo()->getObjInfosTubo();
+
+                    $objInfosNovo = new InfosTubo();
+                    $objInfosNovo = $objInfosTubo;
+
+                    $objInfosNovo->setIdInfosTubo(null);
+                    $objInfosNovo->setEtapa(InfosTuboRN::$TP_RTqPCR_MIX_PLACA);
+                    $objInfosNovo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
+                    $objInfosNovo->setSituacaoTubo(InfosTuboRN::$TST_AGUARDANDO_MONTAGEM_PLACA);
+                    $objInfosNovo->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+                    $objInfosNovo->setDataHora(date("Y-m-d H:i:s"));
+                    $arr_infos[$contador++] = $objInfosNovo;
+
+                    $objInfosNovo2 = new InfosTubo();
+                    $objInfosTubo = new InfosTubo();
+
+                    $objInfosNovo2->setIdTubo_fk($objInfosNovo->getIdTubo_fk());
+                    $objInfosNovo2->setIdLote_fk($objInfosNovo->getIdLote_fk());
+                    $objInfosNovo2->setReteste($objInfosNovo->getReteste());
+                    $objInfosNovo2->setVolume($objInfosNovo->getVolume());
+                    $objInfosNovo2->setObsProblema($objInfosNovo->getObsProblema());
+                    $objInfosNovo2->setObservacoes($objInfosNovo->getObservacoes());
+                    $objInfosNovo2->setIdLocalFk($objInfosNovo->getIdLocalFk());
+                    $objInfosNovo2->setIdInfosTubo(null);
+                    $objInfosNovo2->setEtapa(InfosTuboRN::$TP_RTqPCR_MONTAGEM_PLACA);
+                    $objInfosNovo2->setEtapaAnterior(InfosTuboRN::$TP_RTqPCR_MIX_PLACA);
+                    $objInfosNovo2->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
+                    $objInfosNovo2->setSituacaoTubo(InfosTuboRN::$TST_AGUARDANDO_MONTAGEM_PLACA);
+                    $objInfosNovo2->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+                    $objInfosNovo2->setDataHora(date("Y-m-d H:i:s"));
+                    $arr_infos[$contador++] = $objInfosNovo2;
+
+                }
+
+                /*echo "<pre>";
+                print_r($arr_infos);
+                echo "</pre>";*/
+
+                $objMix->setArrObjInfosTubo($arr_infos);
+                $objMix->setObjPlaca($objPlaca);
+
+                $objMix = $objMixRN->alterar($objMix);
+
+                header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_mix_placa_RTqPCR'));
+                die();
+            }else{
+                $alert .= Alert::alert_warning("O mix já está pronto e indo para a montagem. Logo, não é possível finalizá-lo novamente");
+            }
+        }else if($objPlaca->getSituacaoPlaca() != PlacaRN::$STA_INVALIDA){
+            $alert .= Alert::alert_warning("A placa está inválida. Logo, não é possível finalizar o mix");
+        }
+
     }
 
 
@@ -462,32 +541,48 @@ if($liberar_popUp == 's') {
 }
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
-Pagina::montar_topo_listar('EDITAR POÇO',null,null, 'listar_solicitacao_montagem_placa_RTqPCR', 'LISTAR SOLICITAÇÕES MONTAGEM PLACA');
+Pagina::montar_topo_listar('EDITAR POÇO',null,null, 'listar_mix_placa_RTqPCR', 'LISTAR MIX PLACA');
 echo $alert;
 Pagina::getInstance()->mostrar_excecoes();
 
 echo '<div class="conteudo_grande"   style="margin-top: 0px;">        
              <form method="POST">
-             <input type="text" class="form-control" id="idDataHoraLogin" hidden style="text-align: center;"
+             
+             <div class="form-row">  
+                <div class="col-md-12" >
+                    <label>Selecione uma placa para fazer o mix</label>
+                    '.$select_solicitacao.'
+                </div>
+             </div>';
+             
+      if (isset($_GET['idPlaca']) && isset($_GET['idSolicitacao']) && isset($_GET['idMix'])) {
+          echo '             <input type="text" class="form-control" id="idDataHoraLogin" hidden style="text-align: center;"
                            name="dtHoraLoginInicio" required value="' . $_SESSION['DATA_LOGIN'] . '">
                            
-            '.$table;
+            ' . $table;
 
-if (Sessao::getInstance()->verificar_permissao('remover_amostras_da_placa') && $objPlaca->getSituacaoPlaca() != PlacaRN::$STA_NO_MIX) {
-    echo '    
+          if (Sessao::getInstance()->verificar_permissao('remover_amostras_da_placa') ) {
+              echo '    
                
                 <div class="form-row">
                     <div class="col-md-5">
                         <button class="btn btn-primary" type="submit" name="btn_remover" style="width: 100%;">REMOVER AMOSTRA(S) DA PLACA</button>
                     </div>';
-    //if($objPlaca->getSituacaoPlaca() != PlacaRN::$STA_INVALIDA && $objPlaca->getSituacaoPlaca() != PlacaRN::$STA_MIX_FINALIZADO) {
-        echo '<div class="col-md-5">
+              //if($objPlaca->getSituacaoPlaca() != PlacaRN::$STA_INVALIDA && $objPlaca->getSituacaoPlaca() != PlacaRN::$STA_MIX_FINALIZADO) {
+              echo '<div class="col-md-5">
                         <input class="btn btn-primary" type="submit" name="btn_editar_poco" style="width: 100%;" value="EDITAR" </input>
                     </div>';
-    //}
-                echo '</div>
-            </form>';
-}
-echo '</div>';
+              //}
+              echo '</div>';
+
+              echo '<div class="form-row">
+                    <div class="col-md-12">
+                        <input class="btn btn-primary" type="submit" name="btn_salvar_mix" style="margin-left:0%;width: 100%;" value="SALVAR O MIX DEFINITIVAMENTE"></input>
+                    </div>';
+              echo '</div>';
+          }
+      }
+echo '</form>
+</div>';
 
 Pagina::getInstance()->fechar_corpo();

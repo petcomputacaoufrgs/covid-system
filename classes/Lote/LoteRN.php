@@ -280,7 +280,7 @@ class LoteRN{
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $lote;
-        }catch(Exception $e){
+        }catch(Throwable $e){
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro no cadastramento do lote.', $e);
         }
@@ -294,6 +294,7 @@ class LoteRN{
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
 
+
            $this->validarStrTipoLote($lote,$objExcecao);
            $this->validarQntAmostrasDesejadas($lote,$objExcecao);
            $this->validarQntAmostrasAdquiridas($lote,$objExcecao);
@@ -301,7 +302,13 @@ class LoteRN{
 
            $objExcecao->lancar_validacoes();
            $objLoteBD = new LoteBD();
-           $objLoteBD->alterar($lote,$objBanco);
+            $objLote = $objLoteBD->alterar($lote,$objBanco);
+
+
+          /* echo "<pre>";
+            print_r($lote);
+            echo "</pre>";
+          */
 
 
            if($lote->getObjsTubo() != null) {
@@ -311,24 +318,36 @@ class LoteRN{
                $objRelTuboLote->setIdLote_fk($lote->getIdLote());
                $arr_tubos_lote = $objRelTuboLoteRN->listar($objRelTuboLote);
 
+              /* echo "<pre>";
+               print_r($arr_tubos_lote);
+               echo "</pre>";*/
+
                $remover_relac = array();
                foreach ($arr_tubos_lote as $tubo) {
+
                    $encontrou = false;
                    foreach ($lote->getObjsTubo() as $t) {
                        if ($t->getIdTubo() == $tubo->getIdTubo_fk()) {
-                           $encontrou = true;
+                            if($t->getTuboOriginal() != null){
+                                $objTuboRN = new TuboRN();
+                                $objTuboRN->alterar($t);
+                            }
+                            $encontrou = true;
                            if ($t->getObjInfosTubo() != null) {
                                foreach ($t->getObjInfosTubo() as $info) {
                                    $objInfosTuboRN = new InfosTuboRN();
+                                   //print_r($info);
                                    $objInfosTuboRN->cadastrar($info);
                                }
                            }
+
 
                        }
                    }
 
                    if (!$encontrou) {
                        $remover_relac[] = $tubo;
+
                        $objInfosTubo = new InfosTubo();
                        $objInfosTuboRN = new InfosTuboRN();
                        $objInfosTubo->setIdTubo_fk($tubo->getIdTubo_fk());
@@ -340,16 +359,20 @@ class LoteRN{
                    }
                }
 
+              // die();
+
 
                foreach ($remover_relac as $reltubolote) {
                    $objRelTuboLoteRN->remover($reltubolote);
                }
            }
 
+           //die("adadlkasjndklanskdlas");
+
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $lote;
-        }catch(Exception $e){
+        }catch(Throwable $e){
             $objBanco->cancelarTransacao();
            throw new Excecao('Erro na alteração do lote.', $e);
        }
@@ -370,7 +393,7 @@ class LoteRN{
            $objBanco->confirmarTransacao();
            $objBanco->fecharConexao();
            return $arr;
-       }catch(Exception $e){
+       }catch(Throwable $e){
            $objBanco->cancelarTransacao();
            throw new Excecao('Erro na consulta do lote.',$e);
        }
@@ -391,7 +414,7 @@ class LoteRN{
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        }catch(Exception $e){
+        }catch(Throwable $e){
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro na consulta do lote.',$e);
         }
@@ -413,7 +436,7 @@ class LoteRN{
            $objBanco->confirmarTransacao();
            $objBanco->fecharConexao();
            return $arr;
-       }catch(Exception $e){
+       }catch(Throwable $e){
            $objBanco->cancelarTransacao();
            throw new Excecao('Erro na remoção do lote.', $e);
        }
@@ -435,11 +458,34 @@ class LoteRN{
            $objBanco->confirmarTransacao();
            $objBanco->fecharConexao();
            return $arr;
-       }catch(Exception $e){
+       }catch(Throwable $e){
            $objBanco->cancelarTransacao();
            throw new Excecao('Erro na listagem do lote.',$e);
        }
    }
+
+   /**** EXTRAS ****/
+    public function listar_completo($lote) {
+        $objBanco = new Banco();
+        try{
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $objExcecao->lancar_validacoes();
+            $objLoteBD = new LoteBD();
+
+            $arr = $objLoteBD->listar_completo($lote,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        }catch(Throwable $e){
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro na listagem do lote.',$e);
+        }
+    }
 
    public function pesquisar($campoBD, $valor_usuario) {
        $objBanco = new Banco();
@@ -456,7 +502,7 @@ class LoteRN{
            $objBanco->confirmarTransacao();
            $objBanco->fecharConexao();
            return $arr;
-       }catch(Exception $e){
+       }catch(Throwable $e){
            $objBanco->cancelarTransacao();
         throw new Excecao('Erro na pesquisa do lote.', $e);
     }

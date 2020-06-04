@@ -11,8 +11,12 @@ class MixRTqPCR_RN
 {
 
     public static $STA_INVALIDA = 'I';
-    public static $STA_AGUARDANDO_CONFIRMACAO = 'C';
     public static $STA_TRANSPORTE_MONTAGEM = 'T';
+    public static $STA_NA_MONTAGEM = 'M';
+    public static $STA_MONTAGEM_FINALIZADA = 'F';
+
+    public static $STA_EM_ANDAMENTO = 'E';
+
 
 
     public static function listarValoresStaMix(){
@@ -21,13 +25,28 @@ class MixRTqPCR_RN
             $arrObjTEtapa = array();
 
             $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$STA_EM_ANDAMENTO);
+            $objSituacao->setStrDescricao('EM ANDAMENTO');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$STA_INVALIDA);
-            $objSituacao->setStrDescricao('Inválida');
+            $objSituacao->setStrDescricao('INVÁLIDA');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$STA_NA_MONTAGEM);
+            $objSituacao->setStrDescricao('NA MONTAGEM DA PLACA RTqPCR');
             $arrObjTEtapa[] = $objSituacao;
 
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$STA_TRANSPORTE_MONTAGEM);
-            $objSituacao->setStrDescricao('Em transporte para a montagem da placa RTqPCR');
+            $objSituacao->setStrDescricao('EM TRANSPORTE PARA A MONTAGEM DA PLACA RTqPCR');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$STA_MONTAGEM_FINALIZADA);
+            $objSituacao->setStrDescricao('MONTAGEM DA PLACA RTqPCR FINALIZADA');
             $arrObjTEtapa[] = $objSituacao;
 
             return $arrObjTEtapa;
@@ -116,8 +135,21 @@ class MixRTqPCR_RN
             $this->validarDataHoraFim($objMix,$objExcecao);
             $this->validarDataHoraInicio($objMix,$objExcecao);
 
-
             $objExcecao->lancar_validacoes();
+
+            if($objMix->getObjPlaca() != null){
+                $objPlacaRN = new PlacaRN();
+                $objPlacaRN->alterar($objMix->getObjPlaca());
+            }
+
+            if($objMix->getArrObjInfosTubo() != null){
+                $objInfosTuboRN = new InfosTuboRN();
+
+                foreach ($objMix->getArrObjInfosTubo() as $infoTubo){
+                    $objInfosTuboRN->cadastrar($infoTubo);
+                }
+            }
+
             $objMixBD = new MixRTqPCR_BD();
             $mix  = $objMixBD->cadastrar($objMix,$objBanco);
 
@@ -147,6 +179,20 @@ class MixRTqPCR_RN
             $this->validarDataHoraInicio($objMix,$objExcecao);
 
             $objExcecao->lancar_validacoes();
+
+            if($objMix->getObjPlaca() != null){
+                $objPlacaRN = new PlacaRN();
+                $objPlacaRN->alterar($objMix->getObjPlaca());
+            }
+
+            if($objMix->getArrObjInfosTubo() != null){
+                $objInfosTuboRN = new InfosTuboRN();
+
+                foreach ($objMix->getArrObjInfosTubo() as $infoTubo){
+                    $objInfosTuboRN->cadastrar($infoTubo);
+                }
+            }
+
              $objMixBD = new MixRTqPCR_BD();
             $mix = $objMixBD->alterar($objMix,$objBanco);
 
@@ -218,6 +264,26 @@ class MixRTqPCR_RN
              }else {
                  $arr = $objMixBD->listar($objMix, $numLimite, $objBanco);
              }
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando o placa.',$e);
+        }
+    }
+
+    public function paginacao(MixRTqPCR $objMix) {
+        $objBanco = new Banco();
+        try {
+
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $objMixBD = new MixRTqPCR_BD();
+
+            $arr = $objMixBD->paginacao($objMix, $objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();

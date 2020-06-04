@@ -9,7 +9,26 @@ class RelTuboPlaca
     private $idTubo_fk;
     private $idPlaca_fk;
 
+    private $objTubo;
     private $objPlaca;
+
+    /**
+     * @return mixed
+     */
+    public function getObjTubo()
+    {
+        return $this->objTubo;
+    }
+
+    /**
+     * @param mixed $objTubo
+     */
+    public function setObjTubo($objTubo)
+    {
+        $this->objTubo = $objTubo;
+    }
+
+
 
     /**
      * @return mixed

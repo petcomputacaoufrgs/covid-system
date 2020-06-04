@@ -12,9 +12,48 @@ class Placa
     private $situacaoPlaca;
 
     private $objProtocolo;
+    private $objRelPerfilPlaca;
+    private $objRelTuboPlaca;
+
+
     private $objsAmostras;
     private $objsTubos;
     private $objsPocosPlacas;
+
+    /**
+     * @return mixed
+     */
+    public function getObjRelPerfilPlaca()
+    {
+        return $this->objRelPerfilPlaca;
+    }
+
+    /**
+     * @param mixed $objRelPerfilPlaca
+     */
+    public function setObjRelPerfilPlaca($objRelPerfilPlaca)
+    {
+        $this->objRelPerfilPlaca = $objRelPerfilPlaca;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getObjRelTuboPlaca()
+    {
+        return $this->objRelTuboPlaca;
+    }
+
+    /**
+     * @param mixed $objRelTuboPlaca
+     */
+    public function setObjRelTuboPlaca($objRelTuboPlaca)
+    {
+        $this->objRelTuboPlaca = $objRelTuboPlaca;
+    }
+
+
+
 
     /**
      * @return mixed

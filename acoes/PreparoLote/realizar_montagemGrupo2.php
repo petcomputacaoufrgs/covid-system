@@ -43,6 +43,12 @@ try {
     require_once __DIR__ . '/../../classes/Log/Log.php';
     require_once __DIR__ . '/../../classes/Log/LogRN.php';
 
+    require_once __DIR__ . '/../../classes/KitExtracao/KitExtracao.php';
+    require_once __DIR__ . '/../../classes/KitExtracao/KitExtracaoRN.php';
+
+    require_once __DIR__ . '/../../classes/LocalArmazenamentoTexto/LocalArmazenamentoTexto.php';
+    require_once __DIR__ . '/../../classes/LocalArmazenamentoTexto/LocalArmazenamentoTextoRN.php';
+
 
 
     Sessao::getInstance()->validar();
@@ -156,10 +162,20 @@ try {
 
     if(isset($_POST['btn_cancelar']) ){
         $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
-        $objPreparoLote = $objPreparoLoteRN->consultar($objPreparoLote);
-        $objPreparoLote = $objPreparoLoteRN->remover_completamente($objPreparoLote);
-        header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao'));
+        //$objPreparoLote = $objPreparoLoteRN->preparoLote_completo($objPreparoLote,null,true,true,true);
+        $_SESSION['COVID19']['INFOSTUBO'] = true;
+        $objPreparoLote = $objPreparoLoteRN->preparoLote_completo($objPreparoLote);
+        $_SESSION['COVID19']['INFOSTUBO'] = false;
 
+
+        echo "<pre>";
+        print_r($objPreparoLote);
+        echo "</pre>";
+
+        die();
+        $objPreparoLote = $objPreparoLoteRN->remover_completamente2($objPreparoLote);
+        //header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao'));
+        die();
     }
 
     if(!isset($_GET['idPreparoLote'])) {
@@ -194,19 +210,21 @@ try {
                                     </div>
                                     </div>
                                     
-                                    <div class="col-md-11" >
+                                    <div class="col-md-10" >
                                         <input type="text" class="form-control" id="idQntAmostras" placeholder="código amostra"
-                                            name="txtCod_' . $i . '" style="margin-left:-20px;width:102%;" value="' . Pagina::formatar_html(strtoupper($utils->tirarAcentos($_POST['txtCod_' . $i]))) . '">
+                                            name="txtCod_' . $i . '" style="margin-left:10px;width:102%;" value="' . Pagina::formatar_html(strtoupper($utils->tirarAcentos($_POST['txtCod_' . $i]))) . '">
                                     </div>
                                 </div>';
 
-                            $arr_posts[] .= strtoupper($utils->tirarAcentos($_POST['txtCod_' . $i]));
+                            if (isset($_POST['txtCod_' . $i])){
+                                $arr_posts[] .= strtoupper($utils->tirarAcentos($_POST['txtCod_' . $i]));
+                            }
                         }
 
                         if(count($arr_posts) > 0){
                             $arr_posts_unique = array_unique($arr_posts);
 
-                            if(count($arr_posts_unique) < count($arr_posts)){
+                            if(count($arr_posts_unique) < count($arr_posts) && count($arr_posts) > 0){
                                 $alert.= Alert::alert_warning("Alguma amostra foi informada mais de uma vez");
                             }else{
                                 if (isset($_POST['btn_enviar_amostras'])) {
@@ -331,6 +349,13 @@ try {
                                     $objMontagemGrupo->setQntAmostras($qntSelecionada);
                                     $arr_grupo = $objMontagemGrupoRN->listar_completo($objMontagemGrupo);
 
+                                    /*
+                                    echo "<pre>";
+                                    print_r($arr_grupo);
+                                    echo "</pre>";
+                                    die();
+                                    */
+
                                     $tubos = array();
                                     foreach ($arr_grupo as $grupo) {
                                         $objInfosTubo = new InfosTubo();
@@ -364,6 +389,8 @@ try {
 
 
     if (count($tubos) > 0 && !isset($_GET['idPreparoLote'])) {
+
+
         $objLote->setTipo(LoteRN::$TL_PREPARO);
         $objLote->setObjsTubo($tubos);
         $objLote->setSituacaoLote(LoteRN::$TE_NA_MONTAGEM);
@@ -379,6 +406,8 @@ try {
 
         $objRel_Perfil_preparoLote->setObjPreparoLote($objPreparoLote);
         $objRel_Perfil_preparoLote->setObjPerfilPaciente($perfil);
+
+
         $objRel_Perfil_preparoLote = $objRel_Perfil_preparoLoteRN->cadastrar($objRel_Perfil_preparoLote);
 
         header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao&idPreparoLote=' . $objRel_Perfil_preparoLote->getObjPreparoLote()->getIdPreparoLote()));
@@ -394,8 +423,17 @@ try {
         $alert .= Alert::alert_success("Cadastro parcial realizado");
         $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
         $objPreparoLote = $objPreparoLoteRN->consultar($objPreparoLote);
+
         $todas_infos = $objPreparoLoteRN->obter_todas_infos($objPreparoLote,null);
 
+
+
+
+        /*    echo "<pre>";
+            print_r($todas_infos);
+            echo "</pre>";
+        die();
+        */
 
         $qntSelecionada = $todas_infos->getObjLote()->getQntAmostrasDesejadas();
         $quantidade = count($todas_infos->getObjLote()->getObjsAmostras());
@@ -423,11 +461,13 @@ try {
                             </div>
                          </div>';
         }
+
         $hidden = '';
         $VALORES = '';
         $show = false;
 
         foreach ($todas_infos->getObjLote()->getObjsAmostras() as $amostra) { //todos os tubos originais
+            $objTubo = $amostra->getObjTubo();
             //print_r($grupo);
             $checked = '';
             $disabled = '';
@@ -496,8 +536,16 @@ try {
                          </div>';
             //print_r($arr_checks);
             $arr_infos = array();
+
+            /*
+            echo "<pre>";
+            print_r($arr_amostras);
+            echo "</pre>";
+            */
+
             for($i=0; $i<count($arr_amostras); $i++){
 
+                //print_r($arr_amostras[$i]);
                 $objTubo = new Tubo();
                 $objTubo->setIdTubo($arr_amostras[$i]->getObjTubo()->getIdTubo());
 
@@ -530,6 +578,7 @@ try {
 
             }
 
+
             if(count($tubos) > 0) {
 
 
@@ -546,10 +595,18 @@ try {
                 $objPreparoLote->setDataHoraFim(date("Y-m-d H:i:s"));
                 $objPreparoLote->setObjPerfil($todas_infos->getObjPerfil());
 
+                /*
+                    echo "<pre>";
+                    print_r($objPreparoLote);
+                    echo "</pre>";
+                */
+
+
 
                 $objPreparoLoteRN = new PreparoLoteRN();
                 $objPreparoLote = $objPreparoLoteRN->alterar($objPreparoLote);
 
+                //die();
                 $btn_imprimir = 's';
                 $sumir_btn_confirmar = 's';
                 $sumir_btn_cancelar = 'n';

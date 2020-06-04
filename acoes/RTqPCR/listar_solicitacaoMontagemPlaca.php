@@ -15,6 +15,7 @@ try {
 
     require_once __DIR__ . '/../../classes/Placa/Placa.php';
     require_once __DIR__ . '/../../classes/Placa/PlacaRN.php';
+    require_once __DIR__ . '/../../classes/Placa/PlacaINT.php';
 
     require_once __DIR__ . '/../../classes/Amostra/Amostra.php';
     require_once __DIR__ . '/../../classes/Amostra/AmostraRN.php';
@@ -25,8 +26,10 @@ try {
     require_once __DIR__ . '/../../classes/InfosTubo/InfosTubo.php';
     require_once __DIR__ . '/../../classes/InfosTubo/InfosTuboRN.php';
 
+
     require_once __DIR__ . '/../../classes/Protocolo/Protocolo.php';
     require_once __DIR__ . '/../../classes/Protocolo/ProtocoloRN.php';
+    require_once __DIR__ . '/../../classes/Protocolo/ProtocoloINT.php';
 
     require_once __DIR__ . '/../../classes/PerfilPaciente/PerfilPaciente.php';
     require_once __DIR__ . '/../../classes/PerfilPaciente/PerfilPacienteRN.php';
@@ -39,6 +42,12 @@ try {
 
     require_once __DIR__ . '/../../classes/SolicitacaoMontarPlaca/SolicitacaoMontarPlaca.php';
     require_once __DIR__ . '/../../classes/SolicitacaoMontarPlaca/SolicitacaoMontarPlacaRN.php';
+    require_once __DIR__ . '/../../classes/SolicitacaoMontarPlaca/SolicitacaoMontarPlacaINT.php';
+
+    require_once __DIR__ . '/../../classes/Pesquisa/PesquisaINT.php';
+
+    require_once __DIR__ . '/../../classes/LocalArmazenamentoTexto/LocalArmazenamentoTexto.php';
+    require_once __DIR__ . '/../../classes/LocalArmazenamentoTexto/LocalArmazenamentoTextoRN.php';
 
     Sessao::getInstance()->validar();
     $utils = new Utils();
@@ -98,13 +107,9 @@ try {
     $objSolMontarPlacaRN = new SolicitacaoMontarPlacaRN();
 
 
-    /*
-     * SOLICITAÇÃO DE MONTAGEM DA PLACA RTqPCR
-     */
-    $objSolMontarPlaca = new SolicitacaoMontarPlaca();
-    $objSolMontarPlacaRN = new SolicitacaoMontarPlacaRN();
 
     $alert = '';
+    /************************* REMOÇÃO *************************/
     switch ($_GET['action']){
         case 'remover_solicitacao_montagem_placa_RTqPCR':
             try{
@@ -120,39 +125,150 @@ try {
                 Pagina::getInstance()->processar_excecao($ex);
             }
     }
+    /************************* FIM DA REMOÇÃO *************************/
 
 
 
-    $arr_solicitacoes = $objSolMontarPlacaRN->listar(new SolicitacaoMontarPlaca());
-    /*echo '<pre>';
-           print_r($arr_solicitacoes);
-           echo '</pre>';*/
+    //$objProtocolo->setIndexProtocolo("AGPATH/CDC");
+    //$objPlaca->setObjProtocolo($objProtocolo);
+    //$objSolMontarPlaca->setObjPlaca($objPlaca);
 
+
+
+    $array_colunas = array('CÓDIGO', 'SITUAÇÃO DA SOLICITAÇÃO','CÓDIGO PLACA','SITUAÇÃO PLACA','PROTOCOLO');
+    $array_tipos_colunas = array('text','selectSituacaoSolicitacao', 'text','selectSituacaoPlaca', 'selectProtocolo');//,'text');
+    $valorPesquisa = '';
+    $select_pesquisa = '';
+    PesquisaINT::montar_select_pesquisa($select_pesquisa,$array_colunas, null,null,' onchange="this.form.submit()" ');
+
+    if (isset($_POST['bt_resetar'])) {
+        $select_pesquisa = '';
+        PesquisaINT::montar_select_pesquisa($select_pesquisa,$array_colunas, null,null,' onchange="this.form.submit()" ');
+    }
+
+    $select_situacoes_placa = '';
+    $select_protocolo = '';
+    $select_situacao_solicitacao = '';
+
+    if(isset($_POST['sel_pesquisa_coluna']) ){
+
+        PesquisaINT::montar_select_pesquisa($select_pesquisa,$array_colunas, $_POST['sel_pesquisa_coluna'],null,' onchange="this.form.submit()" ');
+        if($array_tipos_colunas[$_POST['sel_pesquisa_coluna']] == 'selectSituacaoPlaca'){
+            PlacaINT::montar_select_situacao_placa($select_situacoes_placa,$objPlaca,null,null);
+            $input = $select_situacoes_placa;
+        }else if($array_tipos_colunas[$_POST['sel_pesquisa_coluna']] == 'selectSituacaoSolicitacao'){
+            $objSolMontarPlaca->setSituacaoSolicitacao(null);
+            SolicitacaoMontarPlacaINT::montar_select_situacoes_solicitacao($select_situacao_solicitacao, $objSolMontarPlaca, null,  null);
+            $input = $select_situacao_solicitacao;
+        } else if($array_tipos_colunas[$_POST['sel_pesquisa_coluna']] == 'selectProtocolo'){
+            ProtocoloINT::montar_select_protocolo($select_protocolo,$objProtocolo,null,null);
+            $input = $select_protocolo;
+
+        } else {
+            //echo $array_tipos_colunas[$_POST['sel_pesquisa_coluna']];
+            $input = '<input type="' . $array_tipos_colunas[$_POST['sel_pesquisa_coluna']] . '" value="' . $_POST['valorPesquisa'] .
+                '" placeholder="' . $array_colunas[$_POST['sel_pesquisa_coluna']] . '" name="valorPesquisa" aria-label="Search" class="form-control">';
+        }
+    }ELSE{
+        $input = '<input type="text" disabled value="" id="pesquisaDisabled" placeholder="" name="valorPesquisa" aria-label="Search" class="form-control">';
+    }
+
+    if(!isset($_POST['hdnPagina'])){
+        $objSolMontarPlaca->setNumPagina(1);
+    } else {
+        $objSolMontarPlaca->setNumPagina($_POST['hdnPagina']);
+    }
+
+
+    if(isset($_POST['valorPesquisa']) || isset($_POST['sel_situacao_placa'])
+        || isset($_POST['sel_tipos_protocolos']) || isset($_POST['sel_situacao_solicitacao'])){
+        if($array_colunas[$_POST['sel_pesquisa_coluna']] == 'CÓDIGO'){
+            $objSolMontarPlaca->setIdSolicitacaoMontarPlaca($_POST['valorPesquisa']);
+        }
+
+        if($array_colunas[$_POST['sel_pesquisa_coluna']] == 'CÓDIGO PLACA'){
+            $objPlaca->setIdPlaca($_POST['valorPesquisa']);
+            $objSolMontarPlaca->setObjPlaca($objPlaca);
+        }
+
+
+        if($array_colunas[$_POST['sel_pesquisa_coluna']] == 'SITUAÇÃO DA SOLICITAÇÃO'){
+            $objSolMontarPlaca->setSituacaoSolicitacao($_POST['sel_situacao_solicitacao']);
+            SolicitacaoMontarPlacaINT::montar_select_situacoes_solicitacao($select_situacao_solicitacao, $objSolMontarPlaca, null,  null);
+            $input = $select_situacao_solicitacao;
+        }
+
+
+        if($array_colunas[$_POST['sel_pesquisa_coluna']] == 'SITUAÇÃO PLACA'){
+            $objPlaca->setSituacaoPlaca($_POST['sel_situacao_placa']);
+            PlacaINT::montar_select_situacao_placa($select_situacoes_placa,$objPlaca,null,null);
+            $input = $select_situacoes_placa;
+            $objSolMontarPlaca->setObjPlaca($objPlaca);
+        }
+
+        if($array_colunas[$_POST['sel_pesquisa_coluna']] == 'PROTOCOLO'){
+            $objProtocolo->setCaractere($_POST['sel_tipos_protocolos']);
+            ProtocoloINT::montar_select_protocolo($select_protocolo,$objProtocolo,null,null);
+            $input = $select_protocolo;
+            $objPlaca->setObjProtocolo($objProtocolo);
+            $objSolMontarPlaca->setObjPlaca($objPlaca);
+        }
+
+    }
+
+    $arr_solicitacoes = $objSolMontarPlacaRN->paginacao($objSolMontarPlaca);
+    $alert .= Alert::alert_info("Foram encontradas ".$objSolMontarPlaca->getTotalRegistros()." solicitações");
+
+
+    /************************* PAGINAÇÃO *************************/
+    $paginacao = '
+                    <nav aria-label="Page navigation example">
+                      <ul class="pagination">';
+    $paginacao .= '<li class="page-item"><input type="button" onclick="paginar(1)" class="page-link" name="btn_paginacao" value="Primeiro"/></li>';
+    for($i=0; $i<($objSolMontarPlaca->getTotalRegistros()/20); $i++){
+        $color = '';
+        if($objSolMontarPlaca->getNumPagina() == $i ){
+            $color = ' style="background-color: #d2d2d2;" ';
+        }
+        $paginacao .= '<li '.$color.' class="page-item"><input type="button" onclick="paginar('.($i+1).')" class="page-link" name="btn_paginacao" value="'.($i+1).'"/></li>';
+    }
+    //$paginacao .= '<li class="page-item"><input type="button" onclick="paginar('.($objAmostra->getTotalRegistros()-1).')" class="page-link" name="btn_paginacao" value="Último"/></li>';
+    $paginacao .= '  </ul>
+                    </nav>';
+
+
+    /************************* FIM PAGINAÇÃO *************************/
+
+    /*
+    echo "<pre>";
+    print_r($arr_solicitacoes);
+    echo "</pre>";
+    */
 
     foreach ($arr_solicitacoes as $solicitacao) {
-
 
         $strTubos = '';
         $strAmostras = '';
         $contador = 0;
-        foreach ($solicitacao->getObjsRelTuboPlaca() as $relacionamento) {
+        $contadorAmostra = 0;
+        foreach ($solicitacao->getObjPlaca()->getObjRelTuboPlaca() as $relacionamento) {
             $strTubos .= $relacionamento->getIdTuboFk() . ",";
             $contador++;
             if ($contador == 8) {
                 $contador = 0;
                 $strTubos .= "\n";
             }
-        }
 
-        $contador = 0;
-        foreach ($solicitacao->getObjsAmostras() as $relacionamento) {
-            $strAmostras .= $relacionamento->getNickname() . ",";
-            $contador++;
-            if ($contador == 8) {
-                $contador = 0;
-                $strAmostras .= "\n";
+            foreach ($relacionamento->getObjTubo() as $amostra) {
+                $strAmostras .= $amostra->getNickname() . ",";
+                $contadorAmostra++;
+                if ($contadorAmostra == 8) {
+                    $contadorAmostra = 0;
+                    $strAmostras .= "\n";
+                }
             }
         }
+
 
         $strTubos = substr($strTubos, 0, -1);
         $strAmostras = substr($strAmostras, 0, -1);
@@ -192,7 +308,7 @@ try {
             $html .= '    <td style="white-space: pre-wrap;"> ' . Pagina::formatar_html($strTubos) . '</td>';
         }
         $html .= '    <td style="white-space: pre-wrap;">' . Pagina::formatar_html($strAmostras) . '</td>';
-        $html .= '    <td >' . Pagina::formatar_html($solicitacao->getIdUsuarioFk()) . '</td>';
+        $html .= '    <td >' . Pagina::formatar_html($solicitacao->getObjUsuario()->getMatricula()) . '</td>';
 
         $dataHoraInicio = explode(" ", $solicitacao->getDataHoraInicio());
         $data = explode("-", $dataHoraInicio[0]);
@@ -234,21 +350,6 @@ try {
             $html.='<td></td>';
         }
 
-        if (Sessao::getInstance()->verificar_permissao('mix_placa_RTqPCR')) {
-            if($solicitacao->getSituacaoSolicitacao() == SolicitacaoMontarPlacaRN::$TS_FINALIZADA ) {
-                $color = ' style="color:black;" ';
-                if($solicitacao->getObjPlaca()->getSituacaoPlaca() == PlacaRN::$STA_INVALIDA){
-                    $color = ' style="color:red;" ';
-                }
-                $html .= '<td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=mix_placa_RTqPCR&idSolicitacao=' . Pagina::formatar_html($solicitacao->getIdSolicitacaoMontarPlaca()) . '&idPlaca=' . Pagina::formatar_html($solicitacao->getObjPlaca()->getIdPlaca())) . '"><i class="fas fa-th" '.$color.'"></i></a></td>';
-            }else{
-                $html.='<td></td>';
-            }
-        }else{
-            $html.='<td></td>';
-        }
-
-
         if (Sessao::getInstance()->verificar_permissao('imprimir_solicitacao_montagem_placa_RTqPCR')) {
             $html .= '<td><a target="_blank" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=imprimir_solicitacao_montagem_placa_RTqPCR&idSolicitacao=' . Pagina::formatar_html($solicitacao->getIdSolicitacaoMontarPlaca()) ) . '"><i style="color:black;margin: 0px; padding: 0px;" class="fas fa-print"></i></a></td>';
         }else{
@@ -272,23 +373,33 @@ try {
 
 
 } catch (Throwable $ex) {
-    //die($ex);
     Pagina::getInstance()->processar_excecao($ex);
 }
 
 
 Pagina::abrir_head("Listar Solicitações de Montagem das Placas RTqPCR");
 Pagina::getInstance()->adicionar_css("precadastros");
-
+Pagina::getInstance()->adicionar_javascript("pesquisa_pg");
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
 Pagina::montar_topo_listar('LISTAR SOLICITAÇÕES DE MONTAGEM DAS PLACAS RTqPCR', null, null, null, null);
 Pagina::getInstance()->mostrar_excecoes();
 echo $alert;
+Pagina::montar_topo_pesquisar($select_pesquisa, $input);
 
-echo '<div id="tabela_preparos" style="margin-top: -50px;" >
+echo '
+        
+        <form method="post" style="height:40px;margin-left: 1%;width: 98%;">
+             <div class="form-row">
+                <div class="col-md-12" >
+                    '.$paginacao.'
+                 </div>
+             </div>
+         </form>
+         
+         <div id="tabela_preparos" style="margin-top: -50px;" >
         <div class="conteudo_tabela " >
-            <table class="table table-hover table-responsive table-sm"  >
+            <table class="table table-hover  table-sm"  >
                 <thead>
                     <tr>
                         <th  scope="col">SOLICITAÇÃO</th>

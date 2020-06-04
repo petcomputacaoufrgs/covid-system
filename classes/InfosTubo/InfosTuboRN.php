@@ -17,6 +17,7 @@ class InfosTuboRN{
     public static $TP_EXTRACAO = 'E';
     public static $TP_RTqPCR_SOLICITACAO__MONTAGEM_PLACA = 'M';
     public static $TP_RTqPCR_MIX_PLACA = 'X';
+    public static $TP_RTqPCR_MONTAGEM_PLACA = 'N';
     public static $TP_RTqPCR = 'Q';
     public static $TP_LAUDO = 'L';
 
@@ -38,6 +39,7 @@ class InfosTuboRN{
     public static $TST_DESCARTADO_SEM_VOLUME= 'V';
     public static $TST_AGUARDANDO_SOLICITACAO_MONTAGEM_PLACA =  'N';
     public static $TST_AGUARDANDO_MIX_PLACA =  'X';
+    public static $TST_AGUARDANDO_MONTAGEM_PLACA =  'U';
     public static $TST_AGUARDANDO_RTqCPR =  'Q';
     /*public static $TST_NA_MONTAGEM = 'N';
     public static $TST_NA_PREPARACAO = 'R';
@@ -88,6 +90,18 @@ class InfosTuboRN{
             $objSituacao->setStrTipo(self::$TP_RTqPCR_SOLICITACAO__MONTAGEM_PLACA);
             $objSituacao->setStrDescricao('Solicitação de montagem da placa RT-qPCR');
             $arrObjTEtapa[] = $objSituacao;
+
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TP_RTqPCR_MIX_PLACA);
+            $objSituacao->setStrDescricao('Mix da placa RT-qPCR');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TP_RTqPCR_MONTAGEM_PLACA);
+            $objSituacao->setStrDescricao('Montagem da placa RT-qPCR');
+            $arrObjTEtapa[] = $objSituacao;
+
 
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$TP_LAUDO);
@@ -170,6 +184,12 @@ class InfosTuboRN{
             $objSituacao->setStrDescricao('Descartado no meio da etapa');
             $arrObjTStaTubo[] = $objSituacao;
 
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TST_AGUARDANDO_SOLICITACAO_MONTAGEM_PLACA);
+            $objSituacao->setStrDescricao('Aguardando a solicitação de montagem da placa');
+            $arrObjTStaTubo[] = $objSituacao;
+
+
 
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$TST_AGUARDANDO_BANCO_AMOSTRAS);
@@ -185,6 +205,18 @@ class InfosTuboRN{
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$TST_AGUARDANDO_RTqCPR);
             $objSituacao->setStrDescricao('Aguardando a etapa de RT-qCPR');
+            $arrObjTStaTubo[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TST_AGUARDANDO_MIX_PLACA);
+            $objSituacao->setStrDescricao('Aguardando o mix da placa de RT-qCPR');
+            $arrObjTStaTubo[] = $objSituacao;
+
+
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TST_AGUARDANDO_MONTAGEM_PLACA);
+            $objSituacao->setStrDescricao('Aguardando a montagem da placa de RT-qCPR');
             $arrObjTStaTubo[] = $objSituacao;
 
 
@@ -315,7 +347,6 @@ class InfosTuboRN{
 
             if($infosTubo->getVolume() == 0.0){
                 $infosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA);
-
             }
 
                 /*if($infosTubo->getObjTubo()->getTipo() == TuboRN::$TT_ALIQUOTA && $infosTubo->getReteste() == 'S'){
@@ -562,6 +593,27 @@ class InfosTuboRN{
         }catch (Throwable $e){
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro na listagem das informacoes do tubo.', $e);
+        }
+    }
+
+    /**** EXTRAS ****/
+
+    public function listar_completo(InfosTubo $infosTubo){
+        $objBanco = new Banco();
+        try{
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objInfosTuboBD = new infosTuboBD();
+            $arr = $objInfosTuboBD->listar_completo($infosTubo,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        }catch (Throwable $e){
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro na listagem completa das informacoes do tubo.', $e);
         }
     }
 

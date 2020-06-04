@@ -9,6 +9,25 @@ require_once __DIR__ . '/Rel_tubo_lote_BD.php';
 
 class Rel_tubo_lote_RN{
 
+    private  function validarIdLote(Rel_tubo_lote $relTuboLote,Excecao $objExcecao){
+        if($relTuboLote->getIdLote_fk() == null){
+            $objExcecao->adicionar_validacao('Identificador do lote não informado',null,'alert-danger');
+        }
+    }
+
+    private  function validarIdTubo(Rel_tubo_lote $relTuboLote, Excecao $objExcecao){
+        if($relTuboLote->getIdTubo_fk() == null){
+            $objExcecao->adicionar_validacao('Identificador do tubo não informado',null,'alert-danger');
+        }
+    }
+
+    private function validarIdRelTuboLote(Rel_tubo_lote $relTuboLote, Excecao $objExcecao){
+        if($relTuboLote->getIdRelTuboLote() == null){
+            $objExcecao->adicionar_validacao('Identificador do relacionamento tubo com o lote não informado',null,'alert-danger');
+        }
+    }
+
+
     public function cadastrar(Rel_tubo_lote $relTuboLote){
         $objBanco = new Banco();
         try{
@@ -17,7 +36,8 @@ class Rel_tubo_lote_RN{
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
 
-            //print_r($relTuboLote);
+            $this->validarIdLote($relTuboLote,$objExcecao);
+            $this->validarIdTubo($relTuboLote,$objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objRel_tubo_lote_BD = new Rel_tubo_lote_BD();
@@ -38,7 +58,10 @@ class Rel_tubo_lote_RN{
             $objExcecao = new Excecao();
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
-            
+
+            $this->validarIdLote($relTuboLote,$objExcecao);
+            $this->validarIdTubo($relTuboLote,$objExcecao);
+            $this->validarIdRelTuboLote($relTuboLote,$objExcecao);
             
             $objExcecao->lancar_validacoes();
             $objRel_tubo_lote_BD = new Rel_tubo_lote_BD();
@@ -114,6 +137,31 @@ class Rel_tubo_lote_RN{
            throw new Excecao('Erro na listagem do relacionamento do tubo com seu respectivo lote.',$e);
        }
    }
+
+
+   /**** EXTRAS ****/
+    public function listar_completo($relTuboLote) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $objExcecao->lancar_validacoes();
+            $objRel_tubo_lote_BD = new Rel_tubo_lote_BD();
+
+            $arr =  $objRel_tubo_lote_BD->listar_completo($relTuboLote,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro na listagem completa do relacionamento do tubo com seu respectivo lote.',$e);
+        }
+    }
+
+
 
    public function listar_lotes(Rel_tubo_lote $relTuboLote) {
        $objBanco = new Banco();

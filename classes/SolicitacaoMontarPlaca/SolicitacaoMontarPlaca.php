@@ -13,10 +13,82 @@ class SolicitacaoMontarPlaca
     private $dataHoraFim;
 
     private $objPlaca;
+    private $objUsuario;
+
+    private $numPagina;
+    private $totalRegistros;
+    private $registrosEncontrados;
+
     private $objsRelTuboPlaca;
     private $objsAmostras;
     private $objsPerfis;
     private $ObjRelPerfilPlaca;
+
+    /**
+     * @return mixed
+     */
+    public function getNumPagina()
+    {
+        return $this->numPagina;
+    }
+
+    /**
+     * @param mixed $numPagina
+     */
+    public function setNumPagina($numPagina)
+    {
+        $this->numPagina = $numPagina;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalRegistros()
+    {
+        return $this->totalRegistros;
+    }
+
+    /**
+     * @param mixed $totalRegistros
+     */
+    public function setTotalRegistros($totalRegistros)
+    {
+        $this->totalRegistros = $totalRegistros;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegistrosEncontrados()
+    {
+        return $this->registrosEncontrados;
+    }
+
+    /**
+     * @param mixed $registrosEncontrados
+     */
+    public function setRegistrosEncontrados($registrosEncontrados)
+    {
+        $this->registrosEncontrados = $registrosEncontrados;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjUsuario()
+    {
+        return $this->objUsuario;
+    }
+
+    /**
+     * @param mixed $objUsuario
+     */
+    public function setObjUsuario($objUsuario)
+    {
+        $this->objUsuario = $objUsuario;
+    }
+
 
     /**
      * @return mixed

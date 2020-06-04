@@ -186,6 +186,35 @@ class SolicitacaoMontarPlacaBD
                             $objTubo->setTuboOriginal($arr[0]['tuboOriginal']);
                             $objTubo->setTipo($arr[0]['tipo']);
 
+                            $SELECT_ID_INFO = "SELECT max(idInfosTubo) from tb_infostubo where idTubo_fk = ?  LIMIT 1";
+                            $arrayBindTubo = array();
+                            $arrayBindTubo[] = array('i', $arr[0]['idTubo']);
+                            $ultimoIdInfo = $objBanco->consultarSQL($SELECT_ID_INFO, $arrayBindTubo);
+
+                            $SELECT_ULTIMO_INFO = "SELECT * from tb_infostubo where idInfosTubo = ? LIMIT 1";
+                            $arrayBindInfoTubo = array();
+                            $arrayBindInfoTubo[] = array('i', $ultimoIdInfo[0]['max(idInfosTubo)']);
+
+                            $ultimoInfo = $objBanco->consultarSQL($SELECT_ULTIMO_INFO, $arrayBindInfoTubo);
+
+                            $objInfosTubo = new InfosTubo();
+                            $objInfosTubo->setIdInfosTubo($ultimoInfo[0]['idInfosTubo']);
+                            $objInfosTubo->setIdUsuario_fk($ultimoInfo[0]['idUsuario_fk']);
+                            $objInfosTubo->setIdPosicao_fk($ultimoInfo[0]['idPosicao_fk']);
+                            $objInfosTubo->setIdTubo_fk($ultimoInfo[0]['idTubo_fk']);
+                            $objInfosTubo->setIdLote_fk($ultimoInfo[0]['idLote_fk']);
+                            $objInfosTubo->setEtapa($ultimoInfo[0]['etapa']);
+                            $objInfosTubo->setEtapaAnterior($ultimoInfo[0]['etapaAnterior']);
+                            $objInfosTubo->setDataHora($ultimoInfo[0]['dataHora']);
+                            $objInfosTubo->setReteste($ultimoInfo[0]['reteste']);
+                            $objInfosTubo->setVolume($ultimoInfo[0]['volume']);
+                            $objInfosTubo->setObsProblema($ultimoInfo[0]['obsProblema']);
+                            $objInfosTubo->setObservacoes($ultimoInfo[0]['observacoes']);
+                            $objInfosTubo->setSituacaoEtapa($ultimoInfo[0]['situacaoEtapa']);
+                            $objInfosTubo->setSituacaoTubo($ultimoInfo[0]['situacaoTubo']);
+                            $objInfosTubo->setIdLocalFk($ultimoInfo[0]['idLocal_fk']);
+                            $objTubo->setObjInfosTubo($objInfosTubo);
+
                             $objAmostra = new Amostra();
                             $objAmostra->setIdAmostra($arr[0]['idAmostra']);
                             $objAmostra->setIdPaciente_fk($arr[0]['idPaciente_fk']);
@@ -249,7 +278,99 @@ class SolicitacaoMontarPlacaBD
                 }
 
 
+                $array[] = $solMontarPlaca;
+            }
+            return $array;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando o relacionamento dos perfis com uma placa no BD.",$ex);
+        }
 
+    }
+
+    public function listar_solicitacoes_validas(SolicitacaoMontarPlaca $objSolMontarPlaca, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT * FROM tb_solicitacao_montagem_placa_rtqpcr ";
+
+            $FROM = '';
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($objSolMontarPlaca->getIdUsuarioFk() != null) {
+                $WHERE .= $AND . " tb_solicitacao_montagem_placa_rtqpcr.idUsuario_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objSolMontarPlaca->getIdUsuarioFk());
+            }
+
+            if ($objSolMontarPlaca->getIdSolicitacaoMontarPlaca() != null) {
+                $WHERE .= $AND . "  tb_solicitacao_montagem_placa_rtqpcr.idSolicitacaoMontarPlaca = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objSolMontarPlaca->getIdSolicitacaoMontarPlaca());
+            }
+            if ($objSolMontarPlaca->getSituacaoSolicitacao() != null) {
+                $WHERE .= $AND . "  tb_solicitacao_montagem_placa_rtqpcr.situacaoSolicitacao = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objSolMontarPlaca->getSituacaoSolicitacao());
+            }
+
+            if($objSolMontarPlaca->getObjPlaca() != null) {
+
+                $FROM .=' ,tb_placa ';
+                $WHERE .= $AND . " tb_placa.idPlaca = tb_solicitacao_montagem_placa_rtqpcr.idPlaca_fk";
+                $AND = ' and ';
+
+                if ($objSolMontarPlaca->getObjPlaca()->getIdPlaca() != null) {
+                    $WHERE .= $AND . " tb_placa.idPlaca = ?";
+                    $AND = ' and ';
+                    $arrayBind[] = array('i', $objSolMontarPlaca->getObjPlaca()->getIdPlaca());
+
+                }
+                if ($objSolMontarPlaca->getObjPlaca()->getSituacaoPlaca() != null) {
+                    $WHERE .= $AND . " tb_placa.situacaoPlaca = ?";
+                    $AND = ' and ';
+                    $arrayBind[] = array('s', $objSolMontarPlaca->getObjPlaca()->getSituacaoPlaca());
+
+                }
+            }
+
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            //echo $SELECT.$WHERE;$WHERE
+            $order_by = ' order by  tb_solicitacao_montagem_placa_rtqpcr.idSolicitacaoMontarPlaca desc ';
+
+            $arr2 = $objBanco->consultarSQL($SELECT .$FROM. $WHERE.$order_by, $arrayBind);
+
+            /*
+                ECHO "<pre>";
+                print_r($arr2);
+                ECHO "</pre>";
+            */
+            $array = array();
+            foreach ($arr2 as $reg){
+                $solMontarPlaca = new SolicitacaoMontarPlaca();
+                $solMontarPlaca->setIdSolicitacaoMontarPlaca($reg['idSolicitacaoMontarPlaca']);
+                $solMontarPlaca->setIdPlacaFk($reg['idPlaca_fk']);
+                $solMontarPlaca->setIdUsuarioFk($reg['idUsuario_fk']);
+                $solMontarPlaca->setDataHoraInicio($reg['dataHoraInicio']);
+                $solMontarPlaca->setDataHoraFim($reg['dataHoraFim']);
+                $solMontarPlaca->setSituacaoSolicitacao($reg['situacaoSolicitacao']);
+
+                $objUsuario = new Usuario();
+                $objUsuarioRN = new UsuarioRN();
+
+                $objUsuario->setIdUsuario($reg['idUsuario_fk']);
+                $objUsuario = $objUsuarioRN->consultar($objUsuario);
+                $solMontarPlaca->setObjUsuario($objUsuario);
+
+                $objPlaca = new Placa();
+                $objPlacaRN = new PlacaRN();
+                $objPlaca->setIdPlaca($reg['idPlaca_fk']);
+                $objPlaca = $objPlacaRN->consultar($objPlaca);
+                $solMontarPlaca->setObjPlaca($objPlaca);
 
                 $array[] = $solMontarPlaca;
             }
@@ -395,4 +516,156 @@ class SolicitacaoMontarPlacaBD
             throw new Excecao("Erro removendo a solicitação de montagem da placa completamente no BD.",$ex);
         }
     }
+
+    /************************** EXTRAS  **************************/
+
+    public function paginacao(SolicitacaoMontarPlaca $objSolMontarPlaca, Banco $objBanco) {
+        try{
+
+            $inicio = ($objSolMontarPlaca->getNumPagina()-1)*20;
+
+            if($objSolMontarPlaca->getNumPagina() == null){
+                $inicio = 0;
+            }
+
+            $SELECT = "SELECT SQL_CALC_FOUND_ROWS * FROM tb_solicitacao_montagem_placa_rtqpcr  ";
+
+            $FROM = '';
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($objSolMontarPlaca->getIdUsuarioFk() != null) {
+                $WHERE .= $AND . " tb_solicitacao_montagem_placa_rtqpcr.idUsuario_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objSolMontarPlaca->getIdUsuarioFk());
+            }
+
+            if ($objSolMontarPlaca->getIdSolicitacaoMontarPlaca() != null) {
+                $WHERE .= $AND . "  tb_solicitacao_montagem_placa_rtqpcr.idSolicitacaoMontarPlaca = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objSolMontarPlaca->getIdSolicitacaoMontarPlaca());
+            }
+
+            if ($objSolMontarPlaca->getIdPlacaFk() != null) {
+                $WHERE .= $AND . " tb_solicitacao_montagem_placa_rtqpcr.idPlaca_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objSolMontarPlaca->getIdPlacaFk());
+
+            }
+
+            if ($objSolMontarPlaca->getSituacaoSolicitacao() != null) {
+                $WHERE .= $AND . " tb_solicitacao_montagem_placa_rtqpcr.situacaoSolicitacao = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objSolMontarPlaca->getSituacaoSolicitacao());
+
+            }
+
+            if ($objSolMontarPlaca->getObjPlaca() != null) {
+                $FROM .=' ,tb_placa ';
+                $WHERE .= $AND . " tb_solicitacao_montagem_placa_rtqpcr.idPlaca_fk = tb_placa.idPlaca ";
+                $AND = ' and ';
+                if ($objSolMontarPlaca->getObjPlaca()->getIdPlaca() != null) {
+                    $WHERE .= $AND . " tb_placa.idPlaca = ?";
+                    $AND = ' and ';
+                    $arrayBind[] = array('i', $objSolMontarPlaca->getObjPlaca()->getIdPlaca());
+
+                }
+
+                if ($objSolMontarPlaca->getObjPlaca()->getSituacaoPlaca() != null) {
+                    $WHERE .= $AND . " tb_placa.situacaoPlaca = ?";
+                    $AND = ' and ';
+                    $arrayBind[] = array('s', $objSolMontarPlaca->getObjPlaca()->getSituacaoPlaca());
+
+                }
+
+                if ($objSolMontarPlaca->getObjPlaca()->getObjProtocolo() != null) {
+                    $FROM .=' ,tb_protocolo ';
+                    $WHERE .= $AND . " tb_protocolo.idProtocolo = tb_placa.idProtocolo_fk ";
+                    $AND = ' and ';
+                    if ($objSolMontarPlaca->getObjPlaca()->getObjProtocolo()->getCaractere() != null) {
+                        $WHERE .= $AND . " tb_protocolo.caractere = ? ";
+                        $AND = ' and ';
+                        $arrayBind[] = array('s', $objSolMontarPlaca->getObjPlaca()->getObjProtocolo()->getCaractere());
+
+                    }
+                }
+            }
+
+
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            $order_by = ' order by  tb_solicitacao_montagem_placa_rtqpcr.idSolicitacaoMontarPlaca desc ';
+            $limit = ' LIMIT ?,20';
+
+            $arrayBind[] = array('i', $inicio);
+            $arr2 = $objBanco->consultarSQL($SELECT .$FROM. $WHERE.$order_by.$limit, $arrayBind);
+
+            $SELECT = "SELECT FOUND_ROWS() as total";
+            $total = $objBanco->consultarSQL($SELECT);
+            $objSolMontarPlaca->setTotalRegistros($total[0]['total']);
+            $objSolMontarPlaca->setNumPagina($inicio);
+
+            $array = array();
+            foreach ($arr2 as $reg) {
+                $solMontarPlaca = new SolicitacaoMontarPlaca();
+                $solMontarPlaca->setIdSolicitacaoMontarPlaca($reg['idSolicitacaoMontarPlaca']);
+                $solMontarPlaca->setIdPlacaFk($reg['idPlaca_fk']);
+                $solMontarPlaca->setIdUsuarioFk($reg['idUsuario_fk']);
+                $solMontarPlaca->setDataHoraInicio($reg['dataHoraInicio']);
+                $solMontarPlaca->setDataHoraFim($reg['dataHoraFim']);
+                $solMontarPlaca->setSituacaoSolicitacao($reg['situacaoSolicitacao']);
+
+                $objUsuario = new Usuario();
+                $objUsuarioRN = new UsuarioRN();
+
+                $objUsuario->setIdUsuario($reg['idUsuario_fk']);
+                $objUsuario = $objUsuarioRN->consultar($objUsuario);
+                $solMontarPlaca->setObjUsuario($objUsuario);
+
+                $objPlaca = new Placa();
+                $objPlacaRN = new PlacaRN();
+
+                $objPlaca->setIdPlaca($reg['idPlaca_fk']);
+                $objPlaca = $objPlacaRN->consultar($objPlaca);
+
+                // dentro da placa
+                $objProtocolo = new Protocolo();
+                $objProtocoloRN = new ProtocoloRN();
+
+                $objProtocolo->setIdProtocolo($objPlaca->getIdProtocoloFk());
+                $objProtocolo = $objProtocoloRN->consultar($objProtocolo);
+                $objPlaca->setObjProtocolo($objProtocolo);
+
+
+                $objRelTuboPlaca = new RelTuboPlaca();
+                $objRelTuboPlacaRN = new RelTuboPlacaRN();
+
+                $objRelTuboPlaca->setIdPlacaFk($objPlaca->getIdPlaca());
+                $arr_rel_tubos_na_placa = $objRelTuboPlacaRN->listar_completo($objRelTuboPlaca);
+
+                $objPlaca->setObjRelTuboPlaca($arr_rel_tubos_na_placa);
+
+                $objRelPerfilPlaca = new RelPerfilPlaca();
+                $objRelPerfilPlacaRN = new RelPerfilPlacaRN();
+
+                $objRelPerfilPlaca->setIdPlacaFk($objPlaca->getIdPlaca());
+                $arr_rel_perfis_placa = $objRelPerfilPlacaRN->listar($objRelPerfilPlaca);
+
+                $objPlaca->setObjRelPerfilPlaca($arr_rel_perfis_placa);
+                $solMontarPlaca->setObjPlaca($objPlaca);
+
+                $array[] = $solMontarPlaca;
+            }
+
+            return $array;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando a solicitação de montagem de placa de forma completa no BD.",$ex);
+        }
+
+    }
+
 }

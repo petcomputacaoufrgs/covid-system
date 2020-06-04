@@ -6,11 +6,60 @@ class Usuario{
     private $idUsuario;
     private $matricula;
     private $senha;
-    
-    function __construct() {
-        
+
+    private $numPagina;
+    private $totalRegistros;
+    private $registrosEncontrados;
+
+    /**
+     * @return mixed
+     */
+    public function getNumPagina()
+    {
+        return $this->numPagina;
     }
-    
+
+    /**
+     * @param mixed $numPagina
+     */
+    public function setNumPagina($numPagina)
+    {
+        $this->numPagina = $numPagina;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalRegistros()
+    {
+        return $this->totalRegistros;
+    }
+
+    /**
+     * @param mixed $totalRegistros
+     */
+    public function setTotalRegistros($totalRegistros)
+    {
+        $this->totalRegistros = $totalRegistros;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegistrosEncontrados()
+    {
+        return $this->registrosEncontrados;
+    }
+
+    /**
+     * @param mixed $registrosEncontrados
+     */
+    public function setRegistrosEncontrados($registrosEncontrados)
+    {
+        $this->registrosEncontrados = $registrosEncontrados;
+    }
+
+
     function getIdUsuario() {
         return $this->idUsuario;
     }

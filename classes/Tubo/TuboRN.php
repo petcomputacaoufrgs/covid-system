@@ -48,10 +48,6 @@ class TuboRN{
     public static $TT_INDO_EXTRACAO = 'R';
 
 
-    public static $TUBO_CADASTRADOS_PREPARACAO_INATIVACAO = 'C';
-    public static $TUBO_ALTERADOS_PREPARACAO_INATIVACAO = 'A';
-    public static $TUBO_NOVOSTUBOS_PREPARACAO_INATIVACAO = 'N';
-
     public static function listarValoresTipoTubo(){
         try {
 
@@ -95,8 +91,6 @@ class TuboRN{
         return null;
     }
 
-
-
     private function validarTuboOriginal(Tubo $tubo, Excecao $objExcecao){
         $boolTuboOriginal = $tubo->getTuboOriginal();
 
@@ -105,6 +99,30 @@ class TuboRN{
         }
         return $tubo->setTuboOriginal($boolTuboOriginal);
     }
+
+    private function validarIdTubo(Tubo $tubo,Excecao $objExcecao){
+
+        if($tubo->getIdTubo() != null) {
+            if ($tubo->getIdTubo() == '') {
+                $objExcecao->adicionar_validacao('O identificador do tubo não foi informado', null,'alert-danger');
+            }
+        }else{
+            $objExcecao->adicionar_validacao('O identificador do tubo não foi informado', null,'alert-danger');
+        }
+
+    }
+
+
+    private function validarJaExisteTubo(Tubo $tubo,Excecao $objExcecao){
+
+        $objTuboRN = new TuboRN();
+        $numTubo = count($objTuboRN->listar($tubo,1));
+        if($numTubo > 0){
+            $objExcecao->adicionar_validacao('O tubo já existe',null,'alert-danger');
+        }
+
+    }
+
 
     public function cadastrar(Tubo $tubo){
         $objBanco = new Banco();
@@ -115,6 +133,7 @@ class TuboRN{
             $objBanco->abrirTransacao();
 
             $this->validarTuboOriginal($tubo, $objExcecao);
+            //$this->validarJaExisteTubo($tubo, $objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objTuboBD = new TuboBD();
@@ -176,6 +195,8 @@ class TuboRN{
             $objBanco->abrirTransacao();
             
             $this->validarTuboOriginal($tubo, $objExcecao);
+            $this->validarIdTubo($tubo, $objExcecao);
+            //$this->validarJaExisteTubo($tubo, $objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objTuboBD = new TuboBD();
@@ -300,7 +321,7 @@ class TuboRN{
         }
     }
 
-    public function listar(Tubo $tubo){
+    public function listar(Tubo $tubo,$numLimite = null){
         $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
@@ -310,8 +331,31 @@ class TuboRN{
             $objExcecao->lancar_validacoes();
             $objTuboBD = new TuboBD();
             
-            $arr = $objTuboBD->listar($tubo,$objBanco);
+            $arr = $objTuboBD->listar($tubo,$numLimite,$objBanco);
             
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro na listagem do tubo.',$e);
+        }
+    }
+
+    /**** EXTRAS *****/
+
+    public function listar_completo($tubo,$numLimite=null,$comInfos=null){
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $objExcecao->lancar_validacoes();
+            $objTuboBD = new TuboBD();
+
+            $arr = $objTuboBD->listar_completo($tubo,$numLimite,$comInfos,$objBanco);
+
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;

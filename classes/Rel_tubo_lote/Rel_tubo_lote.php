@@ -6,11 +6,31 @@ class Rel_tubo_lote{
     private $idRelTuboLote;
     private $idTubo_fk;
     private $idLote_fk;
+
+    private $objTubo;
+
     private $objLote;
 
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObjTubo()
+    {
+        return $this->objTubo;
+    }
+
+    /**
+     * @param mixed $objTubo
+     */
+    public function setObjTubo($objTubo)
+    {
+        $this->objTubo = $objTubo;
+    }
+
 
     /**
      * @return mixed

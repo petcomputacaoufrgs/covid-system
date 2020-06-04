@@ -75,30 +75,47 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
     <body>
         <!--<a href="controlador.php?action=montar_caixas">montar caixas</a>-->
 
+        <div class="conjunto_itens">
+            <div class="row" style="text-align: center;">
+                <h5 style="padding-left10px;color: red;"> Banco de dados atualizado em 03/06/2020 - 20:55</h5>
+            </div>
+        </div>
+
          <div class="conjunto_itens">
           <div class="row">
 
               <?php
-                    if(Sessao::getInstance()->verificar_permissao('cadastrar_amostra') || Sessao::getInstance()->verificar_permissao('gerar_estatisticas')) {
+                    if(Sessao::getInstance()->verificar_permissao('cadastrar_amostra') ||
+                        Sessao::getInstance()->verificar_permissao('listar_amostra')
+                        || Sessao::getInstance()->verificar_permissao('gerar_estatisticas')) {
                         echo '<div class="col-md-2">
                             <h5>Etapa RECEPÇÃO AMOSTRA</h5>
                             </div>';
                     }
               ?>
 
-        <?php 
-            // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-            if(Sessao::getInstance()->verificar_permissao('cadastrar_amostra')){ 
-                  echo '<div class="col-md-5">
-                          <a  class="btn btn-primary" STYLE="margin-top: 17px;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra').'">CADASTRO AMOSTRA</a>'
-                          . '</div>';
-            } 
-        ?>
+            <?php
+                // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+                if(Sessao::getInstance()->verificar_permissao('cadastrar_amostra')){
+                      echo '<div class="col-md-4">
+                              <a  class="btn btn-primary" STYLE="margin-top: 17px;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra').'">CADASTRO AMOSTRA</a>'
+                              . '</div>';
+                }
+            ?>
+
+              <?php
+              // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+              if(Sessao::getInstance()->verificar_permissao('listar_amostra')){
+                  echo '<div class="col-md-3">
+                          <a  class="btn btn-primary" STYLE="margin-top: 17px;background-color: #67BFDB;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_amostra').'"><i class="fas fa-list icon" ></i> LISTAR AMOSTRAS</a>'
+                      . '</div>';
+              }
+              ?>
 
               <?php
               // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
               if(Sessao::getInstance()->verificar_permissao('gerar_estatisticas')){
-                  echo '<div class="col-md-5">
+                  echo '<div class="col-md-3">
                           <a target="_blank" class="btn btn-primary"  STYLE="margin-top: 17px;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=gerar_estatisticas').'">ESTATÍSTICAS DO CADASTRO </a>'
                       . '</div>';
               }
@@ -143,7 +160,7 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                     <?php
                     if(Sessao::getInstance()->verificar_permissao('listar_preparo_lote')){
                         echo '<div class="col-md-4">
-                              <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_preparo_lote').'">LISTAR LOTES DE MONTAGEM DE GRUPOS E DE PREPARAÇÃO </a>'
+                              <a class="btn btn-primary"  style="background-color: #67BFDB;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_preparo_lote').'">LISTAR LOTES DE MONTAGEM DE GRUPOS E DE PREPARAÇÃO </a>'
                             . '</div>';
                     }
                     ?>
@@ -179,7 +196,7 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                 <?php
                 if(Sessao::getInstance()->verificar_permissao('listar_preparo_inativacao')){
                     echo '<div class="col-md-3">
-                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_preparo_inativacao').'">LISTAR LOTES DE EXTRAÇÃO </a>'
+                  <a class="btn btn-primary" style="background-color: #67BFDB;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_preparo_inativacao').'">LISTAR LOTES DE EXTRAÇÃO </a>'
                         . '</div>';
                 }
                 ?>
@@ -213,7 +230,7 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
             <?php
             if(Sessao::getInstance()->verificar_permissao('listar_solicitacao_montagem_placa_RTqPCR')){
                 echo '<div class="col-md-4">
-                                      <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_solicitacao_montagem_placa_RTqPCR').'">LISTAR SOLICITAÇÕES MONTAGEM PLACA RTqPCR</a>'
+                                      <a class="btn btn-primary "  style="background-color: #67BFDB;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_solicitacao_montagem_placa_RTqPCR').'">LISTAR SOLICITAÇÕES MONTAGEM PLACA RTqPCR</a>'
                     . '</div>';
             }
             ?>
@@ -225,7 +242,8 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
             <div class="row">
 
                 <?php
-                if(Sessao::getInstance()->verificar_permissao('mix_placa_RTqPCR')) {
+                if(Sessao::getInstance()->verificar_permissao('mix_placa_RTqPCR') ||
+                    Sessao::getInstance()->verificar_permissao('listar_mix_placa_RTqPCR')) {
                     echo '<div class="col-md-2">
                             <h5>Etapa MIX DA PLACA RTqPCR</h5>
                             </div>';
@@ -233,9 +251,49 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                 ?>
 
                 <?php
+                if(Sessao::getInstance()->verificar_permissao('mix_placa_RTqPCR')){
+                    echo '<div class="col-md-4">
+                                      <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=mix_placa_RTqPCR').'">MIX PLACA RTqPCR</a>'
+                        . '</div>';
+                }
+                ?>
+
+                <?php
                 if(Sessao::getInstance()->verificar_permissao('listar_mix_placa_RTqPCR')){
                     echo '<div class="col-md-4">
-                                      <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_mix_placa_RTqPCR').'">LISTAR MIX PLACA RTqPCR</a>'
+                                      <a class="btn btn-primary "  style="background-color: #67BFDB;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_mix_placa_RTqPCR').'">LISTAR MIX PLACA RTqPCR</a>'
+                        . '</div>';
+                }
+                ?>
+
+
+            </div>
+        </div>
+
+        <div class="conjunto_itens" style="margin-top: 10px;">
+            <div class="row">
+
+                <?php
+                if(Sessao::getInstance()->verificar_permissao('montar_placa_RTqPCR')
+                    || Sessao::getInstance()->verificar_permissao('listar_montagem_placa_RTqPCR')) {
+                    echo '<div class="col-md-2">
+                            <h5>Etapa MONTAGEM DA PLACA RTqPCR</h5>
+                            </div>';
+                }
+                ?>
+
+                <?php
+                if(Sessao::getInstance()->verificar_permissao('montar_placa_RTqPCR')){
+                    echo '<div class="col-md-4">
+                                      <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=montar_placa_RTqPCR').'">MONTAGEM PLACA RTqPCR</a>'
+                        . '</div>';
+                }
+                ?>
+
+                <?php
+                if(Sessao::getInstance()->verificar_permissao('listar_montagem_placa_RTqPCR')){
+                    echo '<div class="col-md-4">
+                                      <a class="btn btn-primary "  style="background-color: #67BFDB;"   href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_montagem_placa_RTqPCR').'">LISTAR MONTAGEM DA PLACA RTqPCR</a>'
                         . '</div>';
                 }
                 ?>
@@ -329,12 +387,13 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
         <div class="conjunto_itens" style="margin-top: 10px;">
             <div class="row">
                 <?php
-
+                /*
                 if(Sessao::getInstance()->verificar_permissao('listar_divisao_protocolo')){
                     echo '<div class="col-md-4">
                                   <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_divisao_protocolo').'">LISTAR DIVISÃO PROTOCOLO</a>'
                         . '</div>';
                 }
+                */
                 ?>
 
                 <?php
@@ -482,14 +541,17 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                                   . '</div>';*/
                     } 
               ?>
-              
-              <?php 
+
+              <?php
+              /*
                     if(Sessao::getInstance()->verificar_permissao('listar_paciente')){ 
                           echo '<div class="col-md-2">
                                   <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_paciente').'">PACIENTE</a>'
                                   . '</div>';
-                    } 
+                    }
+              */
               ?>
+
               
              
               
@@ -551,7 +613,7 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
               <?php 
                     if(Sessao::getInstance()->verificar_permissao('listar_usuario')){ 
                           echo '<div class="col-md-2">
-                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_usuario').'">USUÁRIO</a>'
+                                  <a class="btn btn-primary " style="background-color: #67BFDB;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_usuario').'">LISTAR USUÁRIO</a>'
                                   . '</div>';
                     } 
               ?>

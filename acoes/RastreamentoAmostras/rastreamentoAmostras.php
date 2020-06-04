@@ -100,7 +100,13 @@ try {
 
                     $data = $dia . '/' . $mes . '/' . $ano . ' ' . $dataHora[1];
 
-                    $html .= '<tr><th scope="row">' . Pagina::formatar_html($objAmostra->getNickname()) . '</th>';
+                    $corDescarte = '';$corTr ='';
+                    if($info->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA ||  $info->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO){
+                        $corDescarte = ' style="color:red;" ';
+                        $corTr = 'style="background-color: rgba(255,0,0,0.1);" ';
+                    }
+
+                    $html .= '<tr '.$corTr.'><th scope="row">' . Pagina::formatar_html($objAmostra->getNickname()) . '</th>';
                     if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
                         $html .= '<td>' . Pagina::formatar_html($info->getIdInfosTubo()) . '</td>';
                         $html .= '<td>' . Pagina::formatar_html($tubo->getIdTubo()) . '</td>';
@@ -119,11 +125,14 @@ try {
                     }else{
                         $reteste = 'Não';
                     }
+
+
+
                     $html .= '<td>' . Pagina::formatar_html($original) . '</td>';
                     $html .= '<td>' . Pagina::formatar_html(TuboRN::mostrarDescricaoTipoTubo($tubo->getTipo())) . '</td>
                         <td>' . Pagina::formatar_html($reteste) . '</td>
                         <td>' . Pagina::formatar_html($info->getVolume()) . '</td>
-                        <td>' . Pagina::formatar_html(InfosTuboRN::retornarStaTubo($info->getSituacaoTubo())) . '</td>
+                        <td '.$corDescarte.'>' . Pagina::formatar_html(InfosTuboRN::retornarStaTubo($info->getSituacaoTubo())) . '</td>
                         <td>' . Pagina::formatar_html(InfosTuboRN::retornarStaEtapa($info->getSituacaoEtapa())) . '</td>
                             <td>' . Pagina::formatar_html(InfosTuboRN::retornarEtapa($info->getEtapa())) . '</td>
                         <td>' . Pagina::formatar_html(InfosTuboRN::retornarEtapa($info->getEtapaAnterior())) . '</td>

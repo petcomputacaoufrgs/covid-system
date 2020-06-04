@@ -14,7 +14,9 @@ class PlacaRN
     public static $STA_NO_MIX = 'M';
     public static $STA_AGUARDANDO_RTqPCR = 'Q';
     public static $STA_INVALIDA = 'I';
-    public static $STA_MIX_FINALIZDO = 'F';
+    public static $STA_MIX_FINALIZADO = 'F';
+    public static $STA_NA_MONTAGEM = 'N';
+    public static $STA_MONTAGEM_FINALIZADA = 'Z';
 
 
     public static function listarValoresStaPlaca(){
@@ -38,7 +40,7 @@ class PlacaRN
             $arrObjTEtapa[] = $objSituacao;
 
             $objSituacao = new Situacao();
-            $objSituacao->setStrTipo(self::$STA_MIX_FINALIZDO);
+            $objSituacao->setStrTipo(self::$STA_MIX_FINALIZADO);
             $objSituacao->setStrDescricao('MixRTqPCR finalizado');
             $arrObjTEtapa[] = $objSituacao;
 
@@ -50,6 +52,16 @@ class PlacaRN
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$STA_AGUARDANDO_RTqPCR);
             $objSituacao->setStrDescricao('Aguardando RTqPCR');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$STA_NA_MONTAGEM);
+            $objSituacao->setStrDescricao('Na montagem');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$STA_MONTAGEM_FINALIZADA);
+            $objSituacao->setStrDescricao('Montagem finalizada');
             $arrObjTEtapa[] = $objSituacao;
 
             return $arrObjTEtapa;

@@ -260,6 +260,125 @@ class InfosTuboBD{
     }
 
 
+    /**** EXTRAS ****/
+
+    public function listar_completo(InfosTubo $objInfosTubo, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT * FROM tb_infostubo";
+
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($objInfosTubo->getIdTubo_fk() != null) {
+                $WHERE .= $AND . " idTubo_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objInfosTubo->getIdTubo_fk());
+            }
+
+            if ($objInfosTubo->getIdLote_fk() != null) {
+                $WHERE .= $AND . " idLote_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objInfosTubo->getIdLote_fk());
+            }
+
+
+            if ($objInfosTubo->getSituacaoTubo() != null) {
+                $WHERE .= $AND . " situacaoTubo = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objInfosTubo->getSituacaoTubo());
+            }
+
+
+            if ($objInfosTubo->getSituacaoEtapa() != null) {
+                $WHERE .= $AND . " situacaoEtapa = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objInfosTubo->getSituacaoEtapa());
+            }
+
+            if ($objInfosTubo->getReteste() != null) {
+                $WHERE .= $AND . " reteste = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objInfosTubo->getReteste());
+            }
+
+            if ($objInfosTubo->getEtapa() != null) {
+                $WHERE .= $AND . " etapa = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objInfosTubo->getEtapa());
+            }
+
+            if ($objInfosTubo->getEtapaAnterior() != null) {
+                $WHERE .= $AND . " etapaAnterior = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objInfosTubo->getEtapa());
+            }
+
+            if ($objInfosTubo->getIdPosicao_fk() != null) {
+                $WHERE .= $AND . " idPosicao_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objInfosTubo->getIdPosicao_fk());
+            }
+
+            if ($objInfosTubo->getIdLocalFk() != null) {
+                $WHERE .= $AND . " idLocal_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objInfosTubo->getIdLocalFk());
+            }
+
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            //echo $SELECT.$WHERE;$WHERE
+
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
+
+            //print_r($arr);
+            $array_paciente = array();
+            foreach ($arr as $reg){
+                $objInfosTubo = new InfosTubo();
+                $objInfosTubo->setIdInfosTubo($reg['idInfosTubo']);
+                $objInfosTubo->setIdUsuario_fk($reg['idUsuario_fk']);
+                $objInfosTubo->setIdPosicao_fk($reg['idPosicao_fk']);
+                $objInfosTubo->setIdTubo_fk($reg['idTubo_fk']);
+                $objInfosTubo->setIdLote_fk($reg['idLote_fk']);
+                $objInfosTubo->setEtapa($reg['etapa']);
+                $objInfosTubo->setEtapaAnterior($reg['etapaAnterior']);
+                $objInfosTubo->setDataHora($reg['dataHora']);
+                $objInfosTubo->setReteste($reg['reteste']);
+                $objInfosTubo->setVolume($reg['volume']);
+                $objInfosTubo->setObsProblema($reg['obsProblema']);
+                $objInfosTubo->setObservacoes($reg['observacoes']);
+                $objInfosTubo->setSituacaoEtapa($reg['situacaoEtapa']);
+                $objInfosTubo->setSituacaoTubo($reg['situacaoTubo']);
+                $objInfosTubo->setIdLocalFk($reg['idLocal_fk']);
+
+               // echo "<pre>";
+               // print_r($objInfosTubo);
+               // echo "</pre>";
+
+                $objLocal = new LocalArmazenamentoTexto();
+                $objLocalRN = new LocalArmazenamentoTextoRN();
+
+                $objLocal->setIdLocal($reg['idLocal_fk']);
+                $local = $objLocalRN->listar($objLocal);
+                $objInfosTubo->setObjLocal($local[0]);
+
+
+                $array_paciente[] = $objInfosTubo;
+
+            }
+            return $array_paciente;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando a amostra no BD.",$ex);
+        }
+
+    }
+
+
     public function pegar_ultimo(InfosTubo $objInfosTubo, Banco $objBanco) {
 
         try{
@@ -525,7 +644,7 @@ class InfosTuboBD{
                                 $objInfosTubo2->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
                                 $objInfosTubo2->setDataHora(date("Y-m-d H:i:s"));
                                 $objInfosTubo2->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
-                                $objInfosTubo2->setEtapa(InfosTuboRN::$TP_PREPARACAO_INATIVACAO);
+                                $objInfosTubo2->setEtapa(InfosTuboRN::$TP_MONTAGEM_GRUPOS_AMOSTRAS);
                                 $objInfosTubo2->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
                                 $objInfosTubo2->setReteste('s');
                                 $objInfosTuboRN->cadastrar($objInfosTubo2);

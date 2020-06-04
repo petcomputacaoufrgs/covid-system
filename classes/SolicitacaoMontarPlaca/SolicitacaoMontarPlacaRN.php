@@ -222,6 +222,48 @@ class SolicitacaoMontarPlacaRN
         }
     }
 
+    public function paginacao(SolicitacaoMontarPlaca $objSolMontarPlaca) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $objExcecao->lancar_validacoes();
+            $objSolMontarPlacaBD = new SolicitacaoMontarPlacaBD();
+
+            $arr =  $objSolMontarPlacaBD->paginacao($objSolMontarPlaca,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro na paginação da solicitação de montagem da placa do RTqPCR.',$e);
+        }
+    }
+
+    public function listar_solicitacoes_validas(SolicitacaoMontarPlaca $objSolMontarPlaca) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $objExcecao->lancar_validacoes();
+            $objSolMontarPlacaBD = new SolicitacaoMontarPlacaBD();
+
+            $arr =  $objSolMontarPlacaBD->listar_solicitacoes_validas($objSolMontarPlaca,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro na listagem da solicitação de montagem da placa do RTqPCR.',$e);
+        }
+    }
+
     public function remover_completamente(SolicitacaoMontarPlaca $objSolMontarPlaca) {
         $objBanco = new Banco();
         try {

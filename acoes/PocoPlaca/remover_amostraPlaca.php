@@ -142,15 +142,8 @@ try {
             $objPlacaRN->remover_amostras($objPlaca);
             header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=mix_placa_RTqPCR&idSolicitacao=' . $_GET['idSolicitacao'].'&idPlaca='.$_GET['idPlaca']));
             die();
-                //$objPoco->setConteudo($amostraRemovida);
-            //}
         }
     }
-
-
-
-
-
 
 } catch (Throwable $ex) {
     //die($ex);
@@ -166,7 +159,7 @@ if($boolRemocaoTotal) {
 Pagina::getInstance()->adicionar_javascript("tabelaDinamica");
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
-Pagina::montar_topo_listar("REMOVER AMOSTRAS DA PLACA",null,null, "listar_solicitacao_montagem_placa_RTqPCR", 'LISTAR SOLICITAÇÕES DE MONTAGEM');
+Pagina::montar_topo_listar("REMOVER AMOSTRAS DA PLACA",'listar_montagem_placa_RTqPCR','LISTAR MONTAGEM DA PLACA', "listar_mix_placa_RTqPCR", 'LISTAR MIX DA PLACA');
 Pagina::getInstance()->mostrar_excecoes();
 echo $alert;
 

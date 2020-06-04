@@ -15,15 +15,144 @@ class PreparoLote
     private $idKitExtracao_fk;
     private $obsKitExtracao;
     private $loteFabricacaokitExtracao;
+    private $nomeResponsavel;
+    private $idResponsavel;
+
+    private $numPagina;
+    private $totalRegistros;
+    private $registrosEncontrados;
 
     private $objLote;
+    private $objCapela;
+    private $objUsuario;
+    private $objKitExtracao;
+
+
     private $objLoteOriginal;
     private $objPerfil;
     private $objsTubos;
-    private $objCapela;
+
     private $ObjsTubosCadastro;
     private $ObjsTubosAlterados;
     private $extracao_invalida;
+
+    /**
+     * @return mixed
+     */
+    public function getObjUsuario()
+    {
+        return $this->objUsuario;
+    }
+
+    /**
+     * @param mixed $objUsuario
+     */
+    public function setObjUsuario($objUsuario)
+    {
+        $this->objUsuario = $objUsuario;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getObjKitExtracao()
+    {
+        return $this->objKitExtracao;
+    }
+
+    /**
+     * @param mixed $objKitExtracao
+     */
+    public function setObjKitExtracao($objKitExtracao)
+    {
+        $this->objKitExtracao = $objKitExtracao;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getNumPagina()
+    {
+        return $this->numPagina;
+    }
+
+    /**
+     * @param mixed $numPagina
+     */
+    public function setNumPagina($numPagina)
+    {
+        $this->numPagina = $numPagina;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalRegistros()
+    {
+        return $this->totalRegistros;
+    }
+
+    /**
+     * @param mixed $totalRegistros
+     */
+    public function setTotalRegistros($totalRegistros)
+    {
+        $this->totalRegistros = $totalRegistros;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegistrosEncontrados()
+    {
+        return $this->registrosEncontrados;
+    }
+
+    /**
+     * @param mixed $registrosEncontrados
+     */
+    public function setRegistrosEncontrados($registrosEncontrados)
+    {
+        $this->registrosEncontrados = $registrosEncontrados;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getIdResponsavel()
+    {
+        return $this->idResponsavel;
+    }
+
+    /**
+     * @param mixed $idResponsavel
+     */
+    public function setIdResponsavel($idResponsavel)
+    {
+        $this->idResponsavel = $idResponsavel;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getNomeResponsavel()
+    {
+        return $this->nomeResponsavel;
+    }
+
+    /**
+     * @param mixed $nomeResponsavel
+     */
+    public function setNomeResponsavel($nomeResponsavel)
+    {
+        $this->nomeResponsavel = $nomeResponsavel;
+    }
+
+
 
     /**
      * @return mixed

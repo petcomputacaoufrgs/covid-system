@@ -132,6 +132,72 @@ class Rel_tubo_lote_BD{
         }
     }
 
+
+    /**** EXTRAS ****/
+
+    public function listar_completo($objRelTuboLote, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT * FROM tb_rel_tubo_lote";
+
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($objRelTuboLote->getIdTubo_fk() != null) {
+                $WHERE .= $AND . " idTubo_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objRelTuboLote->getIdTubo_fk());
+            }
+
+            if ($objRelTuboLote->getIdLote_fk() != null) {
+                $WHERE .= $AND . " idLote_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objRelTuboLote->getIdLote_fk());
+            }
+
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            //echo $SELECT.$WHERE;$WHERE
+
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
+
+            $array = array();
+            foreach ($arr as $reg){
+                $objRelTuboLote = new Rel_tubo_lote();
+                $objRelTuboLote->setIdRelTuboLote($reg['idRelTuboLote']);
+                $objRelTuboLote->setIdTubo_fk($reg['idTubo_fk']);
+                $objRelTuboLote->setIdLote_fk($reg['idLote_fk']);
+
+                $objTubo = new Tubo();
+                $objTuboRN = new TuboRN();
+
+
+                echo $_SESSION['COVID19']['INFOSTUBO'];
+                ECHO "$";
+                $objTubo->setIdTubo($reg['idTubo_fk']);
+                $objTubo = $objTuboRN->listar_completo($objTubo,null,$_SESSION['COVID19']['INFOSTUBO']);
+                $objRelTuboLote->setObjTubo($objTubo);
+
+                $objLote = new Lote();
+                $objLoteRN = new LoteRN();
+                $objLote->setIdLote($reg['idLote_fk']);
+                $objLote = $objLoteRN->consultar($objLote);
+
+                $objRelTuboLote->setObjLote($objLote);
+
+                $array[] = $objRelTuboLote;
+            }
+            return $array;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando o relacionamento do tubo com um dos seus lotes no BD.",$ex);
+        }
+
+    }
+
     public function remover_peloIdLote(Rel_tubo_lote $objRelTuboLote, Banco $objBanco) {
 
         try{

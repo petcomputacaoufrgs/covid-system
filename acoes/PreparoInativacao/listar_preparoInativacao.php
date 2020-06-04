@@ -30,45 +30,65 @@ try {
     require_once __DIR__ . '/../../classes/PreparoLote/PreparoLote.php';
     require_once __DIR__ . '/../../classes/PreparoLote/PreparoLoteRN.php';
 
+    require_once __DIR__ . '/../../classes/Lote/Lote.php';
+    require_once __DIR__ . '/../../classes/Lote/LoteRN.php';
+    require_once __DIR__ . '/../../classes/Lote/LoteINT.php';
+
+    require_once __DIR__.'/../../classes/Capela/Capela.php';
+    require_once __DIR__.'/../../classes/Capela/CapelaRN.php';
+
+    require_once __DIR__.'/../../classes/KitExtracao/KitExtracao.php';
+    require_once __DIR__.'/../../classes/KitExtracao/KitExtracaoRN.php';
+    require_once __DIR__.'/../../classes/KitExtracao/KitExtracaoINT.php';
+
+    require_once __DIR__ . '/../../classes/Pesquisa/PesquisaINT.php';
+
     Sessao::getInstance()->validar();
 
 
-    $value = '';
-    $retornou_certo = false;
-    $options = '';
-    $position = null;
-    $inputs = '';
-    $error = '';
-    $arrAmostras_pesquisa = array();
-    $disabled = '';$onchange ='';
-
-    /* AMOSTRA */
+    /* AMOSTRA
     $objAmostra = new Amostra();
     $objAmostraRN = new AmostraRN();
 
-    /* PERFIL PACIENTE */
-    $objPerfilPaciente = new PerfilPaciente();
-    $objPerfilPacienteRN = new PerfilPacienteRN();
 
-    /* PACIENTE */
-    $objPaciente = new Paciente();
-    $objPacienteRN = new PacienteRN();
-
-    /* TUBO */
+    /* TUBO
     $objTubo = new Tubo();
     $objTuboRN = new TuboRN();
 
 
-    /* INFOS TUBO */
+    /* INFOS TUBO
     $objInfosTubo = new InfosTubo();
     $objInfosTuboRN = new InfosTuboRN();
+        */
 
-
+    /*
+     * PREPARO LOTE
+     */
     $objPreparoLote = new PreparoLote();
     $objPreparoLoteRN = new PreparoLoteRN();
 
+    /*
+     *  LOTE
+     */
+    $objLote = new Lote();
+    $objLoteRN = new LoteRN();
+
+    /*
+     *  CAPELA
+     */
+    $objCapela = new Capela();
+    $objCapelaRN = new CapelaRN();
+
+    /*
+     *  KIT EXTRAÇÃO
+     */
+    $objKitExtracao = new KitExtracao();
+    $objKitExtracaoRN = new KitExtracaoRN();
+
+
     $alert = '';
     $html = '';
+    $inputs = '';
 
     switch ($_GET['action']){
         case 'remover_montagemGrupo_extracao':
@@ -80,37 +100,138 @@ try {
             }
     }
 
-    $options = InterfacePagina::montar_select_pesquisa($array_colunas,$position);
 
-    $botoes_aparecer = false;
+    //$arr_preparos = $objPreparoLoteRN->listar_preparos_lote($objPreparoLote,LoteRN::$TL_EXTRACAO);
+
+    /* PESQUISA */
+
+    $array_colunas = array( 'Nº LOTE','SITUAÇÃO LOTE','CAPELA','KIT EXTRAÇÃO');
+    $array_tipos_colunas = array( 'text', 'selectSituacaoLote','text','selectKitExtracao');
+    $valorPesquisa = '';
+    $select_situacao_lote = '';
+    $select_kits_extracao = '';
+
+    PesquisaINT::montar_select_pesquisa($select_pesquisa,$array_colunas, null,null,' onchange="this.form.submit()" ');
 
 
+    if(isset($_POST['sel_pesquisa_coluna']) ){
 
-    $arr_preparos = $objPreparoLoteRN->listar_preparos_lote($objPreparoLote,LoteRN::$TL_EXTRACAO);
-    //print_r($arr_preparos);
+        PesquisaINT::montar_select_pesquisa($select_pesquisa,$array_colunas, $_POST['sel_pesquisa_coluna'],null,' onchange="this.form.submit()" ');
+        if($array_tipos_colunas[$_POST['sel_pesquisa_coluna']] == 'selectSituacaoLote'){
+            LoteINT::montar_select_situacao_lote($select_situacao_lote, null, null,null);
+            $input = $select_situacao_lote;
+        }else if($array_tipos_colunas[$_POST['sel_pesquisa_coluna']] == 'selectKitExtracao'){
+            KitExtracaoINT::montar_select_kitsExtracao($select_kits_extracao, $objKitExtracao, $objKitExtracaoRN,null, null);
+            $input = $select_kits_extracao;
+        }else {
+            //echo $array_tipos_colunas[$_POST['sel_pesquisa_coluna']];
+            $input = '<input type="' . $array_tipos_colunas[$_POST['sel_pesquisa_coluna']] . '" value="' . $_POST['valorPesquisa'] .
+                '" placeholder="' . $array_colunas[$_POST['sel_pesquisa_coluna']] . '" name="valorPesquisa" aria-label="Search" class="form-control">';
+        }
+    }ELSE{
+        $input = '<input type="text" disabled value="" id="pesquisaDisabled" placeholder="" name="valorPesquisa" aria-label="Search" class="form-control">';
+    }
 
-    foreach ($arr_preparos as $preparo) {
+    if(!isset($_POST['hdnPagina'])){
+        $objPreparoLote->setNumPagina(1);
+    } else {
+        $objPreparoLote->setNumPagina($_POST['hdnPagina']);
+    }
+
+    $objLote->setTipo(LoteRN::$TL_EXTRACAO);
+    $objPreparoLote->setObjLote($objLote);
+
+    if(isset($_POST['valorPesquisa']) || isset($_POST['sel_situacao_lote']) || isset($_POST['sel_kit_extracao'])){
+
+
+        if($array_colunas[$_POST['sel_pesquisa_coluna']] == 'LOTE ORIGINAL' ){
+            $objPreparoLote->setIdPreparoLote(strtoupper($_POST['valorPesquisa']));
+        }
+
+        if($array_colunas[$_POST['sel_pesquisa_coluna']] == 'Nº LOTE'){
+            $objLote->setIdLote($_POST['valorPesquisa']);
+            $objPreparoLote->setObjLote($objLote);
+        }
+
+        if($array_colunas[$_POST['sel_pesquisa_coluna']] == 'SITUAÇÃO LOTE'){
+            $objLote->setSituacaoLote($_POST['sel_situacao_lote']);
+            LoteINT::montar_select_situacao_lote($select_situacao_lote, $_POST['sel_situacao_lote'], null,null);
+            $input = $select_situacao_lote;
+            $objPreparoLote->setObjLote($objLote);
+
+        }
+
+        if($array_colunas[$_POST['sel_pesquisa_coluna']] == 'CAPELA'){
+            $objCapela->setNumero($_POST['valorPesquisa']);
+            $objPreparoLote->setObjCapela($objCapela);
+
+        }
+
+        if($array_colunas[$_POST['sel_pesquisa_coluna']] == 'KIT EXTRAÇÃO'){
+            $objKitExtracao->setIdKitExtracao($_POST['sel_kit_extracao']);
+            KitExtracaoINT::montar_select_kitsExtracao($select_kits_extracao, $objKitExtracao, $objKitExtracaoRN,null, null);
+            $input = $select_kits_extracao;
+            $objPreparoLote->setObjKitExtracao($objKitExtracao);
+
+        }
+
+    }
+
+
+    $arrPreparos = $objPreparoLoteRN->paginacao($objPreparoLote);
+    $alert .= Alert::alert_info("Foram encontradas ".$objPreparoLote->getTotalRegistros()." amostras");
+
+    /*
+    * PAGINAÇÃO
+    */
+    $paginacao = '
+                    <nav aria-label="Page navigation example">
+                      <ul class="pagination">';
+    $paginacao .= '<li class="page-item"><input type="button" onclick="paginar(1)" class="page-link" name="btn_paginacao" value="Primeiro"/></li>';
+    for($i=0; $i<($objPreparoLote->getTotalRegistros()/20); $i++){
+        $color = '';
+        if($objPreparoLote->getNumPagina() == $i ){
+            $color = ' style="background-color: #d2d2d2;" ';
+        }
+        $paginacao .= '<li '.$color.' class="page-item"><input type="button" onclick="paginar('.($i+1).')" class="page-link" name="btn_paginacao" value="'.($i+1).'"/></li>';
+    }
+    //$paginacao .= '<li class="page-item"><input type="button" onclick="paginar('.($objAmostra->getTotalRegistros()-1).')" class="page-link" name="btn_paginacao" value="Último"/></li>';
+    $paginacao .= '  </ul>
+                    </nav>';
+
+
+    /* FIM PESQUISA */
+
+    /*
+        echo "<pre>";
+        print_r($arrPreparos);
+        echo "</pre>";
+    */
+
+    foreach ($arrPreparos as $preparo) {
+        $objLote = $preparo->getObjLote();
         $strTubos = '';
         $strAmostras = '';
         $contador = 0;
-        foreach($preparo->getObjLote()->getObjsTubo() as $tubo){
-            $strTubos .= $tubo->getIdTubo().",";
+        $contadorAmostra = 0;
+        foreach($objLote->getObjRelTuboLote() as $tubo){
+            $strTubos .= $tubo->getIdTubo_fk().",";
             $contador++;
-            if($contador == 8){
+            if($contador == 5){
                 $strTubos .= "\n";
                 $contador = 0;
             }
-        }
 
-        foreach($preparo->getObjLote()->getObjsAmostras() as $amostra){
-            $strAmostras .= $amostra->getNickname().",";
-            $contador++;
-            if($contador == 8){
-                $strAmostras .= "\n";
-                $contador = 0;
+
+            foreach ($tubo->getObjTubo() as $amostra) {
+                $strAmostras .= $amostra->getNickname() . ",";
+                $contadorAmostra++;
+                if ($contadorAmostra == 5) {
+                    $contadorAmostra = 0;
+                    $strAmostras .= "\n";
+                }
             }
         }
-
 
         $strTubos = substr($strTubos, 0,-1);
         $strAmostras = substr($strAmostras, 0,-1);
@@ -151,7 +272,16 @@ try {
         if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
             $html .='    <td style="white-space: pre-wrap;">' . Pagina::formatar_html($strTubos) . '</td>';
         }
-           $html .='   <td>' . Pagina::formatar_html($preparo->getIdUsuarioFk()) . '</td>';
+
+        $idResp = '';
+        if($preparo->getIdResponsavel()){
+            $idResp = '('.$preparo->getIdResponsavel().')';
+        }
+        $html .= '    <td>' . Pagina::formatar_html($preparo->getNomeResponsavel())." ".$idResp . '</td>';
+
+        $html .='   <td>' . Pagina::formatar_html($preparo->getObjUsuario()->getMatricula()) . '</td>';
+        $html .='   <td>' . Pagina::formatar_html($preparo->getObjKitExtracao()->getNome()) . '</td>';
+        $html .='   <td>' . Pagina::formatar_html($preparo->getObjCapela()->getNumero()) . '</td>';
 
         $dataHoraInicio = explode(" ", $preparo->getDataHoraInicio());
         $data = explode("-", $dataHoraInicio[0]);
@@ -219,16 +349,27 @@ try {
 
 Pagina::abrir_head("Listar Grupos Extração");
 Pagina::getInstance()->adicionar_css("precadastros");
-
+Pagina::getInstance()->adicionar_javascript("pesquisa_pg");
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
 Pagina::montar_topo_listar('LISTAR GRUPOS DE EXTRAÇÃO', null, null, null, null);
 Pagina::getInstance()->mostrar_excecoes();
 echo $alert;
+Pagina::montar_topo_pesquisar($select_pesquisa, $input);
 
-echo '<div id="tabela_preparos"  style="margin-top: -50px;">
+echo '
+        
+        <form method="post" style="height:40px;margin-left: 1%;width: 98%;">
+             <div class="form-row">
+                <div class="col-md-12" >
+                    '.$paginacao.'
+                 </div>
+             </div>
+         </form>
+         
+         <div id="tabela_preparos"  style="margin-top: -50px;">
         <div class="conteudo_tabela " >
-            <table class="table table-responsive table-hover table-sm" >
+            <table class="table table-hover " >
                 <thead>
                     <tr>
                        <th scope="col">LOTE ORIGINAL</th>
@@ -240,7 +381,11 @@ echo '<div id="tabela_preparos"  style="margin-top: -50px;">
                         if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
                             echo '<th scope="col">TUBOS</th>';
                         }
-                        echo '<th scope="col">ID USUÁRIO</th>
+                        echo '
+                        <th scope="col">RESPONSÁVEL</th>
+                        <th scope="col">USUÁRIO</th>
+                        <th scope="col">KIT EXTRAÇÃO</th>
+                        <th scope="col">CAPELA</th>
                         <th  scope="col">DATA HORA INÍCIO</th>
                         <th  scope="col">DATA HORA TÉRMINO</th>
                         <th scope="col"></th>

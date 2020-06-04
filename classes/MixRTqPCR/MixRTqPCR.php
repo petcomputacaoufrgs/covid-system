@@ -1,5 +1,4 @@
 <?php
-
 /*
  *  Author: Carine Bertagnolli Bathaglini
  */
@@ -13,7 +12,117 @@ class MixRTqPCR
     private $dataHoraInicio;
     private $dataHoraFim;
 
+    private $numPagina;
+    private $totalRegistros;
+    private $registrosEncontrados;
+
+    private $objUsuario;
     private $objSolicitacao;
+
+
+    private $objPlaca;
+    private $arrObjInfosTubo;
+
+    /**
+     * @return mixed
+     */
+    public function getNumPagina()
+    {
+        return $this->numPagina;
+    }
+
+    /**
+     * @param mixed $numPagina
+     */
+    public function setNumPagina($numPagina)
+    {
+        $this->numPagina = $numPagina;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalRegistros()
+    {
+        return $this->totalRegistros;
+    }
+
+    /**
+     * @param mixed $totalRegistros
+     */
+    public function setTotalRegistros($totalRegistros)
+    {
+        $this->totalRegistros = $totalRegistros;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegistrosEncontrados()
+    {
+        return $this->registrosEncontrados;
+    }
+
+    /**
+     * @param mixed $registrosEncontrados
+     */
+    public function setRegistrosEncontrados($registrosEncontrados)
+    {
+        $this->registrosEncontrados = $registrosEncontrados;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjUsuario()
+    {
+        return $this->objUsuario;
+    }
+
+    /**
+     * @param mixed $objUsuario
+     */
+    public function setObjUsuario($objUsuario)
+    {
+        $this->objUsuario = $objUsuario;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getArrObjInfosTubo()
+    {
+        return $this->objInfosTubo;
+    }
+
+    /**
+     * @param mixed $objInfosTubo
+     */
+    public function setArrObjInfosTubo($objInfosTubo)
+    {
+        $this->objInfosTubo = $objInfosTubo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getObjPlaca()
+    {
+        return $this->objPlaca;
+    }
+
+    /**
+     * @param mixed $objPlaca
+     */
+    public function setObjPlaca($objPlaca)
+    {
+        $this->objPlaca = $objPlaca;
+    }
+
 
     /**
      * @return mixed
