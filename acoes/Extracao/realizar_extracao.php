@@ -12,6 +12,7 @@ try {
     require_once __DIR__ . '/../../classes/Capela/CapelaINT.php';
 
     require_once _DIR__ . '/../../classes/Pagina/InterfacePagina.php';
+    require_once _DIR__ . '/../../classes/Tipo/Tipo.php';
 
     require_once __DIR__ . '/../../classes/Amostra/Amostra.php';
     require_once __DIR__ . '/../../classes/Amostra/AmostraRN.php';
@@ -152,6 +153,8 @@ try {
     $objKitExtracao = new KitExtracao();
     $objKitExtracaoRN = new KitExtracaoRN();
 
+    $objPreparoLoteORIGINAL = new PreparoLote();
+
     $ja_confirmou = 'n';
     $show_amostras = '';
     $select_capelas = '';
@@ -218,40 +221,162 @@ try {
 
         if (strlen($select_grupos) > 0) {
 
-            if (isset($_POST['btn_alocarCapela']) && !isset($_GET['idCapela'])) {
+            if(isset($_GET['idTipoExtracao'] ) && $_GET['idTipoExtracao'] == Tipo::$TIPO_AUTOMATICO) {
+                if (isset($_POST['btn_alocarCapela']) && !isset($_GET['idCapela'])) {
 
-                $objCapela->setIdCapela($_POST['sel_nivelSegsCapela']);
-                $objCapela->setNivelSeguranca(CapelaRN::$TNS_MEDIA_SEGURANCA);
+                    $objCapela->setIdCapela($_POST['sel_nivelSegsCapela']);
+                    $objCapela->setNivelSeguranca(CapelaRN::$TNS_MEDIA_SEGURANCA);
 
-                $objPreparoLoteORIGINAL->setIdPreparoLote($_POST['sel_preparo_lote']);
-                $objPreparoLoteORIGINAL = $objPreparoLoteRN->consultar($objPreparoLoteORIGINAL);
+                    $objPreparoLoteORIGINAL->setIdPreparoLote($_POST['sel_preparo_lote']);
+                    $objPreparoLoteORIGINAL = $objPreparoLoteRN->consultar($objPreparoLoteORIGINAL);
 
-                $objPreparoLoteORIGINAL->setObsKitExtracao($_POST['txtObsKit']);
-                $objPreparoLoteORIGINAL->setLoteFabricacaokitExtracao($_POST['txtLoteFabricacaoKit']);
+                    $objPreparoLoteORIGINAL->setIdKitExtracaoFk($_POST['sel_kit_extracao']);
+                    $objPreparoLoteORIGINAL->setObsKitExtracao($_POST['txtObsKit']);
+                    $objPreparoLoteORIGINAL->setLoteFabricacaokitExtracao($_POST['txtLoteFabricacaoKit']);
 
-                if(isset($_POST['txtNomeResponsavel']) && strlen($_POST['txtNomeResponsavel']) > 0) {
-                    $objPreparoLoteORIGINAL->setNomeResponsavel($_POST['txtNomeResponsavel']);
+                    if (isset($_POST['txtNomeResponsavel']) && strlen($_POST['txtNomeResponsavel']) > 0) {
+                        $objPreparoLoteORIGINAL->setNomeResponsavel($_POST['txtNomeResponsavel']);
+                    }
+
+                    if (isset($_POST['txtMatricula']) && strlen($_POST['txtMatricula']) > 0) {
+                        $objPreparoLoteORIGINAL->setIdResponsavel(strtoupper($_POST['txtMatricula']));
+
+                    }
+                    //print_r($objPreparoLoteORIGINAL);
+                    //die();
+
+                    $objPreparoLoteORIGINAL = $objPreparoLoteRN->alterar($objPreparoLoteORIGINAL);
+                    if ($objPreparoLoteORIGINAL->getIdResponsavel() != null) {
+                        $objUsuario->setIdUsuario($objPreparoLoteORIGINAL->getIdResponsavel());
+                        $objUsuario = $objUsuarioRN->consultar($objUsuario);
+                        $objPreparoLoteORIGINAL->setIdResponsavel($objUsuario->getMatricula());
+
+                    }
+
+                    $objCapelaRN->bloquear_registro($objCapela);
+                    header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao&idCapela=' . $_POST['sel_nivelSegsCapela'] . '&idPreparoLote=' . $_POST['sel_preparo_lote'] . '&idKitExtracao=' . $_POST['sel_kit_extracao']));
+                    die();
+
                 }
+            }
+            else if(isset($_GET['idTipoExtracao'] ) && $_GET['idTipoExtracao'] == Tipo::$TIPO_MANUAL){
+                if (isset($_POST['btn_alocarCapela']) || isset($_POST['btn_enviar_amostras'])) {
 
-                if(isset($_POST['txtMatricula']) && strlen($_POST['txtMatricula']) > 0 ) {
-                    $objPreparoLoteORIGINAL->setIdResponsavel(strtoupper($_POST['txtMatricula']));
+                    try {
+                        $objKitExtracao->setIdKitExtracao($_POST['sel_kit_extracao']);
+                        KitExtracaoINT::montar_select_kitsExtracao($select_kitExtracao, $objKitExtracao, $objKitExtracaoRN, null, null);
 
+                        $objCapela->setIdCapela($_POST['sel_nivelSegsCapela']);
+                        CapelaINT::montar_capelas_liberadas($select_capelas, $objCapela, $objCapelaRN, null, null);
+
+                        if (isset($_POST['txtNomeResponsavel']) && strlen($_POST['txtNomeResponsavel']) > 0) {
+                            $objPreparoLote->setNomeResponsavel($_POST['txtNomeResponsavel']);
+                        }
+
+                        if (isset($_POST['txtMatricula']) && strlen($_POST['txtMatricula']) > 0) {
+                            $objPreparoLote->setIdResponsavel(strtoupper($_POST['txtMatricula']));
+
+                        }
+
+                        $objPreparoLote->setLoteFabricacaokitExtracao($_POST['txtLoteFabricacaoKit']);
+                        $objPreparoLote->setObsKitExtracao($_POST['txtObsKit']);
+                        $objPreparoLote->setIdCapelaFk($_POST['sel_nivelSegsCapela']);
+                        $objPreparoLote->setIdKitExtracaoFk($_POST['sel_kit_extracao']);
+                        $objPreparoLote->setIdUsuarioFk(Sessao::getInstance()->getIdUsuario());
+                        $objPreparoLote->setDataHoraInicio($_POST['dtHoraLoginInicio']);
+                        $objPreparoLote->setDataHoraFim(date("Y-m-d H:i:s"));
+
+                        /*$objPreparoLote = $objPreparoLoteRN->paginacao($objPreparoLote);
+                        echo "<pre>";
+                        print_r($objPreparoLote);
+                        echo "</pre>";*/
+
+
+                        $qntSelecionada = $_POST['numQntAmostras'];
+                        $lista = '';
+                        for ($i = 0; $i < $qntSelecionada; $i++) {
+                            $lista .= ' <div class="form-row" >
+                                    <div class="col-md-1" >
+                                    <div class="input-group-prepend">
+                                      <div class="input-group-text">' . ($i + 1) . ' ª amostra </div>
+                                    </div>
+                                    </div>
+                                    
+                                    <div class="col-md-10" >
+                                        <input type="text" class="form-control" id="idQntAmostras" placeholder="código amostra"
+                                            name="txtCod_' . $i . '" style="margin-left:10px;width:102%;" value="' . Pagina::formatar_html(strtoupper($utils->tirarAcentos($_POST['txtCod_' . $i]))) . '">
+                                    </div>
+                                </div>';
+
+                            if (isset($_POST['txtCod_' . $i])) {
+                                $arr_posts[] .= strtoupper($utils->tirarAcentos($_POST['txtCod_' . $i]));
+                            }
+                        }
+
+
+                        if (count($arr_posts) > 0) {
+                            $arr_posts_unique = array_unique($arr_posts);
+
+                            if (count($arr_posts_unique) < count($arr_posts) && count($arr_posts) > 0) {
+                                $alert .= Alert::alert_warning("Alguma amostra foi informada mais de uma vez");
+                            } else {
+                                if (isset($_POST['btn_enviar_amostras'])) {
+
+                                    //print_r($objPreparoLote);
+                                    $amostras_selecionadas = $objAmostraRN->validar_amostras_extracao($arr_posts);
+
+                                    //print_r($amostras_selecionadas);
+                                    foreach ($amostras_selecionadas as $amostra){
+                                        $tubo = $amostra->getObjTubo();
+                                        $tam = count($amostra->getObjTubo()->getObjInfosTubo());
+                                        $infotubo = $amostra->getObjTubo()->getObjInfosTubo()[$tam-1];
+
+                                        $objRelTuboLote->setIdTubo_fk($tubo->getIdTubo());
+                                        $objRelTuboLote->setIdLote_fk($infotubo->getIdLote_fk());
+                                        $arrRel = $objRelTuboLoteRN->listar($objRelTuboLote);
+                                        $arr_rel_tubo_lote[] = $arrRel[0];
+
+                                        $infotubo->setIdInfosTubo(null);
+                                        $infotubo->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+                                        $infotubo->setEtapa(InfosTuboRN::$TP_EXTRACAO);
+                                        $infotubo->setEtapaAnterior(InfosTuboRN::$TP_PREPARACAO_INATIVACAO);
+                                        $infotubo->setDataHora(date("Y-m-d H:i:s"));
+                                        $infotubo->setObsProblema(null);
+                                        $infotubo->setObservacoes(null);
+                                        $infotubo->setSituacaoEtapa(InfosTuboRN::$TSP_EM_ANDAMENTO);
+                                        $infotubo->setSituacaoTubo(InfosTuboRN::$TST_EM_UTILIZACAO);
+                                        $infotubo->setObjLote(null);
+                                        $infotubo->setIdLote_fk(null);
+                                        $infotubo->setObjLocal(null);
+                                        $infotubo->setObjTubo(null);
+                                        $tubo->setObjInfosTubo($infotubo);
+                                        $arr_tubos[] = $tubo;
+
+                                    }
+
+                                    $objLote->setSituacaoLote(LoteRN::$TE_EM_EXTRACAO);
+                                    $objLote->setTipo(LoteRN::$TL_EXTRACAO);
+                                    $objLote->setObjsTubo($arr_tubos);
+
+                                    $objLote->setObjRelTuboLote($arr_rel_tubo_lote);
+                                    $objLote->setQntAmostrasAdquiridas(count($arr_tubos));
+                                    $objLote->setQntAmostrasDesejadas(count($arr_tubos));
+                                    $objPreparoLote->setObjLote($objLote);
+                                    $objPreparoLote = $objPreparoLoteRN->cadastrar($objPreparoLote);
+
+                                    header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao&idCapela=' . $_POST['sel_nivelSegsCapela'] . '&idPreparoLote=' . $objPreparoLote->getIdPreparoLote() . '&idKitExtracao=' . $_POST['sel_kit_extracao']));
+                                    die();
+
+
+                                }
+
+                            }
+                        }
+
+                    } catch (Throwable $e) {
+                        Pagina::getInstance()->processar_excecao($e);
+                    }
                 }
-                //print_r($objPreparoLoteORIGINAL);
-                //die();
-
-                $objPreparoLoteORIGINAL = $objPreparoLoteRN->alterar($objPreparoLoteORIGINAL);
-                if($objPreparoLoteORIGINAL->getIdResponsavel() != null) {
-                    $objUsuario->setIdUsuario($objPreparoLoteORIGINAL->getIdResponsavel());
-                    $objUsuario = $objUsuarioRN->consultar($objUsuario);
-                    $objPreparoLoteORIGINAL->setIdResponsavel($objUsuario->getMatricula());
-
-                }
-
-                $objCapelaRN->bloquear_registro($objCapela);
-                header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao&idCapela=' . $_POST['sel_nivelSegsCapela'] . '&idPreparoLote=' . $_POST['sel_preparo_lote'] . '&idKitExtracao=' . $_POST['sel_kit_extracao']));
-                die();
-
             }
 
 
@@ -263,6 +388,9 @@ try {
 
             if ((isset($_GET['idCapela']) && isset($_GET['idPreparoLote'])) || isset($_POST['btn_confirmar_extracao']) || isset($_POST['btn_terminar_extracao'])) {
                 //garantir que não vá cadastrar outros ao mesmo tempo
+                $objPreparoLote->setIdPreparoLote($_GET['idPreparoLote']);
+                $objPreparoLote = $objPreparoLoteRN->consultar($objPreparoLote);
+
                 $disabled_responsavel = ' disabled ';
                 $objPreparoLoteAuxiliar = new PreparoLote();
                 $objPreparoLoteAuxiliar->setIdPreparoLote($_GET['idPreparoLote']);
@@ -1071,7 +1199,7 @@ try {
 }
 
 
-Pagina::abrir_head("Montar grupo");
+Pagina::abrir_head("Extração");
 Pagina::getInstance()->adicionar_css("precadastros");
 if($cadastrar_novo  == 's') {
     Pagina::getInstance()->adicionar_javascript("popUp");
@@ -1143,10 +1271,37 @@ echo '<!-- Modal -->
     </div>';
 
 
-if($_GET['action'] == 'realizar_extracao') {
+if(!isset($_GET['idTipoExtracao']) && !isset($_GET['idPreparoLote'])){
+    echo '
+        <div class="conteudo_grande" style="margin-top: -20px;">
+            <form method="POST" name="inicio">
+            <div class="form-row" >
+            
+                <div class="col-md-12">
+                    <input type="text" class="form-control" id="idDataHoraLogin" hidden style="text-align: center;"
+                           name="dtHoraLoginInicio" required value="' . $_SESSION['DATA_LOGIN'] . '">
+                </div>
+            </div>
+             <div class="form-row" >
+                  <div class="col-md-6" >
+                        <a  class="btn btn-primary" STYLE="margin-left:0px;width:100%;margin-top: 17px;font-size: 20px;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao&idTipoExtracao=1').'"><i style="color:white;" class="fas fa-cogs fa-3x"></i><br>ESCOLHA MANUAL</a>
+                        <!--<button class="btn btn-primary" style="margin-left:0px;margin-top: 31px;width: 100%;" type="submit"  name="btn_manual">ESCOLHA MANUAL</button>-->
+                  </div>
+                   <div class="col-md-6" >
+                        <a  class="btn btn-primary" STYLE="margin-left:0px;width:100%;margin-top: 17px;font-size: 20px;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao&idTipoExtracao=2').'"><i  style="color:white;" class="fas fa-laptop-code fa-3x"></i><br>ESCOLHA AUTOMÁTICA</a>
+                        <!--<button class="btn btn-primary" style="margin-left:0px;margin-top: 31px;width: 100%;" type="submit"  name="btn_automatico">ESCOLHA AUTOMÁTICA</button>-->
+                  </div>
+             </div>
+             </form>
+        </div>
+                    ';
+}else {
 
 
-    echo '<div class="conteudo_grande " STYLE="margin-top: 0px;" >
+    if ($_GET['action'] == 'realizar_extracao') {
+
+
+        echo '<div class="conteudo_grande " STYLE="margin-top: 0px;" >
          <form method="POST">
                 <div class="form-row" >
                     <div class="col-md-12">
@@ -1157,91 +1312,113 @@ if($_GET['action'] == 'realizar_extracao') {
                       <div class="form-row" >
                     <div class="col-md-8">
                         <label>Informe o nome do responsável: (opcional)</label>
-                        <input type="text" class="form-control" '.$disabled_responsavel .' style="text-align: center;"
-                               name="txtNomeResponsavel" value="'.$objPreparoLoteORIGINAL->getNomeResponsavel().'">
+                        <input type="text" class="form-control" ' . $disabled_responsavel . ' style="text-align: center;"
+                               name="txtNomeResponsavel" value="' . $objPreparoLote->getNomeResponsavel() . '">
                      </div>
                       <div class="col-md-4">
                         <label>Informe o código do responsável: (opcional)</label>
-                        <input type="text" class="form-control" '.$disabled_responsavel .' style="text-align: center;"
-                               name="txtMatricula" value="'.$objPreparoLoteORIGINAL->getIdResponsavel().'">
+                        <input type="text" class="form-control" ' . $disabled_responsavel . ' style="text-align: center;"
+                               name="txtMatricula" value="' . $objPreparoLote->getIdResponsavel() . '">
                      </div>
                 </div>
                 <div class="form-row" >
                 <div class="col-md-12"> 
                     <label>Escolha um dos kits</label>'
-        . $select_kitExtracao .
-        '</div>
+            . $select_kitExtracao .
+            '</div>
                     </div>
                  <div class="form-row" >
                     <div class="col-md-6">
                         <label for="">Informe o lote de fabricação do kit de extração (opcional)</label>
                         <input type="text" class="form-control"  ' . $disabled_inputs . '
-                               name="txtLoteFabricacaoKit"  value="' . Pagina::formatar_html($objPreparoLoteORIGINAL->getLoteFabricacaokitExtracao()) . '">
+                               name="txtLoteFabricacaoKit"  value="' . Pagina::formatar_html($objPreparoLote->getLoteFabricacaokitExtracao()) . '">
                      </div>
                      <div class="col-md-6">
                         <label for="">Observações do kit de extração (opcional)</label>
                         <textarea id="idTxtAreaObs" ' . $disabled_inputs . '
                                   name="txtObsKit" rows="1" cols="100" class="form-control"
-                                  >' . Pagina::formatar_html($objPreparoLoteORIGINAL->getObsKitExtracao()) . '</textarea>
+                                  >' . Pagina::formatar_html($objPreparoLote->getObsKitExtracao()) . '</textarea>
                      </div>
                 </div>
                 <div class="form-row" >
                     <div class="col-md-6">
                         <label>Escolha uma capela de média segurança</label>'
-        . $select_capelas .
-        '</div>
-              
-                   <div class="col-md-6"> 
+            . $select_capelas .
+            '</div>';
+
+
+        if($_GET['idTipoExtracao'] == Tipo::$TIPO_AUTOMATICO) {
+            echo '      <div class="col-md-6"> 
                     <label>Escolha um grupo de amostras de extração</label>'
-        . $select_grupos .
-        '</div>
-                    
-                </div>';
-    if ($sumir_btn_alocar == 'n') {
-        echo '<div class="form-row" >
+                . $select_grupos .
+                '</div>
+              </div>';
+        }
+
+        if($_GET['idTipoExtracao'] == Tipo::$TIPO_MANUAL) {
+            echo '      <div class="col-md-6"> 
+                    <label>Informe a quantidade de amostras devem ir para a extração</label>
+                        <input type="number" class="form-control"  ' . $disabled_inputs . '
+                               name="numQntAmostras"  value="' . $_POST['numQntAmostras']. '">
+                </div>
+              </div>';
+
+        }
+        if ($sumir_btn_alocar == 'n') {
+            echo '<div class="form-row" >
                     <div class="col-md-12" >
                         <button class="btn btn-primary"  type = "submit"style = "width: 25%; margin-left: 35%;" name = "btn_alocarCapela" > ' . $nome_botao_alocar . ' </button >
                     </div >
                  </div >';
-    }
-    echo '
+        }
+
+        if(strlen($lista) > 0) {
+            echo $lista;
+            echo '<div class="form-row" >
+                    <div class="col-md-12" >
+                        <button class="btn btn-primary"  type = "submit"style = "width: 25%; margin-left: 35%;" name = "btn_enviar_amostras" > SELECIONAR AMOSTRAS </button >
+                    </div >
+                 </div >';
+        }
+        echo '
          </form>
       </div>';
 
-    if (isset($_GET['idCapela']) && isset($_GET['idPreparoLote'])) {
-        echo '<div class="conteudo_grande preparo_inativacao">
+        if (isset($_GET['idCapela']) && isset($_GET['idPreparoLote'])) {
+            echo '<div class="conteudo_grande preparo_inativacao">
          <form method="POST">
                
                 ';
 
-        if ($sumir_btns == 'n') {
-            echo '  <div class="form-row" style="height: 50px;margin-top: -40px;" >';
-            if ($ja_confirmou == 'n') {
-                echo '<div class="col-md-6">
+            if ($sumir_btns == 'n') {
+                echo '  <div class="form-row" style="height: 50px;margin-top: -40px;" >';
+                if ($ja_confirmou == 'n') {
+                    echo '<div class="col-md-6">
                <button class="btn btn-primary" STYLE="width: 50%;margin-left: 50%;margin-bottom: 5px;" type="submit" name="btn_confirmar_extracao">INICIAR EXTRAÇÃO</button>
              </div>';
-            } else {
-                //if($sumir_btns == 'n') {
-                echo '<div class="col-md-6">
+                } else {
+                    //if($sumir_btns == 'n') {
+                    echo '<div class="col-md-6">
                <button class="btn btn-primary" STYLE="width: 50%;margin-left: 50%;margin-bottom: 5px;" type="submit" name="btn_terminar_extracao">SALVAR DADOS</button>
              </div>';
-                //}
-            }
+                    //}
+                }
 
-            echo '<div class="col-md-6">
+                echo '<div class="col-md-6">
                        <button class="btn btn-primary" STYLE="width: 50%;margin-left: 0%;margin-bottom: 5px;"  type="submit" name="btn_cancelar">CANCELAR</button>
                      </div>
                      </div>';
-        }
+            }
 
-        echo '
+            echo '
              <div class="form-row" style="margin-top: 0px;">
                    <div class="col-md-12">'
-            . $show_amostras .
-            '</div>
+                . $show_amostras .
+                '</div>
                 </div>
                 </form>
       </div>';
+        }
     }
 }
 
@@ -1258,12 +1435,12 @@ if($_GET['action'] == 'editar_extracao'){
                     <div class="col-md-8">
                         <label>Informe o nome do responsável: (opcional)</label>
                         <input type="text" class="form-control" '.$disabled_responsavel .' style="text-align: center;"
-                               name="txtNomeResponsavel" value="'.$objPreparoLote->getNomeResponsavel().'">
+                               name="txtNomeResponsavel" value="'.Pagina::formatar_html($objPreparoLote->getNomeResponsavel()).'">
                      </div>
                       <div class="col-md-4">
                         <label>Informe o código do responsável: (opcional)</label>
                         <input type="text" class="form-control" '.$disabled_responsavel .' style="text-align: center;"
-                               name="txtMatricula" value="'.$objPreparoLote->getIdResponsavel().'">
+                               name="txtMatricula" value="'.Pagina::formatar_html($objPreparoLote->getIdResponsavel()).'">
                      </div>
                 </div>
                 <div class="form-row" >

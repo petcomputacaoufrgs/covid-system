@@ -761,6 +761,7 @@ class PreparoLoteBD{
                 $objLote = new Lote();
                 $objLoteRN = new LoteRN();
 
+                $_SESSION['COVID19']['INFOSTUBO'] = true;
                 $objLote->setIdLote($reg['idLote_fk']);
                 $objLote = $objLoteRN->listar_completo($objLote);
                 //echo "<pre>";

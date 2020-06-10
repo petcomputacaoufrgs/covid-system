@@ -10,6 +10,7 @@ require_once __DIR__ . '/PerfilPacienteBD.php';
 class PerfilPacienteRN{
 
     public static $TP_PROFISSIONAIS_SAUDE = 'S';
+    public static $TP_PREFEITURA_PORTO_ALEGRE = 'P';
     public static $TP_VOLUNTARIOS = 'V';
     public static $TP_PACIENTES_SUS = 'L';
     public static $TP_FUNCIONARIOS_ENGIE = 'E';
@@ -44,6 +45,11 @@ class PerfilPacienteRN{
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$TE_OUTROS);
             $objSituacao->setStrDescricao('outros');
+            $arrObjTECapela[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TP_PREFEITURA_PORTO_ALEGRE);
+            $objSituacao->setStrDescricao('prefeitura de POA');
             $arrObjTECapela[] = $objSituacao;
 
 

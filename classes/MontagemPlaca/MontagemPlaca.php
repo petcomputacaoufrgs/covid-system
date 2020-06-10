@@ -18,9 +18,28 @@ class MontagemPlaca
 
     private $objMix;
     private $objUsuario;
+    private $objPocos;
 
     //para cadastro
     private $objInfosTubo;
+
+    /**
+     * @return mixed
+     */
+    public function getObjPocos()
+    {
+        return $this->objPocos;
+    }
+
+    /**
+     * @param mixed $objPocos
+     */
+    public function setObjPocos($objPocos)
+    {
+        $this->objPocos = $objPocos;
+    }
+
+
 
     /**
      * @return mixed

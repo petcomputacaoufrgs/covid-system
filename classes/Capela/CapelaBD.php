@@ -120,7 +120,6 @@ class CapelaBD{
 
             return $capela;
         } catch (Throwable $ex) {
-       
             throw new Excecao("Erro consultando a capela no BD.",$ex);
         }
 

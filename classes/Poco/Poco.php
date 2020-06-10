@@ -14,6 +14,25 @@ class Poco
     private $conteudo;
 
     private $objPlaca;
+    private $objTubo;
+
+    /**
+     * @return mixed
+     */
+    public function getObjTubo()
+    {
+        return $this->objTubo;
+    }
+
+    /**
+     * @param mixed $objTubo
+     */
+    public function setObjTubo($objTubo)
+    {
+        $this->objTubo = $objTubo;
+    }
+
+
 
     /**
      * @return mixed

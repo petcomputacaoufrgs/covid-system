@@ -17,6 +17,8 @@ class PlacaRN
     public static $STA_MIX_FINALIZADO = 'F';
     public static $STA_NA_MONTAGEM = 'N';
     public static $STA_MONTAGEM_FINALIZADA = 'Z';
+    public static $STA_SETUP_RTqPCR = 'U';
+    public static $STA_ATRASO_RTqPCR = 'T';
 
 
     public static function listarValoresStaPlaca(){
@@ -62,6 +64,16 @@ class PlacaRN
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$STA_MONTAGEM_FINALIZADA);
             $objSituacao->setStrDescricao('Montagem finalizada');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$STA_SETUP_RTqPCR);
+            $objSituacao->setStrDescricao('setup RTqPCR');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$STA_ATRASO_RTqPCR);
+            $objSituacao->setStrDescricao('atraso RTqPCR');
             $arrObjTEtapa[] = $objSituacao;
 
             return $arrObjTEtapa;
@@ -386,6 +398,27 @@ class PlacaRN
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o placa.',$e);
+        }
+    }
+
+    public function listar_completo(Placa $objPlaca) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objPlacaBD = new PlacaBD();
+
+            $arr = $objPlacaBD->listar_completo($objPlaca,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando a placa completa.',$e);
         }
     }
 

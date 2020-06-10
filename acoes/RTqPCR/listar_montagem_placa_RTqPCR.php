@@ -301,24 +301,10 @@ try {
 
         $html .= '    <td>' . Pagina::formatar_html($objUsuario->getMatricula()) . '</td>';
 
-        $dataHoraInicio = explode(" ", $montagem->getDataHoraInicio());
-        $data = explode("-", $dataHoraInicio[0]);
-
-        $diaI = $data[2];
-        $mesI = $data[1];
-        $anoI = $data[0];
-
-        $html .= '   <td>' . $diaI . '/' . $mesI . '/' . $anoI . ' - ' . $dataHoraInicio[1] . '</td>';
+        $html .= '   <td>'.Utils::converterDataHora($montagem->getDataHoraInicio()).'</td>';
 
         if ($montagem->getSituacaoMontagem() == MontagemPlacaRN::$STA_MONTAGEM_FINALIZADA) {
-            $dataHoraFim = explode(" ", $montagem->getDataHoraFim());
-            $data = explode("-", $dataHoraFim[0]);
-
-            $diaF = $data[2];
-            $mesF = $data[1];
-            $anoF = $data[0];
-
-            $html .= '   <td>' . $diaF . '/' . $mesF . '/' . $anoF . ' - ' . $dataHoraFim[1] . '</td>';
+            $html .= '   <td>'.Utils::converterDataHora($montagem->getDataHoraFim()).'</td>';
         }else{
             $html .= '   <td> - </td>';
         }

@@ -34,6 +34,99 @@ class Utils{
 
     }
 
+    public static function converterData($dataPassada)
+    {
+
+        $data = explode("-", $dataPassada);
+
+        $dia = $data[2];
+        $mes = $data[1];
+        $ano = $data[0];
+
+        if($dia == '00'){
+            return " - ";
+        }
+
+        return $dia."/".$mes."/".$ano;
+    }
+
+    public static function converterDataHora($dataHoraPassada)
+    {
+
+        $dataHora = explode(" ", $dataHoraPassada);
+        $data = explode("-", $dataHora[0]);
+
+        $dia = $data[2];
+        $mes = $data[1];
+        $ano = $data[0];
+
+        if($dia == '00'){
+            return " - ";
+        }
+
+        return $dia."/".$mes."/".$ano. " - ".$dataHora[1];
+
+    }
+
+    public static function getStrData($dataHoraPassada)
+    {
+
+        $dataHora = explode(" ", $dataHoraPassada);
+        $data = explode("-", $dataHora[0]);
+
+        $dia = $data[2];
+        $mes = $data[1];
+        $ano = $data[0];
+
+        if($dia == '00'){
+            return " - ";
+        }
+
+        return $dia."/".$mes."/".$ano;
+
+    }
+
+    public static function getData($dataHoraPassada)
+    {
+
+        $dataHora = explode(" ", $dataHoraPassada);
+
+        return $dataHora[0];
+
+    }
+
+    public static function compararDataHora($strDataHoraIni, $strDataHoraFim)
+    {
+
+        if ($strDataHoraIni===null || $strDataHoraFim===null || trim($strDataHoraIni)==='' || trim($strDataHoraFim)==='') {
+            return null;
+        }
+
+        $arrDataIni = explode('-', $strDataHoraIni);
+        $arrDataFim = explode('-', $strDataHoraFim);
+
+
+        if (strlen($arrDataIni[2])===11) {
+            $arrHoraIni = explode(':', substr($arrDataIni[2], 3));
+            $arrDataIni[2] = substr($arrDataIni[2], 0, 2);
+        } else {
+            $arrHoraIni = array(0, 0, 0);
+        }
+
+        if (strlen($arrDataFim[2])===11) {
+            $arrHoraFim = explode(':', substr($arrDataFim[2], 3));
+            $arrDataFim[2] = substr($arrDataFim[2], 0, 2);
+        } else {
+            $arrHoraFim = array(0, 0, 0);
+        }
+
+        //usa gmmktime para evitar interferencia do horario de verao
+        $iniDate = gmmktime((int)$arrHoraIni[0], (int)$arrHoraIni[1], (int)$arrHoraIni[2], (int)$arrDataIni[1], (int)$arrDataIni[0], (int)$arrDataIni[2]);
+        $fimDate = gmmktime((int)$arrHoraFim[0], (int)$arrHoraFim[1], (int)$arrHoraFim[2], (int)$arrDataFim[1], (int)$arrDataFim[0], (int)$arrDataFim[2]);
+
+        return $fimDate - $iniDate;
+    }
+
     static function random_color($opacidade) {
 
 

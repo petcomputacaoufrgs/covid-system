@@ -41,6 +41,8 @@ class InfosTuboRN{
     public static $TST_AGUARDANDO_MIX_PLACA =  'X';
     public static $TST_AGUARDANDO_MONTAGEM_PLACA =  'U';
     public static $TST_AGUARDANDO_RTqCPR =  'Q';
+    public static $TST_ATRASADO_RTqCPR =  'C';
+    public static $TST_NO_POCO =  'P';
     /*public static $TST_NA_MONTAGEM = 'N';
     public static $TST_NA_PREPARACAO = 'R';
     public static $TST_NA_EXTRACAO = 'X';
@@ -208,11 +210,21 @@ class InfosTuboRN{
             $arrObjTStaTubo[] = $objSituacao;
 
             $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TST_ATRASADO_RTqCPR);
+            $objSituacao->setStrDescricao('Atrasado no RTqPCR');
+            $arrObjTStaTubo[] = $objSituacao;
+
+
+            $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$TST_AGUARDANDO_MIX_PLACA);
             $objSituacao->setStrDescricao('Aguardando o mix da placa de RT-qCPR');
             $arrObjTStaTubo[] = $objSituacao;
 
 
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TST_NO_POCO);
+            $objSituacao->setStrDescricao('No poço');
+            $arrObjTStaTubo[] = $objSituacao;
 
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$TST_AGUARDANDO_MONTAGEM_PLACA);
@@ -482,7 +494,7 @@ class InfosTuboRN{
             $infosTubo->getVolume() == 0){
                 $objExcecao->adicionar_validacao('A amostra <strong>'.$infosTubo->getCodAmostra() .'</strong> tem volume 0. Logo, ela não deve ter um local de armazenamento -- '. TuboRN::mostrarDescricaoStaTubo($infosTubo->getObjTubo()->getTipo()) ,null, 'alert-danger');
             }*/
-            $objExcecao->lancar_validacoes();
+
 
 
 

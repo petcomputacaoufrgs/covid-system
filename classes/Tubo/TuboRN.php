@@ -142,22 +142,29 @@ class TuboRN{
 
             if($tubo->getObjInfosTubo() != null){
                 $objInfosTuboRN = new InfosTuboRN();
-                if(count($tubo->getObjInfosTubo() > 0 || $tubo->getObjInfosTubo() != null)) {
-                    foreach ($tubo->getObjInfosTubo() as $info) {
-                        if ($info->getIdInfosTubo() == null) {
-                            $objInfosTubo = $info;
-                            $objInfosTubo->setObjTubo($tubo);
-                            $objInfosTubo->setIdTubo_fk($tubo->getIdTubo());
-                            $objInfosTubo = $objInfosTuboRN->cadastrar($objInfosTubo);
+                if(is_array($tubo->getObjInfosTubo() )){
+                    if(count($tubo->getObjInfosTubo() > 0 || $tubo->getObjInfosTubo() != null)) {
+                        foreach ($tubo->getObjInfosTubo() as $info) {
+                            if ($info->getIdInfosTubo() == null) {
+                                $objInfosTubo = $info;
+                                $objInfosTubo->setObjTubo($tubo);
+                                $objInfosTubo->setIdTubo_fk($tubo->getIdTubo());
+                                $objInfosTubo = $objInfosTuboRN->cadastrar($objInfosTubo);
 
 
-                        } else {
-                            $objInfosTubo = $objInfosTuboRN->alterar($info);
+                            } else {
+                                $objInfosTubo = $objInfosTuboRN->alterar($info);
+                            }
+                            $arr_infos[] = $objInfosTubo;
                         }
-                        $arr_infos[] = $objInfosTubo;
                     }
-                    $tubo->setObjInfosTubo($arr_infos);
+                }else{
+                    $tubo->getObjInfosTubo()->setObjTubo($tubo);
+                    $tubo->getObjInfosTubo()->setIdTubo_fk($tubo->getIdTubo());
+                    $objInfosTubo = $objInfosTuboRN->cadastrar($tubo->getObjInfosTubo());
                 }
+
+                $tubo->setObjInfosTubo($arr_infos);
 
                 /*if($objInfosTuboAux->getEtapa() == InfosTuboRN::$TP_RECEPCAO && $objInfosTuboAux->getSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO)) { //tubo veio da recepção
                     $objTipoLocalArmazenamento->setCaractereTipo(TipoLocalArmazenamentoRN::$TL_GELADEIRA);

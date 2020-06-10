@@ -1186,6 +1186,59 @@ class AmostraBD{
 
     }
 
+
+    public function validar_amostras_extracao($array_amostras, Banco $objBanco){
+        try{
+
+            $arr_amostras_retorno = array();
+            foreach ($array_amostras as $nickname) {
+                $SELECT = "SELECT * FROM tb_amostra,tb_tubo 
+                            where tb_amostra.nickname = ? 
+                            and tb_amostra.idAmostra = tb_tubo.idAmostra_fk ";
+
+                $arrayBind = array();
+                $arrayBind[] = array('s', $nickname);
+                $arr = $objBanco->consultarSql($SELECT, $arrayBind);
+
+                foreach ($arr as $tubo) {
+                    $select_max_infostubo = "
+                    select * from tb_infostubo,tb_tubo,tb_amostra 
+                    WHERE idInfostubo = (select max(tb_infostubo.idInfosTubo) from tb_infostubo, tb_tubo 
+                                                                              where tb_infostubo.idTubo_fk = tb_tubo.idTubo 
+                                                                              and tb_tubo.idTubo = ? ) 
+                    and tb_infostubo.idTubo_fk = tb_tubo.idTubo 
+                    and tb_tubo.idAmostra_fk = tb_amostra.idAmostra ";
+
+                    $arrayBind = array();
+                    $arrayBind[] = array('i', $tubo['idTubo']);
+                    $array_completo = $objBanco->consultarSql($select_max_infostubo, $arrayBind);
+
+
+                    foreach ($array_completo as $completo) {
+                        if ($completo['etapa'] == InfosTuboRN::$TP_EXTRACAO &&
+                            $completo['situacaoEtapa'] == InfosTuboRN::$TSP_AGUARDANDO &&
+                            $completo['situacaoTubo'] == InfosTuboRN::$TST_TRANSPORTE_EXTRACAO) {
+
+                            $tubo = new Tubo();
+                            $objTuboRN = new TuboRN();
+                            $tubo->setIdTubo($completo['idTubo']);
+                            $arr_tubo = $objTuboRN->listar_completo($tubo,null,true);
+                            $arr_amostras_retorno[] = $arr_tubo[0];
+                        }
+                    }
+
+                }
+            }
+
+            return $arr_amostras_retorno;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro validando as amostras.",$ex);
+        }
+
+
+
+    }
+
     public function validar_amostras_solicitacao($array_amostras,$array_perfis, Banco $objBanco){
         try{
 

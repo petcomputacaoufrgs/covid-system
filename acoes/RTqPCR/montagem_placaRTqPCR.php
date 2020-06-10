@@ -403,7 +403,6 @@ try{
                             }
 
                             if (isset($_POST['btn_editar_poco'])) {
-
                                 if (trim(strtoupper($_POST[$strPosicao])) == 'BR') {
                                     $pocoPlaca->getObjPoco()->setConteudo('BR');
                                     $pocoPlaca->getObjPoco()->setSituacao(PocoRN::$STA_OCUPADO);
@@ -424,12 +423,14 @@ try{
                                         foreach ($objPlaca->getObjsAmostras() as $amostra) {
                                             if ($amostra->getNickname() == trim(strtoupper($_POST[$strPosicao]))) {
                                                 $encontrou = true;
+                                                //$idTubo = $amostra->getObjTubo()->getIdTubo();
                                             }
                                         }
                                         if (!$encontrou) {
                                             $arr_errors[] = $_POST[$strPosicao];
                                             $alert .= Alert::alert_danger("O código informado -" . trim(strtoupper($_POST[$strPosicao])) . "- não é o de uma amostra válida para essa placa");
                                         } else {
+                                            //$pocoPlaca->getObjPoco()->setIdTuboFk($idTubo);
                                             $pocoPlaca->getObjPoco()->setConteudo(trim(strtoupper($_POST[$strPosicao])));
                                         }
                                     }
@@ -742,7 +743,6 @@ try{
             }
         }
 
-
     }
 
 
@@ -801,12 +801,59 @@ try{
 
         if($objPlaca->getSituacaoPlaca() != PlacaRN::$STA_INVALIDA) {
 
+           // echo "<pre>";
+           // print_r($objPlaca);
+           // echo "</pre>";
+
+            foreach ($objPlaca->getObjsAmostras() as $amostra){
+
+                foreach ($objPlaca->getObjsPocosPlacas() as $pocoPlaca){
+                    $poco = $pocoPlaca->getObjPoco();
+
+                    if($amostra->getNickname() == $poco->getConteudo()){
+
+
+                        $objTubo = new Tubo();
+                        $objTubo->setIdTubo_fk($amostra->getObjTubo()->getIdTubo());
+                        $objTubo->setTipo($amostra->getObjTubo()->getTipo());
+                        $objTubo->setTuboOriginal('n');
+                        $objTubo->setIdAmostra_fk($amostra->getIdAmostra());
+
+
+                        $objInfosTubo = new InfosTubo();
+                        $objInfosTubo->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+                        //$objInfosTubo->setIdTubo_fk($reg['idTubo_fk']);
+                        $objInfosTubo->setEtapa(InfosTuboRN::$TP_RTqPCR_MONTAGEM_PLACA);
+                        $objInfosTubo->setEtapaAnterior(InfosTuboRN::$TP_RTqPCR_MIX_PLACA);
+                        $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
+                        $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
+                        $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_NO_POCO);
+                        $objTubo->setObjInfosTubo($objInfosTubo);
+
+                        $poco->setObjTubo($objTubo);
+                        $arr_pocos_alterados[] = $poco;
+                        $arr_tubos_novos[] = $objTubo;
+                    }
+                }
+            }
+
+            /*
+            echo "<pre>";
+            print_r($arr_pocos_alterados);
+            echo "</pre>";
+            */
+
+           // die();
+
             /*echo "<pre>";
             print_r($arr_alteracoes);
             echo "</pre>";*/
 
+
+
             $objMontagemPlaca->setIdMontagem($_GET['idMontagem']);
             $objMontagemPlaca = $objMontagemPlacaRN->consultar($objMontagemPlaca);
+            $objMontagemPlaca->setObjPocos($arr_pocos_alterados);
 
             if ($objMontagemPlaca->getSituacaoMontagem() != MontagemPlacaRN::$STA_MONTAGEM_FINALIZADA) {
                 $objMontagemPlaca->setDataHoraFim(date("Y-m-d H:i:s"));
@@ -849,6 +896,8 @@ try{
                     $objInfosTuboAux->setObjLocal($arr_alteracoes[$i]->getObjLocal());
                     $arr_infos[1] = $objInfosTuboAux;
 
+                    //para cada um criar quantos tubos forem equivalentes as ocorrencias na placa
+
                 }
 
                 $arr_alteracoes[] = $arr_infos[0];
@@ -859,6 +908,7 @@ try{
                 print_r($arr_alteracoes);
                 echo "</pre>";
                 */
+
                 $objPlaca->setSituacaoPlaca(PlacaRN::$STA_MONTAGEM_FINALIZADA);
                 $objPlaca->setObjProtocolo(null);
                 $objPlaca->setObjsTubos(null);
@@ -871,12 +921,19 @@ try{
                 $objMontagemPlaca->setObjMix($objMix);
                 $objMontagemPlaca->setObjInfosTubo($arr_alteracoes);
                 $objMontagemPlaca->setSituacaoMontagem(MontagemPlacaRN::$STA_MONTAGEM_FINALIZADA);
+
+                /*
+                echo "<pre>";
+                print_r($objMontagemPlaca);
+                echo "</pre>";
+                */
+
                 $objMontagemPlaca = $objMontagemPlacaRN->alterar($objMontagemPlaca);
                 $alert .= Alert::alert_success("A montagem foi salva");
                 $liberar_popUp = 's';
 
-                //header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_montagem_placa_RTqPCR'));
-                //die();
+                header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_montagem_placa_RTqPCR'));
+                die();
             }else{
                 $alert .= Alert::alert_warning("A montagem da placa já foi finalizada");
             }

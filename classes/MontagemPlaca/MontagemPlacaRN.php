@@ -141,6 +141,26 @@ class MontagemPlacaRN
             $this->validarSituacaoMontagem($objMontagemPlaca,$objExcecao);
             $objExcecao->lancar_validacoes();
 
+            if($objMontagemPlaca->getObjPocos() != null){
+
+                $objTubo = new Tubo;
+                $objTuboRN = new TuboRN();
+                $objInfosTuboRN = new InfosTuboRN();
+                $objPocoRN = new PocoRN();
+                if(is_array($objMontagemPlaca->getObjPocos())){
+                    foreach ($objMontagemPlaca->getObjPocos() as $poco){
+                        $infosTubo = $poco->getObjTubo()->getObjInfosTubo();
+                        $objTubo = $objTuboRN->cadastrar($poco->getObjTubo());
+                        $poco->setIdTuboFk($objTubo->getIdTubo());
+                        //$infosTubo->setIdTuboFk($objTubo->getIdTubo());
+                        $objPoco = $objPocoRN->alterar($poco);
+                        //$objInfosTuboRN->cadastrar($infosTubo);
+                    }
+                }
+
+            }
+            
+
             if($objMontagemPlaca->getObjInfosTubo() != null){
                 if(is_array($objMontagemPlaca->getObjInfosTubo())){
                     $contador = 0;

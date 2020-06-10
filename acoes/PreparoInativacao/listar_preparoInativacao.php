@@ -12,36 +12,56 @@ try {
     require_once __DIR__.'/../../classes/Excecao/Excecao.php';
     require_once __DIR__.'/../../utils/Alert.php';
 
-    require_once __DIR__.'/../../classes/Amostra/Amostra.php';
-    require_once __DIR__.'/../../classes/Amostra/AmostraRN.php';
+    require_once __DIR__ . '/../../classes/Capela/Capela.php';
+    require_once __DIR__ . '/../../classes/Capela/CapelaRN.php';
+    require_once __DIR__ . '/../../classes/Capela/CapelaINT.php';
 
-    require_once __DIR__.'/../../classes/PerfilPaciente/PerfilPaciente.php';
-    require_once __DIR__.'/../../classes/PerfilPaciente/PerfilPacienteRN.php';
+    require_once _DIR__ . '/../../classes/Pagina/InterfacePagina.php';
+    require_once _DIR__ . '/../../classes/Tipo/Tipo.php';
 
-    require_once __DIR__.'/../../classes/Tubo/Tubo.php';
-    require_once __DIR__.'/../../classes/Tubo/TuboRN.php';
+    require_once __DIR__ . '/../../classes/Amostra/Amostra.php';
+    require_once __DIR__ . '/../../classes/Amostra/AmostraRN.php';
 
-    require_once __DIR__.'/../../classes/Paciente/Paciente.php';
-    require_once __DIR__.'/../../classes/Paciente/PacienteRN.php';
+    require_once __DIR__ . '/../../classes/Tubo/Tubo.php';
+    require_once __DIR__ . '/../../classes/Tubo/TuboRN.php';
 
-    require_once __DIR__.'/../../classes/InfosTubo/InfosTubo.php';
-    require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
+    require_once __DIR__ . '/../../classes/InfosTubo/InfosTubo.php';
+    require_once __DIR__ . '/../../classes/InfosTubo/InfosTuboRN.php';
 
-    require_once __DIR__ . '/../../classes/PreparoLote/PreparoLote.php';
-    require_once __DIR__ . '/../../classes/PreparoLote/PreparoLoteRN.php';
+    require_once __DIR__ . '/../../utils/Utils.php';
+    require_once __DIR__ . '/../../utils/Alert.php';
 
     require_once __DIR__ . '/../../classes/Lote/Lote.php';
     require_once __DIR__ . '/../../classes/Lote/LoteRN.php';
-    require_once __DIR__ . '/../../classes/Lote/LoteINT.php';
 
-    require_once __DIR__.'/../../classes/Capela/Capela.php';
-    require_once __DIR__.'/../../classes/Capela/CapelaRN.php';
+    require_once __DIR__ . '/../../classes/PreparoLote/PreparoLote.php';
+    require_once __DIR__ . '/../../classes/PreparoLote/PreparoLoteRN.php';
+    require_once __DIR__ . '/../../classes/PreparoLote/PreparoLoteINT.php';
 
-    require_once __DIR__.'/../../classes/KitExtracao/KitExtracao.php';
-    require_once __DIR__.'/../../classes/KitExtracao/KitExtracaoRN.php';
-    require_once __DIR__.'/../../classes/KitExtracao/KitExtracaoINT.php';
+    require_once __DIR__ . '/../../classes/Rel_perfil_preparoLote/Rel_perfil_preparoLote.php';
+    require_once __DIR__ . '/../../classes/Rel_perfil_preparoLote/Rel_perfil_preparoLote_RN.php';
 
-    require_once __DIR__ . '/../../classes/Pesquisa/PesquisaINT.php';
+    require_once __DIR__ . '/../../classes/Rel_tubo_lote/Rel_tubo_lote.php';
+    require_once __DIR__ . '/../../classes/Rel_tubo_lote/Rel_tubo_lote_RN.php';
+
+    require_once __DIR__ . '/../../classes/PerfilPaciente/PerfilPaciente.php';
+    require_once __DIR__ . '/../../classes/PerfilPaciente/PerfilPacienteRN.php';
+
+
+    require_once __DIR__ . '/../../classes/LocalArmazenamento/LocalArmazenamento.php';
+    require_once __DIR__ . '/../../classes/LocalArmazenamento/LocalArmazenamentoRN.php';
+
+    require_once __DIR__ . '/../../classes/TipoLocalArmazenamento/TipoLocalArmazenamento.php';
+    require_once __DIR__ . '/../../classes/TipoLocalArmazenamento/TipoLocalArmazenamentoRN.php';
+
+    require_once __DIR__ . '/../../classes/LocalArmazenamentoTexto/LocalArmazenamentoTexto.php';
+    require_once __DIR__ . '/../../classes/LocalArmazenamentoTexto/LocalArmazenamentoTextoRN.php';
+
+    require_once __DIR__. '/../../classes/KitExtracao/KitExtracao.php';
+    require_once __DIR__. '/../../classes/KitExtracao/KitExtracaoRN.php';
+    require_once __DIR__. '/../../classes/KitExtracao/KitExtracaoINT.php';
+
+    require_once __DIR__. '/../../classes/Pesquisa/PesquisaINT.php';
 
     Sessao::getInstance()->validar();
 
@@ -208,7 +228,9 @@ try {
         echo "</pre>";
     */
 
+
     foreach ($arrPreparos as $preparo) {
+
         $objLote = $preparo->getObjLote();
         $strTubos = '';
         $strAmostras = '';
@@ -216,20 +238,22 @@ try {
         $contadorAmostra = 0;
         foreach($objLote->getObjRelTuboLote() as $tubo){
             $strTubos .= $tubo->getIdTubo_fk().",";
-            $contador++;
-            if($contador == 5){
+            /*$contador++;
+            if($contador == 3){
                 $strTubos .= "\n";
                 $contador = 0;
-            }
+            }*/
 
 
             foreach ($tubo->getObjTubo() as $amostra) {
-                $strAmostras .= $amostra->getNickname() . ",";
-                $contadorAmostra++;
-                if ($contadorAmostra == 5) {
+                $strAmostras .=  $amostra->getNickname().','; //."(".TuboRN::mostrarDescricaoTipoTubo($amostra->getObjTubo()->getTipo())."),\n";
+                //$contadorAmostra++;
+                /*if ($contadorAmostra == 3) {
                     $contadorAmostra = 0;
                     $strAmostras .= "\n";
-                }
+                }*/
+
+                // $arr_tipos[] = $amostra->getObjTubo()->getTipo();
             }
         }
 
@@ -248,7 +272,7 @@ try {
         if($preparo->getObjLoteOriginal() != null) {
             $html .= '    <th scope="row" >' . LoteRN::$TL_PREPARO . Pagina::formatar_html($preparo->getObjLoteOriginal()->getIdLote()) . '</th>';
         }ELSE{
-            $html .= '<td> .. </td>';
+            $html .= '<td> - </td>';
         }
 
         $html .= '<td>' . LoteRN::$TL_EXTRACAO.Pagina::formatar_html($preparo->getObjLote()->getIdLote()) . '</td>';
@@ -279,9 +303,20 @@ try {
         }
         $html .= '    <td>' . Pagina::formatar_html($preparo->getNomeResponsavel())." ".$idResp . '</td>';
 
+
         $html .='   <td>' . Pagina::formatar_html($preparo->getObjUsuario()->getMatricula()) . '</td>';
-        $html .='   <td>' . Pagina::formatar_html($preparo->getObjKitExtracao()->getNome()) . '</td>';
-        $html .='   <td>' . Pagina::formatar_html($preparo->getObjCapela()->getNumero()) . '</td>';
+
+        if($preparo->getObjKitExtracao() != null) {
+            $html .= '   <td>' . Pagina::formatar_html($preparo->getObjKitExtracao()->getNome()) . '</td>';
+        }else{
+            $html .= '   <td> - </td>';
+        }
+
+        if($preparo->getObjCapela() != null) {
+            $html .= '   <td>' . Pagina::formatar_html($preparo->getObjCapela()->getNumero()) . '</td>';
+        }else{
+            $html .= '   <td>  - </td>';
+        }
 
         $dataHoraInicio = explode(" ", $preparo->getDataHoraInicio());
         $data = explode("-", $dataHoraInicio[0]);

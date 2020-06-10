@@ -67,10 +67,9 @@ class DetentorRN{
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
             $objDetentorBD = new DetentorBD();
-            $this->validarDetentor($detentor,$objExcecao); 
-             
-            
-            
+
+            $this->validarDetentor($detentor,$objExcecao);
+
             $objExcecao->lancar_validacoes();
             $detentor = $objDetentorBD->cadastrar($detentor,$objBanco);
 
@@ -120,7 +119,6 @@ class DetentorRN{
             return $arr;
         }catch (Throwable $e){
             $objBanco->cancelarTransacao();
- 
             throw new Excecao('Erro consultando o detentor.',$e);
         }
     }
@@ -146,7 +144,7 @@ class DetentorRN{
         }
     }
 
-    public function listar(Detentor $detentor) {
+    public function listar(Detentor $detentor,$numLimite = null) {
         $objBanco = new Banco();
         try{
             $objExcecao = new Excecao();
@@ -155,7 +153,7 @@ class DetentorRN{
             $objExcecao->lancar_validacoes();
             $objDetentorBD = new DetentorBD();
             
-            $arr = $objDetentorBD->listar($detentor,$objBanco);
+            $arr = $objDetentorBD->listar($detentor,$numLimite,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();

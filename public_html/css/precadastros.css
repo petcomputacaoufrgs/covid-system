@@ -48,6 +48,14 @@
     border: none;
 }
 
+.verificarAmostras
+{
+    background: rgba(255,0,0,1);
+    color: white;
+    text-align: center;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
 .conteudo_grande{
     /*background-color: black;*/
     width: 98%;

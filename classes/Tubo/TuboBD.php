@@ -233,9 +233,9 @@ class TuboBD{
                     $objTubo->setTuboOriginal($reg['tuboOriginal']);
                     $objTubo->setTipo($reg['tipo']);
 
+
                     $objAmostra = new Amostra();
                     $objAmostraRN = new AmostraRN();
-
                     $objAmostra->setIdAmostra($reg['idAmostra_fk']);
                     $arr_amostras = $objAmostraRN->listar_completo($objAmostra,null);
 

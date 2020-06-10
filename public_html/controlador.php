@@ -18,7 +18,15 @@ switch ($_GET['action']):
         break;
 
     case 'usuario_naoEncontrado':
-        require_once '../acoes/PaginaUserNotFound.php';
+        require_once '../acoes/Erros/401.php';
+        break;
+
+    case 'nao_encontrado':
+        require_once '../acoes/Erros/404.php';
+        break;
+
+    case 'acesso_negado':
+        require_once '../acoes/Erros/401.php';
         break;
 
     case 'login':
@@ -564,8 +572,26 @@ switch ($_GET['action']):
         require_once '../acoes/RTqPCR/imprimir_montagem_placa_RTqPCR.php';
         break;
 
+    case 'analisar_RTqPCR':
+        require_once '../acoes/RTqPCR/analise_RTqPCR.php';
+        break;
+
+    case 'listar_analise_RTqPCR':
+        require_once '../acoes/RTqPCR/listar_analise_RTqPCR.php';
+        break;
+
+    case 'finalizar_RTqPCR':
+        require_once '../acoes/RTqPCR/finalizacao_RTqPCR.php';
+        break;
+
+    case 'verificar_amostras':
+        require_once '../acoes/RTqPCR/acabouTempo.php';
+        break;
 
 
 
-    default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador geral.');
+
+    default :
+        header('Location: controlador.php?action=nao_encontrado');
+        die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador geral.');
 endswitch;

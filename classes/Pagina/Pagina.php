@@ -80,7 +80,7 @@ class Pagina {
            <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <div class="mx-auto d-sm-flex d-block flex-sm-nowrap">
 
-                <a class="navbar-brand" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">Tela Inicial<i class="fas fa-virus"></i></a>
+                <a class="navbar-brand" style="border: none;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">Tela Inicial<i class="fas fa-virus"></i></a>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -176,12 +176,13 @@ class Pagina {
                         <!--<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />-->
                         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
                         
-                        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+                         <script src="js/jquery.min.js"></script>
+                        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
                         <!-- Font Awesome --><!-- NÃO REMOVER SENÃO NÃO APARECEM OS ÍCONES -->
                         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
 
-                        <script src="../../public_html/css/bootstrap-combined.min.css"></script>
+                        <!--<script src="css/bootstrap-combined.min.css"></script>-->
                         
                         <!-- HTML5Shiv -->
                         <!--[if lt IE 9]>
@@ -193,7 +194,8 @@ class Pagina {
                         <!-- Bootstrap CSS -->
                         <!--<link rel="stylesheet" href="css/bootstrap.min.css">-->
 
-                        <script src="js/jquery-3.3.1.slim.min.js"></script>
+                        <!--<script src="js/jquery-3.3.1.slim.min.js"></script>-->
+                       
                         <script src="js/popper.min.js"></script>
                         <script src="js/bootstrap.min.js"></script>
                         
@@ -277,21 +279,40 @@ class Pagina {
                         }  
 
                         </style>
-                                                
+                        
+                                                                     
                         <!-- google fonts -->
-                        <link href="https://fonts.googleapis.com/css?family=Baloo+Chettan+2&display=swap" rel="stylesheet">'
+                        <link href="https://fonts.googleapis.com/css?family=Baloo+Chettan+2&display=swap" rel="stylesheet">';
 
-        ;
+                        if(isset($_GET['action']) && $_GET['action'] !=  'login') {
+                            echo '<script type="text/javascript">
+                                        //$( document ).ready(function() {
+                                        //  alert( "ready!" );
+                                        setInterval(verificarAmostras, 3000);
+                                    //});
+                            
+                                    function verificarAmostras(){
+                                        $.ajax({url: "' . Sessao::getInstance()->assinar_link('controlador.php?action=verificar_amostras') . '", success: function(result){
+                                            //alert(result);
+                                            document.getElementById("idResultadoRTQPCR").classList.add("verificarAmostras");
+                                            document.getElementById("idResultadoRTQPCR").innerHTML = "Finalização do RTqPCR <a href=\"' . Sessao::getInstance()->assinar_link("controlador.php?action=listar_analise_RTqPCR") . '\">aqui</a>"';
+                            echo '          }});
+                                    }
+                                </script>';
+                        }
     }
 
     public  function fechar_head() {
         echo '</head>
-                    
-                      
+                                         
                     <body>
-
+                     <div id="idResultadoRTQPCR" class="">
+                         
+                       </div>
                     <!--<a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" >-->
-                         <img src="img/header.png" class="HeaderImg"></a>';
+                         <img src="img/header.png" class="HeaderImg"></a>
+                         
+                         ';
 
     }
 
@@ -407,6 +428,8 @@ class Pagina {
         echo '              </div>';
           echo '        </form>
             </div>';
+            
+
 
     }
 }

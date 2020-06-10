@@ -1,7 +1,9 @@
 <?php 
 session_start();
+
 require_once __DIR__.'/../classes/Pagina/Pagina.php';
 require_once __DIR__.'/../classes/Sessao/Sessao.php';
+
 try {
 //Sessao::getInstance()->logar('00274715','12345678');
     if (isset($_POST['login-submit'], $_POST['cartaoufrgs'], $_POST['pwd'])) {
@@ -12,19 +14,17 @@ try {
 }
 
 session_destroy();
-?>
-
-<?php
 
     Pagina::abrir_head("Login - Processo de tratamento de amostras para diagnóstico de COVID-19");
     Pagina::getInstance()->adicionar_css("style");
     //Pagina::getInstance()->adicionar_javascript();
 
     ?>
+
+
     <img src="img/header.png" class="HeaderImg">
     </head>
     <BODY>
-   
 
 
     <main>

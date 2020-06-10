@@ -77,6 +77,12 @@ class PlacaBD
                 $arrayBind[] = array('s', $objPlaca->getIndexPlaca());
             }
 
+            if ($objPlaca->getSituacaoPlaca() != null) {
+                $WHERE .= $AND . " situacaoPlaca = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPlaca->getSituacaoPlaca());
+            }
+
 
             if ($WHERE != '') {
                 $WHERE = ' where ' . $WHERE;
@@ -107,6 +113,84 @@ class PlacaBD
             return $array_placa;
         } catch (Throwable $ex) {
             throw new Excecao("Erro listando as placas no BD.",$ex);
+        }
+
+    }
+
+    public function listar_completo(Placa $objPlaca, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT * FROM tb_placa";
+
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($objPlaca->getIdProtocoloFk() != null) {
+                $WHERE .= $AND . " idProtocolo_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objPlaca->getIdProtocoloFk());
+            }
+
+            if ($objPlaca->getIdPlaca() != null) {
+                $WHERE .= $AND . " idPlaca = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objPlaca->getIdPlaca());
+            }
+
+            if ($objPlaca->getIndexPlaca() != null) {
+                $WHERE .= $AND . " index_placa = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPlaca->getIndexPlaca());
+            }
+
+            if ($objPlaca->getSituacaoPlaca() != null) {
+                $WHERE .= $AND . " situacaoPlaca = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPlaca->getSituacaoPlaca());
+            }
+
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
+
+
+            $array_placa = array();
+            foreach ($arr as $reg){
+                $placa = new Placa();
+                $placa->setIdPlaca($reg['idPlaca']);
+                $placa->setPlaca($reg['placa']);
+                $placa->setIdProtocoloFk($reg['idProtocolo_fk']);
+                $placa->setIndexPlaca($reg['index_placa']);
+                $placa->setSituacaoPlaca($reg['situacaoPlaca']);
+
+                $objProtocolo = new Protocolo();
+                $objProtocoloRN = new ProtocoloRN();
+                $objProtocolo->setIdProtocolo($placa->getIdProtocoloFk());
+                $objProtocolo = $objProtocoloRN->consultar($objProtocolo);
+                $placa->setObjProtocolo($objProtocolo);
+
+                $objRelTuboPlaca = new RelTuboPlaca();
+                $objRelTuboPlacaRN = new RelTuboPlacaRN();
+                $objRelTuboPlaca->setIdPlacaFk($placa->getIdPlaca());
+                $arr_tubos = $objRelTuboPlacaRN->listar_completo($objRelTuboPlaca);
+                $placa->setObjsTubos($arr_tubos);
+
+                $objRelPerfilPlaca = new RelPerfilPlaca();
+                $objRelPerfilPlacaRN = new RelPerfilPlacaRN();
+                $objRelPerfilPlaca->setIdPlacaFk($placa->getIdPlaca());
+                $arr_perfis = $objRelPerfilPlacaRN->listar($objRelPerfilPlaca);
+                $placa->setObjRelPerfilPlaca($arr_perfis);
+
+                $array_placa[] = $placa;
+            }
+            return $array_placa;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando as placas completas no BD.",$ex);
         }
 
     }

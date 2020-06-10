@@ -164,7 +164,7 @@ class MontagemPlacaBD
                 $inicio = 0;
             }
 
-            $SELECT = "SELECT * FROM tb_montagem_placa";
+            $SELECT = "SELECT SQL_CALC_FOUND_ROWS * FROM tb_montagem_placa";
 
             $FROM = '';
             $WHERE = '';

@@ -45,6 +45,11 @@ try {
     require_once __DIR__ . '/../../classes/KitExtracao/KitExtracao.php';
     require_once __DIR__ . '/../../classes/KitExtracao/KitExtracaoRN.php';
 
+    require_once __DIR__ . '/../../classes/LocalArmazenamentoTexto/LocalArmazenamentoTexto.php';
+    require_once __DIR__ . '/../../classes/LocalArmazenamentoTexto/LocalArmazenamentoTextoRN.php';
+
+    require_once __DIR__. '/../../classes/KitExtracao/KitExtracaoINT.php';
+
 
 
     Sessao::getInstance()->validar();
@@ -58,6 +63,7 @@ try {
     $error = '';
     $arrAmostras_pesquisa = array();
     $disabled = '';$onchange ='';
+
 
     /* AMOSTRA */
     $objAmostra = new Amostra();
@@ -181,6 +187,8 @@ try {
 
     /* FIM PESQUISA */
 
+
+
     $arrPreparos = $objPreparoLoteRN->paginacao($objPreparoLote);
     $alert .= Alert::alert_info("Foram encontrados ".$objPreparoLote->getTotalRegistros()." lotes");
 
@@ -214,25 +222,29 @@ try {
         $contadorAmostra = 0;
         foreach($objLote->getObjRelTuboLote() as $tubo){
             $strTubos .= $tubo->getIdTubo_fk().",";
-            $contador++;
-            if($contador == 5){
+            /*$contador++;
+            if($contador == 3){
                 $strTubos .= "\n";
                 $contador = 0;
-            }
+            }*/
 
 
             foreach ($tubo->getObjTubo() as $amostra) {
-                $strAmostras .= $amostra->getNickname() . ",";
-                $contadorAmostra++;
-                if ($contadorAmostra == 5) {
+                $strAmostras .=  $amostra->getNickname() ."(".TuboRN::mostrarDescricaoTipoTubo($amostra->getObjTubo()->getTipo())."),\n";
+                //$contadorAmostra++;
+                /*if ($contadorAmostra == 3) {
                     $contadorAmostra = 0;
                     $strAmostras .= "\n";
-                }
+                }*/
+
+               // $arr_tipos[] = $amostra->getObjTubo()->getTipo();
             }
         }
 
+        //print_r($arr_tipos);
+
         $strTubos = substr($strTubos, 0,-1);
-        $strAmostras = substr($strAmostras, 0,-1);
+        $strAmostras = substr($strAmostras, 0,-2);
 
 
         $style_linha = '';

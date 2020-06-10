@@ -41,7 +41,7 @@ try{
         }
 
         if(Sessao::getInstance()->verificar_permissao('remover_perfilUsuario')) {
-            $html .= ' <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_perfilUsuario&idPerfilUsuario=' . Pagina::formatar_html($pu->getIdPerfilUsuario())) . '"><i class="fas fa-trash-alt"></a></td>';
+            $html .= ' <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_perfilUsuario&idPerfilUsuario=' . Pagina::formatar_html($pu->getIdPerfilUsuario())) . '"><i class="fas fa-trash-alt"></i></a></td>';
         }
         $html .= '</tr>';
     }

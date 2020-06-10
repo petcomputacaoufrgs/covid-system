@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 require_once '../classes/Sessao/Sessao.php';
 require_once '../classes/Pagina/Pagina.php';
@@ -12,6 +12,7 @@ $objUsuario = new Usuario();
 $objUsuarioRN = new UsuarioRN();
 $objUsuario->setIdUsuario(Sessao::getInstance()->getIdUsuario());
 $objUsuario = $objUsuarioRN->consultar($objUsuario);
+//print_r($objUsuario);
 
 
 Pagina::getInstance()->abrir_head("Processo de tratamento de amostras para diagnóstico de COVID-19"); 
@@ -302,6 +303,42 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
             </div>
         </div>
 
+
+        <div class="conjunto_itens" STYLE="margin-top: 10px;">
+            <div class="row">
+                <?php
+
+
+                if(Sessao::getInstance()->verificar_permissao('listar_equipamento')  ||
+                    Sessao::getInstance()->verificar_permissao('analisar_RTqPCR') ||
+                    Sessao::getInstance()->verificar_permissao('finalizar_RTqPCR')) {
+                    echo '<div class="col-md-2">
+                        <h5>Etapa RTqPCR</h5>
+                        </div>';
+                }
+
+                if(Sessao::getInstance()->verificar_permissao('listar_equipamento')){
+                    echo '<div class="col-md-4">
+                             <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_equipamento').'">EQUIPAMENTOS DE RTQPCR</a>'
+                        . '</div>';
+                }
+
+                if(Sessao::getInstance()->verificar_permissao('analisar_RTqPCR')){
+                    echo '<div class="col-md-3">
+                             <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=analisar_RTqPCR').'">ANÁLISE RTQPCR</a>'
+                        . '</div>';
+                }
+
+                if(Sessao::getInstance()->verificar_permissao('finalizar_RTqPCR')){
+                    echo '<div class="col-md-3">
+                             <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=finalizar_RTqPCR').'">FINALIZAR RTQPCR</a>'
+                        . '</div>';
+                }
+
+                ?>
+            </div>
+        </div>
+
         <div class="conjunto_itens" STYLE="margin-top: 10px;">
             <div class="row">
 
@@ -420,7 +457,6 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
 
 
 
-
         <div class="conjunto_itens">
             <div class="row">
 
@@ -501,14 +537,7 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                     } 
               ?>
               
-              <?php 
-                    // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-                    if(Sessao::getInstance()->verificar_permissao('listar_equipamento')){ 
-                         /* echo '<div class="col-md-2">
-                                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_equipamento').'">EQUIPAMENTO</a>'
-                                  . '</div>';*/
-                    } 
-              ?>
+
              
               <?php 
                     if(Sessao::getInstance()->verificar_permissao('listar_marca')){

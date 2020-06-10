@@ -18,7 +18,8 @@ class MarcaBD{
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objMarca->setIdMarca($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+            return $objMarca;
+        } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando marca  no BD.",$ex);
         }
         
@@ -38,32 +39,57 @@ class MarcaBD{
             $arrayBind[] = array('i',$objMarca->getIdMarca());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
+            return $objMarca;
 
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro alterando marca no BD.",$ex);
         }
        
     }
     
-     public function listar(Marca $objMarca, Banco $objBanco) {
+     public function listar(Marca $objMarca,$numLimite=null, Banco $objBanco) {
          try{
       
             $SELECT = "SELECT * FROM tb_marca";
 
+             $WHERE = '';
+             $AND = '';
+             $arrayBind = array();
+             if($objMarca->getIndex_marca() != null){
+                 $WHERE .= $AND." index_marca = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('s',$objMarca->getIndex_marca());
+             }
 
-            $arr = $objBanco->consultarSQL($SELECT);
+             if($objMarca->getIdMarca() != null){
+                 $WHERE .= $AND." idMarca = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('i',$objMarca->getIdMarca() );
+             }
 
+
+             if($WHERE != ''){
+                 $WHERE = ' where '.$WHERE;
+             }
+
+             $LIMIT = '';
+             if(!is_null($numLimite)){
+                 $LIMIT = ' LIMIT ?';
+                 $arrayBind[] = array('i',$numLimite);
+             }
+
+             $arr = $objBanco->consultarSQL($SELECT.$WHERE.$LIMIT,$arrayBind);
             $array_marca = array();
             foreach ($arr as $reg){
-                $objMarca = new Marca();
-                $objMarca->setIdMarca($reg['idMarca']);
-                $objMarca->setMarca($reg['marca']);
-                $objMarca->setIndex_marca($reg['index_marca']);
+                $marca = new Marca();
+                $marca->setIdMarca($reg['idMarca']);
+                $marca->setMarca($reg['marca']);
+                $marca->setIndex_marca($reg['index_marca']);
 
-                $array_marca[] = $objMarca;
+                $array_marca[] = $marca;
             }
             return $array_marca;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando marca no BD.",$ex);
         }
        
@@ -86,7 +112,7 @@ class MarcaBD{
             $marca->setIndex_marca($arr[0]['index_marca']);
 
             return $marca;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
        
             throw new Excecao("Erro consultando marca no BD.",$ex);
         }
@@ -102,7 +128,7 @@ class MarcaBD{
             $arrayBind[] = array('i',$objMarca->getIdMarca());
             $objBanco->executarSQL($DELETE, $arrayBind);
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo marca no BD.",$ex);
         }
     }
@@ -132,7 +158,7 @@ class MarcaBD{
             }
              return $arr_marcas;
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro pesquisando marca no BD.",$ex);
         }
     }

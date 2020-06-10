@@ -7,8 +7,7 @@ class DetentorBD{
 
     public function cadastrar(Detentor $objDetentor, Banco $objBanco) {
         try{
-            //echo $objDetentor->getDetentor();
-            //die("die");
+
             $INSERT = 'INSERT INTO tb_detentor (detentor,index_detentor) VALUES (?,?)';
 
             $arrayBind = array();
@@ -27,7 +26,7 @@ class DetentorBD{
     
     public function alterar(Detentor $objDetentor, Banco $objBanco) {
         try{
-            //print_r($objDetentor);
+
             $UPDATE = 'UPDATE tb_detentor SET '
                     . ' detentor = ?,'
                     . ' index_detentor = ?'
@@ -47,7 +46,7 @@ class DetentorBD{
        
     }
     
-     public function listar(Detentor $objDetentor, Banco $objBanco) {
+     public function listar(Detentor $objDetentor,$numLimite=null, Banco $objBanco) {
          try{
       
             $SELECT = "SELECT * FROM tb_detentor";
@@ -61,18 +60,29 @@ class DetentorBD{
                 $AND = ' and '; 
                 $arrayBind[] = array('s',$objDetentor->getIndex_detentor());
             }
-            
+
+             if($objDetentor->getIdDetentor() != null){
+                 $WHERE .= $AND." idDetentor = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('i',$objDetentor->getIdDetentor() );
+             }
+
 
             if($WHERE != ''){
                 $WHERE = ' where '.$WHERE;
-            } 
-        
-            //echo $SELECT.$WHERE;$WHERE
+            }
 
-            $arr = $objBanco->consultarSQL($SELECT.$WHERE,$arrayBind);
-            
+             $LIMIT = '';
+             if(!is_null($numLimite)){
+                 $LIMIT = ' LIMIT ?';
+                 $arrayBind[] = array('i',$numLimite);
+             }
 
-            $array_detentor = array();
+             $arr = $objBanco->consultarSQL($SELECT.$WHERE.$LIMIT,$arrayBind);
+
+
+
+             $array_detentor = array();
             foreach ($arr as $reg){
                 $objDetentor = new Detentor();
                 $objDetentor->setIdDetentor($reg['idDetentor']);

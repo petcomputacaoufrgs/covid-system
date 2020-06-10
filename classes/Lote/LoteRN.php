@@ -205,7 +205,7 @@ class LoteRN{
 
             $objExcecao->lancar_validacoes();
             $objLoteBD = new LoteBD();
-            $lote = $objLoteBD->cadastrar($lote,$objBanco);
+            $objLote = $objLoteBD->cadastrar($lote,$objBanco);
 
 
             $objRelTuboLote = new Rel_tubo_lote();
@@ -213,10 +213,16 @@ class LoteRN{
 
             //o lote para extração tem que validar coisas como lugar onde o tubo tá
             if($lote->getSituacaoLote() == LoteRN::$TE_AGUARDANDO_EXTRACAO && $lote->getObjsTubo() != null){
-
-                $objRelTuboLote->setIdLote_fk($lote->getIdLote());
-                $objRelTuboLote->setObjLote($lote);
+                $objRelTuboLote->setIdLote_fk($objLote->getIdLote());
+                $objRelTuboLote->setObjLote($objLote);
                 foreach ($lote->getObjsTubo() as $t) {
+                    if($t->getObjInfosTubo() != null){
+                        foreach ($t->getObjInfosTubo() as $info){
+                            $info->setIdLote_fk($objLote->getIdLote());
+                            $arr_info[] = $info;
+                        }
+                        $t->setObjInfosTubo($arr_info);
+                    }
                     $objTuboRN = new TuboRN();
                     $t = $objTuboRN->cadastrar($t); //tubos do novo lote de extração
                     $arr_tubos[] = $t;
@@ -226,8 +232,8 @@ class LoteRN{
                 $lote->setObjsTubo($arr_tubos);
             }
             else if($lote->getSituacaoLote() == LoteRN::$TE_NA_MONTAGEM) {
-                $objRelTuboLote->setIdLote_fk($lote->getIdLote());
-                $objRelTuboLote->setObjLote($lote);
+                $objRelTuboLote->setIdLote_fk($objLote->getIdLote());
+                $objRelTuboLote->setObjLote($objLote);
                 if ($lote->getObjsTubo() != null) {
                     foreach( $lote->getObjsTubo() as $tubo) {
                         $objInfosTuboRN = new InfosTuboRN();
@@ -236,11 +242,33 @@ class LoteRN{
                         $objRelTuboLoteRN->cadastrar($objRelTuboLote);
                     }
                 }
-            }else{
+            }
+            else if($lote->getSituacaoLote() == LoteRN::$TE_EM_EXTRACAO) {
+
+                //primeiro remover dos outros lotes os tubos que foram escolhidos aqui
+                if($lote->getObjRelTuboLote() != null) {
+                    foreach( $lote->getObjRelTuboLote() as $rel) {
+                        $objRelTuboLoteRN->remover($rel);
+                    }
+                }
+
+
+                $objRelTuboLote->setIdLote_fk($objLote->getIdLote());
+                $objRelTuboLote->setObjLote($objLote);
+                if ($lote->getObjsTubo() != null) {
+                    foreach( $lote->getObjsTubo() as $tubo) {
+                        $objInfosTuboRN = new InfosTuboRN();
+                        $objInfosTuboRN->cadastrar($tubo->getObjInfosTubo());
+                        $objRelTuboLote->setIdTubo_fk($tubo->getIdTubo());
+                        $objRelTuboLoteRN->cadastrar($objRelTuboLote);
+                    }
+                }
+            }
+            else{
                     if ($lote->getObjsTubo() != null) {
 
-                        $objRelTuboLote->setIdLote_fk($lote->getIdLote());
-                        $objRelTuboLote->setObjLote($lote);
+                        $objRelTuboLote->setIdLote_fk($objLote->getIdLote());
+                        $objRelTuboLote->setObjLote($objLote);
                         foreach ($lote->getObjsTubo() as $t) {
 
                             $objInfosTubo = new InfosTubo();
@@ -279,7 +307,7 @@ class LoteRN{
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $lote;
+            return $objLote;
         }catch(Throwable $e){
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro no cadastramento do lote.', $e);

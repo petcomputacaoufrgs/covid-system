@@ -115,11 +115,13 @@ class PreparoLoteRN
             $this->validarNomeResponsavel($preparoLote,$objExcecao);
             $this->validarIdResponsavel($preparoLote,$objExcecao);
 
+            $objExcecao->lancar_validacoes();
             if($preparoLote->getObjLote() != null){
                 if($preparoLote->getObjLote()->getIdLote() == null){ //cadastrar lote
                     $objLote =$preparoLote->getObjLote();
                     $objLoteRN = new LoteRN();
                     $objLote =  $objLoteRN->cadastrar($objLote);
+                    $preparoLote->setObjLote($objLote);
 
                 }else{ //alterar lote
 
@@ -150,6 +152,7 @@ class PreparoLoteRN
                 //cadastrar tubo especial que vai chamar um infos tubo especial
 
                     foreach ($preparoLote->getObjsTubosCadastro() as $t) {
+
                         $objTuboRN = new TuboRN();
                         $t = $objTuboRN->cadastrar($t);
                         $arr_tubos_cadastrados[] = $t;
@@ -160,7 +163,7 @@ class PreparoLoteRN
 
 
 
-            $objExcecao->lancar_validacoes();
+
             $objPreparoLoteBD = new PreparoLoteBD();
             if($preparoLote->getObjLote() != null) {
                 $preparoLote = $objPreparoLoteBD->cadastrar($preparoLote, $objBanco);
