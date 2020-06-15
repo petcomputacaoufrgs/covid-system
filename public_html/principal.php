@@ -78,7 +78,7 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
 
         <div class="conjunto_itens">
             <div class="row" style="text-align: center;">
-                <h5 style="padding-left10px;color: red;"> Banco de dados atualizado em 03/06/2020 - 20:55</h5>
+                <h5 style="padding-left10px;color: red;"> Banco de dados atualizado em 11/06/2020 - 14:02</h5>
             </div>
         </div>
 
@@ -328,6 +328,9 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
                              <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=analisar_RTqPCR').'">ANÁLISE RTQPCR</a>'
                         . '</div>';
                 }
+
+
+
 
                 if(Sessao::getInstance()->verificar_permissao('finalizar_RTqPCR')){
                     echo '<div class="col-md-3">

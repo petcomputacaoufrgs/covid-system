@@ -121,8 +121,8 @@ class Utils{
         }
 
         //usa gmmktime para evitar interferencia do horario de verao
-        $iniDate = gmmktime((int)$arrHoraIni[0], (int)$arrHoraIni[1], (int)$arrHoraIni[2], (int)$arrDataIni[1], (int)$arrDataIni[0], (int)$arrDataIni[2]);
-        $fimDate = gmmktime((int)$arrHoraFim[0], (int)$arrHoraFim[1], (int)$arrHoraFim[2], (int)$arrDataFim[1], (int)$arrDataFim[0], (int)$arrDataFim[2]);
+        $iniDate = gmmktime((int)$arrHoraIni[0], (int)$arrHoraIni[1], (int)$arrHoraIni[2], (int)$arrDataIni[1], (int)$arrDataIni[2], (int)$arrDataIni[0]);
+        $fimDate = gmmktime((int)$arrHoraFim[0], (int)$arrHoraFim[1], (int)$arrHoraFim[2], (int)$arrDataFim[1], (int)$arrDataFim[2], (int)$arrDataFim[0]);
 
         return $fimDate - $iniDate;
     }

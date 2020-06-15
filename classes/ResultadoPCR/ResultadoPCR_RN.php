@@ -108,7 +108,7 @@ class ResultadoPCR_RN
         }
     }
 
-    public function listar(ResultadoPCR $resultadoPCR) {
+    public function listar(ResultadoPCR $resultadoPCR,$numLimite = null) {
         $objBanco = new Banco();
         try{
 
@@ -118,7 +118,7 @@ class ResultadoPCR_RN
             $objExcecao->lancar_validacoes();
             $objResultadoPCR_BD = new ResultadoPCR_BD();
 
-            $arr = $objResultadoPCR_BD->listar($resultadoPCR,$objBanco);
+            $arr = $objResultadoPCR_BD->listar($resultadoPCR,$numLimite,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();

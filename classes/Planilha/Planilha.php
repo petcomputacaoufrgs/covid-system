@@ -7,16 +7,18 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../ResultadoPCR/ResultadoPCR.php';
 require_once __DIR__ . '/../ResultadoPCR/ResultadoPCR_RN.php';
 
+
 use \PhpOffice\PhpSpreadsheet\Reader;
-
-
-
 
 class Planilha {
 
     public function leituraXLS($fileName) {
-        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load("../../planilhas/" . $fileName);
-        $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify("../../planilhas/" . $fileName);
+
+        $currentDirectory = getcwd();
+        $uploadDirectory = "\planilhas\\";
+
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($currentDirectory . $uploadDirectory . $fileName);
+        $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($currentDirectory . $uploadDirectory . $fileName);
         $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
         $reader->setReadDataOnly(true);
         $reader->setLoadSheetsOnly(["Results"]);
@@ -47,21 +49,25 @@ class Planilha {
 
             //Cria o objeto para armazenar o resultado de APENAS UMA amostra
             $objetoResultado = new ResultadoPCR();
+            $objetoResultado->setNomePlanilha($fileName);
 
             $resultadoRN->configuraObjeto($objetoResultado, $valores);
 
             //debug propouse Only
             //Ao inves de print objeto, salva no  Banco de Dados
 
+            //$resultadoRN->printObjeto($objetoResultado, $pdf);
 
-            $resultadoRN->printObjeto($objetoResultado, $pdf);
+            $resultadoRN->cadastrar($objetoResultado);
 
-            echo "\n";
+            //echo "\n";
 
             $linha++;
         }
-        $pdf->Output();
+        //$pdf->Output();
+
     }
+
 }
 
 //debug propouse only

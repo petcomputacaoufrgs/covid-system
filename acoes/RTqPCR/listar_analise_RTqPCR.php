@@ -289,7 +289,7 @@ try {
         if ($RTqPCR->getSituacaoRTqPCR() == RTqPCR_RN::$STA_EM_ANDAMENTO) {
             $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=analisar_RTqPCR&idRTqPCR=' . Pagina::formatar_html($RTqPCR->getIdRTqPCR()) . '&idPlaca=' . Pagina::formatar_html($objPlaca->getIdPlaca()). '&idEquipamento=' . Pagina::formatar_html($objEquipamento->getIdEquipamento())) .'">'.$icon.'</td>';
         }else if ($RTqPCR->getSituacaoRTqPCR() == RTqPCR_RN::$STA_ATRASADO) {
-            $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=analisar_RTqPCR&idRTqPCR=' . Pagina::formatar_html($RTqPCR->getIdRTqPCR()) . '&idPlaca=' . Pagina::formatar_html($objPlaca->getIdPlaca()). '&idEquipamento=' . Pagina::formatar_html($objEquipamento->getIdEquipamento())) .'"><i class="fas fa-hourglass" style="color: red;"></i></td>';
+            $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=finalizar_RTqPCR&idRTqPCR=' . Pagina::formatar_html($RTqPCR->getIdRTqPCR()) . '&idPlaca=' . Pagina::formatar_html($objPlaca->getIdPlaca()). '&idEquipamento=' . Pagina::formatar_html($objEquipamento->getIdEquipamento())) .'"><i class="fas fa-hourglass" style="color: red;"></i></td>';
         }else{
             $html .= '<td ></td>';
         }
@@ -372,10 +372,10 @@ echo '<th  scope="col">AMOSTRAS</th>
                         <th scope="col">PREVISÃO DE TÉRMINO</th>
                         <th  scope="col">DATA HORA INÍCIO</th>
                         <th  scope="col">DATA HORA TÉRMINO</th>';
-if ($objRTqPCR->getSituacaoRTqPCR() == RTqPCR_RN::$STA_EM_ANDAMENTO) { echo '<th scope="col"></th>';}
-//if (Sessao::getInstance()->verificar_permissao('imprimir_montagem_placa_RTqPCR')) {echo '<th scope="col"></th>';}
-//if (Sessao::getInstance()->verificar_permissao('remover_montagem_placa_RTqPCR')) {echo '<th scope="col"></th>';}
-echo ' <!--<th scope="col"></th>-->
+                if ($objRTqPCR->getSituacaoRTqPCR() == RTqPCR_RN::$STA_EM_ANDAMENTO) { echo '<th scope="col"></th>';}
+                //if (Sessao::getInstance()->verificar_permissao('imprimir_montagem_placa_RTqPCR')) {echo '<th scope="col"></th>';}
+                //if (Sessao::getInstance()->verificar_permissao('remover_montagem_placa_RTqPCR')) {echo '<th scope="col"></th>';}
+                    echo '<th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>'

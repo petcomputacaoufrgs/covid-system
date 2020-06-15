@@ -12,6 +12,7 @@ class PocoRN
     //situcação do poço
     public static $STA_OCUPADO = 'O';
     public static $STA_LIBERADO = 'L';
+    public static $STA_OCUPADO_INVALIDO = 'I';
 
 
     public static function listarTipoSituacaoPoco(){
@@ -27,6 +28,11 @@ class PocoRN
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$STA_LIBERADO);
             $objSituacao->setStrDescricao('Poço liberado');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$STA_OCUPADO_INVALIDO);
+            $objSituacao->setStrDescricao('Poço ocupado por amostra incompatível');
             $arrObjTEtapa[] = $objSituacao;
 
             return $arrObjTStaPoco;

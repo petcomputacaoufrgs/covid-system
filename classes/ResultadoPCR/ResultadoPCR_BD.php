@@ -9,8 +9,8 @@ class ResultadoPCR_BD
     public function cadastrar(ResultadoPCR $objResultado, Banco $objBanco) {
         try{
 
-            $INSERT = 'INSERT INTO tb_resultado_rtqpcr (idResultado,well, sampleName, targetName,task,reporter,ct)
-                        VALUES (?,?,?,?,?,?,?)';
+            $INSERT = 'INSERT INTO tb_resultado_rtqpcr (idResultado,well, sampleName, targetName,task,reporter,ct,nomePlanilha)
+                        VALUES (?,?,?,?,?,?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objResultado->getIdResultado());
@@ -20,6 +20,7 @@ class ResultadoPCR_BD
             $arrayBind[] = array('s',$objResultado->getTask());
             $arrayBind[] = array('s',$objResultado->getReporter());
             $arrayBind[] = array('d',$objResultado->getCt());
+            $arrayBind[] = array('s',$objResultado->getNomePlanilha());
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objResultado->setIdResultado($objBanco->obterUltimoID());
@@ -38,7 +39,8 @@ class ResultadoPCR_BD
                 . ' targetName = ?, '
                 . ' task = ?, '
                 . ' reporter = ?, '
-                . ' ct = ? '
+                . ' ct = ?, '
+                . ' nomePlanilha = ? '
                 . '  where idResultado = ?';
 
 
@@ -49,6 +51,7 @@ class ResultadoPCR_BD
             $arrayBind[] = array('s',$objResultado->getTask());
             $arrayBind[] = array('s',$objResultado->getReporter());
             $arrayBind[] = array('d',$objResultado->getCt());
+            $arrayBind[] = array('s',$objResultado->getNomePlanilha());
 
             $arrayBind[] = array('i',$objResultado->getIdResultado());
 
@@ -114,6 +117,12 @@ class ResultadoPCR_BD
                 $arrayBind[] = array('s',$objResultado->getReporter());
             }
 
+            if($objResultado->getNomePlanilha() != null){
+                $WHERE .= $AND." nomePlanilha  = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s',$objResultado->getNomePlanilha());
+            }
+
 
             if($WHERE != ''){
                 $WHERE = ' where '.$WHERE;
@@ -138,6 +147,7 @@ class ResultadoPCR_BD
                 $resultado->setTask($reg['task']);
                 $resultado->setReporter($reg['reporter']);
                 $resultado->setCt($reg['ct']);
+                $resultado->setNomePlanilha($reg['nomePlanilha']);
 
                 $array_resultado[] = $resultado;
             }
@@ -167,6 +177,7 @@ class ResultadoPCR_BD
             $resultado->setTask($arr[0]['task']);
             $resultado->setReporter($arr[0]['reporter']);
             $resultado->setCt($arr[0]['ct']);
+            $resultado->setNomePlanilha($arr[0]['nomePlanilha']);
 
             return $resultado;
         } catch (Throwable $ex) {

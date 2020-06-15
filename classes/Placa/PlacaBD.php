@@ -186,6 +186,14 @@ class PlacaBD
                 $arr_perfis = $objRelPerfilPlacaRN->listar($objRelPerfilPlaca);
                 $placa->setObjRelPerfilPlaca($arr_perfis);
 
+                $objPocoPlaca = new PocoPlaca();
+                $objPocoPlacaRN = new PocoPlacaRN();
+                $objPocoPlaca->setIdPlacaFk($placa->getIdPlaca());
+                $arrPocosPlaca = $objPocoPlacaRN->listar_completo($objPocoPlaca);
+                $placa->setObjsPocosPlacas($arrPocosPlaca);
+
+
+
                 $array_placa[] = $placa;
             }
             return $array_placa;

@@ -92,6 +92,58 @@ class PocoPlacaBD
 
     }
 
+    public function listar_completo(PocoPlaca $objPocoPlaca, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT * FROM tb_pocos_placa";
+
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+
+            if ($objPocoPlaca->getIdPlacaFk() != null) {
+                $WHERE .= $AND . " idPlaca_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objPocoPlaca->getIdPlacaFk() );
+            }
+
+            if ($objPocoPlaca->getIdPocoFk() != null) {
+                $WHERE .= $AND . " idPoco_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objPocoPlaca->getIdPocoFk() );
+            }
+
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
+
+            $array_poco_placa = array();
+            foreach ($arr as $reg){
+                $pocoPlaca = new PocoPlaca();
+                $pocoPlaca->setIdPocosPlaca($reg['idPocosPlaca']);
+                $pocoPlaca->setIdPlacaFk($reg['idPlaca_fk']);
+                $pocoPlaca->setIdPocoFk($reg['idPoco_fk']);
+
+                $objPoco = new Poco();
+                $objPocoRN = new PocoRN();
+                $objPoco->setIdPoco($pocoPlaca->getIdPocoFk());
+                $objPoco = $objPocoRN->consultar($objPoco);
+                $pocoPlaca->setObjPoco($objPoco);
+
+                $array_poco_placa[] = $pocoPlaca;
+            }
+            return $array_poco_placa;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando os poços das placas no BD.",$ex);
+        }
+
+    }
+
+
+
     public function consultar(PocoPlaca $objPocoPlaca, Banco $objBanco) {
 
         try{

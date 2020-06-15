@@ -113,4 +113,25 @@ class PocoPlacaRN
             throw new Excecao('Erro listando os poços da placa na RN.',$e);
         }
     }
+
+    public function listar_completo(PocoPlaca $objPocosPlaca) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objPocosPlacaBD = new PocoPlacaBD();
+
+            $arr = $objPocosPlacaBD->listar_completo($objPocosPlaca,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando os poços da placa completos na RN.',$e);
+        }
+    }
 }

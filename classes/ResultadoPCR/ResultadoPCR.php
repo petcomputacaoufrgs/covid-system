@@ -8,6 +8,7 @@ class ResultadoPCR {
     private $task;
     private $reporter;
     private $ct;
+    private $nomePlanilha;
 
     /**
      * Resultado constructor.
@@ -16,6 +17,24 @@ class ResultadoPCR {
     {
 
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNomePlanilha()
+    {
+        return $this->nomePlanilha;
+    }
+
+    /**
+     * @param mixed $nomePlanilha
+     */
+    public function setNomePlanilha($nomePlanilha)
+    {
+        $this->nomePlanilha = $nomePlanilha;
+    }
+
+
 
     /**
      * @return mixed

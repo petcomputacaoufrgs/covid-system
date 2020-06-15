@@ -318,17 +318,17 @@ try {
             if (Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao')) {
                 $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote()) . '&idCapela=' . Pagina::formatar_html($preparo->getIdCapelaFk())) . '&idSituacao=1"><i class="fas fa-exclamation-triangle" style="color: #f36c29;"></i></td>';
             }else{
-                $html .= '<td ></td>';
+                $html .= '<td> - </td>';
             }
         } else if ($preparo->getObjLote()->getSituacaoLote() == LoteRN::$TE_NA_MONTAGEM) {
             //echo 'controlador.php?action=montar_preparo_extracao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote())."\n";
             if (Sessao::getInstance()->verificar_permissao('montar_preparo_extracao')) {
                 $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao&idPreparoLote=' . Pagina::formatar_html($preparo->getIdPreparoLote())) . '"><i class="fas fa-exclamation-triangle" style="color: #f36c29;"></i></td>';
             }else{
-                $html .= '<td ></td>';
+                $html .= '<td > - </td>';
             }
         } else{
-            $html .= '<td ></td>';
+            $html .= '<td> - </td>';
         }
             /*if($preparo->getObjLote()->getSituacaoLote() == LoteRN::$TE_AGUARDANDO_PREPARACAO || $preparo->getObjLote()->getSituacaoLote() == LoteRN::$TE_TRANSPORTE_PREPARACAO){
                 $html .= '<td ><i class="fas fa-times-circle" style="color: #ff0000;"></i></td>';

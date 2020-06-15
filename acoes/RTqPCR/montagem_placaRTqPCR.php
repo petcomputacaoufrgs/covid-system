@@ -303,7 +303,7 @@ try{
         $error = false;
         $arr_errors = array();
 
-        $table .= '<table class="table table-responsive table-hover" style="margin-top: 20px;">';
+        //$table .= '<table class="table table-responsive table-hover" style="margin-top: 20px;">';
         $quantidade = 8;
         $letras = range('A', chr(ord('A') + $quantidade));
 
@@ -312,6 +312,7 @@ try{
         $tubo_placa = 0;
         $posicoes_array = 0;
         $cont = 1;
+        $disabled = ' disabled ';
 
         $table = '<table class="table table-hover tabela_poco">';
         $arr_erro_qnt = array();

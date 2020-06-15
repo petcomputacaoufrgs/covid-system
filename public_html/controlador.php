@@ -588,6 +588,10 @@ switch ($_GET['action']):
         require_once '../acoes/RTqPCR/acabouTempo.php';
         break;
 
+    case 'fileUpload':
+        require_once '../acoes/RTqPCR/acabouTempo.php';
+        break;
+
 
 
 

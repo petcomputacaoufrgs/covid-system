@@ -364,7 +364,7 @@ try {
                                     $objPreparoLote->setObjLote($objLote);
                                     $objPreparoLote = $objPreparoLoteRN->cadastrar($objPreparoLote);
 
-                                    header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao&idCapela=' . $_POST['sel_nivelSegsCapela'] . '&idPreparoLote=' . $objPreparoLote->getIdPreparoLote() . '&idKitExtracao=' . $_POST['sel_kit_extracao']));
+                                    header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao&idCapela=' . $_POST['sel_nivelSegsCapela'] . '&idPreparoLote=' . $objPreparoLote->getIdPreparoLote() . '&idKitExtracao=' . $_POST['sel_kit_extracao'].'&idTipoExtracao='.$_GET['idTipoExtracao']));
                                     die();
 
 
@@ -1288,7 +1288,7 @@ if(!isset($_GET['idTipoExtracao']) && !isset($_GET['idPreparoLote'])){
                         <!--<button class="btn btn-primary" style="margin-left:0px;margin-top: 31px;width: 100%;" type="submit"  name="btn_manual">ESCOLHA MANUAL</button>-->
                   </div>
                    <div class="col-md-6" >
-                        <a  class="btn btn-primary" STYLE="margin-left:0px;width:100%;margin-top: 17px;font-size: 20px;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao&idTipoExtracao=2').'"><i  style="color:white;" class="fas fa-laptop-code fa-3x"></i><br>ESCOLHA AUTOMÁTICA</a>
+                        <a  class="btn btn-primary" STYLE="margin-left:0px;width:100%;margin-top: 17px;font-size: 20px;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao&idTipoExtracao=3').'"><i  style="color:white;" class="fas fa-laptop-code fa-3x"></i><br>ESCOLHA AUTOMÁTICA</a>
                         <!--<button class="btn btn-primary" style="margin-left:0px;margin-top: 31px;width: 100%;" type="submit"  name="btn_automatico">ESCOLHA AUTOMÁTICA</button>-->
                   </div>
              </div>
