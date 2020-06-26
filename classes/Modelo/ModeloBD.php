@@ -18,7 +18,8 @@ class ModeloBD{
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objModelo->setIdModelo($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+            return $objModelo;
+        } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando modelo  no BD.",$ex);
         }
         
@@ -39,32 +40,58 @@ class ModeloBD{
             $arrayBind[] = array('i',$objModelo->getIdModelo());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
-
-        } catch (Exception $ex) {
+            return $objModelo;
+        } catch (Throwable $ex) {
             throw new Excecao("Erro alterando modelo no BD.",$ex);
         }
        
     }
     
-     public function listar(Modelo $objModelo, Banco $objBanco) {
+     public function listar(Modelo $objModelo,$numLimite=null, Banco $objBanco) {
          try{
       
             $SELECT = "SELECT * FROM tb_modelo";
 
+             $WHERE = '';
+             $AND = '';
+             $arrayBind = array();
+             if($objModelo->getIndex_modelo() != null){
+                 $WHERE .= $AND." index_modelo = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('s',$objModelo->getIndex_modelo());
+             }
 
-            $arr = $objBanco->consultarSQL($SELECT);
+             if($objModelo->getIdModelo() != null){
+                 $WHERE .= $AND." idModelo = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('i',$objModelo->getIdModelo());
+             }
+
+
+             if($WHERE != ''){
+                 $WHERE = ' where '.$WHERE;
+             }
+
+             $LIMIT = '';
+             if(!is_null($numLimite)){
+                 $LIMIT = ' LIMIT ?';
+                 $arrayBind[] = array('i',$numLimite);
+             }
+
+             $arr = $objBanco->consultarSQL($SELECT.$WHERE.$LIMIT,$arrayBind);
+
 
             $array_modelo = array();
             foreach ($arr as $reg){
-                $objModelo = new Modelo();
-                $objModelo->setIdModelo($reg['idModelo']);
-                $objModelo->setModelo($reg['modelo']);
-                $objModelo->setIndex_modelo($reg['index_modelo']);
+                $modelo = new Modelo();
+                $modelo->setIdModelo($reg['idModelo']);
+                $modelo->setModelo($reg['modelo']);
+                $modelo->setIndex_modelo($reg['index_modelo']);
 
-                $array_modelo[] = $objModelo;
+                $array_modelo[] = $modelo;
             }
             return $array_modelo;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando modelo no BD.",$ex);
         }
        
@@ -87,7 +114,7 @@ class ModeloBD{
             $modelo->setIndex_modelo($arr[0]['index_modelo']);
 
             return $modelo;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
        
             throw new Excecao("Erro consultando modelo no BD.",$ex);
         }
@@ -103,7 +130,7 @@ class ModeloBD{
             $arrayBind[] = array('i',$objModelo->getIdModelo());
             $objBanco->executarSQL($DELETE, $arrayBind);
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo modelo no BD.",$ex);
         }
     }
@@ -133,7 +160,7 @@ class ModeloBD{
             }
              return $arr_modelos;
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro pesquisando modelo no BD.",$ex);
         }
     }

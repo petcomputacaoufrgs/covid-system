@@ -3,10 +3,8 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
-error_reporting(E_ALL & ~E_NOTICE);
+//error_reporting(E_ALL & ~E_NOTICE);
 require_once __DIR__ . '/../classes/Sessao/Sessao.php';
-
-
 
 switch ($_GET['action']):
     case 'principal':
@@ -18,7 +16,15 @@ switch ($_GET['action']):
         break;
 
     case 'usuario_naoEncontrado':
-        require_once '../acoes/PaginaUserNotFound.php';
+        require_once '../acoes/Erros/401.php';
+        break;
+
+    case 'nao_encontrado':
+        require_once '../acoes/Erros/404.php';
+        break;
+
+    case 'acesso_negado':
+        require_once '../acoes/Erros/401.php';
         break;
 
     case 'login':
@@ -40,16 +46,43 @@ switch ($_GET['action']):
     case 'gerar_estatisticas':
         require_once '../acoes/Estatisticas/gerar_estatisticas.php';
         break;
+
+    case 'gerar_estatisticas_relatorios':
+        require_once '../acoes/Estatisticas/gerar_estatisticas_relatorios.php';
+        break;
+    case 'gerar_estatisticas_paciente':
+        require_once '../acoes/Estatisticas/gerar_estatisticas_paciente.php';
+        break;
+    case 'gerar_estatisticas_prefeitura':
+        require_once '../acoes/Estatisticas/gerar_estatisticas_prefeitura.php';
+        break;
     case 'mostrar_estatisticas':
         require_once '../acoes/Estatisticas/gerarPDF.php';
         break;
 
      /* ETAPA 2 */
     case 'montar_preparo_extracao':
-        require_once '../acoes/PreparoLote/cadastrar_preparoLote.php';
+        require_once '../acoes/PreparoLote/realizar_montagemGrupo2.php';
         break;
     case 'realizar_preparo_inativacao':
-        require_once '../acoes/PreparoLote/preparoInativacao.php';
+        require_once '../acoes/PreparoInativacao/realizar_preparoInativacao.php';
+        break;
+    case 'listar_preparo_inativacao':
+    case 'remover_montagemGrupo_extracao':
+        require_once '../acoes/PreparoInativacao/listar_preparoInativacao.php';
+        break;
+    case 'listar_preparo_lote':
+    case 'remover_montagemGrupo':
+        require_once '../acoes/PreparoLote/listar_preparoLote.php';
+        break;
+    case 'imprimir_preparo_lote':
+        require_once '../acoes/PreparoLote/imprimir_preparoLote.php';
+        break;
+
+
+    case 'realizar_extracao':
+    case 'editar_extracao':
+        require_once '../acoes/Extracao/realizar_extracao.php';
         break;
 
 
@@ -60,6 +93,41 @@ switch ($_GET['action']):
 
     case 'cadastrar_localArmazenamento':
         require_once '../acoes/LocalArmazenamento/cadastro_localArmazenamento.php';
+        break;
+
+
+    /*
+     *  KITS DE EXTRAÇÃO
+     */
+    case 'cadastrar_kitExtracao':
+    case 'editar_kitExtracao':
+        require_once '../acoes/KitExtracao/cadastro_kitExtracao.php';
+        break;
+    case 'listar_kitExtracao':
+        require_once '../acoes/KitExtracao/listar_kitExtracao.php';
+        break;
+    case 'remover_kitExtracao':
+        require_once '../acoes/KitExtracao/remover_kitExtracao.php';
+        break;
+
+
+
+
+    /*
+     *  LAUDOS
+     */
+    case 'cadastro_laudo':
+    case 'editar_laudo':
+        require_once '../acoes/Laudo/cadastro_laudo.php';
+        break;
+    case 'listar_laudo':
+        require_once '../acoes/Laudo/listar_laudo.php';
+        break;
+    case 'imprimir_laudo':
+        require_once '../acoes/Laudo/imprimir_laudo.php';
+        break;
+    case 'remover_laudo':
+        require_once '../acoes/Laudo/remover_laudo.php';
         break;
 
 
@@ -96,12 +164,10 @@ switch ($_GET['action']):
         break;
     
     case 'listar_sexoPaciente':
+    case 'remover_sexoPaciente':
         require_once '../acoes/SexoPacientes/listar_sexoPaciente.php';
         break;
-    
-    case 'remover_sexoPaciente':
-        require_once '../acoes/SexoPacientes/remover_sexoPaciente.php';
-        break;
+
     
     /* PERFIL DO PACIENTE */
     case 'cadastrar_perfilPaciente':
@@ -110,12 +176,10 @@ switch ($_GET['action']):
         break;
     
     case 'listar_perfilPaciente':
+    case 'remover_perfilPaciente':
         require_once '../acoes/PerfilPaciente/listar_perfilPaciente.php';
         break;
-    
-    case 'remover_perfilPaciente':
-        require_once '../acoes/PerfilPaciente/remover_perfilPaciente.php';
-        break;
+
     
     
     /* TIPO LOCAL DE ARMAZENAMENTO */
@@ -131,6 +195,17 @@ switch ($_GET['action']):
     case 'remover_tipoLocalArmazenamento':
         require_once '../acoes/TipoLocalArmazenamento/remover_tipoLocalArmazenamento.php';
         break;
+
+    /*
+     * LOCAL ARMAZENAMENTO TEXTO
+     */
+    case 'listar_localArmazenamentoTxt':
+        require_once '../acoes/LocalArmazenamentoTexto/listar_localArmazenamentoTxt.php';
+        break;
+    case 'editar_localArmazenamentoTxt':
+        require_once '../acoes/LocalArmazenamentoTexto/editar_localArmazenamentoTxt.php';
+        break;
+
     
     /* PERFIL DO USUÁRIO */
     case 'cadastrar_perfilUsuario':
@@ -139,12 +214,10 @@ switch ($_GET['action']):
         break;
     
     case 'listar_perfilUsuario':
+    case 'remover_perfilUsuario':
         require_once '../acoes/PerfilUsuario/listar_perfilUsuario.php';
         break;
-    
-    case 'remover_perfilUsuario':
-        require_once '../acoes/PerfilUsuario/remover_perfilUsuario.php';
-        break;
+
     
     
      /* DOENÇA */
@@ -182,12 +255,10 @@ switch ($_GET['action']):
         break;
     
     case 'listar_usuario':
+    case 'remover_usuario':
         require_once '../acoes/Usuario/listar_usuario.php';
         break;
-    
-    case 'remover_usuario':
-        require_once '../acoes/Usuario/remover_usuario.php';
-        break;
+
     
     /* RECURSO */
     case 'cadastrar_recurso':
@@ -196,12 +267,10 @@ switch ($_GET['action']):
         break;
     
     case 'listar_recurso':
+    case 'remover_recurso':
         require_once '../acoes/Recurso/listar_recurso.php';
         break;
-    
-    case 'remover_recurso':
-        require_once '../acoes/Recurso/remover_recurso.php';
-        break;
+
     
     /* EQUIPAMENTO */
     case 'cadastrar_equipamento':
@@ -320,16 +389,28 @@ switch ($_GET['action']):
         break;
     
     case 'listar_amostra':
-       // require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
-        require_once '../acoes/CadastroAmostra/listar_cadastroIntermediario.php';
+        require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
         break;
 
     
     case 'remover_amostra':
         require_once '../acoes/CadastroAmostra/remover_cadastroAmostra.php';
         break;
-    
-    
+
+    /* POÇO */
+    case 'cadastrar_poco':
+    case 'editar_poco':
+        require_once '../acoes/Poco/cadastro_poco.php';
+        break;
+
+    case 'mostrar_poco':
+        require_once '../acoes/Poco/mostrar_poco.php';
+        break;
+
+    case 'listar_poco':
+    case 'remover_poco':
+        //require_once '../acoes/SexoPacientes/listar_sexoPaciente.php';
+        break;
     
     
     /* AMOSTRA + TIPO + LOCAL */
@@ -418,6 +499,155 @@ switch ($_GET['action']):
     case 'remover_etnia':
         require_once '../acoes/Etnia/remover_etnia.php';
         break;
-    
-    default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador geral.');
+
+    /* PROTOCOLO */
+    case 'cadastrar_protocolo':
+    case 'editar_protocolo':
+        require_once '../acoes/Protocolo/cadastro_protocolo.php';
+        break;
+
+    case 'listar_protocolo':
+    case 'remover_protocolo':
+        require_once '../acoes/Protocolo/listar_protocolo.php';
+        break;
+
+    case 'editar_tabelas_protocolos':
+        require_once '../acoes/Operador/editar_tabela_protocolos.php';
+        break;
+
+    /* DIVISÃO PROTOCOLO */
+    case 'cadastrar_divisao_protocolo':
+    case 'editar_divisao_protocolo':
+        require_once '../acoes/DivisaoProtocolo/cadastro_divisaoProtocolo.php';
+        break;
+
+    case 'listar_divisao_protocolo':
+    case 'remover_divisao_protocolo':
+        require_once '../acoes/DivisaoProtocolo/listar_divisaoProtocolo.php';
+        break;
+
+    /* PLACA */
+    case 'cadastrar_placa':
+    case 'editar_placa':
+        require_once '../acoes/Placa/cadastro_placa.php';
+        break;
+
+    case 'listar_placa':
+    case 'remover_placa':
+        require_once '../acoes/Placa/listar_placa.php';
+        break;
+
+    /* CÁLCULO */
+    case 'cadastrar_calculo':
+    case 'editar_calculo':
+        require_once '../acoes/Calculo/cadastro_calculo.php';
+        break;
+
+    case 'listar_calculo':
+    case 'remover_calculo':
+        require_once '../acoes/Calculo/listar_calculo.php';
+        break;
+
+
+    /* OPERADOR */
+    case 'cadastrar_operador':
+    case 'editar_operador':
+        require_once '../acoes/Operador/cadastro_operador.php';
+        break;
+
+    case 'listar_operador':
+    case 'remover_operador':
+        require_once '../acoes/Operador/listar_operador.php';
+        break;
+
+
+
+    /* RTqPCR */
+    case 'solicitar_montagem_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/solicitar_montar_placaRTqPCR.php';
+        break;
+
+
+    case 'listar_solicitacao_montagem_placa_RTqPCR':
+    case 'remover_solicitacao_montagem_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/listar_solicitacaoMontagemPlaca.php';
+        break;
+
+    case 'remover_amostras_da_placa':
+        require_once '../acoes/PocoPlaca/remover_amostraPlaca.php';
+        break;
+
+    case 'imprimir_solicitacao_montagem_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/imprimir_solicitacaoMontagemPlaca.php';
+        break;
+
+    case 'mix_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/mix_placaRTqPCR.php';
+        break;
+
+    case 'listar_mix_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/listar_mix_placa_RTqPCR.php';
+        break;
+
+    case 'imprimir_mix_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/imprimir_mix_placa_RTqPCR.php';
+        break;
+
+
+    case 'montar_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/montagem_placaRTqPCR.php';
+        break;
+
+    case 'listar_montagem_placa_RTqPCR':
+    case 'remover_montagem_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/listar_montagem_placa_RTqPCR.php';
+        break;
+
+    case 'imprimir_montagem_placa_RTqPCR':
+        require_once '../acoes/RTqPCR/imprimir_montagem_placa_RTqPCR.php';
+        break;
+
+    case 'analisar_RTqPCR':
+        require_once '../acoes/RTqPCR/analise_RTqPCR.php';
+        break;
+
+    case 'listar_analise_RTqPCR':
+        require_once '../acoes/RTqPCR/listar_analise_RTqPCR.php';
+        break;
+
+    case 'finalizar_RTqPCR':
+        require_once '../acoes/RTqPCR/finalizacao_RTqPCR.php';
+        break;
+
+    case 'verificar_amostras':
+        require_once '../acoes/RTqPCR/acabouTempo.php';
+        break;
+
+    case 'fileUpload':
+        require_once '../acoes/RTqPCR/acabouTempo.php';
+        break;
+
+    case 'gerar_planilha_correta':
+        require_once '../acoes/Planilha/gerar_planilha_correta.php';
+        break;
+    case 'gerar_planilha_incorreta':
+        require_once '../acoes/Planilha/gerar_planilha_incorreta.php';
+        break;
+
+
+    /* DIAGNÓSTICO */
+    case 'cadastrar_diagnostico':
+    case 'editar_diagnostico':
+        require_once '../acoes/Diagnostico/cadastro_diagnostico.php';
+        break;
+
+    case 'listar_diagnostico':
+    case 'remover_diagnostico':
+        require_once '../acoes/Diagnostico/listar_diagnostico.php';
+        break;
+
+
+    default :
+        header('Location: controlador.php?action=nao_encontrado');
+        die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador geral.');
 endswitch;

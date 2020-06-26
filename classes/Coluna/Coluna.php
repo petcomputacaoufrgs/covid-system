@@ -7,9 +7,29 @@ class Coluna{
     private $idPrateleira_fk;
     private $situacaoColuna;
 
+    private $objPrateleira;
+
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObjPrateleira()
+    {
+        return $this->objPrateleira;
+    }
+
+    /**
+     * @param mixed $objPrateleira
+     */
+    public function setObjPrateleira($objPrateleira)
+    {
+        $this->objPrateleira = $objPrateleira;
+    }
+
+
 
     /**
      * @return mixed

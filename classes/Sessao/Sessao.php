@@ -34,17 +34,19 @@ class Sessao {
         try {
 
             unset($_SESSION['COVID19']);
-            if ($matricula != null && $matricula != '' && $senha != '' && $senha != null) {
+            if ( (!is_null($matricula) && $matricula != '') && $senha != '' && $senha != null ) {
 
                 $objUsuario = new Usuario();
                 $objUsuarioRN = new UsuarioRN();
 
+
+                $objUsuario->setCPF($matricula);
                 $objUsuario->setMatricula($matricula);
                 $objUsuario->setSenha($senha);
-                $objUsuarioRN->validar_cadastro($objUsuario);
+                //$objUsuarioRN->validar_cadastro($objUsuario);
 
                 $arr_valida = $objUsuarioRN->validar_cadastro($objUsuario);
-
+                $objUsuario = $arr_valida[0];
                 if (count($arr_valida) == 0 && empty($arr_valida)) {
                     $objExcecao = new Excecao();
                     $objExcecao->adicionar_validacao("Usuário não encontrado.");
@@ -53,6 +55,7 @@ class Sessao {
                     //die();
                 }
 
+                //die("aquiiii");
 
                 $arr_usuario = $objUsuarioRN->listar($objUsuario);
 
@@ -95,7 +98,8 @@ class Sessao {
                 //print_r($arr_recursos);
                 $_SESSION['COVID19'] = array();
                 $_SESSION['COVID19']['ID_USUARIO'] = $arr_usuario[0]->getIdUsuario();
-                $_SESSION['COVID19']['MATRICULA'] = $arr_usuario[0]->getMatricula();
+                $_SESSION['COVID19']['CPF'] = $arr_usuario[0]->getCPF();
+                $_SESSION['COVID19']['MATRICULA'] = $objUsuario->getMatricula();
                 $_SESSION['COVID19']['RECURSOS'] = $arr_recursos;
                 $_SESSION['COVID19']['CHAVE'] = hash('sha256', random_bytes(50));
 
@@ -107,7 +111,7 @@ class Sessao {
             if (!Configuracao::getInstance()->getValor("producao")) {
                 echo "<pre>" . $ex . "</pre>";
             }
-
+            //echo "<pre>" . $ex . "</pre>";
             die("erro na sessão");
         }
     }
@@ -127,23 +131,30 @@ class Sessao {
         }
 
         foreach ($_GET as $strChave => $strValor) {
+            //if (($strChave != 'action' && substr($strChave, 0, 2) != 'id' && $strChave != 'hash') || ($strChave == 'action' && !preg_match('/^[a-zA-Z0-9_]+/', $strValor)) || (substr($strChave, 0, 2) == 'id' && !is_numeric($strValor)) || ($strChave == 'hash' && (strlen($strValor) != 64 || !ctype_alnum($strValor)))
             if (($strChave != 'action' && substr($strChave, 0, 2) != 'id' && $strChave != 'hash') || ($strChave == 'action' && !preg_match('/^[a-zA-Z0-9_]+/', $strValor)) || (substr($strChave, 0, 2) == 'id' && !is_numeric($strValor)) || ($strChave == 'hash' && (strlen($strValor) != 64 || !ctype_alnum($strValor)))
             ) {
                 //die('url inválida:' . $strChave . "=" . $strValor);
-                header('Location: controlador.php?action=login');
+                header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=acesso_negado'));
+                //header('Location: controlador.php?action=login');
                 die();
             }
         }
 
         if (!$this->verificar_link()) {
             $this->logoff();
-            header('Location: controlador.php?action=login');
+            header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=nao_encontrado'));
             die();
+            //$this->logoff();
+            //header('Location: controlador.php?action=login');
+            //die();
         }
 
         if (!$this->verificar_permissao($_GET['action'])) {
-            throw new Exception("Acesso negado");
+            header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=acesso_negado'));
             die();
+            //throw new Exception("Acesso negado");
+            //die();
         }
     }
 
@@ -151,6 +162,12 @@ class Sessao {
       
            return $_SESSION['COVID19']['ID_USUARIO'];
       
+    }
+
+    public function getCPF() {
+
+        return $_SESSION['COVID19']['CPF'];
+
     }
 
     public function getMatricula() {
@@ -174,12 +191,10 @@ class Sessao {
         $link = $_SERVER['QUERY_STRING'];
 
         if (strlen($link)) {
-
-
             $strPosHash = strpos($link, '&hash=');
             if ($strPosHash !== FALSE) {
                 $strParametros = substr($link, 0, $strPosHash);
-
+                $chave = $_SESSION['COVID19']['CHAVE'];
                 if (hash('sha256', $strParametros . $_SESSION['COVID19']['CHAVE']) == $_GET['hash']) {
                     return true;
                 }

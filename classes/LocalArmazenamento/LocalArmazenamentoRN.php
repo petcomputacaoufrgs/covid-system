@@ -168,6 +168,27 @@ class LocalArmazenamentoRN{
         }
     }
 
+    public function pegar_valores(LocalArmazenamento $localArmazenamento, $qntLugares) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objLocalArmazenamentoBD = new LocalArmazenamentoBD();
+            $arr =  $objLocalArmazenamentoBD->pegar_valores($localArmazenamento,$qntLugares,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+
+            throw new Excecao('Erro consultando o local de armazenamento.',$e);
+        }
+    }
+
     public function remover(LocalArmazenamento $localArmazenamento) {
         $objBanco = new Banco();
         try {

@@ -11,6 +11,7 @@ class CadastroAmostraRN{
     public function cadastrar(CadastroAmostra $cadastroAmostra) {
         $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
@@ -29,90 +30,105 @@ class CadastroAmostraRN{
 
             $objExcecao->lancar_validacoes();
             $objCadastroAmostraBD = new CadastroAmostraBD();
-            $objCadastroAmostraBD->cadastrar($cadastroAmostra,$objBanco);
+            $cadastroAmostra = $objCadastroAmostraBD->cadastrar($cadastroAmostra,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            
             return $cadastroAmostra;
         } catch (Throwable $e) {
+
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando amostra.', $e);
         }
     }
 
     public function alterar(CadastroAmostra $cadastroAmostra) {
-         try {
-             
-            $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+        $objBanco = new Banco();
+        try {
 
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             
             $objExcecao->lancar_validacoes();
             
             $objCadastroAmostraBD = new CadastroAmostraBD();
-            $objCadastroAmostraBD->alterar($cadastroAmostra,$objBanco);
+            $cadastro  = $objCadastroAmostraBD->alterar($cadastroAmostra,$objBanco);
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-
+            return $cadastro;
         } catch (Throwable $e) {
-            throw new Excecao('Erro alterando amostra.', NULL, $e);
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro alterando amostra.',  $e);
         }
     }
 
     public function consultar(CadastroAmostra $cadastroAmostra) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objCadastroAmostraBD = new CadastroAmostraBD();
             $arr = $objCadastroAmostraBD->consultar($cadastroAmostra,$objBanco);
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-
         } catch (Throwable $e) {
-            throw new Excecao('Erro consultando amostra.', NULL, $e);
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro consultando amostra.',  $e);
         }
     }
 
     public function remover(CadastroAmostra $cadastroAmostra) {
-         try {
+        $objBanco = new Banco();
+        try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objCadastroAmostraBD = new CadastroAmostraBD();
             $arr =  $objCadastroAmostraBD->remover($cadastroAmostra,$objBanco);
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
-            throw new Excecao('Erro removendo amostra.', NULL, $e);
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro removendo amostra.',  $e);
         }
     }
 
     public function listar(CadastroAmostra $cadastroAmostra) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objCadastroAmostraBD = new CadastroAmostraBD();
             $arr =  $objCadastroAmostraBD->listar($cadastroAmostra,$objBanco);
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
-            throw new Excecao('Erro listando amostra.', NULL, $e);
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.',  $e);
         }
     }
     
     
     
      public function consultarData(CadastroAmostra $cadastroAmostra,$data) {
-        try {
-            $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+         $objBanco = new Banco();
+         try {
+
+             $objExcecao = new Excecao();
+             $objBanco->abrirConexao();
+             $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             
                         
@@ -143,12 +159,35 @@ class CadastroAmostraRN{
                     $arr_resultado[] = $ca;
                 }
             }
-            
-            
+
+
+             $objBanco->confirmarTransacao();
+             $objBanco->fecharConexao();
+             return $arr;
+         } catch (Throwable $e) {
+             $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.',  $e);
+        }
+    }
+
+    public function listar_completo(CadastroAmostra $cadastroAmostra,$datas=null,$numLimite=null) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objCadastroAmostraBD = new CadastroAmostraBD();
+            $arr =  $objCadastroAmostraBD->listar_completo($cadastroAmostra,$datas,$numLimite,$objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $arr_resultado;
+            return $arr;
         } catch (Throwable $e) {
-            throw new Excecao('Erro listando amostra.', NULL, $e);
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.',  $e);
         }
     }
     

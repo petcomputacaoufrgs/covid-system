@@ -1,0 +1,1 @@
+alter table tb_poco add conteudo varchar(8) null;

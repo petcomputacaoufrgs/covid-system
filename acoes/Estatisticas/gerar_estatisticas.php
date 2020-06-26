@@ -36,27 +36,27 @@ Pagina::abrir_head("Gerar Estatísticas");
 Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
+Pagina::montar_topo_listar("ESTATÍSTICAS DE CADASTRO");
 
 echo $alert;
-?>
 
-<div class="conteudo_grande" >
-<form method="POST" >
-    <hr width = 2 size = 2>
-    <div class="form-row" style="width:40%;margin-right:30%;margin-left:30%;margin-top:10px;">
-        <div class="col-md-6">
-            <label for="label_dataEstatistica">Informe uma data:</label>
-            <input type="date" class="form-control " id="idDataEstatistica" placeholder=""  
-                   onblur="#" name="dtEstatistica"  value="">
+
+echo '<div class="conteudo_grande" style="margin-top: 0px;">
+    <form method="POST" >
+        <div class="form-row" style="width: 100%;padding: 0px;margin: 0px;">
+            <div class="col-md-8" style="width: 100%;">
+                <label for="label_dataEstatistica">Informe uma data:</label>
+                <input type="date" class="form-control " id="idDataEstatistica" placeholder=""  
+                       onblur="" name="dtEstatistica"  value="">
+            </div>
+             <div class="col-md-4" style="width: 100%;">
+            <button class="btn btn-primary" style="margin-top:33px;margin-left: -5px;width: 100%;" type="submit" name="enviar">GERAR ESTATÍSTICAS</button>
+             </div>
         </div>
-         <div class="col-md-6">
-        <button class="btn btn-primary" style="margin-top:33px;margin-left: -5px;" type="submit" name="enviar">Enviar</button>
-         </div>
-    </div>
-</form>
-</div>
+    </form>
+</div>';
 
-<?php 
+Pagina::getInstance()->fechar_corpo();
 /*
  include 'filesLogic.php';?>
 

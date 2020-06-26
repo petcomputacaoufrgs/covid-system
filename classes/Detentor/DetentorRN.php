@@ -61,110 +61,125 @@ class DetentorRN{
 
 
     public function cadastrar(Detentor $detentor) {
-        try {
-            
+        $objBanco = new Banco();
+        try{
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objDetentorBD = new DetentorBD();
-            $this->validarDetentor($detentor,$objExcecao); 
-             
-            
-            
+
+            $this->validarDetentor($detentor,$objExcecao);
+
             $objExcecao->lancar_validacoes();
-            $objDetentorBD->cadastrar($detentor,$objBanco);
-            
+            $detentor = $objDetentorBD->cadastrar($detentor,$objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+            return $detentor;
+        }catch (Throwable $e){
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando o detentor.', $e);
         }
     }
 
     public function alterar(Detentor $detentor) {
-         try {
-             
+        $objBanco = new Banco();
+        try{
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             
             $this->validarDetentor($detentor,$objExcecao);  
             
             $objExcecao->lancar_validacoes();
             $objDetentorBD = new DetentorBD();
-            $objDetentorBD->alterar($detentor,$objBanco);
-            
+            $detentor = $objDetentorBD->alterar($detentor,$objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+            return $detentor;
+        }catch (Throwable $e){
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando o detentor.', $e);
         }
     }
 
     public function consultar(Detentor $detentor) {
-        try {
+        $objBanco = new Banco();
+        try{
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objDetentorBD = new DetentorBD();
             $arr =  $objDetentorBD->consultar($detentor,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
- 
+        }catch (Throwable $e){
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o detentor.',$e);
         }
     }
 
     public function remover(Detentor $detentor) {
-         try {
+        $objBanco = new Banco();
+        try{
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
 
              $this->validarRemocao($detentor,$objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objDetentorBD = new DetentorBD();
             $arr =  $objDetentorBD->remover($detentor,$objBanco);
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-
-        } catch (Exception $e) {
+        }catch (Throwable $e){
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro removendo o detentor.', $e);
         }
     }
 
-    public function listar(Detentor $detentor) {
-        try {
+    public function listar(Detentor $detentor,$numLimite = null) {
+        $objBanco = new Banco();
+        try{
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objDetentorBD = new DetentorBD();
             
-            $arr = $objDetentorBD->listar($detentor,$objBanco);
-            
+            $arr = $objDetentorBD->listar($detentor,$numLimite,$objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        }catch (Throwable $e){
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o detentor.',$e);
         }
     }
 
 
      public function pesquisar_index(Detentor $detentor) {
-        try {
-            $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+         $objBanco = new Banco();
+         try{
+             $objExcecao = new Excecao();
+             $objBanco->abrirConexao();
+             $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objDetentorBD = new DetentorBD();
             $arr = $objDetentorBD->pesquisar_index($detentor,$objBanco);
-            
-            $objBanco->fecharConexao();
-            return $arr;
-        } catch (Exception $e) {
+
+             $objBanco->confirmarTransacao();
+             $objBanco->fecharConexao();
+             return $arr;
+         }catch (Throwable $e){
+             $objBanco->cancelarTransacao();
             throw new Excecao('Erro pesquisando o detentor.', $e);
         }
     }

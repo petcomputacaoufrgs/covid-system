@@ -10,9 +10,29 @@ class Caixa{
     private $qntColunas;
     private $idColuna_fk;
 
+    private $objColuna;
+
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObjColuna()
+    {
+        return $this->objColuna;
+    }
+
+    /**
+     * @param mixed $objColuna
+     */
+    public function setObjColuna($objColuna)
+    {
+        $this->objColuna = $objColuna;
+    }
+
+
 
     /**
      * @return mixed

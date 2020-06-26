@@ -9,18 +9,18 @@ class UsuarioBD{
 
     public function cadastrar(Usuario $objUsuario, Banco $objBanco) {
         try{
-            //echo $objUsuario->getMatricula();
-            //die("die");
-            $INSERT = 'INSERT INTO tb_usuario (matricula,senha) VALUES (?,?)';
+            $INSERT = 'INSERT INTO tb_usuario (matricula,senha,CPF) VALUES (?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('s',$objUsuario->getMatricula());
             $arrayBind[] = array('s',$objUsuario->getSenha());
+            $arrayBind[] = array('s',$objUsuario->getCPF());
 
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objUsuario->setIdUsuario($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+            return $objUsuario;
+        } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando usuário no BD.",$ex);
         }
         
@@ -30,7 +30,8 @@ class UsuarioBD{
         try{
             $UPDATE = 'UPDATE tb_usuario SET '
                     . ' matricula = ?,'
-                    . ' senha = ?'
+                    . ' senha = ?,'
+                    . ' CPF = ?'
                 . '  where idUsuario = ?';
         
                 
@@ -41,14 +42,15 @@ class UsuarioBD{
             
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
+            return $objUsuario;
 
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro alterando usuário no BD.",$ex);
         }
        
     }
     
-     public function listar(Usuario $objUsuario, Banco $objBanco) {
+     public function listar(Usuario $objUsuario,$numLimite=null, Banco $objBanco) {
          try{
       
              
@@ -62,27 +64,48 @@ class UsuarioBD{
                  
                 $arrayBind[] = array('s',$objUsuario->getMatricula());
             }
+
+             if($objUsuario->getIdUsuario() != null){
+                 $WHERE .= $AND." idUsuario = ?";
+                 $AND = ' and ';
+
+                 $arrayBind[] = array('i',$objUsuario->getIdUsuario());
+             }
+
+             if($objUsuario->getCPF() != null){
+                 $WHERE .= $AND." CPF = ?";
+                 $AND = ' and ';
+
+                 $arrayBind[] = array('s',$objUsuario->getCPF());
+             }
             
 
             if($WHERE != ''){
                 $WHERE = ' where '.$WHERE;
-            } 
-        
-            //echo $SELECT.$WHERE;
+            }
 
-            $arr = $objBanco->consultarSQL($SELECT.$WHERE,$arrayBind);
+             $LIMIT = '';
+             if($numLimite != null){
+                 $LIMIT = ' LIMIT ?';
+                 $arrayBind[] = array('i',$numLimite);
+             }
+
+             $arr = $objBanco->consultarSQL($SELECT.$WHERE.$LIMIT,$arrayBind);
 
             $array_usuario = array();
-            foreach ($arr as $reg){
-                $objUsuario = new Usuario();
-                $objUsuario->setIdUsuario($reg['idUsuario']);
-                $objUsuario->setMatricula($reg['matricula']);
-                $objUsuario->setSenha($reg['senha']);
+            if(count($arr) > 0) {
+                foreach ($arr as $reg) {
+                    $objUsuario = new Usuario();
+                    $objUsuario->setIdUsuario($reg['idUsuario']);
+                    $objUsuario->setMatricula($reg['matricula']);
+                    $objUsuario->setCPF($reg['CPF']);
+                    $objUsuario->setSenha($reg['senha']);
 
-                $array_usuario[] = $objUsuario;
+                    $array_usuario[] = $objUsuario;
+                }
             }
             return $array_usuario;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando usuário no BD.",$ex);
         }
        
@@ -106,7 +129,7 @@ class UsuarioBD{
             $usuario->setSenha($arr[0]['senha']);
 
             return $usuario;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
        
             throw new Excecao("Erro consultando usuário no BD.",$ex);
         }
@@ -122,7 +145,7 @@ class UsuarioBD{
             $arrayBind[] = array('i',$objUsuario->getIdUsuario());
             $objBanco->executarSQL($DELETE, $arrayBind);
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo usuário no BD.",$ex);
         }
     }
@@ -132,10 +155,12 @@ class UsuarioBD{
 
        try{
 
-            $SELECT = 'SELECT idUsuario,matricula,senha FROM tb_usuario WHERE matricula = ? AND senha = ? ';
+            $SELECT = 'SELECT * FROM tb_usuario WHERE (matricula = ? AND senha = ?) or (CPF = ? and senha = ?) ';
 
             $arrayBind = array();
             $arrayBind[] = array('s',$objUsuario->getMatricula());
+            $arrayBind[] = array('s',$objUsuario->getSenha());
+            $arrayBind[] = array('s',$objUsuario->getCPF());
             $arrayBind[] = array('s',$objUsuario->getSenha());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
@@ -145,6 +170,7 @@ class UsuarioBD{
                 $objUsuario = new Usuario();
                 $objUsuario->setIdUsuario($reg['idUsuario']);
                 $objUsuario->setMatricula($reg['matricula']);
+                $objUsuario->setCPF($reg['CPF']);
                 $objUsuario->setSenha($reg['senha']);
 
                 $array_usuario[] = $objUsuario;
@@ -152,14 +178,82 @@ class UsuarioBD{
             return $array_usuario;
 
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
        
             throw new Excecao("Erro validando cadastro do usuário no BD.",$ex);
         }
+    }
+
+
+    public function paginacao(Usuario $objUsuario, Banco $objBanco) {
+        try{
+
+            $inicio = ($objUsuario->getNumPagina()-1)*20;
+
+            if($objUsuario->getNumPagina() == null){
+                $inicio = 0;
+            }
+
+            $SELECT = "SELECT SQL_CALC_FOUND_ROWS * FROM tb_usuario ";
+            $WHERE = '';
+            $AND = '';
+            $arrayBind = array();
+            if($objUsuario->getMatricula() != null){
+                $WHERE .= $AND . " matricula LIKE ? ";
+                $AND = ' and ';
+                $arrayBind[] = array('s',"%".$objUsuario->getMatricula()."%");
+            }
+
+            if($objUsuario->getCPF() != null){
+                $WHERE .= $AND." CPF = ?";
+                $AND = ' and ';
+
+                $arrayBind[] = array('s',$objUsuario->getCPF());
+            }
+
+            if($objUsuario->getIdUsuario() != null){
+                $WHERE .= $AND." idUsuario = ?";
+                $AND = ' and ';
+
+                $arrayBind[] = array('i',$objUsuario->getIdUsuario());
+            }
+
+            if($WHERE != ''){
+                $WHERE = ' where '.$WHERE;
+            }
+
+
+            $SELECT.= $WHERE;
+            $SELECT.= ' LIMIT ?,20 ';
+
+            $arrayBind[] = array('i',$inicio);
+            $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
+
+            $SELECT = "SELECT FOUND_ROWS() as total";
+            $total = $objBanco->consultarSQL($SELECT);
+            $objUsuario->setTotalRegistros($total[0]['total']);
+            $objUsuario->setNumPagina($inicio);
+
+            $array_usuario = array();
+            if(count($arr) > 0) {
+                foreach ($arr as $reg) {
+                    $usuario = new Usuario();
+                    $usuario->setIdUsuario($reg['idUsuario']);
+                    $usuario->setMatricula($reg['matricula']);
+                    $usuario->setCPF($reg['CPF']);
+
+                    $array_usuario[] = $usuario;
+                }
+            }
+
+
+            return $array_usuario;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando usuário no BD.",$ex);
+        }
 
     }
-    
-    
+
 
     
 }

@@ -115,13 +115,15 @@ class CodigoGAL_BD {
 
             $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
 
-            $paciente = new CodigoGAL();
-            $paciente->setIdCodigoGAL($arr[0]['idCodigoGAL']);
-            $paciente->setCodigo($arr[0]['codigo']);
-            $paciente->setIdPaciente_fk($arr[0]['idPaciente_fk']);
-            $paciente->setObsCodGAL($arr[0]['obsCodGAL']);
+            if(count($arr) > 0) {
+                $codGAL = new CodigoGAL();
+                $codGAL->setIdCodigoGAL($arr[0]['idCodGAL']);
+                $codGAL->setCodigo($arr[0]['codigo']);
+                $codGAL->setIdPaciente_fk($arr[0]['idPaciente_fk']);
+                $codGAL->setObsCodGAL($arr[0]['obsCodGAL']);
 
-            return $paciente;
+                return $codGAL;
+            }
         } catch (Throwable $ex) {
 
             throw new Excecao("Erro consultando o código GAL  no BD.", $ex);

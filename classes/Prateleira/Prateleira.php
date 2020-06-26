@@ -7,9 +7,29 @@ class Prateleira{
     private $situacaoPrateleira;
     private $idPorta_fk;
 
+    private $objPorta;
+
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObjPorta()
+    {
+        return $this->objPorta;
+    }
+
+    /**
+     * @param mixed $objPorta
+     */
+    public function setObjPorta($objPorta)
+    {
+        $this->objPorta = $objPorta;
+    }
+
+
 
     /**
      * @return mixed

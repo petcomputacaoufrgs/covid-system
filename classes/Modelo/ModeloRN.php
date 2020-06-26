@@ -40,111 +40,135 @@ class ModeloRN{
     }
     
     public function cadastrar(Modelo $modelo) {
+        $objBanco = new Banco();
         try {
-            
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objModeloBD = new ModeloBD();
             
             $this->validarModelo($modelo,$objExcecao); 
             
             $objExcecao->lancar_validacoes();
-            $objModeloBD->cadastrar($modelo,$objBanco);
-            
-            
+            $objModelo = $objModeloBD->cadastrar($modelo,$objBanco);
+
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+            return $objModelo;
+        }catch (Throwable $e){
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando o modelo.', $e);
         }
     }
 
     public function alterar(Modelo $modelo) {
-         try {
-             
+        $objBanco = new Banco();
+        try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             
             $this->validarModelo($modelo,$objExcecao);   
                         
             $objExcecao->lancar_validacoes();
             $objModeloBD = new ModeloBD();
-            $objModeloBD->alterar($modelo,$objBanco);
-            
+            $objModelo = $objModeloBD->alterar($modelo,$objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+            return $objModelo;
+        }catch (Throwable $e){
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando o modelo.', $e);
         }
     }
 
     public function consultar(Modelo $modelo) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objModeloBD = new ModeloBD();
            
             $arr =  $objModeloBD->consultar($modelo,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
- 
+        }catch (Throwable $e){
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o modelo.',$e);
         }
     }
 
     public function remover(Modelo $modelo) {
-         try {
+        $objBanco = new Banco();
+        try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
 
              $this->validarRemocao($modelo,$objExcecao);
 
             $objExcecao->lancar_validacoes();
             $objModeloBD = new ModeloBD();
             $arr =  $objModeloBD->remover($modelo,$objBanco);
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-
-        } catch (Exception $e) {
+        }catch (Throwable $e){
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro removendo o modelo.', $e);
         }
     }
 
-    public function listar(Modelo $modelo) {
+    public function listar(Modelo $modelo,$numLimite = null) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objModeloBD = new ModeloBD();
             
-            $arr = $objModeloBD->listar($modelo,$objBanco);
-            
+            $arr = $objModeloBD->listar($modelo,$numLimite,$objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        }catch (Throwable $e){
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o modelo.',$e);
         }
     }
 
 
     public function pesquisar_index(Modelo $modelo) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objModeloBD = new ModeloBD();
             $arr = $objModeloBD->pesquisar_index($modelo,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        }catch (Throwable $e){
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro pesquisando o modelo.', $e);
         }
     }

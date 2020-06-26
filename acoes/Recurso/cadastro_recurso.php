@@ -4,18 +4,19 @@
  */
 
 session_start();
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Recurso/Recurso.php';
-require_once '../classes/Recurso/RecursoRN.php';
-require_once '../utils/Alert.php';
-$objPagina = new Pagina();
-$objRecurso = new Recurso();
-$objRecursoRN = new RecursoRN();
-$alert = '';
-
 try{
+    require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
+    require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
+    require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
+    require_once __DIR__ . '/../../classes/Recurso/Recurso.php';
+    require_once __DIR__ . '/../../classes/Recurso/RecursoRN.php';
+    require_once __DIR__ . '/../../utils/Alert.php';
+
+    $objRecurso = new Recurso();
+    $objRecursoRN = new RecursoRN();
+    $alert = '';
+
+
     Sessao::getInstance()->validar();
     switch($_GET['action']){
         case 'cadastrar_recurso':
@@ -23,12 +24,10 @@ try{
                 $objRecurso->setNome($_POST['txtNome']);
                 $objRecurso->setS_n_menu( mb_strtolower($_POST['txtSN'],'utf-8'));
                 $objRecurso->setEtapa(mb_strtoupper($_POST['txtEtapa'],'utf-8'));
-                
-                $arr_recursos = $objRecursoRN->validar_cadastro($objRecurso);
-                if(empty($arr_recursos)){
-                    $objRecursoRN->cadastrar($objRecurso);
-                    $alert.= Alert::alert_success("O recurso foi cadastrado");
-                }else{$alert.= Alert::alert_warning("O recurso já tinha sido cadastrado");}
+
+                $objRecurso  = $objRecursoRN->cadastrar($objRecurso);
+                $alert.= Alert::alert_success("O recurso -".$objRecurso->getNome()."- foi cadastrado");
+
                 
             }else{
                 $objRecurso->setIdRecurso('');
@@ -49,11 +48,9 @@ try{
                 $objRecurso->setNome($_POST['txtNome']);
                 $objRecurso->setS_n_menu( strtolower($_POST['txtSN']));
                 $objRecurso->setEtapa(mb_strtoupper($_POST['txtEtapa'],'utf-8'));
-                $arr_recursos = $objRecursoRN->validar_cadastro($objRecurso);
-                if(empty($arr_recursos)){
-                    $objRecursoRN->alterar($objRecurso);
-                   $alert .= Alert::alert_success("O recurso foi alterado");
-                }else{$alert.= Alert::alert_danger("O recurso não foi alterado");}
+                $objRecursoRN->alterar($objRecurso);
+                $alert .= Alert::alert_success("O recurso foi alterado");
+
              
             }
             
@@ -62,18 +59,18 @@ try{
         default : die('Ação ['.$_GET['action'].'] não reconhecida pelo controlador em cadastro_recurso.php');  
     }
    
-} catch (Exception $ex) {
+} catch (Throwable $ex) {
       Pagina::getInstance()->processar_excecao($ex);
 }
 
-Pagina::getInstance()->abrir_head("Listar Recursos");
+Pagina::getInstance()->abrir_head("Cadastrar Recurso");
 Pagina::getInstance()->adicionar_css("precadastros");
+Pagina::getInstance()->adicionar_javascript("recurso");
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
-
-echo $alert;
-
-?>
+Pagina::montar_topo_listar("CADASTRAR RECURSO",null,null,"listar_recurso","LISTAR RECURSOS");
+Pagina::getInstance()->mostrar_excecoes();
+echo $alert.'
 
 <DIV class="conteudo">
 <form method="POST">
@@ -81,34 +78,30 @@ echo $alert;
         <div class="col-md-4 mb-3">
             <label for="label_nome">Digite o nome:</label>
             <input type="text" class="form-control" id="idNomeRecurso" placeholder="Nome" 
-                   onblur="validaNome()" name="txtNome" required value="<?=$objRecurso->getNome()?>">
+                   onblur="validaNome()" name="txtNome"  value="'.Pagina::formatar_html($objRecurso->getNome()).'">
             <div id ="feedback_nome"></div>
 
         </div>
         <div class="col-md-4 mb-3">
             <label for="label_etapa">Digite o nome da etapa:</label>
             <input type="text" class="form-control" id="idEtapa" placeholder="Etapa" 
-                   onblur="validaEtapa()" name="txtEtapa" required value="<?=$objRecurso->getEtapa()?>">
+                   onblur="validaEtapa()" name="txtEtapa"  value="'.Pagina::formatar_html($objRecurso->getEtapa()).'">
             <div id ="feedback_etapa"></div>
 
         </div>
         <div class="col-md-4 mb-3">
             <label for="label_s_n_menu">Digite S/N para o menu:</label>
             <input type="text" class="form-control" id="idSNRecurso" placeholder="S/N" 
-                   onblur="validaSNmenu()" name="txtSN" required value="<?=$objRecurso->getS_n_menu()?>">
+                   onblur="validaSNmenu()" name="txtSN"  value="'.Pagina::formatar_html($objRecurso->getS_n_menu()).'">
             <div id ="feedback_s_n_menu"></div>
 
         </div>
     </div>  
     <button class="btn btn-primary" type="submit" name="salvar_recurso">Salvar</button>
 </form>
-</DIV>
-<script src="js/recurso.js"></script>
-<script src="js/fadeOut.js"></script>
+</DIV>';
 
-<?php 
-$objPagina->mostrar_excecoes(); 
-$objPagina->fechar_corpo(); 
-?>
 
+
+Pagina::getInstance()->fechar_corpo();
 

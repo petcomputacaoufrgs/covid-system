@@ -7,8 +7,8 @@ try{
     require_once  __DIR__ . '/../../classes/Sessao/Sessao.php';
     require_once  __DIR__ . '/../../classes/Pagina/Pagina.php';
     require_once  __DIR__ . '/../../classes/Excecao/Excecao.php';
-    require_once  __DIR__ . '/../../Utils/Utils.php';
-    require_once  __DIR__ . '/../../Utils/Alert.php';
+    require_once  __DIR__ . '/../../utils/Utils.php';
+    require_once  __DIR__ . '/../../utils/Alert.php';
 
     require_once  __DIR__ . '/../../classes/TipoLocalArmazenamento/TipoLocalArmazenamento.php';
     require_once  __DIR__ . '/../../classes/TipoLocalArmazenamento/TipoLocalArmazenamentoRN.php';
@@ -38,7 +38,8 @@ try{
 
     }
     
-} catch (Exception $ex) {
+} catch (Throwable $ex) {
+
    Pagina::getInstance()->processar_excecao($ex);
 }
 

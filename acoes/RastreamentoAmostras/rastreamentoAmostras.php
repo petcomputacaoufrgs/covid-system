@@ -27,6 +27,8 @@ try {
     require_once __DIR__.'/../../classes/InfosTubo/InfosTubo.php';
     require_once __DIR__.'/../../classes/InfosTubo/InfosTuboRN.php';
 
+    require_once __DIR__.'/../../classes/Situacao/Situacao.php';
+
 
     Sessao::getInstance()->validar();
 
@@ -50,6 +52,11 @@ try {
     $objAmostra = new Amostra();
     $objAmostraRN = new AmostraRN();
 
+
+    //$objAmostraRN->arrumar_banco($objAmostra);
+
+
+
     /* PERFIL PACIENTE */
     $objPerfilPaciente = new PerfilPaciente();
     $objPerfilPacienteRN = new PerfilPacienteRN();
@@ -71,48 +78,77 @@ try {
     $alert = '';
     $html = '';
 
-    $options = Interf::montar_select_pesquisa($array_colunas,$position);
+    $options = InterfacePagina::montar_select_pesquisa($array_colunas,$position);
 
-    if(isset($_POST['selecionar_amostra'])){
-        if(isset($_POST['txtCodAmostra'])){
-            $objAmostra->setIdAmostra($_POST['txtCodAmostra']);
-            $objAmostra = $objAmostraRN->consultar($objAmostra);
-            $objTubo->setIdAmostra_fk($objAmostra->getIdAmostra());
-            $arr_tubos[] = $objTuboRN->listar($objTubo);
+    if(isset($_POST['selecionar_amostra'])) {
+        if (isset($_POST['txtCodAmostra'])) {
 
-            //print_r($arr_tubos);
+            //$id = substr($_POST['txtCodAmostra'], 1);
+            $objAmostra->setNickname(strtoupper($_POST['txtCodAmostra']));
+            $arr_tubos = $objAmostraRN->obter_infos($objAmostra);
 
 
-            foreach ($arr_tubos as $tubos) {
-                foreach ($tubos as $t) {
+            foreach ($arr_tubos as $tubo) {
+                foreach ($tubo->getObjInfosTubo() as $info) {
 
-                    $objInfosTubo->setIdTubo_fk($t->getIdTubo());
-                    $arr_infos_tubo[] = $objInfosTuboRN->listar($objInfosTubo);
+                    $dataHora = explode(" ", $info->getDataHora());
+                    $data = explode("-", $dataHora[0]);
+
+                    $ano = $data[0];
+                    $mes = $data[1];
+                    $dia = $data[2];
+
+                    $data = $dia . '/' . $mes . '/' . $ano . ' ' . $dataHora[1];
+
+                    $corTd = '';
+                    if($tubo->getTipo()  == TuboRN::$TT_ALIQUOTA){
+                        //$corDescarte = ' style="color: black; font-weight:bold;" ';
+                        $corTd = 'style="background-color: rgba(255,255,0,0.1);" ';
+                    }
+                    $corDescarte = '';$corTr ='';
+                    if($info->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA ||  $info->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO || $info->getSituacaoTubo() == InfosTuboRN::$TST_LOCAL_ERRADO_POCO){
+                        $corDescarte = ' style="color:red;" ';
+                        $corTr = 'style="background-color: rgba(255,0,0,0.1);" ';
+                    }
+
+
+                    $html .= '<tr '.$corTr.'><th scope="row">' . Pagina::formatar_html($objAmostra->getNickname()) . '</th>';
+                    if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
+                        $html .= '<td>' . Pagina::formatar_html($info->getIdInfosTubo()) . '</td>';
+                        $html .= '<td>' . Pagina::formatar_html($tubo->getIdTubo()) . '</td>';
+                        $html .= '<td>' . Pagina::formatar_html($tubo->getIdTubo_fk()) . '</td>';
+                    }
+                    $original = '';
+                    if($tubo->getTuboOriginal() == 's'){
+                        $original = 'Sim';
+                    }else{
+                        $original = 'Não';
+                    }
+
+                    $reteste = '';
+                    if($info->getReteste() == 's'){
+                        $reteste = 'Sim';
+                    }else{
+                        $reteste = 'Não';
+                    }
+
+
+
+                    $html .= '<td>' . Pagina::formatar_html($original) . '</td>';
+                    $html .= '<td '.$corTd.'>' . Pagina::formatar_html(TuboRN::mostrarDescricaoTipoTubo($tubo->getTipo())) . '</td>
+                        <td>' . Pagina::formatar_html($reteste) . '</td>
+                        <td>' . Pagina::formatar_html($info->getVolume()) . '</td>
+                        <td '.$corDescarte.'>' . Pagina::formatar_html(InfosTuboRN::retornarStaTubo($info->getSituacaoTubo())) . '</td>
+                        <td>' . Pagina::formatar_html(InfosTuboRN::retornarStaEtapa($info->getSituacaoEtapa())) . '</td>
+                            <td>' . Pagina::formatar_html(InfosTuboRN::retornarEtapa($info->getEtapa())) . '</td>
+                        <td>' . Pagina::formatar_html(InfosTuboRN::retornarEtapa($info->getEtapaAnterior())) . '</td>
+              <td>' . Pagina::formatar_html($info->getObservacoes()) . '</td>
+                    <td>' . Pagina::formatar_html($data) . '</td>
+                        
+                    </tr>';
                 }
+
             }
-
-
-            foreach ($arr_infos_tubo as $infos) {
-                foreach ($infos as $i) {
-                    $objTubo->setIdTubo($i->getIdTubo_fk());
-                    $objTubo = $objTuboRN->consultar($objTubo);
-
-                            $html .= '<tr>
-                    <th scope="row">' . Pagina::formatar_html($objAmostra->getCodigoAmostra()) . '</th>
-                             <td>' . Pagina::formatar_html($i->getIdInfosTubo()) . '</td>
-                            <td>' . Pagina::formatar_html($objTubo->getIdTubo()) . '</td>
-                            <td>' . Pagina::formatar_html($objTubo->getIdTubo_fk()) . '</td>
-                             <td>' . Pagina::formatar_html($objTubo->getTuboOriginal()) . '</td>
-                             <td>' . Pagina::formatar_html($objTubo->getTipo()) . '</td>
-                            <td>' . Pagina::formatar_html($i->getReteste()) . '</td>
-                            <td>' . Pagina::formatar_html($i->getStatusTubo()) . '</td>'
-                                . '<td>' . Pagina::formatar_html($i->getEtapa()) . '</td>
-                 <td>' . Pagina::formatar_html($i->getVolume()) . '</td>
-                            
-                        </tr>';
-                }
-            }
-
         }
     }
 
@@ -129,23 +165,22 @@ Pagina::abrir_head("Listar Amostras");
 Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
+Pagina::montar_topo_listar('RASTREAMENTO DE AMOSTRAS', null, null, 'cadastrar_amostra', 'NOVA AMOSTRA');
 
 
+echo $alert;
 
-echo $alert.
-    '<div class="conteudo_listar">' .
-    Pagina::montar_topo_listar('LISTAR AMOSTRAS', null, null, 'cadastrar_amostra', 'NOVA AMOSTRA');
 
 echo '  <div class="conteudo_grande">
         <form method="POST"  >
         <div class="form-row" >
             <div class="col-md-10" style="width: 100%;">
-                <label>Informe o número da amostra</label>
+                <label>Informe o código da amostra</label>
                 <input type="text" class="form-control" id="idCodAmostra" style="text-align: center;"
-                       name="txtCodAmostra" required value="">
+                       name="txtCodAmostra"  value="'.$objAmostra->getNickname().'">
             </div>
             <div class="col-md-2">
-              <button class="btn btn-primary" type="submit"  style="margin-top: 33px;width: 100%;margin-left: 0px;" name="selecionar_amostra">selecionar</button>
+              <button class="btn btn-primary" type="submit"  style="margin-top: 33px;width: 100%;margin-left: 0px;" name="selecionar_amostra">SELECIONAR</button>
             </div>
             </div>
         </form>
@@ -153,20 +188,27 @@ echo '  <div class="conteudo_grande">
 
 
 
-echo '<div class="conteudo_tabela">
-            <table class="table table-hover">
+echo '<div id="tabela_preparos">
+        <div class="conteudo_tabela">
+            <table class="table table-hover table-sm">
                 <thead>
                     <tr>
-                        <th scope="col">CÓDIGO DA AMOSTRA</th>
-                        <th scope="col">COD INFOS</th>
-                        <th scope="col">CÓDIGO TUBO</th>
-                        <th scope="col">ORIGINOU</th>
-                        <th scope="col">TUBO ORIGINAL</th>
+                        <th scope="col">COD AMOSTRA</th>';
+                if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
+                    echo '<th scope="col">COD INFOS</th>
+                        <th scope="col">COD TUBO</th>
+                        <th scope="col">ORIGINADO PELO TUBO</th>';
+                }
+                        echo '<th scope="col">AMOSTRA ORIGINAL</th>
                         <th scope="col">TIPO</th>
                         <th scope="col">RETESTE</th>
-                        <th scope="col">STATUS TUBO</th>
-                        <th scope="col">ETAPA</th>
                         <th scope="col">VOLUME</th>
+                        <th scope="col">SITUAÇÃO AMOSTRA</th>
+                        <th scope="col">SITUAÇÃO ETAPA</th>
+                        <th scope="col">ETAPA</th>
+                        <th scope="col">ETAPA ANTERIOR</th>
+                        <th scope="col">OBS</th>
+                        <th scope="col">DATA HORA</th>
                     </tr>
                 </thead>
                 <tbody>'
@@ -174,7 +216,8 @@ echo '<div class="conteudo_tabela">
     '</tbody>
             </table>
         </div>
-    </div>';
+    </div>
+    ';
 
 
 Pagina::getInstance()->mostrar_excecoes();

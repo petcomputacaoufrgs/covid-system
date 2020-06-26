@@ -8,9 +8,29 @@ class Porta{
     private $idLocalArmazenamento_fk;
     private $qntPrateleiras;
 
+    private $objLocalArmazenamento;
+
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getObjLocalArmazenamento()
+    {
+        return $this->objLocalArmazenamento;
+    }
+
+    /**
+     * @param mixed $objLocalArmazenamento
+     */
+    public function setObjLocalArmazenamento($objLocalArmazenamento)
+    {
+        $this->objLocalArmazenamento = $objLocalArmazenamento;
+    }
+
+
 
     /**
      * @return mixed

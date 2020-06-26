@@ -58,6 +58,7 @@ class Pagina {
                 $log = new Log();
                 $log->setIdUsuario(Sessao::getInstance()->getIdUsuario());
                 $log->setTexto($e->__toString()."\n".$e->getTraceAsString());
+                date_default_timezone_set('America/Sao_Paulo');
                 $log->setDataHora(date("Y-m-d H:i:s"));
                 print_r($log);
                 $logRN = new LogRN();
@@ -66,8 +67,8 @@ class Pagina {
                 
             } catch (Throwable $ex) {      
             }
-            header('Location: controlador.php?action=erro');
-            //die('pagina->processarexcecao ' . $e);
+            //header('Location: controlador.php?action=erro');
+            die('pagina->processarexcecao ' . $e);
         }
     }
 
@@ -79,17 +80,95 @@ class Pagina {
            <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <div class="mx-auto d-sm-flex d-block flex-sm-nowrap">
 
-                <a class="navbar-brand" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">COVID19<i class="fas fa-virus"></i></a>
+                <a class="navbar-brand" style="border: none;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">Tela Inicial<i class="fas fa-virus"></i></a>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse text-center" id="navbarsExample11">
-                    <ul class="navbar-nav">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra').'">Cadastro Amostra</a>
-                        </li>
-                        <!--<li class="nav-item">
+                    <ul class="navbar-nav">';
+
+
+        if (Sessao::getInstance()->verificar_permissao('cadastrar_amostra')) {
+            echo '<li class="nav-item active">
+                            <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_amostra') . '">Cadastro Amostra</a>
+                        </li>';
+        }
+
+
+        echo ' <li class="nav-item">
+                        <div class="dropdown">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          PREPARAÇÃO E EXTRAÇÃO
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">';
+
+                    if (Sessao::getInstance()->verificar_permissao('montar_preparo_extracao')) {
+                        echo ' <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao') . '">Montar grupo preparação</a>';
+                    }
+
+                    if (Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao')) {
+                        echo '<a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao') . '">Realizar Preparação/Inativação</a>';
+                    }
+
+                    if (Sessao::getInstance()->verificar_permissao('realizar_extracao')) {
+                        echo '<a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao') . '">Realizar Extração</a>';
+                    }
+
+
+
+        echo ' <li class="nav-item">
+                        <div class="dropdown">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          RTQPCR
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">';
+
+
+        if (Sessao::getInstance()->verificar_permissao('solicitar_montagem_placa_RTqPCR')) {
+            echo ' <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=solicitar_montagem_placa_RTqPCR') . '">Solicitação Montagem Placa RTqPCR</a>';
+        }
+
+        if (Sessao::getInstance()->verificar_permissao('mix_placa_RTqPCR')) {
+            echo '<a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=mix_placa_RTqPCR') . '">Mix da Placa RTqPCR</a>';
+        }
+
+        if (Sessao::getInstance()->verificar_permissao('montar_placa_RTqPCR')) {
+            echo '<a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_placa_RTqPCR') . '">Montagem da Placa RTqPCR</a>';
+        }
+
+        if (Sessao::getInstance()->verificar_permissao('analisar_RTqPCR')) {
+            echo '<a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=analisar_RTqPCR') . '">Análise RTqPCR</a>';
+        }
+
+        echo '          </div>
+                      </div>';
+
+
+        echo ' <li class="nav-item">
+                        <div class="dropdown">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          DIAGNÓSTICO E LAUDO
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">';
+
+
+        if (Sessao::getInstance()->verificar_permissao('cadastrar_diagnostico')) {
+            echo ' <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_diagnostico') . '">Cadastrar Diagnóstico</a>';
+        }
+
+        if (Sessao::getInstance()->verificar_permissao('listar_laudo')) {
+            echo '<a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_laudo') . '">Ver Laudos</a>';
+        }
+
+        echo '          </div>
+                     </div>';
+
+
+        echo '               <!--<li class="nav-item">
                             <a class="nav-link" href="#">Preparo e Armazenamento</a>
                         </li>
                         <li class="nav-item">
@@ -140,10 +219,15 @@ class Pagina {
                         <link rel="icon" type="text/css" href="docs/img/coronavirus.png"><!--<i class="fas fa-virus"></i>-->
                         <!--<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />-->
                         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+                        
+                         <script src="js/jquery.min.js"></script>
+                        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
                         <!-- Font Awesome --><!-- NÃO REMOVER SENÃO NÃO APARECEM OS ÍCONES -->
                         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
+
+                        <!--<script src="css/bootstrap-combined.min.css"></script>-->
+                        
                         <!-- HTML5Shiv -->
                         <!--[if lt IE 9]>
                           <script src="js/html5shiv.min.js"></script>
@@ -154,9 +238,12 @@ class Pagina {
                         <!-- Bootstrap CSS -->
                         <!--<link rel="stylesheet" href="css/bootstrap.min.css">-->
 
-                        <script src="js/jquery-3.3.1.slim.min.js"></script>
+                        <!--<script src="js/jquery-3.3.1.slim.min.js"></script>-->
+                       
                         <script src="js/popper.min.js"></script>
                         <script src="js/bootstrap.min.js"></script>
+
+                        
                         
                         <!-- Bootstrap CSS -->
                         <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -175,10 +262,15 @@ class Pagina {
                         <!--<link rel="stylesheet" type="text/css" href="css/style.css">-->
                         
                         <style>
+                        
+                       
+                        
                         /* Barra de rolagem */
                         ::-webkit-scrollbar {width:9px;height:auto;background: #fff;border-bottom:none;}
                         ::-webkit-scrollbar-button:vertical {height:2px;display:block;} 
                         ::-webkit-scrollbar-thumb:vertical {background-color: #3a5261; -webkit-border-radius: 1px;}
+                        ::-webkit-scrollbar-button:horizontal {height:2px;display:block;}
+                        ::-webkit-scrollbar-thumb:horizontal {background-color: #3a5261; -webkit-border-radius: 1px;}
                          
                         .fas{
                             color:#3a5261;
@@ -213,7 +305,10 @@ class Pagina {
                        
                         html,body{
                                 height: 100%;
-                                overflow-x: hidden;
+                                
+                                overflow-x: hidden; 
+                                /*white-space: nowrap;*/
+                        
                         }
 
                         /*body{
@@ -229,21 +324,43 @@ class Pagina {
                         }  
 
                         </style>
-                                                
+                        
+                                                                     
                         <!-- google fonts -->
-                        <link href="https://fonts.googleapis.com/css?family=Baloo+Chettan+2&display=swap" rel="stylesheet">'
+                        <link href="https://fonts.googleapis.com/css?family=Baloo+Chettan+2&display=swap" rel="stylesheet">';
 
-        ;
+                        if(isset($_GET['action']) && $_GET['action'] !=  'login') {
+                            echo '<script type="text/javascript">
+                                        //$( document ).ready(function() {
+                                        //  alert( "ready!" );
+                                        setInterval(verificarAmostras, 3000);
+                                    //});
+                            
+                                    function verificarAmostras(){
+                                        $.ajax({url: "' . Sessao::getInstance()->assinar_link('controlador.php?action=verificar_amostras') . '", success: function(result){
+                                            //alert(result);
+                                            if(result !== null){
+                                                document.getElementById("idResultadoRTQPCR").classList.add("verificarAmostras");
+                                                document.getElementById("idResultadoRTQPCR").innerHTML = "Finalização do RTqPCR <a href=\"' . Sessao::getInstance()->assinar_link("controlador.php?action=listar_analise_RTqPCR") . '\">aqui</a>" 
+        
+                                            }
+                                            }});
+                                    } 
+                                </script>';
+                        }
     }
 
     public  function fechar_head() {
         echo '</head>
-                    
-                      
+                                         
                     <body>
-
-                    <a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" >'
-                         .'<img src="img/header.png" class="HeaderImg"></a>';
+                     <div id="idResultadoRTQPCR" class="">
+                         
+                       </div>
+                    <!--<a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" >-->
+                         <img src="img/header.png" class="HeaderImg"></a>
+                         
+                         ';
 
     }
 
@@ -310,24 +427,57 @@ class Pagina {
         return htmlentities($strValor,ENT_QUOTES);
     }
     
-    public static function montar_topo_listar($titulo=null ,$link1 =null, $novo1= null,$link2,$novo2) {
+    public static function montar_topo_listar($titulo=null ,$link1 =null, $novo1= null,$link2= null,$novo2=null) {
         echo '<div class="topo_listar">
                 <div class="row">
-                    <div class="col-md-6"><h3>'.$titulo.'</h3></div>
-                    <div class="col-md-3">';
+                    <div class="col-md-6" ><h3>'.$titulo.'</h3></div>
+                    <div class="col-md-3" >';
                       if(Sessao::getInstance()->verificar_permissao($link1)){ //só aparece o botão de cadastro para alguns perfis
                           echo '<a class="btn btn-primary " 
+                            style="width:108%;margin-left: 0px; border-left: 1px solid white;" 
                             href="' . Sessao::getInstance()->assinar_link('controlador.php?action='.$link1). '">'.$novo1.'</a> ';
                       }
                     echo '</div>
                     <div class="col-md-3">';
                       if(Sessao::getInstance()->verificar_permissao($link2)){ //só aparece o botão de cadastro para alguns perfis
-                          echo '<a class="btn btn-primary " 
+                          echo '<a class="btn btn-primary" style="width:100%;border-left:1px solid white;" 
                             href="' . Sessao::getInstance()->assinar_link('controlador.php?action='.$link2). '">'.$novo2.'</a> ';
                       }
                     echo '</div>
                 </div>
             </div>';
                 
+    }
+
+    public static function montar_topo_pesquisar($input_1=null,$input_2=null) {
+        echo '<div class="conteudo_grande" style="width:100%;margin-left: 5px;margin-top: -10px;">
+                <form method="post" id="formPesquisa">
+                    <div class="form-row">
+                        <input type="hidden" id="hdnPagina" name="hdnPagina" value="1">
+                        <div class="col-md-4" >
+                              <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text"><i class="fas fa-search"></i></div>
+                                </div>
+                                '.$input_1.'
+                              </div>
+                        </div>';
+        //if(isset($_POST['sel_pesquisa_coluna']) || $aparecer) {
+            echo '  <div class="col-md-4" >
+                            ' . $input_2 . '
+                        </div>
+                        <div class="col-md-2" >
+                            <input style="width: 100%;" type="submit" class="btn btn-outline-add" name="btn_pesquisar" value="PESQUISAR">
+                        </div>
+                        <div class="col-md-2" >
+                            <input style="width: 100%;" type="button" class="btn btn-outline-add" onclick="window.location.href=window.location.href" name="btn_resetar" value="LIMPAR">
+                        </div>';
+       // }
+        echo '              </div>';
+          echo '        </form>
+            </div>';
+            
+
+
     }
 }

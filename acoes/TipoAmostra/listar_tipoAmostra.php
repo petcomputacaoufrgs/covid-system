@@ -32,7 +32,7 @@ try{
 
 ?>
 
-<?php Pagina::abrir_head("Listar Tipos de Amostras"); ?>
+<?php Pagina::abrir_head("Listar Tipo de Amostras"); ?>
 <?php Pagina::fechar_head(); ?>
 <?php $objPagina->montar_menu_topo();?>
 

@@ -22,13 +22,218 @@ class Amostra{
     private $obsCEP;
     private $CEP;
     private $motivoExame;
+    private $nickname;
+
+    private $numPagina;
+    private $totalRegistros;
+    private $registrosEncontrados;
     
     private $objPaciente;
+    private $objPerfil;
+
+
+
     private $objTubo;
-    
+    private $idsAmostras;
+    private $objLaudo;
+    private $objProtocolo;
+    private $objLote;
+    private $objMunicipio;
+    private $objEstado;
+
+    /**
+     * @return mixed
+     */
+    public function getObjMunicipio()
+    {
+        return $this->objMunicipio;
+    }
+
+    /**
+     * @param mixed $objMunicipio
+     */
+    public function setObjMunicipio($objMunicipio)
+    {
+        $this->objMunicipio = $objMunicipio;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getObjEstado()
+    {
+        return $this->objEstado;
+    }
+
+    /**
+     * @param mixed $objEstado
+     */
+    public function setObjEstado($objEstado)
+    {
+        $this->objEstado = $objEstado;
+    }
+
+
+
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNumPagina()
+    {
+        return $this->numPagina;
+    }
+
+    /**
+     * @param mixed $numPagina
+     */
+    public function setNumPagina($numPagina)
+    {
+        $this->numPagina = $numPagina;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalRegistros()
+    {
+        return $this->totalRegistros;
+    }
+
+    /**
+     * @param mixed $totalRegistros
+     */
+    public function setTotalRegistros($totalRegistros)
+    {
+        $this->totalRegistros = $totalRegistros;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegistrosEncontrados()
+    {
+        return $this->registrosEncontrados;
+    }
+
+    /**
+     * @param mixed $registrosEncontrados
+     */
+    public function setRegistrosEncontrados($registrosEncontrados)
+    {
+        $this->registrosEncontrados = $registrosEncontrados;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjLote()
+    {
+        return $this->objLote;
+    }/**
+     * @param mixed $objLote
+     */
+    public function setObjLote($objLote)
+    {
+        $this->objLote = $objLote;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjProtocolo()
+    {
+        return $this->objProtocolo;
+    }
+
+    /**
+     * @param mixed $objProtocolo
+     */
+    public function setObjProtocolo($objProtocolo)
+    {
+        $this->objProtocolo = $objProtocolo;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjPerfil()
+    {
+        return $this->objPerfil;
+    }
+
+    /**
+     * @param mixed $objPerfil
+     */
+    public function setObjPerfil($objPerfil)
+    {
+        $this->objPerfil = $objPerfil;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjLaudo()
+    {
+        return $this->objLaudo;
+    }
+
+    /**
+     * @param mixed $objLaudo
+     */
+    public function setObjLaudo($objLaudo)
+    {
+        $this->objLaudo = $objLaudo;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getNickname()
+    {
+        return $this->nickname;
+    }
+
+    /**
+     * @param mixed $nickname
+     */
+    public function setNickname($nickname)
+    {
+        $this->nickname = $nickname;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getIdsAmostras()
+    {
+        return $this->idsAmostras;
+    }
+
+    /**
+     * @param mixed $idsAmostras
+     */
+    public function setIdsAmostras($idsAmostras)
+    {
+        $this->idsAmostras = $idsAmostras;
+    }
+
+
     
     function getObjTubo() {
         return $this->objTubo;

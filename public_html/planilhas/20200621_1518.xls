@@ -1,0 +1,720 @@
+  <table border='1' >
+                        <tr><td> linha 1 </td></tr>
+                        <tr><td> linha 2 </td></tr>
+                        <tr><td> linha 3 </td></tr>
+                        <tr><td> linha 4 </td></tr>
+                        <tr><td> linha 5 </td></tr>
+                        <tr><td> linha 6 </td></tr>
+                        <tr><td> - </td></tr>
+                         <tr>
+                            <td> Well </td>
+                            <td> Sample Name </td>
+                            <td> Task </td>
+                            <td> Reporter </td>
+                            <td> Quencher </td>
+                            <td> Ct </td>
+                         </tr> <tr>
+                            <td> A1 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> A2 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> A3 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> A4 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> A5 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> A6 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> A7 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> A8 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> A9 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> A10 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> A11 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> B1 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> B2 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> B3 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> B4 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> B5 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> B6 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> B7 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> B8 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> B9 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> B10 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> B11 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> C1 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> C2 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> C3 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> C4 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> C5 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> C6 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> C7 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> C8 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> C9 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> C10 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> C11 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> D1 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> D2 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> D3 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> D4 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> D5 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> D6 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> D7 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> D8 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> D9 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> D10 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> D11 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> E1 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> E2 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> E3 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> E4 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> E5 </td>
+                            <td> R </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> E6 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> E7 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> E8 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> E9 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> E10 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> E11 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> F1 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> F2 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> F3 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> F4 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> F5 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> F6 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> F7 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> F8 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> F9 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> F10 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> F11 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> G1 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> G2 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> G3 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> G4 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> G5 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> G6 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> G7 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> G8 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> G9 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> G10 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> G11 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> H1 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> H2 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> H3 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> H4 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> H5 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> H6 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> H7 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> H8 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> H9 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> H10 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                          <tr>
+                            <td> H11 </td>
+                            <td>  </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                            <td> xx </td>
+                         </tr>
+                           </table>

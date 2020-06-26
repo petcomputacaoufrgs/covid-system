@@ -7,8 +7,7 @@ class DetentorBD{
 
     public function cadastrar(Detentor $objDetentor, Banco $objBanco) {
         try{
-            //echo $objDetentor->getDetentor();
-            //die("die");
+
             $INSERT = 'INSERT INTO tb_detentor (detentor,index_detentor) VALUES (?,?)';
 
             $arrayBind = array();
@@ -18,7 +17,8 @@ class DetentorBD{
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objDetentor->setIdDetentor($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+            return $objDetentor;
+        } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando detentor  no BD.",$ex);
         }
         
@@ -26,7 +26,7 @@ class DetentorBD{
     
     public function alterar(Detentor $objDetentor, Banco $objBanco) {
         try{
-            //print_r($objDetentor);
+
             $UPDATE = 'UPDATE tb_detentor SET '
                     . ' detentor = ?,'
                     . ' index_detentor = ?'
@@ -39,14 +39,14 @@ class DetentorBD{
             $arrayBind[] = array('i',$objDetentor->getIdDetentor());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
-
-        } catch (Exception $ex) {
+            return $objDetentor;
+        } catch (Throwable $ex) {
             throw new Excecao("Erro alterando detentor no BD.",$ex);
         }
        
     }
     
-     public function listar(Detentor $objDetentor, Banco $objBanco) {
+     public function listar(Detentor $objDetentor,$numLimite=null, Banco $objBanco) {
          try{
       
             $SELECT = "SELECT * FROM tb_detentor";
@@ -60,18 +60,29 @@ class DetentorBD{
                 $AND = ' and '; 
                 $arrayBind[] = array('s',$objDetentor->getIndex_detentor());
             }
-            
+
+             if($objDetentor->getIdDetentor() != null){
+                 $WHERE .= $AND." idDetentor = ?";
+                 $AND = ' and ';
+                 $arrayBind[] = array('i',$objDetentor->getIdDetentor() );
+             }
+
 
             if($WHERE != ''){
                 $WHERE = ' where '.$WHERE;
-            } 
-        
-            //echo $SELECT.$WHERE;$WHERE
+            }
 
-            $arr = $objBanco->consultarSQL($SELECT.$WHERE,$arrayBind);
-            
+             $LIMIT = '';
+             if(!is_null($numLimite)){
+                 $LIMIT = ' LIMIT ?';
+                 $arrayBind[] = array('i',$numLimite);
+             }
 
-            $array_detentor = array();
+             $arr = $objBanco->consultarSQL($SELECT.$WHERE.$LIMIT,$arrayBind);
+
+
+
+             $array_detentor = array();
             foreach ($arr as $reg){
                 $objDetentor = new Detentor();
                 $objDetentor->setIdDetentor($reg['idDetentor']);
@@ -81,7 +92,7 @@ class DetentorBD{
                 $array_detentor[] = $objDetentor;
             }
             return $array_detentor;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando detentor no BD.",$ex);
         }
        
@@ -104,7 +115,7 @@ class DetentorBD{
             $detentor->setIndex_detentor($arr[0]['index_detentor']);
 
             return $detentor;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
        
             throw new Excecao("Erro consultando detentor no BD.",$ex);
         }
@@ -120,7 +131,7 @@ class DetentorBD{
             $arrayBind[] = array('i',$objDetentor->getIdDetentor());
             $objBanco->executarSQL($DELETE, $arrayBind);
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo detentor no BD.",$ex);
         }
     }
@@ -148,7 +159,7 @@ class DetentorBD{
             }
              return $arr_detentores;
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro pesquisando o detentor no BD.",$ex);
         }
     }

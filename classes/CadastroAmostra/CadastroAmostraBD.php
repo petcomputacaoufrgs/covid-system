@@ -22,8 +22,8 @@ class CadastroAmostraBD{
             $objBanco->executarSQL($INSERT,$arrayBind);
             //$objCadastroAmostra->setIdAmostra_fk($objBanco->obterUltimoID());
             
-           
-        } catch (Exception $ex) {
+           return $objCadastroAmostra;
+        } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando o paciente  no BD.",$ex);
         }
         
@@ -54,7 +54,7 @@ class CadastroAmostraBD{
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
 
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro alterando o paciente no BD.",$ex);
         }
        
@@ -84,10 +84,98 @@ class CadastroAmostraBD{
                 
             }
             return $array_paciente;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando o paciente no BD.",$ex);
         }
        
+    }
+
+    public function listar_completo(CadastroAmostra $objCadastroAmostra,$data = null,$numLimite=null, Banco $objBanco) {
+        try{
+
+
+
+            $SELECT = "SELECT * FROM tb_cadastroamostra";
+
+            $WHERE = '';
+            $AND = '';
+            $FROM = '';
+            $arrayBind = array();
+
+            if ($objCadastroAmostra->getIdAmostra_fk() != null) {
+                $WHERE .= $AND . " tb_cadastroamostra.idAmostra_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objCadastroAmostra->getIdAmostra_fk());
+            }
+
+
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            $LIMIT = '';
+            if(!is_null($numLimite)){
+                $LIMIT = ' LIMIT ?';
+                $arrayBind[] = array('i',$numLimite);
+            }
+
+            $arr = $objBanco->consultarSQL($SELECT .$FROM. $WHERE.$LIMIT, $arrayBind);
+
+            $array = array();
+            foreach ($arr as $reg){
+                $listar = true;
+                $dataCadastro = explode(" ",$reg['dataCadastroInicio']);
+                if(!is_array($data) && !is_null($data)) {
+                    if($dataCadastro[0] != $data){
+                        $listar = false;
+                    }
+                }else if(is_array($data)){
+                    $encontrou = false;
+                    $i=0;
+                    while(!$encontrou && $i<count($data)){
+                        if($dataCadastro[0] != $data[$i]){
+                            $listar = false;
+                        }else{
+                            $encontrou = true;
+                            $listar = true;
+                        }
+                        $i++;
+                    }
+
+                }
+
+                if($listar) {
+                    $objCadastroAmostraNovo = new CadastroAmostra();
+                    $objCadastroAmostraNovo->setIdCadastroAmostra($reg['idCadastroAmostra']);
+                    $objCadastroAmostraNovo->setIdUsuario_fk($reg['idUsuario_fk']);
+                    $objCadastroAmostraNovo->setIdAmostra_fk($reg['idAmostra_fk']);
+                    $objCadastroAmostraNovo->setIdLocalArmazenamento_fk($reg['idLocalArmazenamento_fk']);
+                    $objCadastroAmostraNovo->setDataHoraFim($reg['dataCadastroFim']);
+                    $objCadastroAmostraNovo->setDataHoraInicio($reg['dataCadastroInicio']);
+
+                    $objAmostra = new Amostra();
+                    $objAmostraRN = new AmostraRN();
+                    $objAmostra->setIdAmostra($objCadastroAmostraNovo->getIdAmostra_fk());
+                    $arrAmostras = $objAmostraRN->listar_completo($objAmostra);
+                    $objCadastroAmostraNovo->setObjAmostra($arrAmostras[0]);
+
+                    $objUsuario = new Usuario();
+                    $objUsuarioRN = new UsuarioRN();
+                    $objUsuario->setIdUsuario($objCadastroAmostraNovo->getIdUsuario_fk());
+                    $objUsuario = $objUsuarioRN->consultar($objUsuario);
+                    $objCadastroAmostraNovo->setObjUsuario($objUsuario);
+
+
+                    $array[] = $objCadastroAmostraNovo;
+                }
+
+            }
+            return $array;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando o paciente no BD.",$ex);
+        }
+
     }
     
     public function consultar(CadastroAmostra $objCadastroAmostra, Banco $objBanco) {
@@ -111,8 +199,7 @@ class CadastroAmostraBD{
             
 
             return $paciente;
-        } catch (Exception $ex) {
-       
+        } catch (Throwable $ex) {
             throw new Excecao("Erro consultando o paciente no BD.",$ex);
         }
 
@@ -127,7 +214,7 @@ class CadastroAmostraBD{
             $arrayBind[] = array('i',$objCadastroAmostra->getIdCadastroAmostra());
             $objBanco->executarSQL($DELETE, $arrayBind);
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo o paciente no BD.",$ex);
         }
     }

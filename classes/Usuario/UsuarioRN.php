@@ -13,8 +13,8 @@ class UsuarioRN{
    private function validarMatricula(Usuario $usuario,Excecao $objExcecao){
         $strMatriculaUsuario = trim($usuario->getMatricula());
        
-        if ($strMatriculaUsuario == '') {
-            $objExcecao->adicionar_validacao('A matrícula do usuário não foi informada','idMatricula');
+        if ($strMatriculaUsuario == '' && $usuario->getCPF() == '') {
+            $objExcecao->adicionar_validacao('A matrícula e CPF do usuário não foram informados', null,'alert-danger');
         }else{
             /*if (strlen($strMatriculaUsuario) > 8) {
                 $objExcecao->adicionar_validacao('A matrícula do usuário possui mais que 8 caracteres.','idMatricula');
@@ -24,15 +24,30 @@ class UsuarioRN{
         return $usuario->setMatricula($strMatriculaUsuario);
 
     }
+
+    private function validarCPF(Usuario $usuario,Excecao $objExcecao){
+        $strCPF = trim($usuario->getCPF());
+
+        if (strlen($strCPF) > 11) {
+            $objExcecao->adicionar_validacao('O CPF do usuário possui mais que 11 caracteres', null,'alert-danger');
+        }else{
+            /*if (strlen($strMatriculaUsuario) > 8) {
+                $objExcecao->adicionar_validacao('A matrícula do usuário possui mais que 8 caracteres.','idMatricula');
+            }*/
+        }
+
+        return $usuario->setCPF($strCPF);
+
+    }
     
      private function validarSenha(Usuario $usuario,Excecao $objExcecao){
         $strSenhaUsuario = trim($usuario->getSenha());
        
         if ($strSenhaUsuario == '') {
-            $objExcecao->adicionar_validacao('A senha do usuário não foi informada','idPassword');
+            $objExcecao->adicionar_validacao('A senha do usuário não foi informada', null,'alert-danger');
         }else{
             if (strlen($strSenhaUsuario) > 50) {
-                $objExcecao->adicionar_validacao('A senha do usuário possui mais que 12 caracteres.','idPassword');
+                $objExcecao->adicionar_validacao('A senha do usuário possui mais que 12 caracteres', null,'alert-danger');
             }
             
             //validacoes de senha
@@ -41,130 +56,205 @@ class UsuarioRN{
         return $usuario->setSenha($strSenhaUsuario);
 
     }
+
+    private function validarIdUsuario(Usuario $usuario,Excecao $objExcecao){
+
+       if($usuario->getIdUsuario() != null) {
+           if ($usuario->getIdUsuario() == '') {
+               $objExcecao->adicionar_validacao('O identificador do usuário não foi informado', null,'alert-danger');
+           }
+       }else{
+           $objExcecao->adicionar_validacao('O identificador do usuário não foi informado', null,'alert-danger');
+       }
+
+    }
+
+
+    private function validarJaExisteUsuario(Usuario $usuario,Excecao $objExcecao){
+
+        $objUsuarioRN = new UsuarioRN();
+        $numUsuario = count($objUsuarioRN->listar($usuario,1));
+        if($numUsuario > 0){
+            $objExcecao->adicionar_validacao('O usuário já existe',null,'alert-danger');
+        }
+
+    }
      
 
     public function cadastrar(Usuario $usuario) {
+        $objBanco = new Banco();
         try {
-            
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
-            
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $this->validarCPF($usuario,$objExcecao);
             $this->validarMatricula($usuario,$objExcecao); 
-            $this->validarSenha($usuario,$objExcecao); 
+            $this->validarSenha($usuario,$objExcecao);
+            $this->validarJaExisteUsuario($usuario,$objExcecao);
             
             $objExcecao->lancar_validacoes();
             $objUsuarioBD = new UsuarioBD();
-            $objUsuarioBD->cadastrar($usuario,$objBanco);
-            
+            $usuario = $objUsuarioBD->cadastrar($usuario,$objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+            return $usuario;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando o usuário.', $e);
         }
     }
 
     public function alterar(Usuario $usuario) {
-         try {
-             
+        $objBanco = new Banco();
+        try {
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
-            
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $this->validarCPF($usuario,$objExcecao);
             $this->validarMatricula($usuario,$objExcecao);   
-            $this->validarSenha($usuario,$objExcecao); 
+            $this->validarSenha($usuario,$objExcecao);
+            $this->validarIdUsuario($usuario,$objExcecao);
+            $this->validarJaExisteUsuario($usuario,$objExcecao);
                         
             $objExcecao->lancar_validacoes();
             $objUsuarioBD = new UsuarioBD();
-            $objUsuarioBD->alterar($usuario,$objBanco);
-            
+            $usuario = $objUsuarioBD->alterar($usuario,$objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+            return $usuario;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando o usuário.', $e);
         }
     }
 
     public function consultar(Usuario $usuario) {
+        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objUsuarioBD = new UsuarioBD();
             $arr =  $objUsuarioBD->consultar($usuario,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
- 
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o usuário.',$e);
         }
     }
 
     public function remover(Usuario $usuario) {
-         try {
+        $objBanco = new Banco();
+        try {
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objUsuarioBD = new UsuarioBD();
             $arr =  $objUsuarioBD->remover($usuario,$objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro removendo o usuário.', $e);
         }
     }
 
-    public function listar(Usuario $usuario) {
+    public function listar(Usuario $usuario,$numLimite = null) {
+        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objUsuarioBD = new UsuarioBD();
             
-            $arr = $objUsuarioBD->listar($usuario,$objBanco);
-            
+            $arr = $objUsuarioBD->listar($usuario,$numLimite,$objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o usuário.',$e);
         }
     }
     
     
      public function validar_cadastro(Usuario $usuario) {
-        try {
-            $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+         $objBanco = new Banco();
+         try {
+             $objExcecao = new Excecao();
+             $objBanco->abrirConexao();
+             $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objUsuarioBD = new UsuarioBD();
             $arr = $objUsuarioBD->validar_cadastro($usuario,$objBanco);
 
-            $objBanco->fecharConexao();
-            return $arr;
-        } catch (Exception $e) {
+             $objBanco->confirmarTransacao();
+             $objBanco->fecharConexao();
+             return $arr;
+         } catch (Throwable $e) {
+             $objBanco->cancelarTransacao();
             throw new Excecao('Erro validando cadastro do usuário.', $e);
         }
     }
 
 
     public function pesquisar($campoBD, $valor_usuario) {
+        $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objUsuarioBD = new UsuarioBD();
             $arr = $objUsuarioBD->pesquisar($campoBD,$valor_usuario,$objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro pesquisando o usuário.', $e);
         }
     }
+
+    public function paginacao(Usuario $usuario) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $objExcecao->lancar_validacoes();
+            $objUsuarioBD = new UsuarioBD();
+            $arr = $objUsuarioBD->paginacao($usuario,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro na paginação do usuário.', $e);
+        }
+    }
+
 
 }
 

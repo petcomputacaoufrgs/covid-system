@@ -5,18 +5,19 @@
 
 
 session_start();
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Paciente/Paciente.php';
-require_once '../classes/Paciente/PacienteRN.php';
-require_once '../classes/Etnia/Etnia.php';
-require_once '../classes/Etnia/EtniaRN.php';
-require_once '../classes/Sexo/Sexo.php';
-require_once '../classes/Sexo/SexoRN.php';
-
 
 try{
+     require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
+    require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
+    require_once __DIR__ . '/../../classes/Pagina/InterfacePagina.php';
+    require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
+    require_once __DIR__ . '/../../classes/Paciente/Paciente.php';
+    require_once __DIR__ . '/../../classes/Paciente/PacienteRN.php';
+    require_once __DIR__ . '/../../classes/Etnia/Etnia.php';
+    require_once __DIR__ . '/../../classes/Etnia/EtniaRN.php';
+    require_once __DIR__ . '/../../classes/Sexo/Sexo.php';
+    require_once __DIR__ . '/../../classes/Sexo/SexoRN.php';
+
     Sessao::getInstance()->validar();
     $objPaciente = new Paciente();
     $objPacienteRN = new PacienteRN();
@@ -88,8 +89,8 @@ try{
                         <td>'.Pagina::formatar_html($cpf).'</td>        
                         <td>'.Pagina::formatar_html($rg).'</td>        
                         
-                        <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_paciente&idPaciente='.Pagina::formatar_html($p->getIdPaciente())).'">Editar</a></td>
-                        <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_paciente&idPaciente='.Pagina::formatar_html($p->getIdPaciente())).'">Remover</a></td>
+                       <!-- <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=editar_paciente&idPaciente='.Pagina::formatar_html($p->getIdPaciente())).'">Editar</a></td> -->
+                       <!-- <td><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=remover_paciente&idPaciente='.Pagina::formatar_html($p->getIdPaciente())).'">Remover</a></td> -->
                 </tr>';
     }
     
@@ -107,7 +108,7 @@ Pagina::getInstance()->montar_menu_topo();
 echo '
     <div class="conteudo_listar">'.
     
-       Pagina::montar_topo_listar('LISTAR PACIENTES',null,null, 'cadastrar_paciente', 'NOVO PACIENTE').
+       Pagina::montar_topo_listar('LISTAR PACIENTES',null,null, null, null).
         
         '<div class="conteudo_tabela">
             <table class="table table-hover">
@@ -123,8 +124,7 @@ echo '
                     <th scope="col">DATA NASCIMENTO</th>
                     <th scope="col">CPF</th>
                     <th scope="col">RG</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
+                    
                   </tr>
                 </thead>
                 <tbody>'

@@ -23,7 +23,7 @@ class EstadoOrigemBD{
                 $array_marca[] = $objEstadoOrigem;
             }
             return $array_marca;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando marca no BD.",$ex);
         }
        
@@ -40,13 +40,20 @@ class EstadoOrigemBD{
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
 
-            $estadoOrigem = new EstadoOrigem();
-            $estadoOrigem->setCod_estado($arr[0]['cod_estado']);
-            $estadoOrigem->setSigla($arr[0]['sigla']);
-            $estadoOrigem->setNome($arr[0]['nome']);
 
-            return $estadoOrigem;
-        } catch (Exception $ex) {
+            if(count($arr) >0 ) {
+                $estadoOrigem = new EstadoOrigem();
+                $estadoOrigem->setCod_estado($arr[0]['cod_estado']);
+                $estadoOrigem->setSigla($arr[0]['sigla']);
+                $estadoOrigem->setNome($arr[0]['nome']);
+                return $estadoOrigem;
+            }
+
+
+
+            //throw new Throwable("Nenhum registro encontrado na consulta");
+
+        } catch (Throwable $ex) {
        
             throw new Excecao("Erro consultando marca no BD.",$ex);
         }

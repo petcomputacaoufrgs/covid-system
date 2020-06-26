@@ -53,6 +53,21 @@ class PacienteRN {
         return $paciente->setObsNomeMae($strNomeMaeObs);
     }
 
+    private function validarObsMunicipio(Paciente $paciente, Excecao $objExcecao) {
+        $strMunicipio = trim($paciente->getObsMunicipio());
+
+        if (strlen($strMunicipio) > 150) {
+            $objExcecao->adicionar_validacao('Observações do município do paciente possui mais que 150 caracteres.',  null, 'alert-danger');
+        }
+
+        if ($strMunicipio == '' && $paciente->getIdMunicipioFk() == '') {
+            return $paciente->setObsMunicipio('Desconhecido');
+        }
+
+
+        return $paciente->setObsMunicipio($strMunicipio);
+    }
+
     private function validarCPF(Paciente $paciente, Excecao $objExcecao) {
         $strCPF = trim($paciente->getCPF());
 
@@ -113,7 +128,7 @@ class PacienteRN {
             $objExcecao->adicionar_validacao('O RG já possui mais de 10 caracteres', null, 'alert-danger');
         }
 
-        if (strlen($strRG) > 0) {
+        /*if (strlen($strRG) > 0) {
             $objPacienteAux = new Paciente();
             $objPacienteAuxRN = new PacienteRN();
             $arr = $objPacienteAuxRN->listar($objPacienteAux);
@@ -130,7 +145,7 @@ class PacienteRN {
                     
                 }
             }
-        }
+        }*/
 
         return $paciente->setRG($strRG);
     }
@@ -186,7 +201,7 @@ class PacienteRN {
                 $objExcecao->adicionar_validacao('O cartão do SUS do paciente possui mais que 15 caracteres.', null, 'alert-danger');
             }
 
-            if (strlen($strCartaoSUS) > 0) {
+            /*if (strlen($strCartaoSUS) > 0) {
                 $objPacienteAux = new Paciente();
                 $objPacienteAuxRN = new PacienteRN();
                 $arr = $objPacienteAuxRN->listar($objPacienteAux);
@@ -203,7 +218,7 @@ class PacienteRN {
 
                     }
                 }
-            }
+            }*/
 
             return $paciente->setCartaoSUS($strCartaoSUS);
         }
@@ -269,7 +284,7 @@ class PacienteRN {
                     $objExcecao->adicionar_validacao('O passaporte do paciente possui mais que 15 caracteres.', 'idPassaporte', 'alert-danger');
                 }
 
-                if (strlen($strPassaporte) > 0) {
+                /*if (strlen($strPassaporte) > 0) {
                     $objPacienteAux = new Paciente();
                     $objPacienteAuxRN = new PacienteRN();
                     $arr = $objPacienteAuxRN->listar($objPacienteAux);
@@ -286,7 +301,7 @@ class PacienteRN {
 
                         }
                     }
-                }
+                }*/
 
 
                 return $paciente->setPassaporte($strPassaporte);
@@ -319,6 +334,31 @@ class PacienteRN {
 
     private function validarEndereco(Paciente $paciente, Excecao $objExcecao) {
         if($paciente->getEndereco() != null) {
+            $strEndereco = trim($paciente->getEndereco());
+
+            if (strlen($strEndereco) > 150) {
+                $objExcecao->adicionar_validacao('O endereço possui mais que 150 caracteres.', 'idEndereco', 'alert-danger');
+            }
+
+            return $paciente->setEndereco($strEndereco);
+        }
+    }
+
+    private function validarIdMunicipioIdEstado(Paciente $paciente, Excecao $objExcecao) {
+        if($paciente->getIdEstadoFk() != null && $paciente->getIdMunicipioFk() != null) {
+            $objLugarOrigem = new LugarOrigem();
+            $objLugarOrigemRN = new LugarOrigemRN();
+            $arr_lugar = $objLugarOrigemRN->listar($objLugarOrigem);
+
+            foreach ($arr_lugar as $lugar){
+                if($lugar->getIdLugarOrigem() == $paciente->getIdMunicipioFk()){
+                    if($paciente->getIdEstadoFk() != $lugar->getObjEstado()->getCod_estado()){
+                        return $objExcecao->adicionar_validacao('O município deve ser do estado correspondente', 'idEndereco', 'alert-danger');
+                    }
+                }
+            }
+
+
             $strEndereco = trim($paciente->getEndereco());
 
             if (strlen($strEndereco) > 150) {
@@ -523,6 +563,8 @@ class PacienteRN {
             $paciente->setCadastroPendente('s');
         }
 
+
+
     }
 
     private function validarObsDataNascimento(Paciente $paciente, Excecao $objExcecao) {
@@ -547,7 +589,7 @@ class PacienteRN {
             $objBanco->abrirTransacao();
             $objPacienteBD = new PacienteBD();
 
-            $this->validarCenarioPendente($paciente, $objExcecao);
+            //$this->validarCenarioPendente($paciente, $objExcecao);
             $this->validarCEP($paciente, $objExcecao);
             $this->validarEndereco($paciente, $objExcecao);
             $this->validarCPF($paciente, $objExcecao);
@@ -565,6 +607,8 @@ class PacienteRN {
             $this->validarObsPassaporte($paciente, $objExcecao);
             $this->validarObsEndereco($paciente, $objExcecao);
             $this->validarRG($paciente, $objExcecao);
+            $this->validarObsMunicipio($paciente, $objExcecao);
+            $this->validarIdMunicipioIdEstado($paciente, $objExcecao);
             
             /* VALIDAR CENÁRIO 7 e 8 */
             //$this->validarCenario_7_8($paciente, $objExcecao);
@@ -596,11 +640,12 @@ class PacienteRN {
     }
 
     public function alterar(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
 
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objCodGALRN = new CodigoGAL_RN();
 
             if($paciente->getObjCodGAL() != null){
@@ -617,7 +662,7 @@ class PacienteRN {
 
             }
 
-            $this->validarCenarioPendente($paciente, $objExcecao);
+            //$this->validarCenarioPendente($paciente, $objExcecao);
             $this->validarCEP($paciente, $objExcecao);
             $this->validarEndereco($paciente, $objExcecao);
             $this->validarCPF($paciente, $objExcecao);
@@ -635,149 +680,232 @@ class PacienteRN {
             $this->validarObsPassaporte($paciente, $objExcecao);
             $this->validarObsEndereco($paciente, $objExcecao);
             $this->validarRG($paciente, $objExcecao);
+            $this->validarObsMunicipio($paciente, $objExcecao);
+            $this->validarIdMunicipioIdEstado($paciente, $objExcecao);
             //$this->validarCenario_7_8($paciente,$objExcecao); 
 
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
             $objPacienteBD->alterar($paciente, $objBanco);
 
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $paciente;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando o paciente.', $e);
         }
     }
 
     public function consultar(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
             $arr = $objPacienteBD->consultar($paciente, $objBanco);
 
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro consultando o paciente.', $e);
+        }
+    }
 
+    public function listar_completo(Paciente $paciente,$numLimite = null) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $objExcecao->lancar_validacoes();
+            $objPacienteBD = new PacienteBD();
+            $arr = $objPacienteBD->listar_completo($paciente,$numLimite, $objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o paciente.', $e);
         }
     }
 
     public function remover(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
             $arr = $objPacienteBD->remover($paciente, $objBanco);
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro removendo o paciente.', $e);
         }
     }
 
     public function listar(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
 
             $arr = $objPacienteBD->listar($paciente, $objBanco);
 
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o paciente.', $e);
         }
     }
 
     public function validarCadastro(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
             $arr = $objPacienteBD->validarCadastro($paciente, $objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro pesquisando o paciente.', $e);
         }
     }
 
     public function procurar(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
             $arr = $objPacienteBD->procurar($paciente, $objBanco);
 
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
-
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o paciente.', $e);
         }
     }
 
     public function procurarCPF(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
             $arr = $objPacienteBD->procurarCPF($paciente, $objBanco);
 
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
-
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o paciente.', $e);
         }
     }
 
     public function procurarRG(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
             $arr = $objPacienteBD->procurarRG($paciente, $objBanco);
 
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
-
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o paciente.', $e);
         }
     }
 
     
     public function procurarPassaporte(Paciente $paciente) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objPacienteBD = new PacienteBD();
             $arr = $objPacienteBD->procurarPassaporte($paciente, $objBanco);
 
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
-
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o paciente.', $e);
+        }
+    }
+
+    public function procurar_paciente(Paciente $paciente) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            $objExcecao->lancar_validacoes();
+            $objPacienteBD = new PacienteBD();
+
+            $arr = $objPacienteBD->procurar_paciente($paciente, $objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro procurando o paciente.', $e);
         }
     }
     

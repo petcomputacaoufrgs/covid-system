@@ -8,6 +8,25 @@ class CadastroAmostra{
     private $dataHoraFim;
     
     private $objAmostra;
+    private $objUsuario;
+
+    /**
+     * @return mixed
+     */
+    public function getObjUsuario()
+    {
+        return $this->objUsuario;
+    }
+
+    /**
+     * @param mixed $objUsuario
+     */
+    public function setObjUsuario($objUsuario)
+    {
+        $this->objUsuario = $objUsuario;
+    }
+
+
     
     
     

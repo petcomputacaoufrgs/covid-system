@@ -156,12 +156,23 @@ class CapelaRN{
 
     }
 
+    private function validarIdCapela(Capela $capela,Excecao $objExcecao){
+
+        if ($capela->getIdCapela() == null || $capela->getIdCapela() <= 0) {
+            $objExcecao->adicionar_validacao('O identificador da capela não foi informado',null, 'alert-danger');
+        }else{
+            $numIdCapela = trim($capela->getIdCapela());
+            return $capela->setIdCapela(intval($numIdCapela));
+        }
+    }
+
     public function cadastrar(Capela $capela) {
+        $objBanco = new Banco();
         try {
-            
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
 
             $this->validarStrTipoCapela($capela,$objExcecao);
             $this->validarNumero($capela,$objExcecao);
@@ -169,81 +180,100 @@ class CapelaRN{
 
             $objExcecao->lancar_validacoes();
             $objCapelaBD = new CapelaBD();
-            $objCapelaBD->cadastrar($capela,$objBanco);
-            
+            $capela =$objCapelaBD->cadastrar($capela,$objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+            return $capela;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando a capela.', $e);
         }
     }
 
     public function alterar(Capela $capela) {
-         try {
-             
+        $objBanco = new Banco();
+        try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
             $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
 
              $this->validarStrTipoCapela($capela,$objExcecao);
+            $this->validarIdCapela($capela,$objExcecao);
             $this->validarNumero($capela,$objExcecao);
              $this->validarNivelSeguranca($capela,$objExcecao);
                         
             $objExcecao->lancar_validacoes();
             $objCapelaBD = new CapelaBD();
-            $objCapelaBD->alterar($capela,$objBanco);
-            
+             $capela = $objCapelaBD->alterar($capela,$objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-        } catch (Exception $e) {
+            return $capela;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando a capela.', $e);
         }
     }
 
     public function consultar(Capela $capela) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $this->validarIdCapela($capela,$objExcecao);
             $objExcecao->lancar_validacoes();
             $objCapelaBD = new CapelaBD();
             $arr =  $objCapelaBD->consultar($capela,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
- 
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando a capela.',$e);
         }
     }
 
     public function remover(Capela $capela) {
-         try {
+        $objBanco = new Banco();
+        try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objCapelaBD = new CapelaBD();
             $arr =  $objCapelaBD->remover($capela,$objBanco);
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro removendo a capela.', $e);
         }
     }
 
     public function listar(Capela $capela) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objCapelaBD = new CapelaBD();
             
             $arr = $objCapelaBD->listar($capela,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando a capela.',$e);
         }
     }
@@ -253,30 +283,36 @@ class CapelaRN{
         try {
             $objCapelaBD = new CapelaBD();
             $objExcecao = new Excecao();
-            
-            $objBanco->abrirConexao(); 
+
+            $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
 
-            //sleep(5);
-            $arr = $objCapelaBD->bloquear_registro($capela,$objBanco);
-            if(empty($arr)){
-               return $arr; 
-            }
-            
-            $objCapela = new Capela();
-            $objCapela->setIdCapela($arr[0]->getIdCapela());
-            $objCapela->setNumero($arr[0]->getNumero());
-            $arr[0]->setSituacaoCapela(self::$TE_OCUPADA);
-            $objCapela->setSituacaoCapela($arr[0]->getSituacaoCapela());
-            $objCapela->setNivelSeguranca($arr[0]->getNivelSeguranca());
+            if ($capela->getIdCapela() != null){
+                //sleep(5);
+                $arr = $objCapelaBD->bloquear_registro($capela, $objBanco);
+                if (empty($arr)) {
+                    return $arr;
+                }
+
+                $objCapela = new Capela();
+                $objCapela->setIdCapela($arr[0]->getIdCapela());
+                $objCapela->setNumero($arr[0]->getNumero());
+                $arr[0]->setSituacaoCapela(self::$TE_OCUPADA);
+                $objCapela->setSituacaoCapela($arr[0]->getSituacaoCapela());
+                $objCapela->setNivelSeguranca($arr[0]->getNivelSeguranca());
+            }/*else if($capela->getIdCapela() == null){
+                $objCapelaRN = new CapelaRN();
+                $objCapela = $objCapelaRN->consultar($capela);
+                $objCapela->setSituacaoCapela(self::$TE_OCUPADA);
+            }*/
             
             $capelaRN = NEW CapelaRN();
-            $capelaRN->alterar($objCapela);
+            $objCapela = $capelaRN->alterar($objCapela);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $arr;
-        } catch (Exception $e) {
+            return $objCapela;
+        } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro bloqueando a capela.',$e);
         }
@@ -284,19 +320,45 @@ class CapelaRN{
 
     
     public function validar_cadastro(Capela $capela) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
             $objCapelaBD = new CapelaBD();
             $this->validarNumero($capela,$objExcecao);
 
             $arr = $objCapelaBD->validar_cadastro($capela,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando a capela.',$e);
+        }
+    }
+
+
+    public function listar_altaSegur_liberada(Capela $capela) {
+        $objBanco = new Banco();
+        try {
+
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objCapelaBD = new CapelaBD();
+
+            $arr = $objCapelaBD->listar_altaSegur_liberada($capela,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando a capela.',$e);
         }
     }

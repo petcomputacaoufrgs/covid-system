@@ -33,10 +33,14 @@ class AmostraRN{
             if ($strDataColeta == '') {
                 $objExcecao->adicionar_validacao('Informar a data da coleta', 'idDtColeta', 'alert-danger');
             } else if (strlen($objAmostra->getDataColeta()) <= 11) {
-                Utils::validarData($strDataColeta, $objExcecao);
+                //Utils::validarData($strDataColeta, $objExcecao);
+                $atual = date("Y-m-d");
 
-                //validar para que não se coloque datas futuras a atual
-                return $objAmostra->setDataColeta($strDataColeta);
+
+                if ($objAmostra->getDataColeta() > $atual) {
+                    $objExcecao->adicionar_validacao('A data informada é maior que a data atual', 'idDataHora', 'alert-danger');
+                }
+
             } else {
                 $objExcecao->adicionar_validacao('Informar uma data válida da coleta', 'idDtColeta', 'alert-danger');
             }
@@ -244,6 +248,8 @@ class AmostraRN{
 
 
 
+
+
     public function cadastrar(Amostra $amostra) {
         $objBanco = new Banco();
         try {
@@ -292,19 +298,23 @@ class AmostraRN{
             $this->validarPerfilCartaoSUS($amostra, $objExcecao);
             $this->validarPerfilAmostra($amostra, $objExcecao);
             $this->validarCamposDesconhecidos($amostra, $objExcecao);
-            
-            $objExcecao->lancar_validacoes();
-            $objAmostraBD = new AmostraBD();
-            $objAmostraBD->cadastrar($amostra,$objBanco); //cadastra sem o código pq precisa do ID
-            
+            $this->validarNickname($amostra,$objExcecao);
+
             $objPerfilPaciente = new PerfilPaciente();
             $objPerfilPacienteRN = new PerfilPacienteRN();
             $objPerfilPaciente->setIdPerfilPaciente($amostra->getIdPerfilPaciente_fk());
             $arr_perfil = $objPerfilPacienteRN->listar($objPerfilPaciente);
+            $objAmostraBD = new AmostraBD();
+            //$idNickname = $objAmostraBD->alterar_nickname($amostra,$objBanco);
+            //$amostra->setNickname($arr_perfil[0]->getCaractere() . ($idNickname+1));
+
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD->cadastrar($amostra,$objBanco); //cadastra sem o código pq precisa do ID
             $amostra->setCodigoAmostra($arr_perfil[0]->getCaractere() . $amostra->getIdAmostra());
             $objAmostraAuxRN = new AmostraRN();
             $objAmostraAuxRN->alterar($amostra);
-            
+
             if($amostra->getObjTubo() != null){
 
                 $objTuboRN = new TuboRN();
@@ -316,10 +326,25 @@ class AmostraRN{
 
                     }
                 }else {
-                    $objTuboRN->alterar($amostra->getObjTubo());
+                    $amostra->setObjTubo($objTuboRN->alterar($amostra->getObjTubo()));
                 }
                
             }
+
+            $objLaudo = new Laudo();
+            if($amostra->getObjLaudo() != null){
+                $objLaudoRN = new LaudoRN();
+                if($amostra->getObjLaudo()->getIdLaudo() == null) { //laudo ainda não cadastrado
+
+                    $objLaudo->setIdAmostraFk($amostra->getIdAmostra());
+                    $objLaudo = $objLaudoRN->cadastrar($objLaudo);
+                    $amostra->setObjLaudo($objLaudo);
+                }else {
+                   // $amostra->setObjTubo($objTuboRN->alterar($amostra->getObjTubo()));
+                }
+            }
+
+
             //print_r($objTubo);
             //print_r($amostra);
             //die("rn 40");
@@ -374,6 +399,8 @@ class AmostraRN{
             $this->validarMotivo($amostra, $objExcecao);
             $this->validarCEP($amostra, $objExcecao);
 
+            $this->validarNickname($amostra);
+
 
             $objExcecao->lancar_validacoes();
 
@@ -382,6 +409,7 @@ class AmostraRN{
 
              if($amostra->getObjTubo() != null){
                  $objTuboRN = new TuboRN();
+
                  if($amostra->getObjTubo()->getIdTubo() == null) { //tubo ainda não cadastrado
 
                          $objTubo = $amostra->getObjTubo();
@@ -393,6 +421,19 @@ class AmostraRN{
                  }
 
              }
+
+            if($amostra->getObjLaudo() != null){
+                $objLaudoRN = new LaudoRN();
+                if($amostra->getObjLaudo()->getIdLaudo() == null) { //laudo ainda não cadastrado
+                    $amostra->getObjLaudo()->setIdAmostraFk($amostra->getIdAmostra());
+                    $objLaudo = $objLaudoRN->cadastrar($amostra->getObjLaudo());
+                    $amostra->setObjLaudo($objLaudo);
+                }else {
+                    // $amostra->setObjTubo($objTuboRN->alterar($amostra->getObjTubo()));
+                }
+            }
+
+
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
              return $amostra;
@@ -461,7 +502,7 @@ class AmostraRN{
         }
     }
 
-    public function listar(Amostra $amostra) {
+    public function listar(Amostra $amostra, $numLimite = null) {
         $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
@@ -470,7 +511,7 @@ class AmostraRN{
             $objExcecao->lancar_validacoes();
 
             $objAmostraBD = new AmostraBD();
-            $arr =  $objAmostraBD->listar($amostra,$objBanco);
+            $arr =  $objAmostraBD->listar($amostra,$numLimite,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
@@ -500,7 +541,324 @@ class AmostraRN{
             throw new Excecao('Erro listando amostra.', $e);
         }
     }
-    
+
+    public function listar_com_perfil(Amostra $amostra,$caractere=null,$perfilouamostra=null ,$limite = null) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+            $arr =  $objAmostraBD->listar_com_perfil($amostra,$caractere,$perfilouamostra,$limite,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+    }
+
+    public function listar_aguardando_sol_montagem_placa_RTqCPR(Amostra $amostra,$numLimite=null,$arr_amostras=null) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+            $arr =  $objAmostraBD->listar_aguardando_sol_montagem_placa_RTqCPR($amostra,$numLimite,$arr_amostras,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+    }
+
+    public function validar_amostras($array_amostras, $array_perfis) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objAmostraRN = new AmostraRN();
+
+            //confere o perfil e o caractere
+            $encontrou = false;
+            $arr_nicknames = array();
+            for($i=0;$i< count($array_amostras); $i++){
+                $encontrou = false;
+                $objAmostra = new Amostra();
+                $objAmostra->setNickname($array_amostras[$i]);
+
+
+                if(strlen($objAmostra->getNickname()) == 0){
+                    $objExcecao->adicionar_validacao("A ".($i+1)."ª amostra não foi informada",null,'alert-danger');
+                }else {
+
+
+                    if(in_array($objAmostra->getNickname(),$arr_nicknames)){
+                        $objExcecao->adicionar_validacao("A ".($i+1)."ª amostra foi repetida",null,'alert-danger');
+                    }
+                    $arr_nicknames[] = $objAmostra->getNickname();
+
+                    if (is_numeric($objAmostra->getNickname()[0])) { //primeiro caractere
+                        $objExcecao->adicionar_validacao("O primeiro caractere da " . ($i + 1) . " amostra é um número", null, 'alert-danger');
+                    }
+                    for ($s = 0; $s < strlen($objAmostra->getNickname()); $s++) {
+                        if ($s > 0 && !is_numeric($objAmostra->getNickname()[$s])) {
+                            $objExcecao->adicionar_validacao($objAmostra->getNickname() . " - O segundo caractere em diante precisa ser um número", null, 'alert-danger');
+                        }
+                    }
+
+                    foreach ($array_perfis as $p) {
+                        $strPrimeiro = $objAmostra->getNickname()[0];
+                        if ($strPrimeiro == $p->getCaractere()) {
+                            $encontrou = true;
+                        }
+                    }
+                    if (!$encontrou) {
+                        $objExcecao->adicionar_validacao($objAmostra->getNickname() . " - O código da amostra não confere com o perfil informado", null, 'alert-danger');
+                        //$arr_nao_encontrados[] = $array_amostras[$i];
+                    }
+                }
+
+                $numAmostras = count($objAmostraRN->listar($objAmostra,1));
+                if($numAmostras == 0){
+                    $objExcecao->adicionar_validacao(" A amostra de código <strong>".$objAmostra->getNickname()."</strong> não existe", null, 'alert-danger');
+                }
+            }
+            $objExcecao->lancar_validacoes();
+            $objAmostraBD = new AmostraBD();
+
+            $amostras =  $objAmostraBD->validar_amostras($array_amostras,$array_perfis,$objBanco);
+
+
+            /*
+                echo "<pre>";
+                print_r($amostras);
+                echo "</pre>";
+            */
+
+            if(count($amostras) > 0) {
+                for ($i = 0; $i < count($array_amostras); $i++) {
+                    $encontrou = false;
+                    foreach ($amostras as $a) {
+
+                        if ($array_amostras[$i] == $a->getNickname()) {
+                            $encontrou = true;
+                        }
+                    }
+
+                    if (!$encontrou) {
+                        $objExcecao->adicionar_validacao("A amostra de código <strong>" . $array_amostras[$i] . "</strong> não é válida para esta etapa", null, "alert-danger");
+                    }
+                }
+            }else{
+                $objExcecao->adicionar_validacao("Nenhuma amostra informada é válida para esta etapa", null, "alert-danger");
+            }
+
+            $objExcecao->lancar_validacoes();
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $amostras;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+    }
+
+    public function validar_amostras_extracao($array_amostras) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objAmostraRN = new AmostraRN();
+
+            //confere o perfil e o caractere
+            $encontrou = false;
+            $arr_nicknames = array();
+            for($i=0;$i< count($array_amostras); $i++){
+                $encontrou = false;
+                $objAmostra = new Amostra();
+                $objAmostra->setNickname($array_amostras[$i]);
+
+
+                if(strlen($objAmostra->getNickname()) == 0){
+                    $objExcecao->adicionar_validacao("A ".($i+1)."ª amostra não foi informada",null,'alert-danger');
+                }else {
+
+
+                    if(in_array($objAmostra->getNickname(),$arr_nicknames)){
+                        $objExcecao->adicionar_validacao("A ".($i+1)."ª amostra foi repetida",null,'alert-danger');
+                    }
+                    $arr_nicknames[] = $objAmostra->getNickname();
+
+                    if (is_numeric($objAmostra->getNickname()[0])) { //primeiro caractere
+                        $objExcecao->adicionar_validacao("O primeiro caractere da " . ($i + 1) . " amostra é um número", null, 'alert-danger');
+                    }
+                    for ($s = 0; $s < strlen($objAmostra->getNickname()); $s++) {
+                        if ($s > 0 && !is_numeric($objAmostra->getNickname()[$s])) {
+                            $objExcecao->adicionar_validacao($objAmostra->getNickname() . " - O segundo caractere em diante precisa ser um número", null, 'alert-danger');
+                        }
+                    }
+
+                }
+
+                $numAmostras = count($objAmostraRN->listar($objAmostra,1));
+                if($numAmostras == 0){
+                    $objExcecao->adicionar_validacao(" A amostra de código <strong>".$objAmostra->getNickname()."</strong> não existe", null, 'alert-danger');
+                }
+            }
+            $objExcecao->lancar_validacoes();
+            $objAmostraBD = new AmostraBD();
+
+            $amostras =  $objAmostraBD->validar_amostras_extracao($array_amostras,$objBanco);
+
+
+            /*
+                echo "<pre>";
+                print_r($amostras);
+                echo "</pre>";
+            */
+
+            if(count($amostras) > 0) {
+                for ($i = 0; $i < count($array_amostras); $i++) {
+                    $encontrou = false;
+                    foreach ($amostras as $a) {
+
+                        if ($array_amostras[$i] == $a->getNickname()) {
+                            $encontrou = true;
+                        }
+                    }
+
+                    if (!$encontrou) {
+                        $objExcecao->adicionar_validacao("A amostra de código <strong>" . $array_amostras[$i] . "</strong> não é válida para esta etapa", null, "alert-danger");
+                    }
+                }
+            }else{
+                $objExcecao->adicionar_validacao("Nenhuma amostra informada é válida para esta etapa", null, "alert-danger");
+            }
+
+            $objExcecao->lancar_validacoes();
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $amostras;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+    }
+
+
+    public function validar_amostras_solicitacao($array_amostras, $array_perfis) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objAmostraRN = new AmostraRN();
+
+
+
+            //confere o perfil e o caractere
+            $encontrou = false;
+            $arr_nicknames = array();
+            for($i=0;$i< count($array_amostras); $i++){
+                $encontrou = false;
+                $objAmostra = new Amostra();
+                $objAmostra->setNickname($array_amostras[$i]);
+
+
+                if(strlen($objAmostra->getNickname()) == 0){
+                    $objExcecao->adicionar_validacao("A ".($i+1)."ª amostra não foi informada",null,'alert-danger');
+                }else {
+
+
+                    if(in_array($objAmostra->getNickname(),$arr_nicknames)){
+                        $objExcecao->adicionar_validacao("A ".($i+1)."ª amostra foi repetida",null,'alert-danger');
+                    }
+                    $arr_nicknames[] = $objAmostra->getNickname();
+
+                    if (is_numeric($objAmostra->getNickname()[0])) { //primeiro caractere
+                        $objExcecao->adicionar_validacao("O primeiro caractere da " . ($i + 1) . " amostra é um número", null, 'alert-danger');
+                    }
+                    for ($s = 0; $s < strlen($objAmostra->getNickname()); $s++) {
+                        if ($s > 0 && !is_numeric($objAmostra->getNickname()[$s])) {
+                            $objExcecao->adicionar_validacao($objAmostra->getNickname() . " - O segundo caractere em diante precisa ser um número", null, 'alert-danger');
+                        }
+                    }
+
+                    foreach ($array_perfis as $p) {
+                        $strPrimeiro = $objAmostra->getNickname()[0];
+                        if ($strPrimeiro == $p->getCaractere()) {
+                            $encontrou = true;
+                        }
+                    }
+                    if (!$encontrou) {
+                        $objExcecao->adicionar_validacao($objAmostra->getNickname() . " - O código da amostra não confere com o perfil informado", null, 'alert-danger');
+                        //$arr_nao_encontrados[] = $array_amostras[$i];
+                    }
+                }
+
+                $numAmostras = count($objAmostraRN->listar($objAmostra,1));
+                if($numAmostras == 0){
+                    $objExcecao->adicionar_validacao(" A amostra de código <strong>".$objAmostra->getNickname()."</strong> não existe", null, 'alert-danger');
+                }
+            }
+            $objExcecao->lancar_validacoes();
+            $objAmostraBD = new AmostraBD();
+
+            $amostras =  $objAmostraBD->validar_amostras_solicitacao($array_amostras,$array_perfis,$objBanco);
+
+
+            /*
+                echo "<pre>";
+                print_r($amostras);
+                echo "</pre>";
+            */
+
+            if(count($amostras) > 0) {
+                for ($i = 0; $i < count($array_amostras); $i++) {
+                    $encontrou = false;
+                    foreach ($amostras as $a) {
+
+                        if ($array_amostras[$i] == $a->getNickname()) {
+                            $encontrou = true;
+                        }
+                    }
+
+                    if (!$encontrou) {
+                        $objExcecao->adicionar_validacao("A amostra de código <strong>" . $array_amostras[$i] . "</strong> não é válida para esta etapa", null, "alert-danger");
+                    }
+                }
+            }else{
+                $objExcecao->adicionar_validacao("Nenhuma amostra informada é válida para esta etapa", null, "alert-danger");
+            }
+
+            $objExcecao->lancar_validacoes();
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $amostras;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+    }
+
+
+
     public function validarCadastro(Amostra $amostra) {
         try {
             $objExcecao = new Excecao();
@@ -546,6 +904,70 @@ class AmostraRN{
         }
     }
 
+    private function validarNickname(Amostra $objAmostra) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
+            if($objAmostra->getNickname() != null) {
+                $strNickname = trim($objAmostra->getNickname());
+
+
+
+                if($objAmostra->getIdPerfilPaciente_fk() != null) {
+                    $objPerfilPaciente = new PerfilPaciente();
+                    $objPerfilPacienteRN = new PerfilPacienteRN();
+                    $objPerfilPaciente->setIdPerfilPaciente($objAmostra->getIdPerfilPaciente_fk());
+                    $objPerfilPaciente = $objPerfilPacienteRN->consultar($objPerfilPaciente);
+
+
+                    if ($objPerfilPaciente->getCaractere() != $strNickname[0]) {
+                        $objExcecao->adicionar_validacao('O primeiro catactere do código da amostra não condiz com o perfil informado', 'idObsLugarOrigem', 'alert-danger');
+                    }
+                }
+
+                if (strlen($strNickname) == 0) {
+                    $objExcecao->adicionar_validacao('O código da amostra precisa ser informado', 'idObsLugarOrigem', 'alert-danger');
+                } else {
+                    if (strlen($strNickname) > 6) {
+                        $objExcecao->adicionar_validacao('O código da amostra possui mais que 6 caracteres', 'idObsLugarOrigem', 'alert-danger');
+                    }
+                    $objAmostraBD = new AmostraBD();
+                    if ($objAmostraBD->validar_nickname($objAmostra, $objBanco) != null) {
+                        $objExcecao->adicionar_validacao('O código da amostra já está associado a outra amostra', 'idObsLugarOrigem', 'alert-danger');
+                    }
+
+                    if(strlen($strNickname) > 0  && strlen($strNickname) <= 6){
+                        for($i =0; $i<strlen($strNickname); $i++){
+                            if($i == 0 && is_numeric($strNickname[0])){
+                                $objExcecao->adicionar_validacao('O código da amostra deve possuir como primeiro caractere uma letra', 'idObsLugarOrigem', 'alert-danger');
+                                break;
+                            }else if($i > 0 && !is_numeric($strNickname[$i])){
+                                $objExcecao->adicionar_validacao('O código da amostra deve possuir números a partir do 2º caractere', 'idObsLugarOrigem', 'alert-danger');
+                                break;
+                            }
+                        }
+                    }
+                }
+            }else{
+                $objExcecao->adicionar_validacao('O código da amostra precisa ser informado', 'idObsLugarOrigem', 'alert-danger');
+            }
+            $objExcecao->lancar_validacoes();
+
+            $objAmostra->setNickname($strNickname);
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $objAmostra;
+        }catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+
+    }
+
+
     public function filtro_menor_data(Amostra $amostra,$select) {
         $objBanco = new Banco();
         try {
@@ -587,7 +1009,148 @@ class AmostraRN{
     }
 
 
-    
+    public function listar_ids(Amostra $amostra) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+            $arr =  $objAmostraBD->listar_ids($amostra,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+    }
+
+
+    public function arrumar_banco(Amostra $amostra) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+
+            $arr =  $objAmostraBD->arrumar_banco1($amostra,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+    }
+
+    public function obter_infos(Amostra $amostra) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+            $arr =  $objAmostraBD->obter_infos($amostra,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+    }
+
+    public function obter_locais(Amostra $amostra) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+            $arr =  $objAmostraBD->obter_locais($amostra,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra.', $e);
+        }
+    }
+
+    /**** EXTRAS ****/
+
+    public function paginacao(Amostra $amostra) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+            $arr =  $objAmostraBD->paginacao($amostra,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro na paginação da amostra.', $e);
+        }
+    }
+
+    public function listar_completo($amostra, $numLimite =null) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+            $arr =  $objAmostraBD->listar_completo($amostra,$numLimite,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando completo a amostra.', $e);
+        }
+    }
+
+    public function consultar_volume(Amostra $objAmostra){
+        $objBanco = new Banco();
+        try{
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+            $objAmostraBD = new AmostraBD();
+            $arr = $objAmostraBD->consultar_volume($objAmostra,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        }catch (Throwable $e){
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro verificando se a amostra tem mais volume.', $e);
+        }
+    }
   
   
 

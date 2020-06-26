@@ -43,7 +43,7 @@ class CapelaBD{
             $arrayBind[] = array('i',$objCapela->getIdCapela());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
-
+            return $objCapela;
         } catch (Throwable $ex) {
             throw new Excecao("Erro alterando a capela no BD.",$ex);
         }
@@ -120,7 +120,6 @@ class CapelaBD{
 
             return $capela;
         } catch (Throwable $ex) {
-       
             throw new Excecao("Erro consultando a capela no BD.",$ex);
         }
 
@@ -144,12 +143,13 @@ class CapelaBD{
 
         try{
 
-            $SELECT = 'SELECT * FROM tb_capela  WHERE situacaoCapela = ? AND nivelSeguranca = ? FOR UPDATE ';
+            $SELECT = 'SELECT * FROM tb_capela  WHERE situacaoCapela = ? AND nivelSeguranca = ? AND idCapela = ? FOR UPDATE ';
 
                    
             $arrayBind = array();
             $arrayBind[] = array('s', CapelaRN::$TE_LIBERADA);
             $arrayBind[] = array('s', $objCapela->getNivelSeguranca());
+            $arrayBind[] = array('i', $objCapela->getIdCapela());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
 
@@ -207,6 +207,38 @@ class CapelaBD{
         } catch (Throwable $ex) {
             throw new Excecao("Erro validando cadastro no BD.",$ex);
         }
+    }
+
+
+    public function listar_altaSegur_liberada(Capela $objCapela, Banco $objBanco) {
+        try{
+
+            $SELECT = "select * from tb_capela 
+                        where 
+                            tb_capela.situacaoCapela = ?
+                            and tb_capela.nivelSeguranca = ?";
+
+            $arrayBind = array();
+            $arrayBind[] = array('s',CapelaRN::$TE_LIBERADA);
+            $arrayBind[] = array('s',CapelaRN::$TNS_ALTA_SEGURANCA);
+
+            $arr = $objBanco->consultarSQL($SELECT , $arrayBind);
+
+            $array = array();
+            foreach ($arr as $reg){
+                $objCapela = new Capela();
+                $objCapela->setIdCapela($reg['idCapela']);
+                $objCapela->setNumero($reg['numero']);
+                $objCapela->setSituacaoCapela($reg['situacaoCapela']);
+                $objCapela->setNivelSeguranca($reg['nivelSeguranca']);
+
+                $array[] = $objCapela;
+            }
+            return $array;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando a capela no BD.",$ex);
+        }
+
     }
     
 

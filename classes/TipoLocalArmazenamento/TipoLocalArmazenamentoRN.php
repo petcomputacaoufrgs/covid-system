@@ -15,7 +15,8 @@ class TipoLocalArmazenamentoRN{
     public static $TL_BANCO_AMOSTRAS = 'B';
     public static $TL_GELADEIRA = 'G';
     public static $TL_FREEZER = 'F';
-
+    public static $TL_APOS_EXTRACAO = 'P';
+    public static $TL_BANCO_AMOSTRAS_RNA = 'R';
     public static function listarValoresTipoLocal(){
         try {
 
@@ -34,6 +35,16 @@ class TipoLocalArmazenamentoRN{
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$TL_FREEZER);
             $objSituacao->setStrDescricao('Tipo freezer');
+            $arrObjStaColuna[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TL_APOS_EXTRACAO);
+            $objSituacao->setStrDescricao('Tipo de armazenamento após extração');
+            $arrObjStaColuna[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TL_BANCO_AMOSTRAS_RNA);
+            $objSituacao->setStrDescricao('Tipo banco de amostras RNA');
             $arrObjStaColuna[] = $objSituacao;
 
             return $arrObjStaColuna;

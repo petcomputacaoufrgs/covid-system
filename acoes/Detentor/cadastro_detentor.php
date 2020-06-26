@@ -4,21 +4,22 @@
  */
 
 session_start();
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/Detentor/Detentor.php';
-require_once '../classes/Detentor/DetentorRN.php';
-require_once '../utils/Utils.php';
-require_once '../utils/Alert.php';
-require_once '../classes/Detentor/DetentorRN.php';
-
+try {
+require_once __DIR__. '/../../classes/Sessao/Sessao.php';
+require_once __DIR__. '/../../classes/Pagina/Pagina.php';
+require_once __DIR__. '/../../classes/Excecao/Excecao.php';
+require_once __DIR__. '/../../classes/Detentor/Detentor.php';
+require_once __DIR__. '/../../classes/Detentor/DetentorRN.php';
+require_once __DIR__. '/../../utils/Utils.php';
+require_once __DIR__. '/../../utils/Alert.php';
+require_once __DIR__. '/../../classes/Detentor/DetentorRN.php';
+    Sessao::getInstance()->validar();
 $utils = new Utils();
 $objDetentor = new Detentor();
 $objDetentorRN = new DetentorRN();
 $alert = '';
 
-try {
+
     switch ($_GET['action']) {
         case 'cadastrar_detentor':
             if (isset($_POST['salvar_detentor'])) {

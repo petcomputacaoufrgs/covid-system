@@ -20,7 +20,8 @@ class SexoBD{
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objSexo->setIdSexo($objBanco->obterUltimoID());
-        } catch (Exception $ex) {
+            return $objSexo;
+        } catch (Throwable $ex) {
             throw new Excecao("Erro cadastrando sexo do paciente no BD.",$ex);
         }
         
@@ -40,8 +41,8 @@ class SexoBD{
             $arrayBind[] = array('i',$objSexo->getIdSexo());
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
-
-        } catch (Exception $ex) {
+            return $objSexo;
+        } catch (Throwable $ex) {
             throw new Excecao("Erro alterando sexo do paciente no BD.",$ex);
         }
        
@@ -65,7 +66,7 @@ class SexoBD{
                 $array_sexo[] = $objSexo;
             }
             return $array_sexo;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro listando sexo do paciente no BD.",$ex);
         }
        
@@ -92,7 +93,7 @@ class SexoBD{
             $sexo->setIndex_sexo($arr[0]['index_sexo']);
 
             return $sexo;
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
        
             throw new Excecao("Erro consultando sexo do paciente no BD.",$ex);
         }
@@ -108,7 +109,7 @@ class SexoBD{
             $arrayBind[] = array('i',$objSexo->getIdSexo());
             $objBanco->executarSQL($DELETE, $arrayBind);
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro removendo sexo do paciente no BD.",$ex);
         }
     }
@@ -138,9 +139,53 @@ class SexoBD{
             }
              return $arr_sexos;
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
             throw new Excecao("Erro pesquisando sexo no BD.",$ex);
         }
+    }
+
+
+    public function ja_existe_sexo(Sexo $objSexo, Banco $objBanco) {
+
+        try{
+
+            $SELECT = 'SELECT idSexo from tb_sexo WHERE index_sexo = ? LIMIT 1';
+
+            $arrayBind = array();
+            $arrayBind[] = array('s',$objSexo->getIndex_sexo());
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
+
+            if(count($arr) > 0){
+                return true;
+            }
+
+            return false;
+
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro pesquisando sexo no BD.",$ex);
+        }
+    }
+
+
+    public function existe_paciente_com_o_sexo(Sexo $objSexo, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT * FROM tb_sexo,tb_paciente WHERE tb_sexo.idSexo = tb_paciente.idSexo_fk 
+                        and tb_sexo.idSexo = ?
+                        LIMIT 1";
+
+            $arrayBind = array();
+            $arrayBind[] = array('i',$objSexo->getIdSexo());
+            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
+
+            if(count($arr) > 0){
+                return true;
+            }
+            return false;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro verificando se existe ao menos um paciente com o sexo no BD.",$ex);
+        }
+
     }
     
 

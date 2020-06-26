@@ -2,6 +2,10 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
+/*
+
+    NÃO ESTÁ SENDO UTILIZADO MAIS
+
 
 session_start();
 require_once '../classes/Sessao/Sessao.php';
@@ -25,4 +29,3 @@ try{
 }
 
 
-?>

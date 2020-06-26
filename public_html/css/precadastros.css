@@ -15,6 +15,7 @@
     background-color: #3a5261;
     color: #fff;
 }
+
 .topo_listar h3{
     padding-top: 10px;
     padding-bottom: 5px;
@@ -39,7 +40,23 @@
    
 }
 
+.tooltip_obs{
+    color: black;
+    border: none;
+}
+.tooltip_obs:hover{
+    color: black;
+    border: none;
+}
 
+.verificarAmostras
+{
+    background: rgba(255,0,0,1);
+    color: white;
+    text-align: center;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
 .conteudo_grande{
     /*background-color: black;*/
     width: 98%;
@@ -162,7 +179,23 @@ td,th{
 }
 
 
+.sucesso_rgba{
+   background-color: rgba(0,255,0,0.2);
+}
 
+.error_rgba{
+    background-color: rgba(255,0,0,0.2);
+}
+
+
+.tabela_poco{
+    /*border:1px solid red;*/
+}
+
+.tabela_poco tr td{
+    /*border:1px solid red;*/
+    padding: 2px;
+}
 
 
 .conteudo_tabela a{
@@ -249,6 +282,21 @@ td,th{
     padding: 10px;
 }
 
+
+#tabela_preparos{
+    max-width: 100%;
+    height: auto;
+    overflow-x: scroll;
+}
+
+
+.icon{
+    color: white;
+}
+
+.icon:hover{
+    color: #3a5261;
+}
 
 /* Media Queries
 -----------------*/

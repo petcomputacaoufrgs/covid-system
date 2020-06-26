@@ -2,26 +2,31 @@
 /* 
  *  Author: Carine Bertagnolli Bathaglini
  */
+/*
+
+NÃO ESTÁ SENDO UTILIZADO
 
 session_start();
-require_once '../classes/Sessao/Sessao.php';
-require_once '../classes/Pagina/Pagina.php';
-require_once '../classes/Excecao/Excecao.php';
-require_once '../classes/PerfilUsuario/PerfilUsuario.php';
-require_once '../classes/PerfilUsuario/PerfilUsuarioRN.php';
-
-$objPagina = new Pagina();
-$objPerfilUsuario = new PerfilUsuario();
-$objPerfilUsuarioRN = new PerfilUsuarioRN();
 try{
+    require_once __DIR__ . '/../../classes/Sessao/Sessao.php';
+    require_once __DIR__ . '/../../classes/Pagina/Pagina.php';
+    require_once __DIR__ . '/../../classes/Excecao/Excecao.php';
+    require_once __DIR__ . '/../../classes/PerfilUsuario/PerfilUsuario.php';
+    require_once __DIR__ . '/../../classes/PerfilUsuario/PerfilUsuarioRN.php';
 
+    Sessao::getInstance()->validar();
+
+    $objPerfilUsuario = new PerfilUsuario();
+    $objPerfilUsuarioRN = new PerfilUsuarioRN();
 
     $objPerfilUsuario->setIdPerfilUsuario($_GET['idPerfilUsuario']);
     $objPerfilUsuarioRN->remover($objPerfilUsuario);
 
-    header('Location: controlador.php?action=listar_perfilUsuario');
-} catch (Exception $ex) {
-    $objPagina->processar_excecao($ex);
+    header('Location: '.Sessao::getInstance()->assinar_link(' controlador.php?action=listar_perfilUsuario'));
+} catch (Throwable $ex) {
+        //$objExcecao = new Excecao();
+    //$objExcecao->adicionar_validacao($ex);
+    Pagina::getInstance()->processar_excecao($ex);
 }
 
 
