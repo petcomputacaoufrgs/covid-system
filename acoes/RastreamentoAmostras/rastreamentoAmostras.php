@@ -78,67 +78,67 @@ try {
     $alert = '';
     $html = '';
 
-    $options = InterfacePagina::montar_select_pesquisa($array_colunas,$position);
+    //$options = InterfacePagina::montar_select_pesquisa($array_colunas,$position);
 
-    if(isset($_POST['selecionar_amostra'])) {
+    //if(isset($_POST['selecionar_amostra'])) {
         if (isset($_POST['txtCodAmostra'])) {
 
             //$id = substr($_POST['txtCodAmostra'], 1);
             $objAmostra->setNickname(strtoupper($_POST['txtCodAmostra']));
             $arr_tubos = $objAmostraRN->obter_infos($objAmostra);
 
+            if(count($arr_tubos) > 0) {
+                foreach ($arr_tubos as $tubo) {
+                    foreach ($tubo->getObjInfosTubo() as $info) {
 
-            foreach ($arr_tubos as $tubo) {
-                foreach ($tubo->getObjInfosTubo() as $info) {
+                        $dataHora = explode(" ", $info->getDataHora());
+                        $data = explode("-", $dataHora[0]);
 
-                    $dataHora = explode(" ", $info->getDataHora());
-                    $data = explode("-", $dataHora[0]);
+                        $ano = $data[0];
+                        $mes = $data[1];
+                        $dia = $data[2];
 
-                    $ano = $data[0];
-                    $mes = $data[1];
-                    $dia = $data[2];
+                        $data = $dia . '/' . $mes . '/' . $ano . ' ' . $dataHora[1];
 
-                    $data = $dia . '/' . $mes . '/' . $ano . ' ' . $dataHora[1];
-
-                    $corTd = '';
-                    if($tubo->getTipo()  == TuboRN::$TT_ALIQUOTA){
-                        //$corDescarte = ' style="color: black; font-weight:bold;" ';
-                        $corTd = 'style="background-color: rgba(255,255,0,0.1);" ';
-                    }
-                    $corDescarte = '';$corTr ='';
-                    if($info->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA ||  $info->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO || $info->getSituacaoTubo() == InfosTuboRN::$TST_LOCAL_ERRADO_POCO){
-                        $corDescarte = ' style="color:red;" ';
-                        $corTr = 'style="background-color: rgba(255,0,0,0.1);" ';
-                    }
-
-
-                    $html .= '<tr '.$corTr.'><th scope="row">' . Pagina::formatar_html($objAmostra->getNickname()) . '</th>';
-                    if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
-                        $html .= '<td>' . Pagina::formatar_html($info->getIdInfosTubo()) . '</td>';
-                        $html .= '<td>' . Pagina::formatar_html($tubo->getIdTubo()) . '</td>';
-                        $html .= '<td>' . Pagina::formatar_html($tubo->getIdTubo_fk()) . '</td>';
-                    }
-                    $original = '';
-                    if($tubo->getTuboOriginal() == 's'){
-                        $original = 'Sim';
-                    }else{
-                        $original = 'Não';
-                    }
-
-                    $reteste = '';
-                    if($info->getReteste() == 's'){
-                        $reteste = 'Sim';
-                    }else{
-                        $reteste = 'Não';
-                    }
+                        $corTd = '';
+                        if ($tubo->getTipo() == TuboRN::$TT_ALIQUOTA) {
+                            //$corDescarte = ' style="color: black; font-weight:bold;" ';
+                            $corTd = 'style="background-color: rgba(255,255,0,0.1);" ';
+                        }
+                        $corDescarte = '';
+                        $corTr = '';
+                        if ($info->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA || $info->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO || $info->getSituacaoTubo() == InfosTuboRN::$TST_LOCAL_ERRADO_POCO) {
+                            $corDescarte = ' style="color:red;" ';
+                            $corTr = 'style="background-color: rgba(255,0,0,0.1);" ';
+                        }
 
 
+                        $html .= '<tr ' . $corTr . '><th scope="row">' . Pagina::formatar_html($objAmostra->getNickname()) . '</th>';
+                        if (Sessao::getInstance()->verificar_permissao('listar_tubos')) {
+                            $html .= '<td>' . Pagina::formatar_html($info->getIdInfosTubo()) . '</td>';
+                            $html .= '<td>' . Pagina::formatar_html($tubo->getIdTubo()) . '</td>';
+                            $html .= '<td>' . Pagina::formatar_html($tubo->getIdTubo_fk()) . '</td>';
+                        }
+                        $original = '';
+                        if ($tubo->getTuboOriginal() == 's') {
+                            $original = 'Sim';
+                        } else {
+                            $original = 'Não';
+                        }
 
-                    $html .= '<td>' . Pagina::formatar_html($original) . '</td>';
-                    $html .= '<td '.$corTd.'>' . Pagina::formatar_html(TuboRN::mostrarDescricaoTipoTubo($tubo->getTipo())) . '</td>
+                        $reteste = '';
+                        if ($info->getReteste() == 's') {
+                            $reteste = 'Sim';
+                        } else {
+                            $reteste = 'Não';
+                        }
+
+
+                        $html .= '<td>' . Pagina::formatar_html($original) . '</td>';
+                        $html .= '<td ' . $corTd . '>' . Pagina::formatar_html(TuboRN::mostrarDescricaoTipoTubo($tubo->getTipo())) . '</td>
                         <td>' . Pagina::formatar_html($reteste) . '</td>
                         <td>' . Pagina::formatar_html($info->getVolume()) . '</td>
-                        <td '.$corDescarte.'>' . Pagina::formatar_html(InfosTuboRN::retornarStaTubo($info->getSituacaoTubo())) . '</td>
+                        <td ' . $corDescarte . '>' . Pagina::formatar_html(InfosTuboRN::retornarStaTubo($info->getSituacaoTubo())) . '</td>
                         <td>' . Pagina::formatar_html(InfosTuboRN::retornarStaEtapa($info->getSituacaoEtapa())) . '</td>
                             <td>' . Pagina::formatar_html(InfosTuboRN::retornarEtapa($info->getEtapa())) . '</td>
                         <td>' . Pagina::formatar_html(InfosTuboRN::retornarEtapa($info->getEtapaAnterior())) . '</td>
@@ -146,11 +146,14 @@ try {
                     <td>' . Pagina::formatar_html($data) . '</td>
                         
                     </tr>';
-                }
+                    }
 
+                }
+            }else{
+                $alert .= Alert::alert_warning("Nenhuma amostra foi encontrada com esse código");
             }
         }
-    }
+    //}
 
 
 
@@ -177,7 +180,7 @@ echo '  <div class="conteudo_grande">
             <div class="col-md-10" style="width: 100%;">
                 <label>Informe o código da amostra</label>
                 <input type="text" class="form-control" id="idCodAmostra" style="text-align: center;"
-                       name="txtCodAmostra"  value="'.$objAmostra->getNickname().'">
+                       name="txtCodAmostra"  value="'.$_POST['txtCodAmostra'].'">
             </div>
             <div class="col-md-2">
               <button class="btn btn-primary" type="submit"  style="margin-top: 33px;width: 100%;margin-left: 0px;" name="selecionar_amostra">SELECIONAR</button>

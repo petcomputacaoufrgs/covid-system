@@ -14,6 +14,11 @@ require_once __DIR__ . '/../../classes/EstadoOrigem/EstadoOrigemRN.php';
 require_once __DIR__ . '/../../classes/LugarOrigem/LugarOrigem.php';
 require_once __DIR__ . '/../../classes/LugarOrigem/LugarOrigemRN.php';
 
+require_once __DIR__.'/../../classes/Sexo/Sexo.php';
+require_once __DIR__.'/../../classes/Sexo/SexoRN.php';
+require_once __DIR__.'/../../classes/Etnia/Etnia.php';
+require_once __DIR__.'/../../classes/Etnia/EtniaRN.php';
+
 class PacienteBD
 {
 
@@ -23,8 +28,8 @@ class PacienteBD
 
             $INSERT = 'INSERT INTO tb_paciente (idSexo_fk,idEtnia_fk,nome,nomeMae,dataNascimento,CPF,RG,'
                 . 'obsRG,obsNomeMae,CEP,endereco,obsEndereco,obsCEP,obsCPF,passaporte,obsPassaporte,
-                    cadastroPendente,cartaoSUS,obsCartaoSUS,obsDataNascimento,idMunicipio_fk,idEstado_fk,obsMunicipio) '
-                . ' VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+                    cadastroPendente,cartaoSUS,obsCartaoSUS,obsDataNascimento,idMunicipio_fk,idEstado_fk,obsMunicipio,DDD,telefone,numero,complemento,bairro) '
+                . ' VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i', $objPaciente->getIdSexo_fk());
@@ -50,6 +55,11 @@ class PacienteBD
             $arrayBind[] = array('i', $objPaciente->getIdMunicipioFk());
             $arrayBind[] = array('i', $objPaciente->getIdEstadoFk());
             $arrayBind[] = array('s', $objPaciente->getObsMunicipio());
+            $arrayBind[] = array('s', $objPaciente->getDDD());
+            $arrayBind[] = array('s', $objPaciente->getTelefone());
+            $arrayBind[] = array('i', $objPaciente->getNumero());
+            $arrayBind[] = array('s', $objPaciente->getComplemento());
+            $arrayBind[] = array('s', $objPaciente->getBairro());
 
 
             $objBanco->executarSQL($INSERT, $arrayBind);
@@ -66,8 +76,9 @@ class PacienteBD
             $UPDATE = 'UPDATE tb_paciente SET idSexo_fk = ?,idEtnia_fk = ?, nome = ?, nomeMae = ?,dataNascimento = ?, CPF = ?,'
                 . ' RG = ?, obsRG = ?, obsNomeMae = ?, CEP = ?, endereco = ?, obsEndereco = ?, obsCEP = ?, obsCPF = ?,'
                 . ' passaporte = ?,obsPassaporte = ?,cadastroPendente = ? , cartaoSUS= ?, 
-                        obsCartaoSUS =? ,obsDataNascimento =?, idMunicipio_fk =?, idEstado_fk =?, obsMunicipio= ? '
-                . 'where idPaciente = ?';
+                        obsCartaoSUS =? ,obsDataNascimento =?, idMunicipio_fk =?, idEstado_fk =?, obsMunicipio= ?, DDD =?, telefone =?,numero=?,
+                         complemento =?, bairro=? '
+                . ' where idPaciente = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i', $objPaciente->getIdSexo_fk());
@@ -93,6 +104,11 @@ class PacienteBD
             $arrayBind[] = array('i', $objPaciente->getIdMunicipioFk());
             $arrayBind[] = array('i', $objPaciente->getIdEstadoFk());
             $arrayBind[] = array('s', $objPaciente->getObsMunicipio());
+            $arrayBind[] = array('s', $objPaciente->getDDD());
+            $arrayBind[] = array('s', $objPaciente->getTelefone());
+            $arrayBind[] = array('i', $objPaciente->getNumero());
+            $arrayBind[] = array('s', $objPaciente->getComplemento());
+            $arrayBind[] = array('s', $objPaciente->getBairro());
 
             $arrayBind[] = array('i', $objPaciente->getIdPaciente());
 
@@ -169,6 +185,18 @@ class PacienteBD
                 $arrayBind[] = array('s', $objPaciente->getObsMunicipio());
             }
 
+            if ($objPaciente->getDDD() != null) {
+                $WHERE .= $AND . " DDD = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPaciente->getDDD());
+            }
+
+            if ($objPaciente->getTelefone() != null) {
+                $WHERE .= $AND . " telefone = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPaciente->getTelefone());
+            }
+
             if ($WHERE != '') {
                 $WHERE = ' where ' . $WHERE;
             }
@@ -204,6 +232,11 @@ class PacienteBD
                 $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
                 $paciente->setIdEstadoFk($reg['idEstado_fk']);
                 $paciente->setObsMunicipio($reg['obsMunicipio']);
+                $paciente->setDDD($reg['DDD']);
+                $paciente->setTelefone($reg['telefone']);
+                $paciente->setNumero($reg['numero']);
+                $paciente->setComplemento($reg['complemento']);
+                $paciente->setBairro($reg['bairro']);
 
                 $array_paciente[] = $paciente;
             }
@@ -279,6 +312,18 @@ class PacienteBD
                 $arrayBind[] = array('s', $objPaciente->getObsMunicipio());
             }
 
+            if ($objPaciente->getDDD() != null) {
+                $WHERE .= $AND . " DDD = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPaciente->getDDD());
+            }
+
+            if ($objPaciente->getTelefone() != null) {
+                $WHERE .= $AND . " telefone = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPaciente->getTelefone());
+            }
+
             if ($WHERE != '') {
                 $WHERE = ' where ' . $WHERE;
             }
@@ -314,7 +359,29 @@ class PacienteBD
                 $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
                 $paciente->setIdEstadoFk($reg['idEstado_fk']);
                 $paciente->setObsMunicipio($reg['obsMunicipio']);
+                $paciente->setDDD($reg['DDD']);
+                $paciente->setTelefone($reg['telefone']);
+                $paciente->setNumero($reg['numero']);
+                $paciente->setComplemento($reg['complemento']);
+                $paciente->setBairro($reg['bairro']);
 
+
+                if (!is_null($paciente->getIdSexo_fk())) {
+                    $objSexo = new Sexo();
+                    $objSexoRN = new SexoRN();
+                    $objSexo->setIdSexo($paciente->getIdSexo_fk());
+                    $objSexo = $objSexoRN->consultar($objSexo);
+                    $paciente->setObjSexo($objSexo);
+
+                }
+                if (!is_null($paciente->getIdEtnia_fk())) {
+                    $objEtnia = new Etnia();
+                    $objEtniaRN = new EtniaRN();
+                    $objEtnia->setIdEtnia($paciente->getIdEtnia_fk());
+                    $objEtnia = $objEtniaRN->consultar($objEtnia);
+                    $paciente->setObjEtnia($objEtnia);
+
+                }
 
                 if (!is_null($paciente->getIdEstadoFk())) {
 
@@ -378,6 +445,11 @@ class PacienteBD
             $paciente->setIdMunicipioFk($arr[0]['idMunicipio_fk']);
             $paciente->setIdEstadoFk($arr[0]['idEstado_fk']);
             $paciente->setObsMunicipio($arr[0]['obsMunicipio']);
+            $paciente->setDDD($arr[0]['DDD']);
+            $paciente->setTelefone($arr[0]['telefone']);
+            $paciente->setNumero($arr[0]['numero']);
+            $paciente->setComplemento($arr[0]['complemento']);
+            $paciente->setBairro($arr[0]['bairro']);
 
             return $paciente;
         } catch (Throwable $ex) {
@@ -500,6 +572,10 @@ class PacienteBD
                 $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
                 $paciente->setIdEstadoFk($reg['idEstado_fk']);
                 $paciente->setObsMunicipio($reg['obsMunicipio']);
+                $paciente->setNumero($reg['numero']);
+                $paciente->setComplemento($reg['complemento']);
+                $paciente->setBairro($reg['bairro']);
+
 
                 $arr_pacientes[] = $paciente;
             }
@@ -556,6 +632,9 @@ class PacienteBD
                         $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
                         $paciente->setIdEstadoFk($reg['idEstado_fk']);
                         $paciente->setObsMunicipio($reg['obsMunicipio']);
+                        $paciente->setNumero($reg['numero']);
+                        $paciente->setComplemento($reg['complemento']);
+                        $paciente->setBairro($reg['bairro']);
 
 
                         $arr_pacientes[] = $paciente;
@@ -614,6 +693,9 @@ class PacienteBD
                         $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
                         $paciente->setIdEstadoFk($reg['idEstado_fk']);
                         $paciente->setObsMunicipio($reg['obsMunicipio']);
+                        $paciente->setNumero($reg['numero']);
+                        $paciente->setComplemento($reg['complemento']);
+                        $paciente->setBairro($reg['bairro']);
 
 
                         $arr_pacientes[] = $paciente;
@@ -627,123 +709,180 @@ class PacienteBD
     }
 
 
-    public function procurarPassaporte(Paciente $objPaciente, Banco $objBanco)
+    public function procurar_paciente(Paciente $objPaciente, Banco $objBanco)
     {
-
         try {
-
-
-            $SELECT = 'SELECT * from tb_paciente where passaporte = ?';
-
+            $SELECT = 'SELECT * from tb_paciente ';
+            $WHERE = '';
+            $AND = '';
+            $FROM = '';
             $arrayBind = array();
-            $arrayBind[] = array('s', $objPaciente->getPassaporte());
 
-            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
-
-            if (empty($arr)) {
-                return $arr;
+            if ($objPaciente->getIdPaciente() != null) {
+                $WHERE .= $AND . " tb_paciente.idPaciente = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objPaciente->getIdPaciente());
             }
-            $arr_pacientes = array();
 
-            foreach ($arr as $reg) {
-                if ($reg['idPaciente'] != $objPaciente->getIdPaciente()) {
-                    if ($reg['passaporte'] != null) {
-                        $paciente = new Paciente();
-                        $paciente->setIdPaciente($reg['idPaciente']);
-                        $paciente->setNome($reg['nome']);
-                        $paciente->setIdSexo_fk($reg['idSexo_fk']);
-                        $paciente->setIdEtnia_fk($reg['idEtnia_fk']);
-                        $paciente->setNomeMae($reg['nomeMae']);
-                        $paciente->setCPF($reg['CPF']);
-                        $paciente->setObsCPF($reg['CPF']);
-                        $paciente->setRG($reg['RG']);
-                        $paciente->setObsRG($reg['obsRG']);
-                        $paciente->setDataNascimento($reg['dataNascimento']);
-                        $paciente->setObsNomeMae($reg['obsNomeMae']);
-                        $paciente->setEndereco($reg['endereco']);
-                        $paciente->setCEP($reg['CEP']);
-                        $paciente->setPassaporte($reg['passaporte']);
-                        $paciente->setObsPassaporte($reg['obsPassaporte']);
-                        $paciente->setObsCEP($reg['obsCEP']);
-                        $paciente->setObsEndereco($reg['obsEndereco']);
-                        $paciente->setCadastroPendente($reg['cadastroPendente']);
-                        $paciente->setCartaoSUS($reg['cartaoSUS']);
-                        $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
-                        $paciente->setObsDataNascimento($reg['obsDataNascimento']);
-                        $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
-                        $paciente->setIdEstadoFk($reg['idEstado_fk']);
-                        $paciente->setObsMunicipio($reg['obsMunicipio']);
+            if ($objPaciente->getNome() != null) {
+                $WHERE .= $AND . " tb_paciente.nome LIKE ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', "%".$objPaciente->getNome()."%");
+            }
 
+            if ($objPaciente->getCPF() != null) {
+                //echo $objPaciente->getCPF();
+                $WHERE .= $AND . " tb_paciente.CPF = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPaciente->getCPF());
+            }
 
-                        $arr_pacientes[] = $paciente;
-                    }
+            if ($objPaciente->getRG() != null) {
+                $WHERE .= $AND . " tb_paciente.RG = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPaciente->getRG());
+            }
+
+            if ($objPaciente->getPassaporte() != null) {
+                $WHERE .= $AND . " tb_paciente.passaporte = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPaciente->getPassaporte());
+            }
+
+            if ($objPaciente->getIdMunicipioFk() != null) {
+                $WHERE .= $AND . " tb_paciente.idMunicipio_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objPaciente->getIdMunicipioFk());
+            }
+
+            if ($objPaciente->getIdEstadoFk() != null) {
+                $WHERE .= $AND . " tb_paciente.idEstado_fk = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objPaciente->getIdEstadoFk());
+            }
+
+            if ($objPaciente->getObsMunicipio() != null) {
+                $WHERE .= $AND . " tb_paciente.obsMunicipio = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objPaciente->getObsMunicipio());
+            }
+
+            if ($objPaciente->getObjCodGAL() != null) {
+                $FROM .= ' ,tb_codgal ';
+                $WHERE .= $AND . " tb_codgal.idPaciente_fk = tb_paciente.idPaciente ";
+                $AND = ' and ';
+                if ($objPaciente->getObjCodGAL()->getCodigo() != null) {
+                    $WHERE .= $AND . " tb_codgal.codigo = ?";
+                    $AND = ' and ';
+                    $arrayBind[] = array('s', $objPaciente->getObjCodGAL()->getCodigo());
+
                 }
             }
+
+
+            if ($WHERE != '') {
+                $WHERE = ' where ' . $WHERE;
+            }
+
+            //echo $SELECT.$WHERE;$WHERE
+
+            $arr = $objBanco->consultarSQL($SELECT .$FROM. $WHERE, $arrayBind);
+
+            $arr_pacientes = array();
+            $numeroAmostras = 0;
+            $numeroPacientes = 0;
+            foreach ($arr as $reg) {
+
+                /*$paciente = new Paciente();
+                $paciente->setIdPaciente($reg['idPaciente']);
+
+                $paciente->setNome($reg['nome']);
+                $paciente->setIdSexo_fk($reg['idSexo_fk']);
+                $paciente->setIdEtnia_fk($reg['idEtnia_fk']);
+                $paciente->setNomeMae($reg['nomeMae']);
+                $paciente->setCPF($reg['CPF']);
+                $paciente->setObsCPF($reg['obsCPF']);
+                $paciente->setRG($reg['RG']);
+                $paciente->setObsRG($reg['obsRG']);
+                $paciente->setDataNascimento($reg['dataNascimento']);
+                $paciente->setObsNomeMae($reg['obsNomeMae']);
+                $paciente->setEndereco($reg['endereco']);
+                $paciente->setCEP($reg['CEP']);
+                $paciente->setPassaporte($reg['passaporte']);
+                $paciente->setObsPassaporte($reg['obsPassaporte']);
+                $paciente->setObsCEP($reg['obsCEP']);
+                $paciente->setObsEndereco($reg['obsEndereco']);
+                $paciente->setCadastroPendente($reg['cadastroPendente']);
+                $paciente->setCartaoSUS($reg['cartaoSUS']);
+                $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
+                $paciente->setObsDataNascimento($reg['obsDataNascimento']);
+                $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
+                $paciente->setIdEstadoFk($reg['idEstado_fk']);
+                $paciente->setObsMunicipio($reg['obsMunicipio']);
+                */
+
+
+                $objAmostra = new Amostra();
+                $objAmostraRN = new AmostraRN();
+
+                if(!is_null($reg['idCodGAL'])){
+                    $objAmostra->setIdCodGAL_fk($reg['idCodGAL']);
+                }
+
+                $objAmostra->setIdPaciente_fk($reg['idPaciente']);
+                $arr_amostras = $objAmostraRN->listar_completo($objAmostra);
+                $numeroAmostras += count($arr_amostras);
+
+                if(count($arr_amostras) == 0){
+                    $paciente = new Paciente();
+                    $paciente->setIdPaciente($reg['idPaciente']);
+
+                    $paciente->setNome($reg['nome']);
+                    $paciente->setIdSexo_fk($reg['idSexo_fk']);
+                    $paciente->setIdEtnia_fk($reg['idEtnia_fk']);
+                    $paciente->setNomeMae($reg['nomeMae']);
+                    $paciente->setCPF($reg['CPF']);
+                    $paciente->setObsCPF($reg['obsCPF']);
+                    $paciente->setRG($reg['RG']);
+                    $paciente->setObsRG($reg['obsRG']);
+                    $paciente->setDataNascimento($reg['dataNascimento']);
+                    $paciente->setObsNomeMae($reg['obsNomeMae']);
+                    $paciente->setEndereco($reg['endereco']);
+                    $paciente->setCEP($reg['CEP']);
+                    $paciente->setPassaporte($reg['passaporte']);
+                    $paciente->setObsPassaporte($reg['obsPassaporte']);
+                    $paciente->setObsCEP($reg['obsCEP']);
+                    $paciente->setObsEndereco($reg['obsEndereco']);
+                    $paciente->setCadastroPendente($reg['cadastroPendente']);
+                    $paciente->setCartaoSUS($reg['cartaoSUS']);
+                    $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
+                    $paciente->setObsDataNascimento($reg['obsDataNascimento']);
+                    $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
+                    $paciente->setIdEstadoFk($reg['idEstado_fk']);
+                    $paciente->setObsMunicipio($reg['obsMunicipio']);
+                    $objAmostra->setObjPaciente($paciente);
+                    $paciente->setNumero($reg['numero']);
+                    $paciente->setComplemento($reg['complemento']);
+                    $paciente->setBairro($reg['bairro']);
+                    $arr_pacientes[] = $objAmostra;
+                }else {
+                    $arr_pacientes[] = $arr_amostras;
+                }
+
+            }
+
+            $numeroPacientes = count($arr);
+            $arr_pacientes[] = $numeroAmostras;
+            $arr_pacientes[] = $numeroPacientes;
             return $arr_pacientes;
-        } catch (Throwable $ex) {
-            throw new Excecao("Erro pesquisando o RG do paciente no BD.", $ex);
+        }catch (Throwable $ex){
+            throw new Excecao("Erro procurando pelo paciente no BD.", $ex);
         }
     }
 
 
-    public function procurarCartaoSUS(Paciente $objPaciente, Banco $objBanco)
-    {
 
-        try {
-
-
-            $SELECT = 'SELECT * from tb_paciente where cartaoSUS = ?';
-
-            $arrayBind = array();
-            $arrayBind[] = array('s', $objPaciente->getCartaoSUS());
-
-            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
-
-            if (empty($arr)) {
-                return $arr;
-            }
-            $arr_pacientes = array();
-
-            foreach ($arr as $reg) {
-                if ($reg['idPaciente'] != $objPaciente->getIdPaciente()) {
-                    if ($reg['passaporte'] != null) {
-                        $paciente = new Paciente();
-                        $paciente->setIdPaciente($reg['idPaciente']);
-                        $paciente->setNome($reg['nome']);
-                        $paciente->setIdSexo_fk($reg['idSexo_fk']);
-                        $paciente->setIdEtnia_fk($reg['idEtnia_fk']);
-                        $paciente->setNomeMae($reg['nomeMae']);
-                        $paciente->setCPF($reg['CPF']);
-                        $paciente->setObsCPF($reg['CPF']);
-                        $paciente->setRG($reg['RG']);
-                        $paciente->setObsRG($reg['obsRG']);
-                        $paciente->setDataNascimento($reg['dataNascimento']);
-                        $paciente->setObsNomeMae($reg['obsNomeMae']);
-                        $paciente->setEndereco($reg['endereco']);
-                        $paciente->setCEP($reg['CEP']);
-                        $paciente->setPassaporte($reg['passaporte']);
-                        $paciente->setObsPassaporte($reg['obsPassaporte']);
-                        $paciente->setObsCEP($reg['obsCEP']);
-                        $paciente->setObsEndereco($reg['obsEndereco']);
-                        $paciente->setCadastroPendente($reg['cadastroPendente']);
-                        $paciente->setCartaoSUS($reg['cartaoSUS']);
-                        $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
-                        $paciente->setObsDataNascimento($reg['obsDataNascimento']);
-                        $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
-                        $paciente->setIdEstadoFk($reg['idEstado_fk']);
-                        $paciente->setObsMunicipio($reg['obsMunicipio']);
-
-
-                        $arr_pacientes[] = $paciente;
-                    }
-                }
-            }
-            return $arr_pacientes;
-        } catch (Throwable $ex) {
-            throw new Excecao("Erro pesquisando o RG do paciente no BD.", $ex);
-        }
-    }
-
+    /*
     public function procurar_paciente(Paciente $objPaciente, Banco $objBanco)
     {
         try {
@@ -814,7 +953,9 @@ class PacienteBD
 
 
             $arrayBind = array();
-            $arrayBind[] = array('s', "%" . $objPaciente->getNome() . "%");
+            if($objPaciente->getNome() != null) {
+                $arrayBind[] = array('s', "%" . $objPaciente->getNome() . "%");
+            }
             if ($objPaciente->getObjCodGAL() != null) {
                 $arrayBind[] = array('d', $objPaciente->getObjCodGAL());
             }
@@ -940,5 +1081,6 @@ class PacienteBD
             throw new Excecao("Erro listando o paciente no BD.", $ex);
         }
     }
+    */
 
 }

@@ -31,6 +31,6 @@ insert into tb_rel_perfilusuario_recurso (idPerfilUsuario_fk,idRecurso_fk) VALUE
               dataHoraFim datetime not NULL ,
               PRIMARY KEY(idMixPlaca)
         );
-ALTER TABLE tb_mix_placa ADD FOREIGN KEY fk_idSolicitacao_mix (idSolicitacao_fk) REFERENCES tb_solicitacao_montagem_placa_rtqpcr (idSolicitacaoMontarPlaca);
+ALTER TABLE tb_mix_placa ADD FOREIGN KEY fk_idSolicitacao_mix (idSolicitacao_fk) REFERENCES tb_solicitacao_montagem_placa_rtqpcr (idSolicitacaoPlacaRTQPCR)
 ALTER TABLE tb_mix_placa ADD FOREIGN KEY fk_idPlaca_mix (idPlaca_fk) REFERENCES tb_placa (idPlaca);
 ALTER TABLE tb_mix_placa ADD FOREIGN KEY fk_idUsuario_mix (idUsuario_fk) REFERENCES tb_usuario (idUsuario);

@@ -38,7 +38,7 @@ class RTqPCR_RN
             return $arrObjTEtapa;
 
         }catch(Throwable $e){
-            throw new Excecao('Erro listando valores de Situação da placa',$e);
+            throw new Excecao('Erro listando valores da situação do RTqPCR',$e);
         }
     }
 
@@ -218,6 +218,7 @@ class RTqPCR_RN
             $objExcecao = new Excecao();
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
+            $this->validarIdRTqPCR($objRTqPCR,$objExcecao);
             $objExcecao->lancar_validacoes();
             $objRTqPCR_BD = new RTqPCR_BD();
             $arr =  $objRTqPCR_BD->consultar($objRTqPCR,$objBanco);
@@ -258,16 +259,17 @@ class RTqPCR_RN
             $objExcecao = new Excecao();
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
+
+            $this->validarIdRTqPCR($objRTqPCR,$objExcecao);
             $objExcecao->lancar_validacoes();
             $objRTqPCR_BD = new RTqPCR_BD();
 
-            //$this->validar_existe_RTqPCR_com_a_placa($objRTqPCR, $objExcecao);
             $objExcecao->lancar_validacoes();
 
-            $arr =  $objRTqPCR_BD->remover($objRTqPCR,$objBanco);
+            $objRTqPCR_BD->remover($objRTqPCR,$objBanco);
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $arr;
+
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro removendo o RTqPCR.', $e);

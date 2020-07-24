@@ -32,7 +32,7 @@ class SolicitacaoMontarPlacaRN
             return $arrObjTStaSolicitacao;
 
         }catch(Throwable $e){
-            throw new Excecao('Erro listando valores de Tipo estado da capela',$e);
+            throw new Excecao('Erro listando valores de situação da montagem da placa',$e);
         }
     }
 
@@ -188,13 +188,10 @@ class SolicitacaoMontarPlacaRN
             $objExcecao->lancar_validacoes();
             $objSolMontarPlacaBD = new SolicitacaoMontarPlacaBD();
 
-
-            $arr =  $objSolMontarPlacaBD->remover($objSolMontarPlaca,$objBanco);
+            $objSolMontarPlacaBD->remover($objSolMontarPlaca,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $arr;
-
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro na remoção da solicitação de montagem da placa do RTqPCR.', $e);
@@ -281,7 +278,6 @@ class SolicitacaoMontarPlacaRN
             $objBanco->fecharConexao();
 
         } catch (Throwable $e) {
-
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro na listagem da solicitação de montagem da placa do RTqPCR.',$e);
         }

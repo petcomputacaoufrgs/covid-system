@@ -18,12 +18,14 @@ try {
     $objUsuario = new Usuario();
     $objUsuarioRN = new UsuarioRN();
     $alert = '';
-    
+    $titulo = '';
     switch ($_GET['action']) {
         case 'cadastrar_usuario':
+            $titulo  = 'CADASTRAR USUÁRIO';
             if (isset($_POST['salvar_usuario'])) {
                 $objUsuario->setMatricula($_POST['numMatricula']);
                 $objUsuario->setSenha($_POST['password']);
+                $objUsuario->setCPF($_POST['numCPF']);
                 $objUsuarioRN->cadastrar($objUsuario);
                 $alert = Alert::alert_success("O usuário -".$objUsuario->getMatricula()."- foi <strong>cadastrado</strong> com sucesso");
 
@@ -35,6 +37,7 @@ try {
             break;
 
         case 'editar_usuario':
+            $titulo  = 'EDITAR USUÁRIO';
             if (!isset($_POST['salvar_usuario'])) { //enquanto não enviou o formulário com as alterações
                 $objUsuario->setIdUsuario($_GET['idUsuario']);
                 $objUsuario = $objUsuarioRN->consultar($objUsuario);
@@ -44,6 +47,7 @@ try {
                 $objUsuario->setIdUsuario($_GET['idUsuario']);
                 $objUsuario->setMatricula($_POST['numMatricula']);
                 $objUsuario->setSenha($_POST['password']);
+                $objUsuario->setCPF($_POST['numCPF']);
                 $objUsuarioRN->alterar($objUsuario);
                 $alert = Alert::alert_success("O usuário -".$objUsuario->getMatricula()."- foi <strong>alterado</strong> com sucesso");
             }
@@ -61,7 +65,7 @@ Pagina::getInstance()->adicionar_css("precadastros");
 Pagina::getInstance()->adicionar_javascript("usuario");
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
-Pagina::montar_topo_listar("CADASTRAR USUÁRIO",null,null,'listar_usuario','LISTAR USUÁRIOS');
+Pagina::montar_topo_listar($titulo,null,null,'listar_usuario','LISTAR USUÁRIOS');
 Pagina::getInstance()->mostrar_excecoes();
 echo  $alert;
 
@@ -70,20 +74,28 @@ echo '
 <div class="conteudo_grande">
     <form method="POST">
         <div class="form-row">
-            <div class="col-md-5 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="label_matricula">Digite a matrícula:</label>
                 <input type="text" class="form-control" id="idMatricula" placeholder="Matrícula" 
                       name="numMatricula" required value="'. Pagina::formatar_html($objUsuario->getMatricula()) .'">
 
             </div>
-            <div class="col-md-5 mb-3">
+            <div class="col-md-4 mb-3">
+                <label for="label_matricula">Digite o CPF:</label>
+                <input type="text" class="form-control" id="idMatricula" placeholder="CPF" 
+                      name="numCPF" required value="'. Pagina::formatar_html($objUsuario->getCPF()) .'">
+
+            </div>
+            <div class="col-md-4 mb-3">
                 <label for="label_senha">Digite a senha:</label>
                 <input type="password" class="form-control" id="idPassword" placeholder="Senha" 
                     name="password" required value="'. Pagina::formatar_html($objUsuario->getSenha()) .'">
 
             </div>
-            <div class="col-md-2 mb-3">
-                <input class="btn btn-primary" type="submit" name="salvar_usuario" style="margin-top: 31px; width: 100%;margin-left: 0px;" value="SALVAR"></input>
+        </div>
+        <div class="form-row">
+            <div class="col-md-12 mb-3">
+                <input class="btn btn-primary" type="submit" name="salvar_usuario" style="width: 40%;margin-left: 30%;" value="SALVAR"></input>
             </div>
         </div>  
        

@@ -19,7 +19,6 @@ class CapelaRN{
     public static $TNS_ALTA_SEGURANCA = 'A';
 
 
-
     public static function listarValoresTipoEstado(){
         try {
 

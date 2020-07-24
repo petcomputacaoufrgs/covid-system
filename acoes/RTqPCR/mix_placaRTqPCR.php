@@ -113,8 +113,10 @@ try{
     $select_placas = '';
     $arr_pocos = array();
     $select_solicitacoes = '';
-    //$disabled = ' disabled ';
+    $liberar_popUp = '';
     $arr_calculos = array();
+    $alert = '';
+    $form = '';
 
 
     InterfacePagina::montar_select_placas($select_placas, $objPlaca, $objPlacaRN, '', '');

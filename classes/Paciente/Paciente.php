@@ -28,11 +28,19 @@ class Paciente{
     private $idEstado_fk;
     private $idMunicipio_fk;
     private $obsMunicipio;
-    
+    private $ddd;
+    private $telefone;
+    private $bairro;
+    private $numero;
+    private $complemento;
+
+
     private $objCodGAL;
     private $objsAmostras;
     private $qntPacientes;
 
+    private $objEtnia;
+    private $objSexo;
     private $objMunicipio;
     private $objEstado;
     
@@ -40,6 +48,124 @@ class Paciente{
     function __construct() {
         
     }
+
+    /**
+     * @return mixed
+     */
+    public function getBairro()
+    {
+        return $this->bairro;
+    }
+
+    /**
+     * @param mixed $bairro
+     */
+    public function setBairro($bairro)
+    {
+        $this->bairro = $bairro;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * @param mixed $numero
+     */
+    public function setNumero($numero)
+    {
+        $this->numero = $numero;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComplemento()
+    {
+        return $this->complemento;
+    }
+
+    /**
+     * @param mixed $complemento
+     */
+    public function setComplemento($complemento)
+    {
+        $this->complemento = $complemento;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjSexo()
+    {
+        return $this->objSexo;
+    }
+
+    /**
+     * @param mixed $objSexo
+     */
+    public function setObjSexo($objSexo)
+    {
+        $this->objSexo = $objSexo;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getObjEtnia()
+    {
+        return $this->objEtnia;
+    }
+
+    /**
+     * @param mixed $objEtnia
+     */
+    public function setObjEtnia($objEtnia)
+    {
+        $this->objEtnia = $objEtnia;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getDDD()
+    {
+        return $this->ddd;
+    }
+
+    /**
+     * @param mixed $ddd
+     */
+    public function setDDD($ddd)
+    {
+        $this->ddd = $ddd;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTelefone()
+    {
+        return $this->telefone;
+    }
+
+    /**
+     * @param mixed $telefone
+     */
+    public function setTelefone($telefone)
+    {
+        $this->telefone = $telefone;
+    }
+
 
     /**
      * @return mixed

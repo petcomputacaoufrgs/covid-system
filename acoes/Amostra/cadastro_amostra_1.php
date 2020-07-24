@@ -173,9 +173,9 @@ try {
                 $objAmostra->setIdPaciente_fk($objPaciente->getIdPaciente());
                 $objAmostra->setDataHoraColeta($_POST['dtColeta']);
                 $objAmostra->setAceita_recusa($_POST['sel_aceita_recusada']);
-                if ($_POST['sel_aceita_recusada'] == 'a') {
+                if ($_POST['sel_aceita_recusada'] ==  AmostraRN::$STA_ACEITA) {
                     $objAmostra->setStatusAmostra('Aguardando Preparação');
-                } else if ($_POST['sel_aceita_recusada'] == 'r') {
+                } else if ($_POST['sel_aceita_recusada'] ==  AmostraRN::$STA_RECUSADA) {
                     $objAmostra->setStatusAmostra('Descartada');
                 }
                 $objAmostra->setObservacoes($_POST['txtAreaObs']);
@@ -268,9 +268,9 @@ try {
                 $objAmostra = $objAmostraRN->consultar($objAmostra);
                 $objAmostra->setDataHoraColeta($_POST['dtColeta']);
                 $objAmostra->setAceita_recusa($_POST['sel_aceita_recusada']);
-                if ($_POST['sel_aceita_recusada'] == 'a') {
+                if ($_POST['sel_aceita_recusada'] ==  AmostraRN::$STA_ACEITA) {
                     $objAmostra->setStatusAmostra('Aguardando Preparação');
-                } else if ($_POST['sel_aceita_recusada'] == 'r') {
+                } else if ($_POST['sel_aceita_recusada'] ==  AmostraRN::$STA_RECUSADA) {
                     $objAmostra->setStatusAmostra('Descartada');
                 }
                 $objAmostra->setObservacoes($_POST['txtAreaObs']);
@@ -374,10 +374,10 @@ function montar_select_aceitaRecusada(&$select_a_r, &$objAmostra) {
     $selectedr = '';
     $selecteda = '';
     if ($objAmostra != null) {
-        if ($objAmostra->getAceita_recusa() == 'r') {
+        if ($objAmostra->getAceita_recusa() ==  AmostraRN::$STA_RECUSADA) {
             $selectedr = ' selected ';
         }
-        if ($objAmostra->getAceita_recusa() == 'a') {
+        if ($objAmostra->getAceita_recusa() ==  AmostraRN::$STA_ACEITA) {
             $selecteda = ' selected ';
         }
     }

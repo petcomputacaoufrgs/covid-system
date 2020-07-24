@@ -153,12 +153,15 @@ try {
     $show_collap = '';
     $sumir_btns = 'n';
     $botaoNovo = false;
+    $alert = '';
 
+    $arr_JSCopiarLocal = array();
+    $arr_JSCopiarCaixa = array();
 
     $objPreparoLoteOriginal = new PreparoLote();
 
 
-    if($_GET['idLiberar'] || isset($_POST['btn_cancelar'])){
+    if(isset($_GET['idLiberar']) || isset($_POST['btn_cancelar'])){
         $objCapela->setIdCapela($_GET['idCapela']);
         $objCapela = $objCapelaRN->consultar($objCapela);
         $objCapela->setSituacaoCapela(CapelaRN::$TE_LIBERADA);
@@ -196,7 +199,7 @@ try {
 
         if (isset($_POST['btn_alocarCapela']) && !isset($_GET['idCapela'])) {
 
-            $objPreparoLoteOriginal->setIdPreparoLote($_POST['sel_preparo_lote']);
+            $objPreparoLoteOriginal->setIdPreparoLote(intval($_POST['sel_preparo_lote']));
             $objLote->setTipo(LoteRN::$TL_PREPARO);
             $objLote->setSituacaoLote(LoteRN::$TE_TRANSPORTE_PREPARACAO);
             $objPreparoLoteOriginal->setObjLote($objLote);
@@ -206,27 +209,31 @@ try {
 
             if(isset($_POST['txtNomeResponsavel']) && strlen($_POST['txtNomeResponsavel']) > 0) {
                 $objPreparoLoteOriginal->setNomeResponsavel($_POST['txtNomeResponsavel']);
+                if(isset($_POST['txtMatricula']) && strlen($_POST['txtMatricula']) > 0 ) {
+                    $objPreparoLoteOriginal->setIdResponsavel(strtoupper($_POST['txtMatricula']));
+                }
+
+                $objPreparoLoteOriginal->setIdCapelaFk($_POST['sel_nivelSegsCapela']);
+
+
+                $objCapela->setIdCapela($_POST['sel_nivelSegsCapela']);
+                CapelaINT::montar_capelas_liberadas($select_capelas,$objCapela, $objCapelaRN, null , null);
+
+
+                $objPreparoLoteOriginal = $objPreparoLoteRN->alterar($objPreparoLoteOriginal);
+
+                //só vai dar um lock de registro quando o alterar funcionar
+                $objCapelaRN->bloquear_registro($objCapela);
+
+
+                header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao&idCapela=' . $_POST['sel_nivelSegsCapela'] . '&idPreparoLote=' . $_POST['sel_preparo_lote']));
+                die();
+
+            }else{
+                $alert .= Alert::alert_danger("O nome do responsável deve ser informado");
             }
 
-            if(isset($_POST['txtMatricula']) && strlen($_POST['txtMatricula']) > 0 ) {
-                $objPreparoLoteOriginal->setIdResponsavel(strtoupper($_POST['txtMatricula']));
-            }
 
-            $objPreparoLoteOriginal->setIdCapelaFk($_POST['sel_nivelSegsCapela']);
-
-
-            $objCapela->setIdCapela($_POST['sel_nivelSegsCapela']);
-            CapelaINT::montar_capelas_liberadas($select_capelas,$objCapela, $objCapelaRN, null , null);
-
-
-            $objPreparoLoteOriginal = $objPreparoLoteRN->alterar($objPreparoLoteOriginal);
-
-            //só vai dar um lock de registro quando o alterar funcionar
-            $objCapelaRN->bloquear_registro($objCapela);
-
-
-            header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao&idCapela=' . $_POST['sel_nivelSegsCapela'] . '&idPreparoLote=' . $_POST['sel_preparo_lote']));
-            die();
         }
 
 
@@ -386,8 +393,9 @@ try {
                                         </div>
                             </div>';
 
-                $arr_JSCopiarLocalLocal = array();
+                $arr_JSCopiarLocal = array();
                 $arr_JSCopiarCaixa = array();
+                $numPreparo = 0;
                 foreach ($arr_tubos[0]->getObjsTubos() as $tubosLote) {
                     //print_r($tubosLote);
 
@@ -460,7 +468,7 @@ try {
                                 <div class="form-row" >
                                     
                                     <div class="col-md-6">
-                                        <label> Volume</label>
+                                        <label> Volume da amostra original</label>
                                             <input type="number" class="form-control form-control-sm" id="idVolume"  ' . $disabled . ' step="any" style="text-align: center;" placeholder="" ' . $disabled . '
                                                 name="txtVolumeORIGINAL_' . $tubosLote->getObjTubo()->getIdTubo() . '"  value="' . $_POST['txtVolumeORIGINAL_' . $tubosLote->getObjTubo()->getIdTubo()] . '">
                                     </div>
@@ -567,13 +575,7 @@ try {
                                     //$objInfosTuboNovo->setVolume('1.0');
                                     $armazenamento = " banco de amostras ";
 
-                                    if(strlen($strPoucoVolume) >0){
-                                        $volume = 0;
-                                        $volumeTxt =0;
-                                    }else {
-                                        $volume = 1.0;
-                                        $volumeTxt = 1.0;
-                                    }
+
                                     if (isset($_POST['txtVolume_' . $nometubo . '_' . $i . '_' . $tubosLote->getObjTubo()->getIdTubo()])) {
                                         $volume = $_POST['txtVolume_' . $nometubo . '_' . $i . '_' . $tubosLote->getObjTubo()->getIdTubo()];
                                     }
@@ -583,14 +585,6 @@ try {
                                     $nometubo = 'EXTRACAO';
                                     //S$objInfosTuboNovo->setVolume('0.2');
                                     $armazenamento = ' extração ';
-
-                                    if(strlen($strPoucoVolume) >0){
-                                        $volume = 0;
-                                        $volumeTxt =0;
-                                    }else {
-                                        $volume = 0.2;
-                                        $volumeTxt = 0.2;
-                                    }
 
                                     if (isset($_POST['txtVolume_' . $nometubo . '_' . $i . '_' . $tubosLote->getObjTubo()->getIdTubo()])) {
                                         $volume = $_POST['txtVolume_' . $nometubo . '_' . $i . '_' . $tubosLote->getObjTubo()->getIdTubo()];
@@ -606,14 +600,6 @@ try {
                                     $objInfosTubo->setIdTubo_fk($tubosLote->getObjTubo()->getIdTubo());
                                     $objInfosTubo = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
 
-
-                                    if(strlen($strPoucoVolume) >0){
-                                        $volume = 0;
-                                        $volumeTxt =0;
-                                    }else {
-                                        $volume = 0.2;
-                                        $volumeTxt = 0.2;
-                                    }
 
                                     if (isset($_POST['txtVolumeALIQUOTA_' . $nometubo . '_' . $i . '_' . $tubosLote->getObjTubo()->getIdTubo()])) {
                                         $volume = $_POST['txtVolumeALIQUOTA_' . $nometubo . '_' . $i . '_' . $tubosLote->getObjTubo()->getIdTubo()];
@@ -631,9 +617,6 @@ try {
                                     if(strlen($strPoucoVolume) >0){
                                         $volume = $objInfosTubo->getVolume();
                                         $volumeTxt =$objInfosTubo->getVolume();
-                                    }else {
-                                        $volume = 0.2;
-                                        $volumeTxt = 0.2;
                                     }
 
                                     if (isset($_POST['txtVolumeALIQUOTA_' . $nometubo . '_' . $i . '_' . $tubosLote->getObjTubo()->getIdTubo()])) {
@@ -660,7 +643,7 @@ try {
                                                     id ="' . $strIdLocal . '" 
                                                      value="' . $_POST[$strIdLocal] . '">';
 
-                                    $arr_JSCopiarLocal[] = $strIdLocal;
+                                    $arr_JSCopiarLocal[$numPreparo][] = $strIdLocal;
 
                                 } else {
                                     $show_amostras .= '<label> Próxima Etapa </label>
@@ -683,7 +666,7 @@ try {
                                                     name="' . $strIdCaixa . '"   id="' . $strIdCaixa . '" 
                                                      value="' . $_POST[$strIdCaixa] . '">
                                              </div>';
-                                $arr_JSCopiarCaixa[] = $strIdCaixa;
+                                $arr_JSCopiarCaixa[$numPreparo][] = $strIdCaixa;
 
                                 $show_amostras .= '           <div class="col-md-2" style="padding: 10px;"' . $hidden . '>
                                              <label> Posição </label>
@@ -699,15 +682,15 @@ try {
                                                 value="' . $volume . '"> <!--$objInfosTuboNovo->getVolume().-->
                                          </div>
                                          <div class="col-md-1" style="padding: 10px;">
-                                         <small style="color:red;">Por padrão o valor do volume será ' . $volumeTxt . 'ml </small>
                                             </div>
                                            ';
 
-                                if ($nometubo == 'ALIQUOTA1' && $entrou == 0) {
+                                if ($nometubo == 'ALIQUOTA1' ) {
                                     $show_amostras .= '<div class="col-md-2" >
                                         <div class="custom-control  custom-checkbox mr-sm-2" style="margin-top: 15px; margin-left: -20px;">
                                         <button style="padding:2px;background-color: #3a5261; color: white;font-size:11px;border: 2px solid white;border-radius: 5px;"  
-                                        type="button" onclick="copiar()">COPIAR LOCAL DE ARMAZENAMENTO E CAIXA PARA TODAS AS AMOSTRAS</button>                                      </div>
+                                            onclick="copiar(\''.$strIdLocal.'\',\''.$strIdCaixa.'\','.$numPreparo.')" type="button"
+                                         >COPIAR LOCAL DE ARMAZENAMENTO E CAIXA PARA TODAS AS AMOSTRAS</button> </div>
                                 </div> ';
                                 }
 
@@ -878,7 +861,7 @@ try {
                                             <input type="text" class="form-control form-control-sm"   style="text-align: center;" placeholder=""
                                                     name="' . $strIdLocalAliquota . '"  id="' . $strIdLocalAliquota . '" 
                                                      value="' . $_POST[$strIdLocalAliquota] . '">';
-                                        $arr_JSCopiarLocal[] = $strIdLocalAliquota;
+                                        $arr_JSCopiarLocal[$numPreparo][]  = $strIdLocalAliquota;
 
                                         $strIdCaixaAliquota = 'txtCaixaALIQUOTA_' . $nometubo . '_' . $i . '_' . $tubosLote->getObjTubo()->getIdTubo();
                                         $show_amostras .= '</div>
@@ -888,7 +871,7 @@ try {
                                                 name="' . $strIdCaixaAliquota . '"  id="' . $strIdCaixaAliquota . '"
                                                  value="' . $_POST[$strIdCaixaAliquota] . '">
                                          </div>';
-                                        $arr_JSCopiarCaixa[] = $strIdCaixaAliquota;
+                                        $arr_JSCopiarCaixa[$numPreparo][] = $strIdCaixaAliquota;
 
 
                                         $show_amostras .= '<div class="col-md-2" style="padding: 10px;">
@@ -898,10 +881,11 @@ try {
                                                 value="' . $_POST['txtPosicaoALIQUOTA_' . $nometubo . '_' . $i . '_' . $tubosLote->getObjTubo()->getIdTubo()] . '">
                                          </div>';
 
-                                        if ($nometubo == 'ALIQUOTA1' && $entrou == 0) {
+                                        if ($nometubo == 'ALIQUOTA1') {
                                             $show_amostras .= '<div class="col-md-2" style="padding: 5px;">
                                         <div class="custom-control  custom-checkbox mr-sm-2" style="padding:2px;background-color: #3a5261; color: white;font-size:11px;border: 2px solid white;border-radius: 5px;">
-                                            <button class="btn btn-primary" type="button" onclick="copiar()">COPIAR LOCAL DE ARMAZENAMENTO E CAIXA PARA TODAS AS AMOSTRAS</button>                                      </div>
+                                            <button class="btn btn-primary" type="button" id="'.$nometubo . '_' . $i . '_' . $tubosLote->getObjTubo()->getIdTubo().'" 
+                                            onclick="copiar(\''.$strIdLocal.'\',\''.$strIdCaixa.'\','.$numPreparo.')">COPIAR LOCAL DE ARMAZENAMENTO E CAIXA PARA TODAS AS AMOSTRAS</button>                                      </div>
                                     </div> ';
                                         }
 
@@ -1103,7 +1087,7 @@ try {
 
                     }
                     $style_top++;
-
+                    $numPreparo++;
                 }
 
 
@@ -1214,30 +1198,42 @@ Pagina::getInstance()->adicionar_javascript("preparacaoInativacao");
 if($botaoNovo) {
     Pagina::getInstance()->adicionar_javascript("popUp");
 }
+?>
+<script type="text/javascript">
 
-echo "\n".'<script type="text/javascript">
-
-    function copiar(){
-      //alert(\'COPIANDO\');  
-    ';
-
-
-for($i=1;$i<count($arr_JSCopiarLocal); $i++){
-    echo "\n".'document.getElementById(\''.$arr_JSCopiarLocal[$i].'\').value = document.getElementById(\''.$arr_JSCopiarLocal[0].'\').value;';
-
-}
-
-for($i=1;$i<count($arr_JSCopiarCaixa); $i++){
-    echo "\n".'document.getElementById(\''.$arr_JSCopiarCaixa[$i].'\').value = document.getElementById(\''.$arr_JSCopiarCaixa[0].'\').value;';
-
-}
+    function copiar(idLocal,idCaixa,posicaoInicial){
+     // alert(idAmostraInicio);
 
 
 
-echo '
+<?PHP
+
+    foreach ($arr_JSCopiarLocal as $posicaoPreparo =>  $arrLocal){
+        echo  ' if (posicaoInicial <= '.$posicaoPreparo.'){'."\n";
+        foreach ($arrLocal as $local){
+            echo "\n" . 'document.getElementById(\'' . $local . '\').value = document.getElementById(idLocal).value;';
+
+        }
+        echo '}'."\n\n";
+    }
+
+
+        foreach ($arr_JSCopiarCaixa as $posicaoPreparo =>  $arrCaixa){
+            echo  ' if (posicaoInicial <= '.$posicaoPreparo.'){'."\n";
+            foreach ($arrCaixa as $caixa){
+                echo "\n" . 'document.getElementById(\'' . $caixa . '\').value = document.getElementById(idCaixa).value;';
+
+            }
+            echo '}'."\n\n";
+        }
+
+
+?>
+
    }
+</script>
 
-</script>';
+<?php
 Pagina::getInstance()->fechar_head();
 Pagina::getInstance()->montar_menu_topo();
 Pagina::montar_topo_listar('PREPARAÇÃO E INATIVAÇÃO', null, null, 'listar_preparo_lote', 'LISTAR MONTAGENS E PREPAROS');
@@ -1276,7 +1272,7 @@ echo '<div class="conteudo_grande " >
                 </div>
                 <div class="form-row" >
                     <div class="col-md-8">
-                        <label>Informe o nome do responsável: (opcional)</label>
+                        <label>Informe o nome do responsável: </label>
                         <input type="text" class="form-control" '.$disabled_responsavel .' style="text-align: center;"
                                name="txtNomeResponsavel" value="'.$objPreparoLoteOriginal->getNomeResponsavel().'">
                      </div>

@@ -8,7 +8,7 @@ require_once __DIR__ . '/MontagemGrupoBD.php';
 
 class MontagemGrupoRN
 {
-    public function listar_completo(MontagemGrupo $montagemGrupo) {
+    public function listar_completo(MontagemGrupo $montagemGrupo,$arrAmostras=null) {
         $objBanco = new Banco();
         try {
             $objExcecao = new Excecao();
@@ -18,7 +18,7 @@ class MontagemGrupoRN
 
             $objExcecao->lancar_validacoes();
             $montagemGrupoBD = new MontagemGrupoBD();
-            $montagemGrupo = $montagemGrupoBD->listar_completo($montagemGrupo,$objBanco);
+            $montagemGrupo = $montagemGrupoBD->listar_completo($montagemGrupo,$arrAmostras,$objBanco);
 
 
             $objBanco->confirmarTransacao();

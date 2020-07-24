@@ -82,11 +82,10 @@ class RelTuboPlacaRN
             $objExcecao->lancar_validacoes();
             $objRelTuboPlacaBD = new RelTuboPlacaBD();
 
-            $arr =  $objRelTuboPlacaBD->remover($objRelTuboPlaca,$objBanco);
+            $objRelTuboPlacaBD->remover($objRelTuboPlaca,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $arr;
 
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
@@ -104,11 +103,10 @@ class RelTuboPlacaRN
             $objExcecao->lancar_validacoes();
             $objRelTuboPlacaBD = new RelTuboPlacaBD();
 
-            $arr =  $objRelTuboPlacaBD->remover_arr($arr_relacionamento,$objBanco);
+            $objRelTuboPlacaBD->remover_arr($arr_relacionamento,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $arr;
 
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();

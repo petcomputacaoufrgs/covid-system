@@ -15,6 +15,8 @@ require_once __DIR__ . '/../Amostra/AmostraRN.php';
 require_once __DIR__ . '/../Paciente/Paciente.php';
 require_once __DIR__ . '/../Paciente/PacienteRN.php';
 
+
+
 class LaudoRN
 {
     //resultado do laudo
@@ -29,6 +31,10 @@ class LaudoRN
     public static $SL_PENDENTE = 'P';
     public static $SL_CONCLUIDO = 'C';
 
+    //descartar ou devolver amostra
+    public static $DD_DESCARTE = 'R';
+    public static $DD_DEVOLVER = 'L';
+
 
     public static function listarValoresResultado(){
         try {
@@ -37,12 +43,12 @@ class LaudoRN
 
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$RL_POSITIVO);
-            $objSituacao->setStrDescricao('POSITIVO');
+            $objSituacao->setStrDescricao('DETECTADO');
             $arrObjTEtapa[] = $objSituacao;
 
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$RL_NEGATIVO);
-            $objSituacao->setStrDescricao('NEGATIVO');
+            $objSituacao->setStrDescricao('NÃO-DETECTADO');
             $arrObjTEtapa[] = $objSituacao;
 
 
@@ -96,6 +102,28 @@ class LaudoRN
         }
     }
 
+    public static function listarValoresDDLaudo(){
+        try {
+
+            $arr = array();
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$DD_DESCARTE);
+            $objSituacao->setStrDescricao('DESCARTE');
+            $arr[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$DD_DEVOLVER);
+            $objSituacao->setStrDescricao('DEVOLVER');
+            $arr[] = $objSituacao;
+
+            return $arr;
+
+        }catch(Throwable $e){
+            throw new Excecao('Erro listando valores de DD no Laudo RN',$e);
+        }
+    }
+
 
     public static function mostrarDescricaoStaLaudo($caractere){
 
@@ -116,6 +144,15 @@ class LaudoRN
         return null;
     }
 
+    public static function mostrarDescricaoDD($caractere){
+        foreach (self::listarValoresDDLaudo() as $sta){
+            if($sta->getStrTipo() == $caractere){
+                return $sta->getStrDescricao();
+            }
+        }
+        return null;
+    }
+
 
     private function validarObservacoes(Laudo $laudo,Excecao $objExcecao){
 
@@ -124,10 +161,41 @@ class LaudoRN
 
 
             if (strlen($strObservacoes) > 300) {
-                $objExcecao->adicionar_validacao('As observações do laudo possuem mais de 300 caracteres.', 'idLaudo', 'alert-danger');
+                $objExcecao->adicionar_validacao('As observações do laudo possuem mais de 300 caracteres.', null, 'alert-danger');
             }
 
-            return $laudo->setObservacoes($strObservacoes);
+            $laudo->setObservacoes($strObservacoes);
+        }
+
+    }
+
+    private function validarDD(Laudo $laudo,Excecao $objExcecao){
+
+        if($laudo->getDescarteDevolver() != null) {
+            if(is_null(self::listarValoresDDLaudo())){
+                $objExcecao->adicionar_validacao('O devolver ou descartar tem um valor inválido', null, 'alert-danger');
+            }
+
+        }
+
+    }
+
+    private function validarIdLaudo(Laudo $laudo,Excecao $objExcecao){
+
+        if($laudo->getIdLaudo() == null) {
+            $objExcecao->adicionar_validacao('O identificar do laudo não foi informado', null, 'alert-danger');
+        }
+
+    }
+
+    private function validarResultado(Laudo $laudo,Excecao $objExcecao){
+
+        if($laudo->getResultado() == null || strlen($laudo->getResultado()) == 0) {
+            $objExcecao->adicionar_validacao('O resultado do laudo não foi informado', null, 'alert-danger');
+        }else{
+            if(is_null(self::mostrarDescricaoResultado($laudo->getResultado()))){
+                $objExcecao->adicionar_validacao('O resultado do laudo que foi informado é inválido', null, 'alert-danger');
+            }
         }
 
     }
@@ -141,13 +209,46 @@ class LaudoRN
             $objLaudoBD = new LaudoBD();
 
             $this->validarObservacoes($laudo,$objExcecao);
-
+            $this->validarDD($laudo,$objExcecao);
+            $this->validarResultado($laudo,$objExcecao);
             $objExcecao->lancar_validacoes();
-            $laudo = $objLaudoBD->cadastrar($laudo,$objBanco);
+            if($laudo->getObjInfosTubo() != null){
+                $objInfosTuboRN = new InfosTuboRN();
+                if(is_array($laudo->getObjInfosTubo())){
+                    foreach ($laudo->getObjInfosTubo() as $info){
+                        $objInfosTuboRN->cadastrar($info);
+                    }
+                }else{
+                    $objInfosTuboRN->cadastrar($laudo->getObjInfosTubo());
+                }
+            }
+
+
+            $laudoCadastro = $objLaudoBD->cadastrar($laudo,$objBanco);
+
+            if(!is_null($laudoCadastro->getArrKitsExtracao())){
+                $objLaudoKitExtracaoRN = new LaudoKitExtracaoRN();
+                foreach ($laudoCadastro->getArrKitsExtracao() as $laudoKit){
+                    $objLaudoKitExtracao = new LaudoKitExtracao();
+                    $objLaudoKitExtracao->setIdKitExtracao($laudoKit);
+                    $objLaudoKitExtracao->setIdLaudoFk($laudoCadastro->getIdLaudo());
+                    $objLaudoKitExtracaoRN->cadastrar($objLaudoKitExtracao);
+                }
+            }
+
+            if(!is_null($laudoCadastro->getArrProtocolos())){
+                $objLaudoProtocoloRN = new LaudoProtocoloRN();
+                foreach ($laudoCadastro->getArrProtocolos() as $protocolo){
+                    $objLaudoProtocolo = new LaudoProtocolo();
+                    $objLaudoProtocolo->setIdProtocoloFk($protocolo);
+                    $objLaudoProtocolo->setIdLaudoFk($laudoCadastro->getIdLaudo());
+                    $objLaudoProtocoloRN->cadastrar($objLaudoProtocolo);
+                }
+            }
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $laudo;
+            return $laudoCadastro;
         }catch (Throwable $e){
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro cadastrando o laudo.', $e);
@@ -162,15 +263,57 @@ class LaudoRN
             $objBanco->abrirTransacao();
 
             $this->validarObservacoes($laudo,$objExcecao);
-
+            $this->validarDD($laudo,$objExcecao);
+            $this->validarResultado($laudo,$objExcecao);
             $objExcecao->lancar_validacoes();
+
 
             if($laudo->getObjInfosTubo() != null){
                 $objInfosTuboRN = new InfosTuboRN();
-                foreach ($laudo->getObjInfosTubo() as $info){
-                    $objInfosTuboRN->cadastrar($info);
+                if(is_array($laudo->getObjInfosTubo())){
+                    foreach ($laudo->getObjInfosTubo() as $info){
+                        $objInfosTuboRN->cadastrar($info);
+                    }
+                }else{
+                    $objInfosTuboRN->cadastrar($laudo->getObjInfosTubo());
                 }
             }
+
+            if(!is_null($laudo->getArrKitsExtracao())){
+                $objLaudoKitExtracaoRN = new LaudoKitExtracaoRN();
+                $objLaudoKitExtracao = new LaudoKitExtracao();
+                $objLaudoKitExtracao->setIdLaudoFk($laudo->getIdLaudo());
+                $arr_banco = $objLaudoKitExtracaoRN->listar($objLaudoKitExtracao);
+                foreach ($arr_banco as $laudokit){
+                    $objLaudoKitExtracaoRN->remover($laudokit);
+                }
+
+                foreach ($laudo->getArrKitsExtracao() as $kit){
+                    $objLaudoKitExtracao->setIdLaudoFk($laudo->getIdLaudo());
+                    $objLaudoKitExtracao->setIdKitExtracao($kit);
+                    $objLaudoKitExtracaoRN->cadastrar($objLaudoKitExtracao);
+
+                }
+            }
+
+
+
+            if(!is_null($laudo->getArrProtocolos())){
+                $objLaudoProtocoloRN = new LaudoProtocoloRN();
+                $objLaudoProtocolo = new LaudoProtocolo();
+                $objLaudoProtocolo->setIdLaudoFk($laudo->getIdLaudo());
+                $arr_banco = $objLaudoProtocoloRN->listar($objLaudoProtocolo);
+                foreach ($arr_banco as $laudokit){
+                    $objLaudoProtocoloRN->remover($laudokit);
+                }
+
+                foreach ($laudo->getArrProtocolos() as $id){
+                    $objLaudoProtocolo->setIdLaudoFk($laudo->getIdLaudo());
+                    $objLaudoProtocolo->setIdProtocoloFk($id);
+                    $objLaudoProtocoloRN->cadastrar($objLaudoProtocolo);
+                }
+            }
+
             $objLaudoBD = new LaudoBD();
             $laudo = $objLaudoBD->alterar($laudo,$objBanco);
 
@@ -189,6 +332,8 @@ class LaudoRN
             $objExcecao = new Excecao();
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
+
+            $this->validarIdLaudo($laudo,$objExcecao);
             $objExcecao->lancar_validacoes();
             $objLaudoBD = new LaudoBD();
 
@@ -212,13 +357,13 @@ class LaudoRN
             $objBanco->abrirTransacao();
 
             //$this->validarRemocao($laudo,$objExcecao);
-
+            $this->validarIdLaudo($laudo,$objExcecao);
             $objExcecao->lancar_validacoes();
             $objLaudoBD = new LaudoBD();
-            $arr =  $objLaudoBD->remover($laudo,$objBanco);
+            $objLaudoBD->remover($laudo,$objBanco);
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $arr;
+
         }catch (Throwable $e){
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro removendo o laudo.', $e);
@@ -265,25 +410,23 @@ class LaudoRN
         }
     }
 
-
-    public function laudo_completo(Laudo $laudo) {
+    public function paginacao(Laudo $laudo) {
         $objBanco = new Banco();
-        try{
+        try {
             $objExcecao = new Excecao();
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
             $objExcecao->lancar_validacoes();
-            $objLaudoBD = new LaudoBD();
 
-            $arr =  $objLaudoBD->laudo_completo($laudo,$objBanco);
+            $objLaudoBD = new LaudoBD();
+            $arr =  $objLaudoBD->paginacao($laudo,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-        }catch (Throwable $e){
+        } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-
-            throw new Excecao('Erro consultando o laudo completo.',$e);
+            throw new Excecao('Erro na paginação do laudo.', $e);
         }
     }
 

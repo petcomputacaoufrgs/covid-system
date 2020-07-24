@@ -38,7 +38,7 @@ class DiagnosticoRN
             return $arrObj;
 
         }catch(Throwable $e){
-            throw new Excecao('Erro listando valores de SITUAÇÃO do diagnóstico',$e);
+            throw new Excecao('Erro listando valores de SITUAÇÃO do diagnóstico (DiagnosticoRN).',$e);
         }
     }
 
@@ -70,7 +70,7 @@ class DiagnosticoRN
             return $arrObj;
 
         }catch(Throwable $e){
-            throw new Excecao('Erro listando valores de STATUS do diagnóstico',$e);
+            throw new Excecao('Erro listando valores de STATUS do diagnóstico (DiagnosticoRN).',$e);
         }
     }
 
@@ -170,7 +170,7 @@ class DiagnosticoRN
             return $diagnostico;
         }catch (Throwable $e){
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro cadastrando o diagnóstico.', $e);
+            throw new Excecao('Erro cadastrando o diagnóstico (DiagnosticoRN).', $e);
         }
     }
 
@@ -200,7 +200,7 @@ class DiagnosticoRN
             return $objEquipamento;
         }catch (Throwable $e){
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro alterando o diagnóstico.', $e);
+            throw new Excecao('Erro alterando o diagnóstico (DiagnosticoRN).', $e);
         }
     }
 
@@ -222,7 +222,7 @@ class DiagnosticoRN
             return $arr;
         }catch (Throwable $e){
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro consultando o diagnóstico.',$e);
+            throw new Excecao('Erro consultando o diagnóstico (DiagnosticoRN).',$e);
         }
     }
 
@@ -237,14 +237,13 @@ class DiagnosticoRN
             $this->validarIdDiagnostico($objDiagnostico,$objExcecao);
             $objExcecao->lancar_validacoes();
             $objDiagnosticoBD = new DiagnosticoBD();
-            $arr =  $objDiagnosticoBD->remover($objDiagnostico,$objBanco);
+            $objDiagnosticoBD->remover($objDiagnostico,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $arr;
         }catch (Throwable $e){
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro removendo o diagnóstico.', $e);
+            throw new Excecao('Erro removendo o diagnóstico (DiagnosticoRN).', $e);
         }
     }
 
@@ -265,7 +264,7 @@ class DiagnosticoRN
             return $arr;
         }catch (Throwable $e){
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando o diagnóstico.',$e);
+            throw new Excecao('Erro listando o diagnóstico (DiagnosticoRN).',$e);
         }
     }
 
@@ -287,7 +286,7 @@ class DiagnosticoRN
             return $arr;
         }catch (Throwable $e){
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando o diagnóstico completo.',$e);
+            throw new Excecao('Erro listando o diagnóstico completo (DiagnosticoRN).',$e);
         }
     }
 
@@ -307,7 +306,7 @@ class DiagnosticoRN
             return $arr;
         }catch (Throwable $e){
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro consultando o diagnóstico.',$e);
+            throw new Excecao('Erro realizando a paginação do diagnóstico (DiagnosticoRN).',$e);
         }
     }
 }

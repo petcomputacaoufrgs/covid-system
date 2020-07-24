@@ -426,6 +426,7 @@ class InfosTuboBD{
 
     }
 
+
     public function consultar_aguardando_diagnostico(InfosTubo $objInfosTubo,$arrIdPerfis, Banco $objBanco) {
         try{
 

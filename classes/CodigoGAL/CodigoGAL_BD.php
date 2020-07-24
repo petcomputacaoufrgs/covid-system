@@ -64,6 +64,13 @@ class CodigoGAL_BD {
             $AND = '';
             $arrayBind = array();
 
+
+            if ($objCodigoGAL->getIdCodigoGAL() != null) {
+                $WHERE .= $AND . " idCodGAL = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objCodigoGAL->getIdCodigoGAL());
+            }
+
             if ($objCodigoGAL->getCodigo() != null) {
                 $WHERE .= $AND . " codigo = ?";
                 $AND = ' and ';
@@ -73,7 +80,7 @@ class CodigoGAL_BD {
             if ($objCodigoGAL->getIdPaciente_fk() != null) {
                 $WHERE .= $AND . " idPaciente_fk = ?";
                 $AND = ' and ';
-                $arrayBind[] = array('s', $objCodigoGAL->getIdPaciente_fk());
+                $arrayBind[] = array('i', $objCodigoGAL->getIdPaciente_fk());
             }
 
 
@@ -87,7 +94,7 @@ class CodigoGAL_BD {
 
             //print_r($arr);
             //die();
-            $array_marca = array();
+            $array = array();
             foreach ($arr as $reg) {
                 $objCodigoGAL = new CodigoGAL();
                 $objCodigoGAL->setIdCodigoGAL($reg['idCodGAL']);
@@ -96,9 +103,9 @@ class CodigoGAL_BD {
                 $objCodigoGAL->setObsCodGAL($reg['obsCodGAL']);
 
 
-                $array_marca[] = $objCodigoGAL;
+                $array[] = $objCodigoGAL;
             }
-            return $array_marca;
+            return $array;
         } catch (Throwable $ex) {
             throw new Excecao("Erro listando o código GAL  no BD.", $ex);
         }

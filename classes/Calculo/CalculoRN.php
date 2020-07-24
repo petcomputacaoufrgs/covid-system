@@ -6,7 +6,6 @@ require_once __DIR__ . '/../Excecao/Excecao.php';
 require_once __DIR__ . '/CalculoBD.php';
 class CalculoRN
 {
-
     private function validarIdCalculo(Calculo $objCalculo, Excecao $objExcecao)
     {
         if($objCalculo->getIdCalculo() == null){
@@ -26,7 +25,6 @@ class CalculoRN
             }*/
         }
     }
-
     private function validarNome(Calculo $objCalculo, Excecao $objExcecao)
     {
         if($objCalculo->getNome() == null){
@@ -38,7 +36,6 @@ class CalculoRN
             }
         }
     }
-
 
     public function cadastrar(Calculo $objCalculo)
     {
@@ -61,7 +58,7 @@ class CalculoRN
             return $objCalculo;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro cadastrando o cálculo.', $e);
+            throw new Excecao('Erro cadastrando o cálculo (CalculoRN).', $e);
         }
     }
 
@@ -88,7 +85,7 @@ class CalculoRN
             return $objCalculo;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro alterando o cálculo.', $e);
+            throw new Excecao('Erro alterando o cálculo (CalculoRN).', $e);
         }
     }
 
@@ -96,7 +93,6 @@ class CalculoRN
     {
         $objBanco = new Banco();
         try {
-
             $objExcecao = new Excecao();
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
@@ -110,7 +106,7 @@ class CalculoRN
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro consultando o cálculo.', $e);
+            throw new Excecao('Erro consultando o cálculo (CalculoRN).', $e);
         }
     }
 
@@ -125,13 +121,12 @@ class CalculoRN
             $this->validarIdCalculo($objCalculo, $objExcecao);
             $objExcecao->lancar_validacoes();
             $objCalculoBD = new CalculoBD();
-            $arr = $objCalculoBD->remover($objCalculo, $objBanco);
+            $objCalculoBD->remover($objCalculo, $objBanco);
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro removendo o cálculo.', $e);
+            throw new Excecao('Erro removendo o cálculo (CalculoRN).', $e);
         }
     }
 
@@ -153,7 +148,7 @@ class CalculoRN
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando o cálculo.', $e);
+            throw new Excecao('Erro listando o cálculo (CalculoRN).', $e);
         }
     }
 
@@ -175,7 +170,7 @@ class CalculoRN
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando o cálculo.', $e);
+            throw new Excecao('Erro listando o cálculo (CalculoRN).', $e);
         }
     }
 }

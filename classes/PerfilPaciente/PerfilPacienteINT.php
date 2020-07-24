@@ -20,14 +20,17 @@ class PerfilPacienteINT
     static function montar_select_perfilPaciente(&$select_perfis, $objPerfilPaciente, $objPerfilPacienteRN, $disabled=null, $onchange=null)
     {
 
-        $onchange = '';
-        $disabled = '';
-        if($disabled){
-            $disabled = ' disabled ';
-        }
-        if($onchange){
+        if(is_null($onchange)){
+            $onchange = '';
+        }else{
             $onchange = ' onchange="this.form.submit()" ';
         }
+        if(is_null($disabled) || strlen($disabled) == 0) {
+            $disabled = '';
+        }else{
+            $disabled = ' disabled ';
+        }
+
 
 
         $arr_perfis = $objPerfilPacienteRN->listar(new PerfilPaciente());

@@ -102,7 +102,14 @@ try{
 
     $arr_pocos = array();
     $select_mix = '';
-    //$disabled = ' disabled ';
+    $liberar_popUp = '';
+    $alert = '';
+    $arr_JSCopiarLocal = array();
+    $arr_JSCopiarCaixa = array();
+    $arr_JSCopiarPorta = array();
+    $arr_JSCopiarColuna = array();
+    $arr_JSCopiarPrateleira = array();
+
 
     if(!isset($_GET['idMontagem']) && !isset($_GET['idMix'])) {
         $objMix = new MixRTqPCR();

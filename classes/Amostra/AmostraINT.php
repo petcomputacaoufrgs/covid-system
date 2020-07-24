@@ -3,19 +3,30 @@
 
 class AmostraINT
 {
+    private static $instance;
+
+    public static function getInstance()
+    {
+        if (self::$instance == null) {
+            self::$instance = new AmostraINT();
+        }
+        return self::$instance;
+    }
+
+
     static function montar_select_aceitaRecusadaAguarda(&$select_a_r_g, $objAmostra, $disabled=null, $onchange=null)
     {
         $selectedr = '';
         $selecteda = '';
         $selectedg = '';
         if ($objAmostra != null) {
-            if ($objAmostra->get_a_r_g() == 'r') {
+            if ($objAmostra->get_a_r_g() == AmostraRN::$STA_RECUSADA) {
                 $selectedr = ' selected ';
             }
-            if ($objAmostra->get_a_r_g() == 'a') {
+            if ($objAmostra->get_a_r_g() == AmostraRN::$STA_ACEITA) {
                 $selecteda = ' selected ';
             }
-            if ($objAmostra->get_a_r_g() == 'g') {
+            if ($objAmostra->get_a_r_g() == AmostraRN::$STA_AGUARDANDO) {
                 $selectedg = ' selected ';
             }
         }

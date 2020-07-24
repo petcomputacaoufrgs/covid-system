@@ -3,6 +3,15 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 require_once __DIR__ . '/../Banco/Banco.php';
+
+require_once __DIR__ . '/../../classes/Placa/Placa.php';
+require_once __DIR__ . '/../../classes/Placa/PlacaRN.php';
+
+require_once __DIR__ . '/../../classes/RelPerfilPlaca/RelPerfilPlaca.php';
+require_once __DIR__ . '/../../classes/RelPerfilPlaca/RelPerfilPlacaRN.php';
+
+require_once __DIR__ . '/../../classes/Equipamento/Equipamento.php';
+require_once __DIR__ . '/../../classes/Equipamento/EquipamentoRN.php';
 class RTqPCR_BD
 {
     public function cadastrar(RTqPCR $objRTqPCR, Banco $objBanco) {
@@ -395,7 +404,7 @@ class RTqPCR_BD
                     if ($objRTqPCR->getObjEquipamento()->getNomeEquipamento() != null) {
                         $WHERE .= $AND . " tb_equipamento.nomeEquipamento LIKE ?";
                         $AND = ' and ';
-                        $arrayBind[] = array('s', "%" . $objRTqPCR->getNomeEquipamento() . "%");
+                        $arrayBind[] = array('s', "%" . $objRTqPCR->getObjEquipamento()->getNomeEquipamento() . "%");
                     }
 
                     if ($objRTqPCR->getObjEquipamento()->getIdEquipamento() != null) {

@@ -14,12 +14,11 @@ class CalculoBD
             $arrayBind[] = array('s',$objCalculo->getNome());
             $arrayBind[] = array('i',$objCalculo->getIdProtocoloFk());
 
-
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objCalculo->setIdCalculo($objBanco->obterUltimoID());
             return$objCalculo;
         } catch (Throwable $ex) {
-            throw new Excecao("Erro cadastrando o cálculo no BD.",$ex);
+            throw new Excecao("Erro cadastrando o cálculo no BD (CalculoBD).",$ex);
         }
 
     }
@@ -42,7 +41,7 @@ class CalculoBD
             $objBanco->executarSQL($UPDATE,$arrayBind);
             return $objCalculo;
         } catch (Throwable $ex) {
-            throw new Excecao("Erro alterando o cálculo no BD.",$ex);
+            throw new Excecao("Erro alterando o cálculo no BD (CalculoBD).",$ex);
         }
 
     }
@@ -98,7 +97,7 @@ class CalculoBD
             }
             return $array;
         } catch (Throwable $ex) {
-            throw new Excecao("Erro listando o cálculo no BD.",$ex);
+            throw new Excecao("Erro listando o cálculo no BD (CalculoBD).",$ex);
         }
 
     }
@@ -168,7 +167,7 @@ class CalculoBD
             }
             return $array;
         } catch (Throwable $ex) {
-            throw new Excecao("Erro listando o cálculo no BD.",$ex);
+            throw new Excecao("Erro listando o cálculo no BD (CalculoBD).",$ex);
         }
 
     }
@@ -185,13 +184,15 @@ class CalculoBD
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
 
             $calculo = new Calculo();
-            $calculo->setIdCalculo($arr[0]['idCalculo']);
-            $calculo->setIdProtocoloFk($arr[0]['idProtocolo_fk']);
-            $calculo->setNome($arr[0]['nome']);
+            if(count($arr) > 0) {
+                $calculo->setIdCalculo($arr[0]['idCalculo']);
+                $calculo->setIdProtocoloFk($arr[0]['idProtocolo_fk']);
+                $calculo->setNome($arr[0]['nome']);
+            }
 
             return $calculo;
         } catch (Throwable $ex) {
-            throw new Excecao("Erro consultando o cálculo no BD.",$ex);
+            throw new Excecao("Erro consultando o cálculo no BD (CalculoBD).",$ex);
         }
 
     }
@@ -206,7 +207,7 @@ class CalculoBD
             $objBanco->executarSQL($DELETE, $arrayBind);
 
         } catch (Throwable $ex) {
-            throw new Excecao("Erro removendo o cálculo no BD.",$ex);
+            throw new Excecao("Erro removendo o cálculo no BD (CalculoBD).",$ex);
         }
     }
 }

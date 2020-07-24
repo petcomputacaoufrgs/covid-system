@@ -1,0 +1,1 @@
+CREATE INDEX nicknameAmostra ON tb_amostra(nickname);

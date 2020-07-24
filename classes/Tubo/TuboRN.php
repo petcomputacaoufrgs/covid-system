@@ -77,7 +77,7 @@ class TuboRN{
             return $arrObjTStaTubo;
 
         }catch(Throwable $e){
-            throw new Excecao('Erro listando valores de Tipo estado da capela',$e);
+            throw new Excecao('Erro listando valores dos tipos de tubo',$e);
         }
     }
 
@@ -97,7 +97,7 @@ class TuboRN{
         if($boolTuboOriginal == null){
             $objExcecao->adicionar_validacao('A originalidade do tubo precisa ser informada', null,'alert-danger');
         }
-        return $tubo->setTuboOriginal($boolTuboOriginal);
+        $tubo->setTuboOriginal($boolTuboOriginal);
     }
 
     private function validarIdTubo(Tubo $tubo,Excecao $objExcecao){
@@ -143,7 +143,7 @@ class TuboRN{
             if($tubo->getObjInfosTubo() != null){
                 $objInfosTuboRN = new InfosTuboRN();
                 if(is_array($tubo->getObjInfosTubo() )){
-                    if(count($tubo->getObjInfosTubo() > 0 || $tubo->getObjInfosTubo() != null)) {
+                    if(count($tubo->getObjInfosTubo()) > 0 || !is_null($tubo->getObjInfosTubo())) {
                         foreach ($tubo->getObjInfosTubo() as $info) {
                             if ($info->getIdInfosTubo() == null) {
                                 $objInfosTubo = $info;
@@ -211,7 +211,7 @@ class TuboRN{
 
              if($tubo->getObjInfosTubo() != null) {
                 $objInfosTuboRN = new InfosTuboRN();
-                if (count($tubo->getObjInfosTubo() > 0)) {
+                if (count($tubo->getObjInfosTubo()) > 0) {
                     foreach ($tubo->getObjInfosTubo() as $info) {
                         if ($info->getIdInfosTubo() == null) {
                             $objInfosTubo = $info;
@@ -254,7 +254,7 @@ class TuboRN{
 
                 if($tubo->getObjInfosTubo() != null) {
                     $objInfosTuboRN = new InfosTuboRN();
-                    if (count($tubo->getObjInfosTubo() > 0)) {
+                    if (count($tubo->getObjInfosTubo()) > 0) {
                         foreach ($tubo->getObjInfosTubo() as $info) {
                             if ($info->getIdInfosTubo() == null) {
                                 $objInfosTubo = $info;
@@ -317,11 +317,11 @@ class TuboRN{
 
             $objExcecao->lancar_validacoes();
             $objTuboBD = new TuboBD();
-            $arr =  $objTuboBD->remover($tubo,$objBanco);
+            $objTuboBD->remover($tubo,$objBanco);
             
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $arr;
+
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro na remoção do tubo.', $e);

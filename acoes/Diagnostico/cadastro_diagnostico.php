@@ -68,6 +68,7 @@ try {
     $perfisSelecionados = '';
     $disabled = '';
     $alert = '';
+    $form = '';
 
     PerfilPacienteINT::montar_select_perfisMultiplos($select_perfis, $perfisSelecionados, $objPerfilPaciente, $objPerfilPacienteRN, '', '', null);
 
@@ -160,18 +161,22 @@ try {
                      $volumeAliquota = 0;
                      $tuboTipoRNA=0;
                      $volumeRNA = 0;
+                     $tuboReteste = array();
                      if(count($arr_tubos_volume) > 0) {
                          foreach ($arr_tubos_volume as $tuboVolume) {
                              if ($tuboVolume->getTipo() == TuboRN::$TT_ALIQUOTA) {
-                                 if($tuboTipoAliquota == 0) $tuboReteste = $tuboVolume;
+
                                  $tuboTipoAliquota++;
                                  $volumeAliquota += $tuboVolume->getObjInfosTubo()->getVolume();
+                                 $tuboReteste[] = $tuboVolume;
                              }
                              if ($tuboVolume->getTipo() == TuboRN::$TT_RNA) {
                                  //if($tuboTipoRNA == 0 && $tuboTipoAliquota == 0) $tuboReteste = $tuboVolume;
                                  $tuboTipoRNA++;
                                  $volumeRNA += $tuboVolume->getObjInfosTubo()->getVolume();
+                                 $tuboReteste[] = $tuboVolume;
                              }
+
                          }
                      }
 
@@ -268,6 +273,7 @@ try {
                              $infosTuboAux->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
                              $arr_infos[] = $infosTuboAux;
 
+
                              $infosTuboAuxUm = new InfosTubo();
                              $infosTuboAuxUm->setIdInfosTubo(null);
                              $infosTuboAuxUm->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
@@ -282,27 +288,28 @@ try {
                              $arr_infos[] = $infosTuboAux;
 
 
-
                              if($objDiagnostico->getReteste() && $objDiagnostico->getVolumeRestante() > 0){
                                  //if($volumeAliquota > 0){
                                  if($primeiraVez) {
-                                     $infosTuboAuxDois = $tuboReteste->getObjInfosTubo();
-                                     $infosTuboAuxDois->setIdInfosTubo(null);
-                                     $infosTuboAuxDois->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
-                                     $infosTuboAuxDois->setIdTubo_fk($tuboReteste->getIdTubo());
-                                     $infosTuboAuxDois->setEtapaAnterior($infosTuboAuxDois->getEtapa());
-                                     $infosTuboAuxDois->setEtapa(InfosTuboRN::$TP_MONTAGEM_GRUPOS_AMOSTRAS);
-                                     $infosTuboAuxDois->setDataHora(date('Y-m-d  H:i:s'));
-                                     $infosTuboAuxDois->setReteste('n');
-                                     if ($objDiagnostico->getReteste()) {
-                                         $infosTuboAuxDois->setReteste('s');
-                                     }
+                                     foreach ($tuboReteste as $t) {
+                                         $infosTuboAuxDois = $t->getObjInfosTubo();
+                                         $infosTuboAuxDois->setIdInfosTubo(null);
+                                         $infosTuboAuxDois->setIdUsuario_fk(Sessao::getInstance()->getIdUsuario());
+                                         $infosTuboAuxDois->setIdTubo_fk($t->getIdTubo());
+                                         $infosTuboAuxDois->setEtapaAnterior(InfosTuboRN::$TP_DIAGNOSTICO);
+                                         $infosTuboAuxDois->setEtapa(InfosTuboRN::$TP_RETESTE);
+                                         $infosTuboAuxDois->setDataHora(date('Y-m-d  H:i:s'));
+                                         $infosTuboAuxDois->setReteste('n');
+                                         if ($objDiagnostico->getReteste()) {
+                                             $infosTuboAuxDois->setReteste('s');
+                                         }
 
-                                     $infosTuboAuxDois->setObservacoes(null);
-                                     $infosTuboAuxDois->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
-                                     $infosTuboAuxDois->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
-                                     $arr_infos[] = $infosTuboAuxDois;
-                                     $primeiraVez = false;
+                                         $infosTuboAuxDois->setObservacoes(null);
+                                         $infosTuboAuxDois->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
+                                         $infosTuboAuxDois->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
+                                         $arr_infos[] = $infosTuboAuxDois;
+                                         $primeiraVez = false;
+                                     }
                                  }
                                  //}
                              }
@@ -336,8 +343,7 @@ try {
                              header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_diagnostico&idLaudo=' .$objDiagnostico->getObjLaudo()->getIdLaudo()));
                              die();
                          }
-
-
+                         //colocar o header na pg do diagnostico
 
 
                      }

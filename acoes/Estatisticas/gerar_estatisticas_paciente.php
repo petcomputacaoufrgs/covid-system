@@ -33,6 +33,9 @@ try{
     require_once __DIR__.'/../../classes/Diagnostico/Diagnostico.php';
     require_once __DIR__.'/../../classes/Diagnostico/DiagnosticoRN.php';
 
+    require_once __DIR__.'/../../classes/Laudo/Laudo.php';
+    require_once __DIR__.'/../../classes/Laudo/LaudoRN.php';
+
     require_once __DIR__.'/../../utils/Utils.php';
 
 
@@ -43,6 +46,9 @@ try{
 
     $objDiagnostico = new Diagnostico();
     $objDiagnosticoRN = new DiagnosticoRN();
+
+    $objLaudo = new Laudo();
+    $objLaudoRN = new LaudoRN();
 
     $objPaciente = new Paciente();
     $objPacienteRN = new PacienteRN();
@@ -56,6 +62,7 @@ try{
     $alert = '';
     $teste = '';
     $dadosXls = '';
+    $contLaudos = 0;
 
     if(!isset($_POST['btn_gerar_xls']) && !isset($_POST['btn_gerar_pdf'])){
         $checkedS = ' checked ';
@@ -136,18 +143,42 @@ try{
             $arr_cadastros = $objCadastroAmostraRN->listar_completo($objCadastroAmostra,array_filter($datasArr) , null);
 
 
-            /*echo "<pre>";
-            print_r($arr_cadastros);
-            echo  "<pre>";
-            die();*/
+           // echo "<pre>";
+           // print_r($arr_cadastros);
+           // echo  "<pre>";
+
 
             //$objDiagnostico->setIdAmostraFk($amostra->getIdAmostra());
             //$objDiagnostico = $objDiagnosticoRN->consultar($objDiagnostico);
-            if (isset($_POST['boolResultadoLaudo']) && $_POST['boolResultadoLaudo'] == 'on') {
-                $arr_diagnosticos = $objDiagnosticoRN->listar($objDiagnostico);
+            if ( (isset($_POST['boolResultadoLaudo']) && $_POST['boolResultadoLaudo'] == 'on')
+            ||  (isset($_POST['boolLaudosEmitidosNoDia']) && $_POST['boolLaudosEmitidosNoDia'] == 'on') ||
+                (isset($_POST['boolLaudosEmitidos']) && $_POST['boolLaudosEmitidos'] == 'on')) {
+
+                $arr_laudos = $objLaudoRN->listar($objLaudo);
+
+
+                //encontrar laudos emitidos nos dias
+                if(isset($_POST['boolLaudosEmitidosNoDia']) && $_POST['boolLaudosEmitidosNoDia'] == 'on') {
+                    foreach ($arr_laudos as $laudo) {
+                        $dataHoraGeracao = explode(" ", $laudo->getDataHoraGeracao());
+                        $dt = explode("-", $dataHoraGeracao[0]);
+                        if ($dt[0] == $ano && $dt[1] == $mes && $dt[2] == $dia) {
+                            $contLaudos++;
+                        }
+                    }
+                }
+
+                //echo "cont: ".$contLaudos;
+                if(isset($_POST['boolLaudosEmitidos']) && $_POST['boolLaudosEmitidos'] == 'on') {
+                    $arr_total_amostras= $objAmostraRN->paginacao($objAmostra);
+                    $numAmostrasSemLaudo = $objAmostra->getTotalRegistros() - count($arr_laudos);
+                }
+
             }
 
+            //print_r($arr_laudos);
 
+            //DIE();
             if (count($arr_cadastros) == 0) {
                 $alert .= Alert::alert_warning("Nenhuma amostra foi encontrada");
                 $checkedS = ' checked ';
@@ -164,6 +195,23 @@ try{
                 $dadosXls .= "    <tr><td>Amostras cadastradas em " . $strDatas . "</td></tr>";
                 $dadosXls .= "    <tr>";
 
+                if(isset($_POST['boolNumAmostras']) && $_POST['boolNumAmostras'] == 'on'){
+                    $dadosXls .= " <tr> <td> TOTAL DE AMOSTRAS CADASTRADAS:  </td><td> ".count($arr_cadastros)." </td></tr>";
+                }
+
+                if(isset($_POST['boolLaudosEmitidos']) && $_POST['boolLaudosEmitidos'] == 'on'){
+                    $dadosXls .= " <tr> <td> TOTAL DE LAUDOS EMITIDOS ATE O DIA:   </td><td> ".count($arr_laudos)." </td></tr>";
+                }
+
+                if(isset($_POST['boolLaudosEmitidosNoDia']) && $_POST['boolLaudosEmitidosNoDia'] == 'on'){
+                    $dadosXls .= " <tr> <td> TOTAL DE LAUDOS EMITIDOS NO DIA:  </td><td> ".$contLaudos." </td></tr>";
+                }
+
+                if(isset($_POST['boolNumAmostrasSemLaudo']) && $_POST['boolNumAmostrasSemLaudo'] == 'on'){
+                    $dadosXls .= " <tr> <td> TOTAL DE AMOSTRAS SEM LAUDO:  </td><td> ".$numAmostrasSemLaudo." </td></tr>";
+                }
+
+                $dadosXls .= '<tr>';
                 if (isset($_POST['boolNomePaciente']) && $_POST['boolNomePaciente'] == 'on') {
                     $dadosXls .= "  <td> Nome Paciente </td>";
                 }
@@ -338,19 +386,19 @@ try{
 
                         if (isset($_POST['boolResultadoLaudo']) && $_POST['boolResultadoLaudo'] == 'on') {
                             $encontrou = false;
-                            $objDiagnostico = new Diagnostico();
+                            $objLaudoAux = new Laudo();
                             $i = 0;
-                            while (!$encontrou && $i < count($arr_diagnosticos)) {
-                                if ($arr_diagnosticos[$i]->getIdAmostraFk() == $amostra->getIdAmostra()) {
+                            while (!$encontrou && $i < count($arr_laudos)) {
+                                if ($arr_laudos[$i]->getIdAmostraFk() == $amostra->getIdAmostra()) {
                                     $encontrou = true;
-                                    $objDiagnostico = $arr_diagnosticos[$i];
+                                    $objLaudoAux = $arr_laudos[$i];
                                 }
                                 $i++;
                             }
-                            if (is_null($objDiagnostico)) {
+                            if (is_null($objLaudoAux)) {
                                 $dadosXls .= "  <td> ainda não há resultado </td>";
                             } else {
-                                $dadosXls .= "  <td> " . DiagnosticoRN::mostrarDescricaoSituacao($objDiagnostico->getDiagnostico()) . "</td>";
+                                $dadosXls .= "  <td> " . strtoupper(LaudoRN::mostrarDescricaoResultado($objLaudoAux->getResultado())) . "</td>";
                             }
                         }
 
@@ -358,8 +406,6 @@ try{
                     }
 
                 }
-
-
 
                 $dadosXls .= '</table>';
 
@@ -395,7 +441,7 @@ try{
 
 
 }catch (Throwable $e){
-    die($e);
+    //die($e);
     Pagina::getInstance()->processar_excecao($e);
 }
 
@@ -591,6 +637,34 @@ echo '<h4 style="margin-top: 20px;">Informações do resultado</h4>
                 <div class="form-check">
                     <input type="checkbox" '.$checkedN.'  class="form-check-input" name="boolResultadoLaudo">
                     <label class="form-check-label" for="exampleCheck1">Resultado do laudo </label>
+                </div>
+            </div>
+         </div>';
+echo '<h4 style="margin-top: 20px;">Informações gerais</h4>
+         <hr>
+         <div class="form-row" style="width: 100%;padding: 0px;margin: 0px;">
+            <div class="col-md-3" style="width: 100%;">
+                <div class="form-check">
+                    <input type="checkbox" '.$checkedN.'  class="form-check-input" name="boolNumAmostras">
+                    <label class="form-check-label" for="exampleCheck1">Número de amostras cadastradas no dia </label>
+                </div>
+            </div>
+            <div class="col-md-3" style="width: 100%;">
+                <div class="form-check">
+                    <input type="checkbox" '.$checkedN.'  class="form-check-input" name="boolLaudosEmitidos">
+                    <label class="form-check-label" for="exampleCheck1">Laudos Emitidos ATÉ ESSE dia </label>
+                </div>
+            </div>
+            <div class="col-md-3" style="width: 100%;">
+                <div class="form-check">
+                    <input type="checkbox" '.$checkedN.'  class="form-check-input" name="boolLaudosEmitidosNoDia">
+                    <label class="form-check-label" for="exampleCheck1">Laudos Emitidos NESSE dia </label>
+                </div>
+            </div>
+            <div class="col-md-3" style="width: 100%;">
+                <div class="form-check">
+                    <input type="checkbox" '.$checkedN.'  class="form-check-input" name="boolNumAmostrasSemLaudo">
+                    <label class="form-check-label" for="exampleCheck1">Nº de amostras sem laudo </label>
                 </div>
             </div>
          </div>

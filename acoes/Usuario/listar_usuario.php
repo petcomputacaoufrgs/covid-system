@@ -33,8 +33,8 @@ try {
     $html = '';
 
 
-    $array_colunas = array('CÓDIGO', 'MATRÍCULA');
-    $array_tipos_colunas = array('text', 'text');//,'text');
+    $array_colunas = array('CÓDIGO', 'MATRÍCULA','CPF');
+    $array_tipos_colunas = array('text', 'text','text');//,'text');
     $valorPesquisa = '';
     $select_pesquisa = '';
     PesquisaINT::montar_select_pesquisa($select_pesquisa,$array_colunas, null,null,' onchange="this.form.submit()" ');
@@ -44,7 +44,7 @@ try {
         PesquisaINT::montar_select_pesquisa($select_pesquisa,$array_colunas, null,null,' onchange="this.form.submit()" ');
     }
 
-    $html .= $options;
+    //$html .= $options;
 
     if(isset($_POST['sel_pesquisa_coluna'])){
         PesquisaINT::montar_select_pesquisa($select_pesquisa,$array_colunas, $_POST['sel_pesquisa_coluna'],null,' onchange="this.form.submit()" ');
@@ -68,6 +68,10 @@ try {
 
         if($array_colunas[$_POST['sel_pesquisa_coluna']] == 'CÓDIGO'){
             $objUsuario->setIdUsuario($_POST['valorPesquisa']);
+        }
+
+        if($array_colunas[$_POST['sel_pesquisa_coluna']] == 'CPF'){
+            $objUsuario->setCPF($_POST['valorPesquisa']);
         }
 
     }

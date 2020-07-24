@@ -1,4 +1,7 @@
 <?php
+/*
+ *  Author: Carine Bertagnolli Bathaglini
+ */
 class CadastroAmostra{
     private $idCadastroAmostra;
     private $idUsuario_fk;
@@ -6,9 +9,61 @@ class CadastroAmostra{
     private $idLocalArmazenamento_fk;
     private $dataHoraInicio;
     private $dataHoraFim;
-    
+
+    private $numPagina;
+    private $totalRegistros;
+    private $registrosEncontrados;
+
     private $objAmostra;
     private $objUsuario;
+
+    /**
+     * @return mixed
+     */
+    public function getNumPagina()
+    {
+        return $this->numPagina;
+    }
+
+    /**
+     * @param mixed $numPagina
+     */
+    public function setNumPagina($numPagina)
+    {
+        $this->numPagina = $numPagina;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalRegistros()
+    {
+        return $this->totalRegistros;
+    }
+
+    /**
+     * @param mixed $totalRegistros
+     */
+    public function setTotalRegistros($totalRegistros)
+    {
+        $this->totalRegistros = $totalRegistros;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegistrosEncontrados()
+    {
+        return $this->registrosEncontrados;
+    }
+
+    /**
+     * @param mixed $registrosEncontrados
+     */
+    public function setRegistrosEncontrados($registrosEncontrados)
+    {
+        $this->registrosEncontrados = $registrosEncontrados;
+    }
 
     /**
      * @return mixed
@@ -27,8 +82,6 @@ class CadastroAmostra{
     }
 
 
-    
-    
     
     function getObjAmostra() {
         return $this->objAmostra;

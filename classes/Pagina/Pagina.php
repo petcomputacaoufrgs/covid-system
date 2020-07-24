@@ -72,15 +72,16 @@ class Pagina {
         }
     }
 
-    public function montar_menu_topo() {
+    public function montar_menu_topo()
+    {
         //echo '<a href="controlador.php?action=principal">TELA INICIAL</a>';
-        echo'<header >
-            <!--<a href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'" ></a> -->
+        echo '<header >
+            <!--<a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=principal') . '" ></a> -->
             
            <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <div class="mx-auto d-sm-flex d-block flex-sm-nowrap">
 
-                <a class="navbar-brand" style="border: none;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=principal').'">Tela Inicial<i class="fas fa-virus"></i></a>
+                <a class="navbar-brand" style="border: none;" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=principal') . '">Tela Inicial<i class="fas fa-virus"></i></a>
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -96,7 +97,10 @@ class Pagina {
         }
 
 
-        echo ' <li class="nav-item">
+        if (Sessao::getInstance()->verificar_permissao('montar_preparo_extracao') ||
+            Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao') ||
+            Sessao::getInstance()->verificar_permissao('realizar_extracao')) {
+            echo ' <li class="nav-item">
                         <div class="dropdown">
                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           PREPARAÇÃO E EXTRAÇÃO
@@ -104,21 +108,25 @@ class Pagina {
 
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">';
 
-                    if (Sessao::getInstance()->verificar_permissao('montar_preparo_extracao')) {
-                        echo ' <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao') . '">Montar grupo preparação</a>';
-                    }
+        if (Sessao::getInstance()->verificar_permissao('montar_preparo_extracao')) {
+            echo ' <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao') . '">Montar grupo preparação</a>';
+        }
 
-                    if (Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao')) {
-                        echo '<a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao') . '">Realizar Preparação/Inativação</a>';
-                    }
+        if (Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao')) {
+            echo '<a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao') . '">Realizar Preparação/Inativação</a>';
+        }
 
-                    if (Sessao::getInstance()->verificar_permissao('realizar_extracao')) {
-                        echo '<a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao') . '">Realizar Extração</a>';
-                    }
+        if (Sessao::getInstance()->verificar_permissao('realizar_extracao')) {
+            echo '<a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao') . '">Realizar Extração</a>';
+        }
+    }
 
 
-
-        echo ' <li class="nav-item">
+        if (Sessao::getInstance()->verificar_permissao('solicitar_montagem_placa_RTqPCR') ||
+            Sessao::getInstance()->verificar_permissao('mix_placa_RTqPCR') ||
+            Sessao::getInstance()->verificar_permissao('montar_placa_RTqPCR') ||
+            Sessao::getInstance()->verificar_permissao('analisar_RTqPCR')) {
+            echo ' <li class="nav-item">
                         <div class="dropdown">
                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           RTQPCR
@@ -145,9 +153,11 @@ class Pagina {
 
         echo '          </div>
                       </div>';
+    }
 
-
-        echo ' <li class="nav-item">
+        if (Sessao::getInstance()->verificar_permissao('cadastrar_diagnostico') ||
+            Sessao::getInstance()->verificar_permissao('listar_laudo')) {
+            echo ' <li class="nav-item">
                         <div class="dropdown">
                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           DIAGNÓSTICO E LAUDO
@@ -156,18 +166,18 @@ class Pagina {
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">';
 
 
-        if (Sessao::getInstance()->verificar_permissao('cadastrar_diagnostico')) {
-            echo ' <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_diagnostico') . '">Cadastrar Diagnóstico</a>';
-        }
+            if (Sessao::getInstance()->verificar_permissao('cadastrar_diagnostico')) {
+                echo ' <a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_diagnostico') . '">Cadastrar Diagnóstico</a>';
+            }
 
-        if (Sessao::getInstance()->verificar_permissao('listar_laudo')) {
-            echo '<a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_laudo') . '">Ver Laudos</a>';
-        }
+            if (Sessao::getInstance()->verificar_permissao('listar_laudo')) {
+                echo '<a class="nav-link" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_laudo') . '">Ver Laudos</a>';
+            }
 
-        echo '          </div>
+            echo '          </div>
                      </div>';
 
-
+        }
         echo '               <!--<li class="nav-item">
                             <a class="nav-link" href="#">Preparo e Armazenamento</a>
                         </li>
@@ -256,8 +266,9 @@ class Pagina {
 
                         <!-- Latest compiled and minified JavaScript -->
                         <script src="js/datetime-copy-paste.js"></script>
-
-
+                        
+                        <script src="js/Chart.js"></script>
+                       
                         <!-- Estilo customizado -->
                         <!--<link rel="stylesheet" type="text/css" href="css/style.css">-->
                         
@@ -328,7 +339,7 @@ class Pagina {
                                                                      
                         <!-- google fonts -->
                         <link href="https://fonts.googleapis.com/css?family=Baloo+Chettan+2&display=swap" rel="stylesheet">';
-
+/*
                         if(isset($_GET['action']) && $_GET['action'] !=  'login') {
                             echo '<script type="text/javascript">
                                         //$( document ).ready(function() {
@@ -347,7 +358,7 @@ class Pagina {
                                             }});
                                     } 
                                 </script>';
-                        }
+                        }*/
     }
 
     public  function fechar_head() {

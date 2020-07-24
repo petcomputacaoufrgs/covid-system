@@ -54,72 +54,45 @@ try {
 
     date_default_timezone_set('America/Sao_Paulo');
 
-
-    /*
-     * AMOSTRA
-     */
     $objAmostra = new Amostra();
     $objAmostraRN = new AmostraRN();
 
-    /*
-     * PLACA
-     */
     $objPlaca = new Placa();
     $objPlacaRN = new PlacaRN();
 
-    /*
-    * TUBO
-    */
     $objTubo = new Tubo();
     $objTuboRN = new TuboRN();
 
     $objInfosTubo = new InfosTubo();
     $objInfosTuboRN = new InfosTuboRN();
 
-    /*
-     * PROTOCOLO
-     */
     $objProtocolo = new Protocolo();
     $objProtocoloRN = new ProtocoloRN();
 
-    /*
-     * PERFIL PACIENTE
-     */
     $objPerfilPaciente = new PerfilPaciente();
     $objPerfilPacienteRN = new PerfilPacienteRN();
 
-    /*
-     * RELACIONAMENTO DOS TUBOS COM A PLACA
-     */
     $objRelTuboPlaca = new RelTuboPlaca();
     $objRelTuboPlacaRN = new RelTuboPlacaRN();
 
-    /*
-    * RELACIONAMENTO DOS PERFIS COM A PLACA
-    */
     $objRelPerfilPlaca = new RelPerfilPlaca();
     $objRelPerfilPlacaRN = new RelPerfilPlacaRN();
 
-    /*
-     * SOLICITAÇÃO DE MONTAGEM DA PLACA RTqPCR
-     */
     $objSolMontarPlaca = new SolicitacaoMontarPlaca();
     $objSolMontarPlacaRN = new SolicitacaoMontarPlacaRN();
 
+    $solicitacao = new SolicitacaoMontarPlaca();
 
-    /*
-     * SOLICITAÇÃO DE MONTAGEM DA PLACA RTqPCR
-     */
     $objSolMontarPlaca = new SolicitacaoMontarPlaca();
     $objSolMontarPlacaRN = new SolicitacaoMontarPlacaRN();
 
-    /*
-     *  MIX
-     */
     $objMix = new MixRTqPCR();
     $objMixRN = new MixRTqPCR_RN();
 
+    $html = '';
     $alert = '';
+
+
     /*switch ($_GET['action']){
         case 'remover_solicitacao_montagem_placa_RTqPCR':
             try{
@@ -423,7 +396,7 @@ echo '<th  scope="col">AMOSTRAS</th>
                         <th scope="col">ID USUÁRIO</th>
                         <th  scope="col">DATA HORA INÍCIO</th>
                         <th  scope="col">DATA HORA TÉRMINO</th>';
-if ($solicitacao->getSituacaoSolicitacao() == SolicitacaoMontarPlacaRN::$TS_EM_ANDAMENTO) { echo '<th scope="col"></th>';}
+if (!is_null($solicitacao) && !is_null($solicitacao->getSituacaoSolicitacao()) && $solicitacao->getSituacaoSolicitacao() == SolicitacaoMontarPlacaRN::$TS_EM_ANDAMENTO) { echo '<th scope="col"></th>';}
 if (Sessao::getInstance()->verificar_permissao('mostrar_poco')) { echo '<th scope="col"></th>';}
 if (Sessao::getInstance()->verificar_permissao('imprimir_solicitacao_montagem_placa_RTqPCR')) {echo '<th scope="col"></th>';}
 if (Sessao::getInstance()->verificar_permissao('remover_solicitacao_montagem_placa_RTqPCR')) {echo '<th scope="col"></th>';}

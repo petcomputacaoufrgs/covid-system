@@ -1,4 +1,3 @@
-
 delete from tb_preparo_lote;
 delete from tb_lote;
 delete from tb_local_armazenamento_texto;
@@ -16,19 +15,17 @@ delete from tb_montagem_placa;
 delete from tb_rtqpcr;
 delete from tb_resultado_rtqpcr;
 delete from tb_rel_mix_operador;
-
-
+delete from tb_cadastroamostra;
 delete from tb_equipamento;
 delete from tb_modelo;
 delete from tb_detentor;
 delete from tb_marca;
-
-
 delete from tb_tubo;
 delete from tb_infostubo;
 delete from tb_paciente;
 delete from tb_codgal;
 delete from tb_amostra;
+delete from tb_diagnostico;
 
 
 //tabelas que não estão sendo utilizadas

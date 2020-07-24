@@ -11,6 +11,10 @@ try{
     require_once __DIR__.'/../../classes/Excecao/Excecao.php';
     require_once __DIR__.'/../../utils/Alert.php';
     //require_once __DIR__.'/../../classes/Estatisticas/PDF_Estatisticas.php';
+    Sessao::getInstance()->validar();
+
+
+
 
     if(isset($_POST['btn_estatisticas_pacientes'])){
         header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=gerar_estatisticas_paciente'));
@@ -37,7 +41,7 @@ echo '<div class="conteudo_grande" style="margin-top: 0px;">
     <form method="POST" >         
         <div class="form-row" >
              <div class="col-md-12" style="margin: 10px;" >
-                <button class="btn btn-primary" style="width: 100%;margin-left: 0px;" type="submit" name="btn_estatisticas_prefeitura"> Relatório Prefeitura de Porto Alegre</button>
+                <button class="btn btn-primary"    style="width: 100%;margin-left: 0px;cursor: default;" type="submit" name="btn_estatisticas_prefeitura"> Relatórios Prefeitura de Porto Alegre </button>
              </div>
              <div class="col-md-12" style="margin: 10px;">
                 <button class="btn btn-primary" style="width: 100%;margin-left: 0px;" type="submit" name="btn_estatisticas_pacientes"> Estatísticas Gerais</button>

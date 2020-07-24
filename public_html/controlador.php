@@ -31,7 +31,7 @@ switch ($_GET['action']):
         require_once 'index.php';
         break;
     
-     case 'erro':
+    case 'erro':
         require_once '../acoes/PaginaErro.php';
         break;
     
@@ -40,6 +40,12 @@ switch ($_GET['action']):
         header('Location: controlador.php?action=login');
         break;
 
+    case 'exibir_graficos':
+        require_once '../acoes/Grafico/exibir_graficos.php';
+        break;
+    case 'exibir_dados_amostra_paciente':
+        require_once '../acoes/Grafico/exibir_dados_amostra_paciente.php';
+        break;
 
     
     /* ESTATÍSTICAS */
@@ -55,9 +61,6 @@ switch ($_GET['action']):
         break;
     case 'gerar_estatisticas_prefeitura':
         require_once '../acoes/Estatisticas/gerar_estatisticas_prefeitura.php';
-        break;
-    case 'mostrar_estatisticas':
-        require_once '../acoes/Estatisticas/gerarPDF.php';
         break;
 
      /* ETAPA 2 */
@@ -84,8 +87,6 @@ switch ($_GET['action']):
     case 'editar_extracao':
         require_once '../acoes/Extracao/realizar_extracao.php';
         break;
-
-
     case 'rastrear_amostras':
         require_once '../acoes/RastreamentoAmostras/rastreamentoAmostras.php';
         break;
@@ -387,14 +388,17 @@ switch ($_GET['action']):
         require_once '../acoes/CadastroAmostra/CadastroAmostra.php';
         //require_once '../acoes/Amostra/cadastro_amostra.php';
         break;
-    
     case 'listar_amostra':
-        require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
+        require_once '../acoes/Amostra/listar_amostra.php';
         break;
-
-    
     case 'remover_amostra':
         require_once '../acoes/CadastroAmostra/remover_cadastroAmostra.php';
+        break;
+
+
+
+    case 'listar_cadastroAmostra':
+        require_once '../acoes/CadastroAmostra/listar_cadastroAmostra.php';
         break;
 
     /* POÇO */
@@ -646,6 +650,16 @@ switch ($_GET['action']):
         require_once '../acoes/Diagnostico/listar_diagnostico.php';
         break;
 
+    /* RETESTE */
+    case 'cadastrar_reteste':
+        require_once '../acoes/Reteste/cadastro_reteste.php';
+        break;
+    case 'listar_reteste':
+        require_once '../acoes/Reteste/listar_reteste.php';
+        break;
+    case 'realizar_reteste':
+        require_once '../acoes/Reteste/realizar_reteste.php';
+        break;
 
     default :
         header('Location: controlador.php?action=nao_encontrado');

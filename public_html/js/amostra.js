@@ -34,6 +34,8 @@ function validaCEPAmostra(){
         div_feedback.classList.add("valid-feedback");
         div_feedback.innerHTML = " Tudo certo. ";
     }
+
+
     
 }
 

@@ -84,11 +84,13 @@ class CodigoGAL_RN{
     }
 
     public function alterar(CodigoGAL $codGAL) {
-         try {
-             
+        $objBanco = new Banco();
+        try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             
             /* VALIDAÇÕES */
             $this->validarCodGAL($codGAL,$objExcecao);
@@ -96,91 +98,117 @@ class CodigoGAL_RN{
             
             $objExcecao->lancar_validacoes();
             $objCodigoGAL_BD = new CodigoGAL_BD();
-            $objCodigoGAL_BD->alterar($codGAL,$objBanco);
-            
+            $codigoGAL = $objCodigoGAL_BD->alterar($codGAL,$objBanco);
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
+            return $codigoGAL;
         } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro alterando o código GAL.', $e);
         }
     }
 
     public function consultar(CodigoGAL $codGAL) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objCodigoGAL_BD = new CodigoGAL_BD();
             $arr =  $objCodigoGAL_BD->consultar($codGAL,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
- 
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro consultando o código GAL.',$e);
         }
     }
 
     public function remover(CodigoGAL $codGAL) {
-         try {
+        $objBanco = new Banco();
+        try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objCodigoGAL_BD = new CodigoGAL_BD();
             $arr =  $objCodigoGAL_BD->remover($codGAL,$objBanco);
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
-
         } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro removendo o código GAL.', $e);
         }
     }
 
     public function listar(CodigoGAL $codGAL) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objCodigoGAL_BD = new CodigoGAL_BD();
             $arr = $objCodigoGAL_BD->listar($codGAL,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o código GAL.',$e);
         }
     }
 
 
     public function pesquisar($campoBD, $valor_usuario) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objCodigoGAL_BD = new CodigoGAL_BD();
             $arr = $objCodigoGAL_BD->pesquisar($campoBD,$valor_usuario,$objBanco);
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro pesquisando o código GAL.', $e);
         }
     }
     
     
     public function validar_cadastro(CodigoGAL $codGAL) {
+        $objBanco = new Banco();
         try {
+
             $objExcecao = new Excecao();
-            $objBanco = new Banco();
-            $objBanco->abrirConexao(); 
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+
             $objExcecao->lancar_validacoes();
             $objCodigoGAL_BD = new CodigoGAL_BD();
             $arr = $objCodigoGAL_BD->validar_cadastro($codGAL,$objBanco);
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro validando cadastron do código GAL.', $e);
         }
     }
@@ -195,10 +223,12 @@ class CodigoGAL_RN{
             $objCodigoGAL_BD = new CodigoGAL_BD();
             
             $arr = $objCodigoGAL_BD->procurarGAL($codGAL,$objBanco);
-            
+
+            $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $arr;
         } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
             throw new Excecao('Erro listando o código GAL.',$e);
         }
     }

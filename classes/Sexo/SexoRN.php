@@ -8,6 +8,13 @@ require_once __DIR__ . '/../Excecao/Excecao.php';
 require_once __DIR__ . '/SexoBD.php';
 
 class SexoRN{
+
+    private function validarIdSexo(Sexo $sexo,Excecao $objExcecao){
+
+        if(is_null($sexo->getIdSexo())){
+            $objExcecao->adicionar_validacao('O identificador do sexo não foi informado','idSexoPaciente', 'alert-danger');
+        }
+    }
     
 
     private function validarSexo(Sexo $sexo,Excecao $objExcecao){
@@ -21,7 +28,7 @@ class SexoRN{
             }
         }
         
-        return $sexo->setSexo($strSexo);
+        $sexo->setSexo($strSexo);
 
     }
 
@@ -70,7 +77,8 @@ class SexoRN{
             $objExcecao = new Excecao();
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
-            
+
+            $this->validarIdSexo($sexo,$objExcecao);
             $this->validarSexo($sexo,$objExcecao);
             $this->validar_ja_existe_sexo($sexo,$objExcecao);
             
@@ -93,7 +101,10 @@ class SexoRN{
             $objExcecao = new Excecao();
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
+
+            $this->validarIdSexo($sexo,$objExcecao);
             $objExcecao->lancar_validacoes();
+
             $objSexoBD = new SexoBD();
             $arr =  $objSexoBD->consultar($sexo,$objBanco);
 
@@ -114,14 +125,16 @@ class SexoRN{
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
 
+            $this->validarIdSexo($sexo,$objExcecao);
             $this->validar_existe_paciente_com_o_sexo($sexo,$objExcecao);
-
             $objExcecao->lancar_validacoes();
+
             $objSexoBD = new SexoBD();
-            $arr =  $objSexoBD->remover($sexo,$objBanco);
+            $objSexoBD->remover($sexo,$objBanco);
+
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $arr;
+
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
             throw new Excecao('Erro removendo o sexo do paciente.', $e);

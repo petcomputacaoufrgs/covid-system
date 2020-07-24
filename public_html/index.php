@@ -40,6 +40,12 @@ session_destroy();
         </div>
     </main>
 
+
+
 <?php
     Pagina::getInstance()->mostrar_excecoes();
     Pagina::getInstance()->fechar_corpo();
+
+
+
+

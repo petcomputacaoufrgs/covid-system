@@ -264,6 +264,26 @@ function validaCEP(){
         div_feedback.classList.add("valid-feedback");
         div_feedback.innerHTML = " Tudo certo. ";
     }
+
+    let url = 'https://viacep.com.br/ws/' + strTipo.value + '/json/unicode/';
+
+    let xmlHttp = new XMLHttpRequest();
+    xmlHttp.open('GET', url);
+
+    xmlHttp.onreadystatechange = () => {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+            let dadosJSONText = xmlHttp.responseText;
+            let dadosJSONObj = JSON.parse(dadosJSONText);
+            console.log(dadosJSONObj);
+
+            document.getElementById('idEndereco').value = dadosJSONObj.logradouro;
+            document.getElementById('idBairro').value = dadosJSONObj.bairro;
+            //document.getElementById('cidade').value = dadosJSONObj.localidade;
+            document.getElementById('idNomeUF').value = dadosJSONObj.uf;
+            document.getElementById('idNomeMun').value = dadosJSONObj.localidade;
+        }
+    }
+    xmlHttp.send();
     
 }
 

@@ -31,6 +31,42 @@ class ProtocoloINT
         $select_protocolo .='</select>';
     }
 
+
+
+
+    static function montar_checkboxes_protocolo(&$checkboxes_protocolo,$objProtocolo,$objProtocoloRN,$checks_selecionados,$disabled =null){
+
+        if(is_null($disabled)){ $disabled = ''; }
+        else{$disabled = ' disabled '; }
+        $checkboxes_protocolo = '';
+
+        $arr_protocolos = $objProtocoloRN->listar(new Protocolo());
+        foreach ($arr_protocolos as $protocolo){
+            $checked = ' ';
+            $encontrou = false;
+            $i=0;
+            if(!is_null($checks_selecionados)){
+                while (!$encontrou && $i<count($checks_selecionados)) {
+                    if ($checks_selecionados[$i]->getIdProtocoloFk() == $protocolo->getIdProtocolo()) {
+                        $checked = ' checked ';
+                    }
+                    $i++;
+                }
+
+            }
+
+
+                $checkboxes_protocolo .= ' <div class="form-check form-check-inline">
+              <input class="form-check-input" '.$checked.' type="checkbox" id="idProtocolo_' . Pagina::formatar_html($protocolo->getIdProtocolo()) . '" 
+                name="protocolo_' . Pagina::formatar_html($protocolo->getIdProtocolo()) . '" value="' . Pagina::formatar_html($protocolo->getIdProtocolo()) . '">
+              <label class="form-check-label"  for="idProtocolo_' . Pagina::formatar_html($protocolo->getIdProtocolo()) . '">' . Pagina::formatar_html(ProtocoloRN::mosrtrar_descricao_tipo_protocolo($protocolo->getCaractere())) . '</label>
+            </div>';
+
+
+        }
+
+    }
+
     static function montar_select_id_protocolo(&$select_protocolo,$objProtocolo,$objProtocoloRN,$disabled =null,$onchange =null)
     {
 

@@ -132,7 +132,6 @@ try{
     $strAtraso =  "<h4> Atraso de ".$dias." dias ".$horas . " horas " . $minutos . " minutos " . $segundos." segundos </h4>";
 
 
-    die("asda");
     try {
         function uploadFile()
         {

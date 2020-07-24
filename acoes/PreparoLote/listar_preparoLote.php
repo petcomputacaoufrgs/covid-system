@@ -51,7 +51,6 @@ try {
     require_once __DIR__. '/../../classes/KitExtracao/KitExtracaoINT.php';
 
 
-
     Sessao::getInstance()->validar();
 
 
@@ -105,7 +104,7 @@ try {
     $alert = '';
     $html = '';
 
-    $options = InterfacePagina::montar_select_pesquisa($array_colunas,$position);
+   // $options = InterfacePagina::montar_select_pesquisa($array_colunas,$position);
 
     $botoes_aparecer = false;
 
@@ -224,20 +223,20 @@ try {
         $contadorAmostra = 0;
         foreach($objLote->getObjRelTuboLote() as $tubo){
             $strTubos .= $tubo->getIdTubo_fk().",";
-            /*$contador++;
+            $contador++;
             if($contador == 3){
                 $strTubos .= "\n";
                 $contador = 0;
-            }*/
+            }
 
 
             foreach ($tubo->getObjTubo() as $amostra) {
-                $strAmostras .=  $amostra->getNickname() ."(".TuboRN::mostrarDescricaoTipoTubo($amostra->getObjTubo()->getTipo())."),\n";
-                //$contadorAmostra++;
-                /*if ($contadorAmostra == 3) {
+                $strAmostras .=  $amostra->getNickname() ."(".TuboRN::mostrarDescricaoTipoTubo($amostra->getObjTubo()->getTipo())."), ";
+                $contadorAmostra++;
+                if ($contadorAmostra == 3) {
                     $contadorAmostra = 0;
                     $strAmostras .= "\n";
-                }*/
+                }
 
                // $arr_tipos[] = $amostra->getObjTubo()->getTipo();
             }
@@ -246,7 +245,7 @@ try {
         //print_r($arr_tipos);
 
         $strTubos = substr($strTubos, 0,-1);
-        $strAmostras = substr($strAmostras, 0,-2);
+        $strAmostras = substr($strAmostras, 0,-1);
 
 
         $style_linha = '';

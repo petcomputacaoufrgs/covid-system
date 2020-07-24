@@ -317,17 +317,13 @@ try {
         //echo 'controlador.php?action=mix_placa_RTqPCR&idSolicitacao=' . Pagina::formatar_html($solicitacao->getIdSolicitacaoMontarPlaca()) . '&idPlaca=' . Pagina::formatar_html($solicitacao->getObjPlaca()->getIdPlaca()) . '&idMix=' . Pagina::formatar_html($mix->getIdMixPlaca())."\n";
         if ($montagem->getSituacaoMontagem() == MontagemPlacaRN::$STA_MONTAGEM_ANDAMENTO) {
             $html .= '<td ><a href="' . Sessao::getInstance()->assinar_link('controlador.php?action=montar_placa_RTqPCR&idMix=' . Pagina::formatar_html($objMix->getIdMixPlaca()) . '&idMontagem=' . Pagina::formatar_html($montagem->getIdMontagem())) .'"><i class="fas fa-exclamation-triangle" style="color: #f36c29;"></i></td>';
-        }else{
-            $html .= '<td ></td>';
         }
 
-
-
-        if (Sessao::getInstance()->verificar_permissao('imprimir_montagem_placa_RTqPCR')) {
+        /*if (Sessao::getInstance()->verificar_permissao('imprimir_montagem_placa_RTqPCR')) {
             $html .= '<td><a target="_blank" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=imprimir_montagem_placa_RTqPCR&idMontagem=' . Pagina::formatar_html($montagem->getIdMontagem())) . '"><i style="color:black;margin: 0px; padding: 0px;" class="fas fa-print"></i></a></td>';
         }else{
             $html .= '<td ></td>';
-        }
+        }*/
 
         if (Sessao::getInstance()->verificar_permissao('remover_montagem_placa_RTqPCR')) {
             if($solicitacao->getSituacaoSolicitacao() != SolicitacaoMontarPlacaRN::$TS_FINALIZADA ) {
@@ -335,8 +331,6 @@ try {
             }else{
                 $html .= '<td ></td>';
             }
-        }else{
-            $html .= '<td ></td>';
         }
 
 
@@ -390,7 +384,7 @@ echo '<th  scope="col">AMOSTRAS</th>
                         <th  scope="col">DATA HORA INÍCIO</th>
                         <th  scope="col">DATA HORA TÉRMINO</th>';
 if ($solicitacao->getSituacaoSolicitacao() == MontagemPlacaRN::$STA_MONTAGEM_ANDAMENTO) { echo '<th scope="col"></th>';}
-if (Sessao::getInstance()->verificar_permissao('imprimir_montagem_placa_RTqPCR')) {echo '<th scope="col"></th>';}
+/* if (Sessao::getInstance()->verificar_permissao('imprimir_montagem_placa_RTqPCR')) {echo '<th scope="col"></th>';} */
 if (Sessao::getInstance()->verificar_permissao('remover_montagem_placa_RTqPCR')) {echo '<th scope="col"></th>';}
 echo ' <!--<th scope="col"></th>-->
                     </tr>

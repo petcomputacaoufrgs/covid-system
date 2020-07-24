@@ -1,7 +1,7 @@
 <?php
 /*
  *  Author: Carine Bertagnolli Bathaglini
- */
+
 
 session_start();
 require_once '../classes/Sessao/Sessao.php';
@@ -53,16 +53,16 @@ try {
     $SUS = false;
     
 
-    /* ETNIA */
+    // ETNIA
     $objEtnia = new Etnia();
     $objEtniaRN = new EtniaRN();
 
-    /* CÓDIGO GAL */
+    // CÓDIGO GAL
     $objCodigoGAL = new CodigoGAL();
     $objCodigoGAL_RN = new CodigoGAL_RN();
 
 
-    /* SEXO PACIENTE */
+    // SEXO PACIENTE
     $objSexoPaciente = new Sexo();
     $objSexoPacienteRN = new SexoRN();
 
@@ -1100,4 +1100,4 @@ Pagina::getInstance()->mostrar_excecoes();
 Pagina::getInstance()->fechar_corpo();
 
 
-
+*/

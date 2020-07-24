@@ -13,9 +13,134 @@ class Laudo
     private $observacoes;
     private $resultado;
     private $situacao;
+    private $descarteDevolver;
+
+    private $numPagina;
+    private $totalRegistros;
+    private $registrosEncontrados;
 
     private $objAmostra;
     private $objInfosTubo;
+    private $objUsuario;
+    private $arrKitsExtracao;
+    private $arrProtocolos;
+
+    /**
+     * @return mixed
+     */
+    public function getArrKitsExtracao()
+    {
+        return $this->arrKitsExtracao;
+    }
+
+    /**
+     * @param mixed $arrKitsExtracao
+     */
+    public function setArrKitsExtracao($arrKitsExtracao)
+    {
+        $this->arrKitsExtracao = $arrKitsExtracao;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getArrProtocolos()
+    {
+        return $this->arrProtocolos;
+    }
+
+    /**
+     * @param mixed $arrProtocolos
+     */
+    public function setArrProtocolos($arrProtocolos)
+    {
+        $this->arrProtocolos = $arrProtocolos;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getNumPagina()
+    {
+        return $this->numPagina;
+    }
+
+    /**
+     * @param mixed $numPagina
+     */
+    public function setNumPagina($numPagina)
+    {
+        $this->numPagina = $numPagina;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalRegistros()
+    {
+        return $this->totalRegistros;
+    }
+
+    /**
+     * @param mixed $totalRegistros
+     */
+    public function setTotalRegistros($totalRegistros)
+    {
+        $this->totalRegistros = $totalRegistros;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRegistrosEncontrados()
+    {
+        return $this->registrosEncontrados;
+    }
+
+    /**
+     * @param mixed $registrosEncontrados
+     */
+    public function setRegistrosEncontrados($registrosEncontrados)
+    {
+        $this->registrosEncontrados = $registrosEncontrados;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getDescarteDevolver()
+    {
+        return $this->descarteDevolver;
+    }
+
+    /**
+     * @param mixed $descarteDevolver
+     */
+    public function setDescarteDevolver($descarteDevolver)
+    {
+        $this->descarteDevolver = $descarteDevolver;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getObjUsuario()
+    {
+        return $this->objUsuario;
+    }
+
+    /**
+     * @param mixed $objUsuario
+     */
+    public function setObjUsuario($objUsuario)
+    {
+        $this->objUsuario = $objUsuario;
+    }
+
 
     /**
      * @return mixed

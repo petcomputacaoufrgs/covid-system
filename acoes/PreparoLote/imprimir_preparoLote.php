@@ -2,7 +2,9 @@
 try {
     session_start();
 
-    require_once '../vendor/autoload.php';
+    require_once __DIR__.'/../../vendor/mpdf60/mpdf.php';
+    require_once __DIR__ . '/../../utils/Utils.php';
+
     require_once __DIR__ . '/../../classes/Lote/Lote.php';
     require_once __DIR__ . '/../../classes/Lote/LoteRN.php';
 
@@ -18,6 +20,7 @@ try {
     require_once __DIR__ . '/../../classes/PerfilPaciente/PerfilPaciente.php';
     require_once __DIR__ . '/../../classes/PerfilPaciente/PerfilPacienteRN.php';
 
+    date_default_timezone_set('America/Sao_Paulo');
     $objPreparoLote = new PreparoLote();
     $objPreparoLoteRN = new PreparoLoteRN();
 
@@ -29,7 +32,7 @@ try {
     }
 
     //ob_clean();//Limpa o buffer de saída
-    $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [190, 236]]);
+    $mpdf = new mPDF(['mode' => 'utf-8', 'format' => [190, 236]]);
 
     $html = "   
             <table>
@@ -88,20 +91,13 @@ try {
         }
 ";
 
-    $data = date("Y/m/d");
-    $DATAAUX = explode("/", $data);
 
-    $dia = $DATAAUX[0];
-    $mes = $DATAAUX[1];
-    $ano = $DATAAUX[2];
-
-    $output = 'grupoAmostras_' . $dia . '_' . $mes . '_' . $ano;
-//echo $output;
+    $output = 'grupoAmostras_' . Utils::converterDataHora(date("Y-m-d h:i:s"));
 
     $mpdf->WriteHTML($css, 1);
     $mpdf->WriteHTML($html);
     //$mpdf->Output($output);
-    $mpdf->Output($output . '.pdf', I);
+    $mpdf->Output($output . '.pdf', 'D');
 }catch(Throwable $e){
     die($e);
 }

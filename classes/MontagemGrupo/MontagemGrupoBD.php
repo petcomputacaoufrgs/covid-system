@@ -4,7 +4,7 @@ require_once __DIR__ . '/../Banco/Banco.php';
 class MontagemGrupoBD
 {
 
-    public function listar_completo(MontagemGrupo $montagemGrupo, Banco $objBanco) {
+    public function listar_completo(MontagemGrupo $objMontagemGrupo, $arrAmostras = null,Banco $objBanco) {
         try{
 
             $SELECT ="select max(idInfosTubo), idTubo_fk from tb_infostubo GROUP by idTubo_fk"; //maior infotubo q vai ter a informacao mais recente
@@ -24,7 +24,7 @@ class MontagemGrupoBD
                 // echo "##";
                 //print_r($interrogacoes_infos);
 
-                $tam = count($montagemGrupo->getArrIdsPerfis());
+                $tam = count($objMontagemGrupo->getArrIdsPerfis());
                 $interrogacoes = '';
                 for ($i = 0; $i < $tam; $i++) {
                     $interrogacoes .= '?';
@@ -46,7 +46,7 @@ class MontagemGrupoBD
             and tb_infostubo.situacaoTubo = ?
             and tb_perfilpaciente.idPerfilPaciente in (' . $interrogacoes . ')
             and tb_perfilpaciente.idPerfilPaciente = tb_amostra.idPerfilPaciente_fk 
-                    order by tb_amostra.idAmostra LIMIT ?';
+                    order by tb_amostra.idAmostra';//' LIMIT ?';
                 $arrayBind = array();
                 foreach ($arr as $a) {
                     $arrayBind[] = array('i', $a['max(idInfosTubo)']);
@@ -56,11 +56,11 @@ class MontagemGrupoBD
                 $arrayBind[] = array('s', InfosTuboRN::$TSP_AGUARDANDO);
                 $arrayBind[] = array('s', InfosTuboRN::$TST_SEM_UTILIZACAO);
 
-                $tam = count($montagemGrupo->getArrIdsPerfis());
+                $tam = count($objMontagemGrupo->getArrIdsPerfis());
                 for ($i = 0; $i < $tam; $i++) {
-                    $arrayBind[] = array('i', $montagemGrupo->getArrIdsPerfis()[$i]);
+                    $arrayBind[] = array('i', intval($objMontagemGrupo->getArrIdsPerfis()[$i]));
                 }
-                $arrayBind[] = array('i', $montagemGrupo->getQntAmostras());
+                //$arrayBind[] = array('i', $montagemGrupo->getQntAmostras());
                 $arr_idsTubos = $objBanco->consultarSQL($SELECT, $arrayBind);
 
 
@@ -105,34 +105,51 @@ class MontagemGrupoBD
                         $array_montagem = array();
                         foreach ($arr as $reg) {
                             $montagemGrupo = new MontagemGrupo();
+                            $encontrou= false;
+                            if(!is_null($arrAmostras)) {
+                                $i=0;
 
-                            $objAmostra = new Amostra();
-                            $objAmostra->setIdAmostra($reg['idAmostra']);
-                            $objAmostra->setCodigoAmostra($reg['codigoAmostra']);
-                            $objAmostra->setDataColeta($reg['dataColeta']);
-                            $objAmostra->setNickname($reg['nickname']);
+                                while ($i < count($arrAmostras) && !$encontrou){
+                                    if($arrAmostras[$i]->getIdAmostra() == $reg['idAmostra']){
+                                        $encontrou = true;
+                                    }
+                                    $i++;
+                                }
+                            }
+
+                            if(is_null($arrAmostras) || !$encontrou) {
+
+                                $objAmostra = new Amostra();
+                                $objAmostra->setIdAmostra($reg['idAmostra']);
+                                $objAmostra->setCodigoAmostra($reg['codigoAmostra']);
+                                $objAmostra->setDataColeta($reg['dataColeta']);
+                                $objAmostra->setNickname($reg['nickname']);
 
 
-                            $objPerfilPaciente = new PerfilPaciente();
-                            $objPerfilPaciente->setIdPerfilPaciente($reg['idPerfilPaciente']);
-                            $objPerfilPaciente->setCaractere($reg['caractere']);
-                            $montagemGrupo->setPerfilPaciente($objPerfilPaciente);
+                                $objPerfilPaciente = new PerfilPaciente();
+                                $objPerfilPaciente->setIdPerfilPaciente($reg['idPerfilPaciente']);
+                                $objPerfilPaciente->setCaractere($reg['caractere']);
+                                $montagemGrupo->setPerfilPaciente($objPerfilPaciente);
 
-                            $objTubo = new Tubo();
-                            $objTubo->setIdTubo($reg['idTubo']);
-                            $objTubo->setIdAmostra_fk($reg['idAmostra']);
-                            $objTubo->setTuboOriginal($reg['tuboOriginal']);
-                            $objTubo->setTipo($reg['tipoTubo']);
+                                $objTubo = new Tubo();
+                                $objTubo->setIdTubo($reg['idTubo']);
+                                $objTubo->setIdAmostra_fk($reg['idAmostra']);
+                                $objTubo->setTuboOriginal($reg['tuboOriginal']);
+                                $objTubo->setTipo($reg['tipoTubo']);
 
 
-                            $objAmostra->setObjTubo($objTubo);
-                            $montagemGrupo->setAmostra($objAmostra);
+                                $objAmostra->setObjTubo($objTubo);
+                                $montagemGrupo->setAmostra($objAmostra);
+                                $montagemGrupo->setQntAmostras($objMontagemGrupo->getQntAmostras());
 
-                            $objAmostra->setCodigoAmostra($reg['codigoAmostra']);
+                                $objAmostra->setCodigoAmostra($reg['codigoAmostra']);
 
-                            $montagemGrupo->setAmostra($objAmostra);
-
-                            $array_montagem[] = $montagemGrupo;
+                                $montagemGrupo->setAmostra($objAmostra);
+                                $array_montagem[] = $montagemGrupo;
+                                if(count($array_montagem) == $objMontagemGrupo->getQntAmostras()) {
+                                    return  $array_montagem;
+                                }
+                            }
                         }
                         return $array_montagem;
                     }

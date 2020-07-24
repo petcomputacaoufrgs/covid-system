@@ -34,6 +34,18 @@ class Utils{
 
     }
 
+    public static function ordenarArrDatas($arrDatas)
+    {
+        foreach ($arrDatas as $data){
+
+        }
+
+        function cmp($a, $b) {
+            return $a['nome'] > $b['nome'];
+        }
+
+    }
+
     public static function converterData($dataPassada)
     {
 

@@ -12,6 +12,9 @@ class Usuario{
     private $totalRegistros;
     private $registrosEncontrados;
 
+
+
+
     /**
      * @return mixed
      */

@@ -162,6 +162,10 @@ try {
     $sumir_btn_alocar = 'n';
     $salvou_dados = 'n';
     $show_collap = '';
+    $cadastrar_novo = '';
+
+    $lista = '';
+    $alert = '';
 
     $select_kitExtracao = '';
     $sumir_btns = 'n';
@@ -169,13 +173,20 @@ try {
     $disabled_inputs = '';
     $nome_botao_alocar ='';
     $disabled_responsavel = '';
+    $arr_tubos_deletados_lote = array();
+
+    $arr_JSCopiarLocal = array();
+    $arr_JSCopiarCaixa = array();
+    $arr_JSCopiarPorta = array();
+    $arr_JSCopiarColuna = array();
+    $arr_JSCopiarPrateleira = array();
 
 
 
     switch ($_GET['action']) {
         case 'realizar_extracao':
             $nome_botao_alocar = 'SALVAR';
-            if ($_GET['idLiberar'] || isset($_POST['btn_cancelar'])) {
+            if (isset($_GET['idLiberar'])  || isset($_POST['btn_cancelar'])) {
 
                 $objCapela->setIdCapela($_GET['idCapela']);
                 $objCapela = $objCapelaRN->consultar($objCapela);

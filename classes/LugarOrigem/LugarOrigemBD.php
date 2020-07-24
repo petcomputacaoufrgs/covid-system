@@ -53,8 +53,8 @@ class LugarOrigemBD{
                 $array[] = $objLugarOrigem;
             }
             return $array;
-        } catch (Exception $ex) {
-            throw new Excecao("Erro listando marca no BD.",$ex);
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando o lugar de origem no BD.",$ex);
         }
        
     }
@@ -70,15 +70,18 @@ class LugarOrigemBD{
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
 
-            $marca = new LugarOrigem();
-            $marca->setIdLugarOrigem($arr[0]['cod_municipio']);
-            $marca->setNome($arr[0]['nome']);
-            $marca->setCod_estado($arr[0]['cod_estado']);
+            if(count($arr) > 0) {
+                $lugar = new LugarOrigem();
+                $lugar->setIdLugarOrigem($arr[0]['cod_municipio']);
+                $lugar->setNome($arr[0]['nome']);
+                $lugar->setCod_estado($arr[0]['cod_estado']);
+                return $lugar;
+            }
 
-            return $marca;
-        } catch (Exception $ex) {
+            return null;
+        } catch (Throwable $ex) {
        
-            throw new Excecao("Erro consultando marca no BD.",$ex);
+            throw new Excecao("Erro consultando o lugar de origem no BD.",$ex);
         }
 
     }

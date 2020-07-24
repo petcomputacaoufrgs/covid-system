@@ -15,6 +15,7 @@ class PerfilPacienteRN{
     public static $TP_PACIENTES_SUS = 'L';
     public static $TP_FUNCIONARIOS_ENGIE = 'E';
     public static $TE_OUTROS = 'O';
+    public static $TP_REDE_ESGOTO = 'A';
 
 
     public static function listarValoresTipoPaciente(){
@@ -50,6 +51,11 @@ class PerfilPacienteRN{
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$TP_PREFEITURA_PORTO_ALEGRE);
             $objSituacao->setStrDescricao('prefeitura de POA');
+            $arrObjTECapela[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TP_REDE_ESGOTO);
+            $objSituacao->setStrDescricao('rede de esgoto de POA');
             $arrObjTECapela[] = $objSituacao;
 
 

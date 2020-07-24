@@ -21,7 +21,7 @@ class PacienteRN {
             }
         }
 
-        return $paciente->setNome($strNome);
+        $paciente->setNome($strNome);
     }
 
     private function validarNomeMae(Paciente $paciente, Excecao $objExcecao) {
@@ -35,9 +35,29 @@ class PacienteRN {
           $objExcecao->adicionar_validacao('Informe o nome da mãe ou justifique a ausência.','idNomeMae');
           } */
 
-        return $paciente->setNomeMae($strNomeMae);
+        $paciente->setNomeMae($strNomeMae);
     }
 
+    private function validarComplemento(Paciente $paciente, Excecao $objExcecao) {
+        $strComplemento = trim($paciente->getComplemento());
+
+        if (strlen($strComplemento) > 50) {
+            $objExcecao->adicionar_validacao('O complemento do endereço do paciente possui mais que 50 caracteres.',  null, 'alert-danger');
+        }
+
+        $paciente->setComplemento($strComplemento);
+    }
+
+
+    private function validarBairro(Paciente $paciente, Excecao $objExcecao) {
+        $strBairro = trim($paciente->getBairro());
+
+        if (strlen($strBairro) > 50) {
+            $objExcecao->adicionar_validacao('O bairro do endereço do paciente possui mais que 50 caracteres.',  null, 'alert-danger');
+        }
+
+        $paciente->setBairro($strBairro);
+    }
     private function validarObsNomeMae(Paciente $paciente, Excecao $objExcecao) {
         $strNomeMaeObs = trim($paciente->getObsNomeMae());
 
@@ -46,11 +66,11 @@ class PacienteRN {
         }
 
         if ($strNomeMaeObs == '' && $paciente->getNomeMae() == '') {
-            return $paciente->setObsNomeMae('Desconhecido');
+            $paciente->setObsNomeMae('Desconhecido');
         }
 
 
-        return $paciente->setObsNomeMae($strNomeMaeObs);
+        $paciente->setObsNomeMae($strNomeMaeObs);
     }
 
     private function validarObsMunicipio(Paciente $paciente, Excecao $objExcecao) {
@@ -61,11 +81,11 @@ class PacienteRN {
         }
 
         if ($strMunicipio == '' && $paciente->getIdMunicipioFk() == '') {
-            return $paciente->setObsMunicipio('Desconhecido');
+            $paciente->setObsMunicipio('Desconhecido');
         }
 
 
-        return $paciente->setObsMunicipio($strMunicipio);
+        $paciente->setObsMunicipio($strMunicipio);
     }
 
     private function validarCPF(Paciente $paciente, Excecao $objExcecao) {
@@ -78,20 +98,19 @@ class PacienteRN {
             
             $objPacienteAux = new Paciente();
             $objPacienteAuxRN = new PacienteRN();
-            
+            $objPacienteAux->setCPF($paciente->getCPF());
             $arr = $objPacienteAuxRN->listar($objPacienteAux);
-            
-            foreach ($arr as $item){
-                if($item->getCPF() == $paciente->getCPF() ){
-                    if($paciente->getIdPaciente() != null){
-                        if($item->getIdPaciente() != $paciente->getIdPaciente()){
+
+            if(count($arr) > 0 && $paciente->getIdPaciente() == null){
+                $objExcecao->adicionar_validacao('O CPF já pertence a outro paciente', null, 'alert-danger');
+            }else if (count($arr) > 0 && $paciente->getIdPaciente() != null) {
+                foreach ($arr as $item) {
+                    if ($item->getIdPaciente() != $paciente->getIdPaciente()) {
+                        if ($item->getCPF() == $paciente->getCPF()) {
                             $objExcecao->adicionar_validacao('O CPF já pertence a outro paciente', null, 'alert-danger');
                         }
-                    //}else{
-                   //     $objExcecao->adicionar_validacao('O CPF já pertence a outro paciente', null, 'alert-danger');
-                   // }
-                    
-                }}
+                    }
+                }
             }
             
             
@@ -118,14 +137,14 @@ class PacienteRN {
         }
        
 
-        return $paciente->setCPF($strCPF);
+        $paciente->setCPF($strCPF);
     }
 
     private function validarRG(Paciente $paciente, Excecao $objExcecao) {
         $strRG = trim($paciente->getRG());
 
-        if(strlen($strRG) > 10){
-            $objExcecao->adicionar_validacao('O RG já possui mais de 10 caracteres', null, 'alert-danger');
+        if(strlen($strRG) > 20){
+            $objExcecao->adicionar_validacao('O RG já possui mais de 20 caracteres', null, 'alert-danger');
         }
 
         /*if (strlen($strRG) > 0) {
@@ -147,7 +166,7 @@ class PacienteRN {
             }
         }*/
 
-        return $paciente->setRG($strRG);
+        $paciente->setRG($strRG);
     }
 
     private function validarObsRG(Paciente $paciente, Excecao $objExcecao) {
@@ -158,9 +177,9 @@ class PacienteRN {
         }
 
         if ($strObsRG == '' && $paciente->getRG() == '') {
-            return $paciente->setObsRG('Desconhecido');
+            $paciente->setObsRG('Desconhecido');
         }
-        return $paciente->setObsRG($strObsRG);
+        $paciente->setObsRG($strObsRG);
     }
 
     private function validarObsCEP(Paciente $paciente, Excecao $objExcecao) {
@@ -171,10 +190,10 @@ class PacienteRN {
         }
 
         if ($strObsCEP == '' && $paciente->getCEP() == '') {
-            return $paciente->setObsCEP('Desconhecido');
+            $paciente->setObsCEP('Desconhecido');
         }
 
-        return $paciente->setObsCEP($strObsCEP);
+        $paciente->setObsCEP($strObsCEP);
     }
 
     private function validarObsCartaoSUS(Paciente $paciente, Excecao $objExcecao) {
@@ -186,10 +205,10 @@ class PacienteRN {
             }
 
             if ($strObsCartaoSUS == '' && $paciente->getCartaoSUS() == '') {
-                return $paciente->setObsCartaoSUS('Desconhecido');
+                $paciente->setObsCartaoSUS('Desconhecido');
             }
 
-            return $paciente->setObsCartaoSUS($strObsCartaoSUS);
+            $paciente->setObsCartaoSUS($strObsCartaoSUS);
         }
     }
 
@@ -220,7 +239,7 @@ class PacienteRN {
                 }
             }*/
 
-            return $paciente->setCartaoSUS($strCartaoSUS);
+            $paciente->setCartaoSUS($strCartaoSUS);
         }
     }
 
@@ -233,10 +252,10 @@ class PacienteRN {
             }
 
             if ($strObsEndereco == '' && $paciente->getEndereco() == '') {
-                return $paciente->setObsEndereco('Desconhecido');
+                $paciente->setObsEndereco('Desconhecido');
             }
 
-            return $paciente->setObsEndereco($strObsEndereco);
+            $paciente->setObsEndereco($strObsEndereco);
         }
     }
 
@@ -251,11 +270,11 @@ class PacienteRN {
             }
 
             if ($strObsPassaporte == '' && $paciente->getPassaporte() == '') {
-                return $paciente->setObsPassaporte('Desconhecido');
+                $paciente->setObsPassaporte('Desconhecido');
             }
 
 
-            return $paciente->setObsPassaporte($strObsPassaporte);
+            $paciente->setObsPassaporte($strObsPassaporte);
         }
     }
 
@@ -268,10 +287,10 @@ class PacienteRN {
             }
 
             if ($strObsCPF == '' && $paciente->getCPF() == '') {
-                return $paciente->setObsCPF('Desconhecido');
+                $paciente->setObsCPF('Desconhecido');
             }
 
-            return $paciente->setObsCPF($strObsCPF);
+            $paciente->setObsCPF($strObsCPF);
         }
     }
 
@@ -304,7 +323,7 @@ class PacienteRN {
                 }*/
 
 
-                return $paciente->setPassaporte($strPassaporte);
+                $paciente->setPassaporte($strPassaporte);
             }
         }
     }
@@ -313,7 +332,7 @@ class PacienteRN {
         if($paciente->getDataNascimento() != null) {
             $strDataNascimento = trim($paciente->getDataNascimento());
             Utils::validarData($strDataNascimento, $objExcecao);
-            return $paciente->setDataNascimento($strDataNascimento);
+            $paciente->setDataNascimento($strDataNascimento);
         }
     }
 
@@ -328,7 +347,7 @@ class PacienteRN {
                 $objExcecao->adicionar_validacao('O CEP do paciente possui menos que 8 caracteres', 'idCEP', 'alert-danger');
             }
 
-            return $paciente->setCEP($strCEP);
+            $paciente->setCEP($strCEP);
         }
     }
 
@@ -340,7 +359,7 @@ class PacienteRN {
                 $objExcecao->adicionar_validacao('O endereço possui mais que 150 caracteres.', 'idEndereco', 'alert-danger');
             }
 
-            return $paciente->setEndereco($strEndereco);
+            $paciente->setEndereco($strEndereco);
         }
     }
 
@@ -365,207 +384,10 @@ class PacienteRN {
                 $objExcecao->adicionar_validacao('O endereço possui mais que 150 caracteres.', 'idEndereco', 'alert-danger');
             }
 
-            return $paciente->setEndereco($strEndereco);
+            $paciente->setEndereco($strEndereco);
         }
     }
 
-    /*
-     *  Cenário : Marcar cadastro como pendente
-     * Quando estou na tela de dados do paciente
-     * E escolho opção “cadastro pendente”
-     * Então recebo msg de confirmação  informando que este cadastro está em situação “pendente”.
-     *
-     * Cenário 7: Não justificar ausência de algum dado opcional do paciente
-     *  Quando estou na tela de dados do paciente
-     *  E não informo <CPF>, <GAL>, <RG>, <Passaporte>, <SUS>, <Sexo>, <endereço>, <CEP>, <Nome da mãe>, <Data nascimento> OU <etnia> 
-     *  E não informo justificativa
-     *  Então o campo é mostrado com o valor <NI/desconhecido>
-     *  E recebo mensagem de confirmação 
-     * 
-     * Cenário 8: Não justificar ausência de NENHUM dado opcional do paciente
-     * Quando estou na tela de dados do paciente
-     * E não informo nenhum dos campos <CPF>, <GAL>, <RG>, <Passaporte>, <SUS>, <Sexo>, <endereço>, <CEP>, <Nome da mãe>, <Data nascimento> e <etnia> 
-     * E não informo justificativa
-     * Então os campos são mostrados com o valor <NI/desconhecido>
-     * E recebo mensagem de erro (algum dado além do nome precisa ser informado para assegurar a correta localização da amostra posteriormente)
-     * E recebo msg de confirmação  informando que este cadastro está em situação “pendente”.
-     * 
-     */
-
-    private function validarCenario_7_8(Paciente $paciente, Excecao $objExcecao) {
-
-        /* ETNIA */
-        $objEtnia = new Etnia();
-        $objEtniaRN = new EtniaRN();
-
-        /* CÓDIGO GAL */
-        $objCodigoGAL = new CodigoGAL();
-        $objCodigoGAL_RN = new CodigoGAL_RN();
-
-        $idGAL = '';
-        $arr_codsGAL = $objCodigoGAL_RN->listar($objCodigoGAL);
-        foreach ($arr_codsGAL as $cg) {
-            if ($cg->getIdPaciente_fk() == $paciente->getIdPaciente()) {
-                $idGAL = $cg->getCodigo();
-            }
-        }
-
-
-        /* SEXO PACIENTE */
-        $objSexoPaciente = new Sexo();
-        $objSexoPacienteRN = new SexoRN();
-
-        $idEtnia = '';
-        $arr_etnias = $objEtniaRN->listar($objEtnia);
-        foreach ($arr_etnias as $ae) {
-            if ($ae->getIndex_etnia() == 'SEM DECLARACAO') {
-                $idEtnia = $ae->getIdEtnia();
-            }
-        }
-
-        $idSexo = '';
-        $arr_sexos = $objSexoPacienteRN->listar($objSexoPaciente);
-        foreach ($arr_sexos as $as) {
-            if ($as->getIndex_sexo() == 'NAO INFORMADO') {
-                $idSexo = $as->getIdSexo();
-            }
-        }
-
-        /* CENÁRIO 7 */
-        if (($paciente->getCPF() == '' &&
-                $paciente->getRG() == '' &&
-                $paciente->getPassaporte() == '' &&
-                $paciente->getIdSexo_fk() == $idSexo &&
-                $paciente->getEndereco() == '' &&
-                $paciente->getCEP() == '' &&
-                $paciente->getCartaoSUS() == '' &&
-                $paciente->getNomeMae() == '' &&
-                $paciente->getDataNascimento() == '' &&
-                $idGAL == null) || $paciente->getIdEtnia_fk() == $idEtnia) {
-
-            $paciente->setObsRG('Desconhecido');
-            $paciente->setObsCEP('Desconhecido');
-            $paciente->setObsCPF('Desconhecido');
-            $paciente->setObsEndereco('Desconhecido');
-            $paciente->setObsCartaoSUS('Desconhecido');
-            $paciente->setObsPassaporte('Desconhecido');
-            $paciente->setObsNomeMae('Desconhecido');
-
-        }
-
-        /* CENÁRIO 8 */
-        if ($paciente->getCPF() == '' &&
-                $paciente->getRG() == '' &&
-                $paciente->getPassaporte() == '' &&
-                $paciente->getIdSexo_fk() == $idSexo &&
-                $paciente->getEndereco() == '' &&
-                $paciente->getCEP() == '' &&
-                $paciente->getNomeMae() == '' &&
-                $paciente->getDataNascimento() == '' &&
-                $idGAL == null && $paciente->getIdEtnia_fk() == $idEtnia) {
-
-            $paciente->setObsRG('Desconhecido');
-            $paciente->setObsCEP('Desconhecido');
-            $paciente->setObsCPF('Desconhecido');
-            $paciente->setObsEndereco('Desconhecido');
-            $paciente->setObsPassaporte('Desconhecido');
-            $paciente->setObsNomeMae('Desconhecido');
-            $paciente->setCadastroPendente('s');
-        }
-
-        /* CENÁRIO 8 */
-        if ($paciente->getCPF() == '' &&
-                $paciente->getRG() == '' &&
-                $paciente->getPassaporte() == '' &&
-                $paciente->getIdSexo_fk() == $idSexo &&
-                $paciente->getEndereco() == '' &&
-                $paciente->getCEP() == '' &&
-                $paciente->getNomeMae() == '' &&
-                $paciente->getDataNascimento() == '' &&
-                $idGAL == null && $paciente->getIdEtnia_fk() == $idEtnia && $paciente->getNome() != null & $paciente->getNome() != '') {
-
-            $paciente->setObsRG('Desconhecido');
-            $paciente->setObsCEP('Desconhecido');
-            $paciente->setObsCPF('Desconhecido');
-            $paciente->setObsEndereco('Desconhecido');
-            $paciente->setObsPassaporte('Desconhecido');
-            $paciente->setObsNomeMae('Desconhecido');
-            $paciente->setCadastroPendente('s');
-        }
-
-
-
-
-        //print_r($paciente);
-
-        return $paciente;
-    }
-    
-    private function validarCenarioPendente(Paciente $paciente, Excecao $objExcecao) {
-         /* ETNIA */
-        $objEtnia = new Etnia();
-        $objEtniaRN = new EtniaRN();
-
-        /* CÓDIGO GAL */
-        $objCodigoGAL = new CodigoGAL();
-        $objCodigoGAL_RN = new CodigoGAL_RN();
-
-        $idGAL = '';
-        $arr_codsGAL = $objCodigoGAL_RN->listar($objCodigoGAL);
-        foreach ($arr_codsGAL as $cg) {
-            if ($cg->getIdPaciente_fk() == $paciente->getIdPaciente()) {
-                $idGAL = $cg->getCodigo();
-            }
-        }
-
-
-        /* SEXO PACIENTE */
-        $objSexoPaciente = new Sexo();
-        $objSexoPacienteRN = new SexoRN();
-
-        $idEtnia = '';
-        $arr_etnias = $objEtniaRN->listar($objEtnia);
-        foreach ($arr_etnias as $ae) {
-            if ($ae->getIndex_etnia() == 'SEM DECLARACAO') {
-                $idEtnia = $ae->getIdEtnia();
-            }
-        }
-
-        $idSexo = '';
-        $arr_sexos = $objSexoPacienteRN->listar($objSexoPaciente);
-        foreach ($arr_sexos as $as) {
-            if ($as->getIndex_sexo() == 'NAO INFORMADO') {
-                $idSexo = $as->getIdSexo();
-            }
-        }
-
-        
-        if ($paciente->getCPF() == '' &&
-                $paciente->getRG() == '' &&
-                $paciente->getPassaporte() == '' &&
-                $paciente->getIdSexo_fk() == $idSexo &&
-                $paciente->getEndereco() == '' &&
-                $paciente->getDataNascimento() == '' &&
-                $paciente->getCartaoSUS() == '' &&
-                $paciente->getCEP() == '' &&
-                $paciente->getNomeMae() == '' &&
-                $paciente->getDataNascimento() == '' &&
-                $idGAL == null && $paciente->getIdEtnia_fk() == $idEtnia && $paciente->getNome() != null & $paciente->getNome() != '') {
-
-            $paciente->setObsRG('Desconhecido');
-            $paciente->setObsCEP('Desconhecido');
-            $paciente->setObsCPF('Desconhecido');
-            $paciente->setObsCartaoSUS('Desconhecido');
-            $paciente->setObsEndereco('Desconhecido');
-            $paciente->setObsPassaporte('Desconhecido');
-            $paciente->setObsDataNascimento('Desconhecido');
-            $paciente->setObsNomeMae('Desconhecido');
-            $paciente->setCadastroPendente('s');
-        }
-
-
-
-    }
 
     private function validarObsDataNascimento(Paciente $paciente, Excecao $objExcecao) {
         $strObsDataNascimento = trim($paciente->getObsDataNascimento());
@@ -574,9 +396,41 @@ class PacienteRN {
             $objExcecao->adicionar_validacao('As observações da data de nascimento possui mais que 300 caracteres.',null,'alert-danger');
         }
 
-        return $paciente->setObsDataNascimento($strObsDataNascimento);
+        $paciente->setObsDataNascimento($strObsDataNascimento);
     }
 
+
+    private function validarDDD(Paciente $paciente, Excecao $objExcecao) {
+        if($paciente->getDDD() != null) {
+            $strDDD = trim($paciente->getDDD());
+
+            if (strlen($strDDD) > 3) {
+                $objExcecao->adicionar_validacao('O DDD do telefone tem mais que 3 caracteres', null, 'alert-danger');
+            }
+
+            if ($strDDD != '' && $paciente->getTelefone() == '') {
+                $objExcecao->adicionar_validacao('Informe o número do telefone', null, 'alert-danger');
+            }
+
+            $paciente->setDDD($strDDD);
+        }
+    }
+
+    private function validarTelefone(Paciente $paciente, Excecao $objExcecao) {
+        if($paciente->getTelefone() != null) {
+            $strTelefone = trim($paciente->getTelefone());
+
+            if (strlen($strTelefone) > 9) {
+                $objExcecao->adicionar_validacao('O número do telefone deve possuir, no máximo, 9 caracteres', null, 'alert-danger');
+            }
+
+            if ($strTelefone != '' && $paciente->getDDD() == '') {
+                $objExcecao->adicionar_validacao('Informe o DDD do número', null, 'alert-danger');
+            }
+
+            $paciente->setTelefone($strTelefone);
+        }
+    }
     
     
     public function cadastrar(Paciente $paciente) {
@@ -609,6 +463,10 @@ class PacienteRN {
             $this->validarRG($paciente, $objExcecao);
             $this->validarObsMunicipio($paciente, $objExcecao);
             $this->validarIdMunicipioIdEstado($paciente, $objExcecao);
+            $this->validarDDD($paciente, $objExcecao);
+            $this->validarTelefone($paciente, $objExcecao);
+            $this->validarBairro($paciente, $objExcecao);
+            $this->validarComplemento($paciente, $objExcecao);
             
             /* VALIDAR CENÁRIO 7 e 8 */
             //$this->validarCenario_7_8($paciente, $objExcecao);
@@ -663,6 +521,8 @@ class PacienteRN {
             }
 
             //$this->validarCenarioPendente($paciente, $objExcecao);
+            $this->validarDDD($paciente, $objExcecao);
+            $this->validarTelefone($paciente, $objExcecao);
             $this->validarCEP($paciente, $objExcecao);
             $this->validarEndereco($paciente, $objExcecao);
             $this->validarCPF($paciente, $objExcecao);
@@ -682,6 +542,8 @@ class PacienteRN {
             $this->validarRG($paciente, $objExcecao);
             $this->validarObsMunicipio($paciente, $objExcecao);
             $this->validarIdMunicipioIdEstado($paciente, $objExcecao);
+            $this->validarBairro($paciente, $objExcecao);
+            $this->validarComplemento($paciente, $objExcecao);
             //$this->validarCenario_7_8($paciente,$objExcecao); 
 
             $objExcecao->lancar_validacoes();

@@ -16,6 +16,8 @@
     color: #fff;
 }
 
+
+
 .topo_listar h3{
     padding-top: 10px;
     padding-bottom: 5px;
@@ -173,6 +175,12 @@ td,th{
 }
 
 
+
+.btn_disabled{
+    background-color: #d2d2d2;
+    cursor: default;
+}
+
 .form-inline{
     width: 100%;
     /*background-color: #7abaff;*/
@@ -311,7 +319,9 @@ td,th{
     h1{
         font-size: 3em;
     }
-    
+    .chart-bar{
+        width: 100%;
+    }
 
 
 
@@ -322,6 +332,9 @@ td,th{
     h1{
         font-size: 4em;
     }
+    .chart-bar{
+        width: 100%;
+    }
 
 }
 
@@ -330,11 +343,32 @@ td,th{
     h1{
         font-size: 5em;
     }
+
+    .chart-bar{
+        width: 100%;
+    }
 }
+
+
 
 /* Extra large devices (large desktops, 1200px and up)*/
 @media (min-width: 1200px) {
     h1{
         font-size: 6em;
+    }
+
+    .chart-bar{
+        width: 100%;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up)*/
+@media (min-width: 1300px) {
+    h1{
+        font-size: 6em;
+    }
+
+    .chart-bar{
+        width: 70%;
     }
 }

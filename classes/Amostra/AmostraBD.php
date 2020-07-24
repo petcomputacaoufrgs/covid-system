@@ -3,6 +3,7 @@
  *  Author: Carine Bertagnolli Bathaglini
  */
 require_once __DIR__ . '/../Banco/Banco.php';
+
 class AmostraBD{
 
     public function cadastrar(Amostra $objAmostra, Banco $objBanco) {
@@ -266,7 +267,6 @@ class AmostraBD{
             $arrayBind = array();
             $arrayBind[] = array('i',$objAmostra->getIdAmostra());
             $objBanco->executarSQL($DELETE, $arrayBind);
-
         } catch (Throwable $ex) {
             //die($ex);
             throw new Excecao("Erro removendo a amostra no BD.",$ex);
@@ -277,7 +277,7 @@ class AmostraBD{
     public function paginacao(Amostra $objAmostra, Banco $objBanco) {
         try{
 
-            $inicio = ($objAmostra->getNumPagina()-1)*100;
+            $inicio = ($objAmostra->getNumPagina()-1)*500;
 
             if($objAmostra->getNumPagina() == null){
                 $inicio = 0;
@@ -335,7 +335,7 @@ class AmostraBD{
 
 
             $SELECT.= $WHERE. ' order by tb_amostra.idAmostra desc';
-            $SELECT.= ' LIMIT ?,100 ';
+            $SELECT.= ' LIMIT ?,500 ';
 
 
 
@@ -452,8 +452,7 @@ class AmostraBD{
             }
 
 
-            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
-
+            $arr = $objBanco->consultarSQL($SELECT . $WHERE. ' order by dataColeta ', $arrayBind);
 
             $array_amostra = array();
             foreach ($arr as $reg){
@@ -479,6 +478,7 @@ class AmostraBD{
                 $objAmostra->setNickname($reg['nickname']);
                 //print_r($objAmostra);
 
+
                 //-----------------------  perfil da amostra -----------------------
                 $objPerfilPaciente = new PerfilPaciente();
                 $objPerfilPacienteRN = new PerfilPacienteRN();
@@ -494,7 +494,6 @@ class AmostraBD{
                 $objPaciente->setIdPaciente($reg['idPaciente_fk']);
                 //print_r($objPaciente);
                 $objPaciente = $objPacienteRN->listar_completo($objPaciente,null);
-                //echo "aqui";
                 //print_r($objPaciente);
 
 
@@ -524,21 +523,334 @@ class AmostraBD{
                     $objCodGALRN = new CodigoGAL_RN();
                     $objCodGAL->setIdCodigoGAL($objAmostra->getIdCodGAL_fk());
                     $objCodGAL = $objCodGALRN->consultar($objCodGAL);
-                    //print_r($objPaciente);
-                    if(!is_null($objCodGAL)) {
+                    //print_r($objCodGAL);
+                    if(!is_null($objCodGAL) ) {
                         //echo "aidkjasdjas";
                         $objPaciente[0]->setObjCodGAL($objCodGAL);
                     }
                 }
                 $objAmostra->setObjPaciente($objPaciente[0]);
-
+                //print_r($objAmostra);
                 $array_amostra[] = $objAmostra;
 
             }
+
+            /*echo "<pre>";
+            print_r($array_amostra);
+            echo "</pre>";
+            die();*/
             return $array_amostra;
         } catch (Throwable $ex) {
-            //die($ex);
             throw new Excecao("Erro listando a amostra no BD.",$ex);
+        }
+
+    }
+
+
+    public function listar_completo_unica_consulta($objAmostra,$numLimite=null, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT DISTINCT  tb_amostra.idAmostra,tb_amostra.idPaciente_fk,
+                                        tb_amostra.idCodGAL_fk,tb_amostra.idNivelPrioridade_fk,
+                                        tb_amostra.idPerfilPaciente_fk,tb_amostra.cod_estado_fk as codEstadoAmostra,
+                                        tb_amostra.dataColeta,
+                                        tb_amostra.a_r_g,tb_amostra.horaColeta,
+                                        tb_amostra.motivo,tb_amostra.CEP, tb_amostra.cod_municipio_fk as codMunicipioAmostra,
+                                        tb_amostra.nickname,
+                                        tb_paciente.nome as nomePaciente,tb_paciente.idPaciente,
+                                        tb_paciente.idSexo_fk, tb_paciente.idEtnia_fk,
+                                        tb_paciente.CPF, tb_paciente.RG,
+                                        tb_paciente.dataNascimento, tb_paciente.endereco,
+                                        tb_paciente.CEP, tb_paciente.passaporte,
+                                        tb_paciente.cartaoSUS, tb_paciente.idMunicipio_fk as codMunicipioPaciente,
+                                        tb_paciente.idEstado_fk as codEstadoPaciente,
+                                        tb_sexo.idSexo, tb_sexo.sexo,tb_sexo.index_sexo,
+                                        tb_etnia.idEtnia, tb_etnia.etnia,tb_etnia.index_etnia,
+                                        tb_perfilpaciente.idPerfilPaciente, tb_perfilpaciente.caractere,
+                                        tb_perfilpaciente.index_perfil, tb_perfilpaciente.perfil,
+                                        tab_municipio.cod_municipio,tab_municipio.nome as nomeMunicipioAmostra,
+                                        tab_municipio.cod_estado,
+                                        tab_estado.cod_estado,tab_estado.sigla as siglaEstadoAmostra,tab_estado.nome as nomeEstadoAmostra,
+                                        tb_laudo.idLaudo, tb_laudo.idAmostra_fk,tb_laudo.dataHoraGeracao, tb_laudo.dataHoraLiberacao, tb_laudo.situacao, tb_laudo.resultado,
+                                        tb_cadastroamostra.idUsuario_fk as idUsuarioCadastroAmostra, tb_cadastroamostra.dataCadastroInicio as dataHoraInicioCadastro,
+                                        tb_cadastroamostra.dataCadastroFim as dataHoraFimCadastro,tb_cadastroamostra.idCadastroAmostra
+                                                                  
+                                        FROM tb_amostra
+                            left join tab_estado on tb_amostra.cod_estado_fk =tab_estado.cod_estado
+                            left join tab_municipio on tb_amostra.cod_municipio_fk =tab_municipio.cod_municipio
+                            left join tb_laudo on tb_amostra.idAmostra =tb_laudo.idAmostra_fk
+                            inner join ((tb_paciente left join tb_sexo on tb_sexo.idSexo = tb_paciente.idSexo_fk)
+                                                     left join tb_etnia on tb_etnia.idEtnia = tb_paciente.idEtnia_fk)  on tb_amostra.idPaciente_fk = tb_paciente.idPaciente
+                            inner join tb_perfilpaciente on tb_amostra.idPerfilPaciente_fk = tb_perfilpaciente.idPerfilPaciente
+                            inner join tb_cadastroamostra on tb_amostra.idAmostra = tb_cadastroamostra.idAmostra_fk
+                            
+                            order by tb_amostra.dataColeta ";
+            $arr = $objBanco->consultarSQL($SELECT , null);
+          
+            $array_amostra = array();
+            foreach ($arr as $reg){
+                $objAmostra = new Amostra();
+                $objAmostra->setIdAmostra($reg['idAmostra']);
+                $objAmostra->setIdPaciente_fk($reg['idPaciente_fk']);
+                $objAmostra->setIdCodGAL_fk($reg['idCodGAL_fk']);
+                $objAmostra->setIdNivelPrioridade_fk($reg['idNivelPrioridade_fk']);
+                $objAmostra->setIdPerfilPaciente_fk($reg['idPerfilPaciente_fk']);
+                $objAmostra->setIdEstado_fk($reg['codEstadoAmostra']);
+                $objAmostra->setIdLugarOrigem_fk($reg['codMunicipioAmostra']);
+                $objAmostra->setDataColeta($reg['dataColeta']);
+                $objAmostra->set_a_r_g($reg['a_r_g']);
+                $objAmostra->setHoraColeta($reg['horaColeta']);
+                $objAmostra->setMotivoExame($reg['motivo']);
+                $objAmostra->setCEP($reg['CEP']);
+                $objAmostra->setCodigoAmostra($reg['codigoAmostra']);
+                $objAmostra->setNickname($reg['nickname']);
+                //print_r($objAmostra);
+
+                //-----------------------  perfil da amostra -----------------------
+                $objCadastroAmostra = new CadastroAmostra();
+                $objCadastroAmostra->setIdCadastroAmostra($reg['idCadastroAmostra']);
+                $objCadastroAmostra->setIdUsuario_fk($reg['idUsuarioCadastroAmostra']);
+                $objCadastroAmostra->setDataHoraFim($reg['dataHoraFimCadastro']);
+                $objCadastroAmostra->setDataHoraInicio($reg['dataHoraInicioCadastro']);
+
+
+
+                //-----------------------  perfil da amostra -----------------------
+                $objPerfilPaciente = new PerfilPaciente();
+                $objPerfilPaciente->setIdPerfilPaciente($reg['idPerfilPaciente']);
+                $objPerfilPaciente->setCaractere($reg['caractere']);
+                $objPerfilPaciente->setIndex_perfil($reg['index_perfil']);
+                $objPerfilPaciente->setPerfil($reg['perfil']);
+                $objAmostra->setObjPerfil($objPerfilPaciente);
+
+                //-----------------------  paciente -----------------------
+                $paciente = new Paciente();
+                $paciente->setIdPaciente($reg['idPaciente']);
+                $paciente->setNome($reg['nomePaciente']);
+                $paciente->setIdSexo_fk($reg['idSexo_fk']);
+                $paciente->setIdEtnia_fk($reg['idEtnia_fk']);
+                $paciente->setNomeMae($reg['nomeMae']);
+                $paciente->setCPF($reg['CPF']);
+                $paciente->setRG($reg['RG']);
+                $paciente->setDataNascimento($reg['dataNascimento']);
+                $paciente->setCEP($reg['CEP']);
+                $paciente->setPassaporte($reg['passaporte']);
+                $paciente->setCadastroPendente($reg['cadastroPendente']);
+                $paciente->setCartaoSUS($reg['cartaoSUS']);
+                $paciente->setIdMunicipioFk($reg['codMunicipioPaciente']);
+                $paciente->setIdEstadoFk($reg['codEstadoPaciente']);
+
+
+
+                if(!is_null($reg['idSexo'])) {
+                    $sexo = new Sexo();
+                    $sexo->setIdSexo($reg['idSexo']);
+                    $sexo->setSexo($reg['sexo']);
+                    $sexo->setIndex_sexo($reg['index_sexo']);
+                    $paciente->setObjSexo($sexo);
+                }
+
+                if(!is_null($reg['idEtnia'])) {
+                    $etnia = new Etnia();
+                    $etnia->setIdEtnia($reg['idEtnia']);
+                    $etnia->setEtnia($reg['etnia']);
+                    $etnia->setIndex_etnia($reg['index_etnia']);
+                    $paciente->setObjEtnia($etnia);
+                }
+
+
+                //print_r($objPaciente);
+
+
+                //-----------------------  estado -----------------------
+
+                if(!is_null($reg['codEstadoAmostra'])) {
+                    $objEstadoOrigem = new EstadoOrigem();
+                    $objEstadoOrigem->setCod_estado($reg['codEstadoAmostra']);
+                    $objEstadoOrigem->setSigla($reg['siglaEstadoAmostra']);
+                    $objEstadoOrigem->setNome($reg['nomeEstadoAmostra']);
+                    $objAmostra->setObjEstado($objEstadoOrigem);
+                }
+
+                /*if(!is_null($reg['cod_estado'])) {
+                    $objEstadoOrigem = new EstadoOrigem();
+                    $objEstadoOrigem->setCod_estado($reg['codEstadoPaciente']);
+                    $objEstadoOrigem->setSigla($reg['siglaEstadoPaciente']);
+                    $objEstadoOrigem->setNome($reg['nomeEstadoPaciente']);
+                    $paciente->setObjEstado($objEstadoOrigem);
+                }*/
+
+                //-----------------------  município -----------------------
+                if(!is_null($reg['codMunicipioAmostra'])) {
+                    $objLugarOrigem = new LugarOrigem();
+                    $objLugarOrigem->setIdLugarOrigem($reg['codMunicipioAmostra']);
+                    $objLugarOrigem->setNome($reg['nomeMunicipioAmostra']);
+                    $objLugarOrigem->setCod_estado($reg['codEstadoAmostra']);
+                    $objAmostra->setObjMunicipio($objLugarOrigem);
+                }
+
+                /*if(!is_null($reg['codMunicipioPaciente'])) {
+                    $objLugarOrigemPaciente = new LugarOrigem();
+                    $objLugarOrigemPaciente->setIdLugarOrigem($reg['codMunicipioPaciente']);
+                    $objLugarOrigemPaciente->setNome($reg['nomeMunicipioPaciente']);
+                    $objLugarOrigemPaciente->setCod_estado($reg['codEstadoPaciente']);
+                    $paciente->setObjMunicipio($objLugarOrigemPaciente);
+                }*/
+                $objAmostra->setObjPaciente($paciente);
+
+                //-----------------------  CÓDIGO GAL -----------------------
+
+                if(!is_null($reg['idLaudo'])) {
+                    $objLaudo = new Laudo();
+                    $objLaudo->setIdLaudo($reg['idLaudo']);
+                    $objLaudo->setIdAmostraFk($reg['idAmostra_fk']);
+                    $objLaudo->setSituacao($reg['situacao']);
+                    $objLaudo->setResultado($reg['resultado']);
+                    $objLaudo->setDataHoraGeracao($reg['dataHoraGeracao']);
+                    $objLaudo->setDataHoraLiberacao($reg['dataHoraLiberacao']);
+                    $objAmostra->setObjLaudo($objLaudo);
+                }
+
+                $objCadastroAmostra->setObjAmostra($objAmostra);
+                //print_r($objAmostra);
+                $array_amostra[] = $objCadastroAmostra;
+
+            }
+
+           // echo "<pre>";
+           // print_r($array_amostra);
+           // echo "</pre>";
+           //die();
+            return $array_amostra;
+        } catch (Throwable $ex) {
+            throw new Excecao("Erro listando a amostra no BD.",$ex);
+        }
+
+    }
+
+    public function listar_rtqpcrs_amostra(Amostra $objAmostra,$situacaoRTQPCR = null, Banco $objBanco) {
+        try{
+
+            $SELECT = "SELECT *  FROM tb_rtqpcr, tb_placa, tb_tubo, tb_rel_tubo_placa, tb_amostra 
+                        WHERE tb_rtqpcr.idPlaca_fk = tb_placa.idPlaca 
+                        AND tb_placa.idPlaca = tb_rel_tubo_placa.idPlaca_fk 
+                        AND tb_rel_tubo_placa.idTubo_fk = tb_tubo.idTubo 
+                        and tb_tubo.idAmostra_fk = tb_amostra.idAmostra ";
+
+            $WHERE = '';
+            $AND = ' and ';
+            $arrayBind = array();
+
+            if ($objAmostra->getIdAmostra() != null) {
+                $WHERE .= $AND . "  tb_amostra.idAmostra = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i', $objAmostra->getIdAmostra());
+            }
+
+            if ($objAmostra->getNickname() != null) {
+                $WHERE .= $AND . " tb_amostra.nickname = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $objAmostra->getNickname());
+            }
+
+            if ($situacaoRTQPCR != null) {
+                $WHERE .= $AND . " tb_rtqpcr.situacaoRTqPCR = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s', $situacaoRTQPCR);
+            }
+
+            //$a = $SELECT .$WHERE. " order by tb_rtqpcr.dataHoraFim ";
+
+            $arr = $objBanco->consultarSQL($SELECT .$WHERE. " order by tb_rtqpcr.dataHoraFim ", $arrayBind);
+
+           // echo "<pre>";
+           // print_r($arr);
+           // echo  "<pre>";
+
+
+            $array = array();
+            $arr_rtqpcrs = array();
+            foreach ($arr as $reg){
+                if(!in_array($reg['idRTqPCR'],$arr_rtqpcrs)) {
+                    $arr_rtqpcrs[] = $reg['idRTqPCR'];
+
+                    $objAmostra = new Amostra();
+                    $objAmostra->setIdAmostra($reg['idAmostra']);
+                    $objAmostra->setIdPaciente_fk($reg['idPaciente_fk']);
+                    $objAmostra->setIdCodGAL_fk($reg['idCodGAL_fk']);
+                    $objAmostra->setIdNivelPrioridade_fk($reg['idNivelPrioridade_fk']);
+                    $objAmostra->setIdPerfilPaciente_fk($reg['idPerfilPaciente_fk']);
+                    $objAmostra->setIdEstado_fk($reg['cod_estado_fk']);
+                    $objAmostra->setIdLugarOrigem_fk($reg['cod_municipio_fk']);
+                    $objAmostra->setObservacoes($reg['observacoes']);
+                    $objAmostra->setDataColeta($reg['dataColeta']);
+                    $objAmostra->set_a_r_g($reg['a_r_g']);
+                    $objAmostra->setHoraColeta($reg['horaColeta']);
+                    $objAmostra->setMotivoExame($reg['motivo']);
+                    $objAmostra->setCEP($reg['CEP']);
+                    $objAmostra->setCodigoAmostra($reg['codigoAmostra']);
+                    $objAmostra->setObsCEP($reg['obsCEPAmostra']);
+                    $objAmostra->setObsHoraColeta($reg['obsHoraColeta']);
+                    $objAmostra->setObsLugarOrigem($reg['obsLugarOrigem']);
+                    $objAmostra->setObsMotivo($reg['obsMotivo']);
+                    $objAmostra->setNickname($reg['nickname']);
+
+
+                    $RTqPCR = new RTqPCR();
+                    $RTqPCR->setIdRTqPCR($reg['idRTqPCR']);
+                    $RTqPCR->setIdPlacaFk($reg['idPlaca_fk']);
+                    $RTqPCR->setIdUsuarioFk($reg['idUsuario_fk']);
+                    $RTqPCR->setIdEquipamentoFk($reg['idEquipamento_fk']);
+                    $RTqPCR->setDataHoraInicio($reg['dataHoraInicio']);
+                    $RTqPCR->setDataHoraFim($reg['dataHoraFim']);
+                    $RTqPCR->setSituacaoRTqPCR($reg['situacaoRTqPCR']);
+                    $RTqPCR->setHoraFinal($reg['horaFinal']);
+                    /*$placa = new Placa();
+                    $placa->setIdPlaca($reg['idPlaca']);
+                    $placa->setPlaca($reg['placa']);
+                    $placa->setIdProtocoloFk($reg['idProtocolo_fk']);
+                    $placa->setIndexPlaca($reg['index_placa']);
+                    $placa->setSituacaoPlaca($reg['situacaoPlaca']);
+                    $RTqPCR->setObjPlaca($placa);*/
+                    $objAmostra->setObjRTqPCR($RTqPCR);
+                    /*$paciente = new Paciente();
+                    $paciente->setIdPaciente($reg['idPaciente']);
+                    $paciente->setNome($reg['nome']);
+                    $paciente->setIdSexo_fk($reg['idSexo_fk']);
+                    $paciente->setIdEtnia_fk($reg['idEtnia_fk']);
+                    $paciente->setNomeMae($reg['nomeMae']);
+                    $paciente->setCPF($reg['CPF']);
+                    $paciente->setObsCPF($reg['CPF']);
+                    $paciente->setRG($reg['RG']);
+                    $paciente->setObsRG($reg['obsRG']);
+                    $paciente->setDataNascimento($reg['dataNascimento']);
+                    $paciente->setObsNomeMae($reg['obsNomeMae']);
+                    $paciente->setEndereco($reg['endereco']);
+                    $paciente->setCEP($reg['CEP']);
+                    $paciente->setPassaporte($reg['passaporte']);
+                    $paciente->setObsPassaporte($reg['obsPassaporte']);
+                    $paciente->setObsCEP($reg['obsCEP']);
+                    $paciente->setObsEndereco($reg['obsEndereco']);
+                    $paciente->setCadastroPendente($reg['cadastroPendente']);
+                    $paciente->setCartaoSUS($reg['cartaoSUS']);
+                    $paciente->setObsCartaoSUS($reg['obsCartaoSUS']);
+                    $paciente->setObsDataNascimento($reg['obsDataNascimento']);
+                    $paciente->setIdMunicipioFk($reg['idMunicipio_fk']);
+                    $paciente->setIdEstadoFk($reg['idEstado_fk']);
+                    $paciente->setObsMunicipio($reg['obsMunicipio']);
+                    $objAmostra->setObjPaciente($paciente);*/
+                    $array[] = $objAmostra;
+                }
+
+            }
+
+           // echo "<pre>";
+           // print_r($array);
+           // echo  "<pre>";
+            return $array;
+        } catch (Throwable $ex) {
+            die($ex);
+            throw new Excecao("Erro listando o exame RTqPCR da amostra no BD.",$ex);
         }
 
     }
@@ -573,8 +885,6 @@ class AmostraBD{
         }
 
     }
-
-
 
     public function listar_aguardando_sol_montagem_placa_RTqCPR(Amostra $amostra,$numLimite=null,$arr_amostras_int=null, Banco $objBanco) {
         try{
@@ -777,8 +1087,6 @@ class AmostraBD{
         }
 
     }
-
-
 
     public function obter_infos(Amostra $objAmostra, Banco $objBanco) {
         try{
@@ -1016,140 +1324,12 @@ class AmostraBD{
         }
 
     }
-    
-
-
-    public function listar_com_perfil(Amostra $objAmostra,$caractere=null,$perfilouamostra=null, $limite=null,Banco $objBanco) {
-        try{
-
-            if($caractere == 'P' || $objAmostra->getObjPerfil() != null) {
-                $interrogacoes = '';
-                foreach ($objAmostra->getObjPerfil() as $perfil) {
-                    $interrogacoes .= "?,";
-                }
-                $interrogacoes = substr($interrogacoes, 0, -1);
-
-                $SELECT = "SELECT * FROM tb_amostra,tb_perfilpaciente 
-                        where tb_amostra.idPerfilPaciente_fk = tb_perfilpaciente.idPerfilPaciente
-                        and tb_perfilpaciente.idPerfilPaciente in (" . $interrogacoes . ") 
-                       ";
-
-                $arrayBind = array();
-                foreach ($objAmostra->getObjPerfil() as $perfil) {
-                    $arrayBind[] = array('i', $perfil->getIdPerfilPaciente());
-                }
-
-            }
-            if($caractere == 'A'){
-                $interrogacoes = '';
-                $amostrasselecionadas = explode(";", $perfilouamostra);
-                //print_r($amostrasselecionadas);
-                array_pop($amostrasselecionadas);
-                $interrogacoes = '';
-                for ($i=0; $i<count($amostrasselecionadas); $i++) {
-                    $interrogacoes .= "?,";
-                }
-                $interrogacoes = substr($interrogacoes, 0, -1);
-                $SELECT = "select * from tb_amostra where idAmostra in (" . $interrogacoes . ")";
-                $arrayBind = array();
-                for ($i=0; $i<count($amostrasselecionadas); $i++) {
-                    //echo $amostrasselecionadas[$i];
-                    $arrayBind[] = array('i', $amostrasselecionadas[$i]);
-                }
-
-                /*echo "<pre>";
-                print_r($arrayBind);
-                echo "</pre>";*/
-
-            }
-
-            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
-
-            /*echo "<pre>";
-            print_r($arr);
-            echo "</pre>";*/
-
-            $array_paciente = array();
-            foreach ($arr as $reg){
-
-                $select_tubo = "select * from tb_tubo where idAmostra_fk = ?";
-                $arrayBind2 = array();
-                $arrayBind2[] = array('i', $reg['idAmostra']);
-                $arr_tubos = $objBanco->consultarSQL($select_tubo, $arrayBind2);
-                //print_r($arr_tubos);
-
-                foreach ($arr_tubos as $tubo){
-                    $objInfosTubo = new InfosTubo();
-                    $objInfosTubo->setIdTubo_fk($tubo['idTubo']);
-                    $objInfosTuboRN = new InfosTuboRN();
-                    $info = $objInfosTuboRN->pegar_ultimo($objInfosTubo);
-                    if($info->getSituacaoTubo() == InfosTuboRN::$TST_SEM_UTILIZACAO &&
-                       $info->getSituacaoEtapa() == InfosTuboRN::$TSP_AGUARDANDO &&
-                       $info->getEtapa() == InfosTuboRN::$TP_MONTAGEM_GRUPOS_AMOSTRAS){
-
-                        //print_r($info);
-
-                        $objAmostra = new Amostra();
-                        $objAmostra->setIdAmostra($reg['idAmostra']);
-                        $objAmostra->setIdPaciente_fk($reg['idPaciente_fk']);
-                        $objAmostra->setIdCodGAL_fk($reg['idCodGAL_fk']);
-                        $objAmostra->setIdNivelPrioridade_fk($reg['idNivelPrioridade_fk']);
-                        $objAmostra->setIdPerfilPaciente_fk($reg['idPerfilPaciente_fk']);
-                        $objAmostra->setIdEstado_fk($reg['cod_estado_fk']);
-                        $objAmostra->setIdLugarOrigem_fk($reg['cod_municipio_fk']);
-                        $objAmostra->setObservacoes($reg['observacoes']);
-                        $objAmostra->setDataColeta($reg['dataColeta']);
-                        $objAmostra->set_a_r_g($reg['a_r_g']);
-                        $objAmostra->setHoraColeta($reg['horaColeta']);
-                        $objAmostra->setMotivoExame($reg['motivo']);
-                        $objAmostra->setCEP($reg['CEP']);
-                        $objAmostra->setCodigoAmostra($reg['codigoAmostra']);
-                        $objAmostra->setObsCEP($reg['obsCEPAmostra']);
-                        $objAmostra->setObsHoraColeta($reg['obsHoraColeta']);
-                        $objAmostra->setObsLugarOrigem($reg['obsLugarOrigem']);
-                        $objAmostra->setObsMotivo($reg['obsMotivo']);
-                        $objAmostra->setNickname($reg['nickname']);
-
-                        $objPerfilPaciente = new PerfilPaciente();
-                        $objPerfilPaciente->setIdPerfilPaciente($reg['idPerfilPaciente']);
-                        $objPerfilPaciente->setPerfil($reg['perfil']);
-                        $objPerfilPaciente->setIndex_perfil($reg['index_perfil']);
-                        $objPerfilPaciente->setCaractere($reg['caractere']);
-                        $objAmostra->setObjPerfil($objPerfilPaciente);
-
-                        $objTubo = new Tubo();
-                        $objTubo->setIdTubo($tubo['idTubo']);
-                        $objTubo->setIdTubo_fk($tubo['idTubo_fk']);
-                        $objTubo->setIdAmostra_fk($tubo['idAmostra_fk']);
-                        $objTubo->setTuboOriginal($tubo['tuboOriginal']);
-                        $objTubo->setTipo($tubo['tipo']);
-                        $objAmostra->setObjTubo($objTubo);
-                        $array_paciente[] = $objAmostra;
-                        if($limite != null) {
-                            if (count($array_paciente) >= $limite) {
-                                return $array_paciente;
-                            }
-                        }
-
-                    }
-                }
-            }
-
-
-
-            return $array_paciente;
-        } catch (Throwable $ex) {
-            //die($ex);
-            throw new Excecao("Erro listando a amostra no BD.",$ex);
-        }
-
-    }
 
     public function alterar_nickname(Amostra $objAmostra, Banco $objBanco){
         $SELECT = 'SELECT nickname FROM tb_amostra where idPerfilPaciente_fk = ? order by nickname desc limit 1 for update';
 
         $arrayBind = array();
-        $arrayBind[] = array('i',$objAmostra->getIdPerfilPaciente_fk());
+        $arrayBind[] = array('i',intval($objAmostra->getIdPerfilPaciente_fk()));
 
         $registro = $objBanco->consultarSql($SELECT,$arrayBind);
         if(count($registro) > 0) {
@@ -1256,7 +1436,6 @@ class AmostraBD{
 
 
     }
-
 
     public function validar_amostras_extracao($array_amostras, Banco $objBanco){
         try{
@@ -1424,8 +1603,6 @@ class AmostraBD{
         $registro = $objBanco->consultarSql($SELECT.$AND.' limit 1',$arrayBind);
 
         return $registro[0]['idAmostra'];
-
-
     }
 
     public function filtro_menor_data(Amostra $objAmostra,$select, Banco $objBanco) {
@@ -1494,458 +1671,5 @@ class AmostraBD{
         }
 
     }
-
-
-    public function filtrar_por_quantidade(Amostra $objAmostra, Banco $objBanco) {
-        try{
-
-            //print_r($objAmostra);
-            $SELECT = 'SELECT * FROM tb_amostra where idAmostra = ? LIMIT 20 ';
-
-            $arrayBind = array();
-            $arrayBind[] = array('i', $objAmostra->getIdAmostra());
-
-
-            $arr = $objBanco->consultarSQL($SELECT, $arrayBind);
-            //print_r($arr);
-            // die();
-            if(count($arr) > 0) {
-                $array_paciente = array();
-                foreach ($arr as $reg) {
-                    $objAmostra = new Amostra();
-                    $objAmostra->setIdAmostra($reg['idAmostra']);
-                    $objAmostra->setIdPaciente_fk($reg['idPaciente_fk']);
-                    $objAmostra->setIdCodGAL_fk($reg['idCodGAL_fk']);
-                    $objAmostra->setIdNivelPrioridade_fk($reg['idNivelPrioridade_fk']);
-                    $objAmostra->setIdPerfilPaciente_fk($reg['idPerfilPaciente_fk']);
-                    $objAmostra->setIdEstado_fk($reg['cod_estado_fk']);
-                    $objAmostra->setIdLugarOrigem_fk($reg['cod_municipio_fk']);
-                    $objAmostra->setObservacoes($reg['observacoes']);
-                    $objAmostra->setDataColeta($reg['dataColeta']);
-                    $objAmostra->set_a_r_g($reg['a_r_g']);
-                    $objAmostra->setHoraColeta($reg['horaColeta']);
-                    $objAmostra->setMotivoExame($reg['motivo']);
-                    $objAmostra->setCEP($reg['CEP']);
-                    $objAmostra->setCodigoAmostra($reg['codigoAmostra']);
-                    $objAmostra->setObsCEP($reg['obsCEPAmostra']);
-                    $objAmostra->setObsHoraColeta($reg['obsHoraColeta']);
-                    $objAmostra->setObsLugarOrigem($reg['obsLugarOrigem']);
-                    $objAmostra->setObsMotivo($reg['obsMotivo']);
-                    $objAmostra->setNickname($reg['nickname']);
-
-                    $array_paciente[] = $objAmostra;
-
-                }
-                return $array_paciente;
-            }
-            return null;
-        } catch (Throwable $ex) {
-            die($ex);
-            throw new Excecao("Erro listando a amostra no BD.",$ex);
-        }
-
-    }
-
-
-    public function listar_ids(Amostra $objAmostra, Banco $objBanco) {
-        try{
-
-            $SELECT = "SELECT * FROM tb_amostra";
-
-            $WHERE = '';
-            $AND = '';
-            $arrayBind = array();
-
-            if ($objAmostra->getCodigoAmostra() != null) {
-                $WHERE .= $AND . " codigoAmostra = ?";
-                $AND = ' and ';
-                $arrayBind[] = array('s', $objAmostra->getCodigoAmostra());
-            }
-
-            if ($objAmostra->get_a_r_g() != null) {
-                $WHERE .= $AND . " a_r_g = ?";
-                $AND = ' and ';
-                $arrayBind[] = array('s', $objAmostra->get_a_r_g());
-            }
-
-            if ($objAmostra->getDataColeta() != null) {
-                $WHERE .= $AND . " dataColeta = ?";
-                $AND = ' and ';
-                $arrayBind[] = array('s', $objAmostra->getDataColeta());
-            }
-
-            if ($objAmostra->getIdPerfilPaciente_fk() != null) {
-                $WHERE .= $AND . " idPerfilPaciente_fk = ?";
-                $AND = ' and ';
-                $arrayBind[] = array('i', $objAmostra->getIdPerfilPaciente_fk());
-            }
-
-            if ($objAmostra->getIdPaciente_fk() != null) {
-                $WHERE .= $AND . " idPaciente_fk = ?";
-                $AND = ' and ';
-                $arrayBind[] = array('i', $objAmostra->getIdPaciente_fk());
-            }
-
-
-            if ($WHERE != '') {
-                $WHERE = ' where ' . $WHERE;
-            }
-
-            //echo $SELECT.$WHERE;$WHERE
-
-            $arr = $objBanco->consultarSQL($SELECT . $WHERE, $arrayBind);
-
-
-
-            $array_paciente = array();
-            foreach ($arr as $reg){
-                $objAmostra = new Amostra();
-                $objAmostra->setIdAmostra($reg['idAmostra']);
-                $objAmostra->setIdPaciente_fk($reg['idPaciente_fk']);
-                $objAmostra->setIdCodGAL_fk($reg['idCodGAL_fk']);
-                $objAmostra->setIdNivelPrioridade_fk($reg['idNivelPrioridade_fk']);
-                $objAmostra->setIdPerfilPaciente_fk($reg['idPerfilPaciente_fk']);
-                $objAmostra->setIdEstado_fk($reg['cod_estado_fk']);
-                $objAmostra->setIdLugarOrigem_fk($reg['cod_municipio_fk']);
-                $objAmostra->setObservacoes($reg['observacoes']);
-                $objAmostra->setDataColeta($reg['dataColeta']);
-                $objAmostra->set_a_r_g($reg['a_r_g']);
-                $objAmostra->setHoraColeta($reg['horaColeta']);
-                $objAmostra->setMotivoExame($reg['motivo']);
-                $objAmostra->setCEP($reg['CEP']);
-                $objAmostra->setCodigoAmostra($reg['codigoAmostra']);
-                $objAmostra->setObsCEP($reg['obsCEPAmostra']);
-                $objAmostra->setObsHoraColeta($reg['obsHoraColeta']);
-                $objAmostra->setObsLugarOrigem($reg['obsLugarOrigem']);
-                $objAmostra->setObsMotivo($reg['obsMotivo']);
-                $objAmostra->setNickname($reg['nickname']);
-
-
-
-                $array_paciente[] = $objAmostra;
-
-            }
-            return $array_paciente;
-        } catch (Throwable $ex) {
-            die($ex);
-            throw new Excecao("Erro listando a amostra no BD.",$ex);
-        }
-
-    }
-
-
-    public function arrumar_banco1(Amostra $objAmostra, Banco $objBanco)
-    {
-        try {
-
-
-            //$SELECT = "select idAmostra, a_r_g,idPerfilPaciente_fk from tb_amostra ";
-            $SELECT = "select tb_tubo.idTubo, tb_amostra.idAmostra,tb_amostra.a_r_g from tb_tubo,tb_amostra where tb_tubo.idTubo not in (select idTubo_fk from tb_infostubo) and tb_tubo.idAmostra_fk= tb_amostra.idAmostra and tb_amostra.a_r_g != 'g'";
-            $arr = $objBanco->consultarSQL($SELECT);
-            //print_r($arr);
-            die();
-            foreach ($arr as $reg) {
-                /*echo "aqui";
-                $objAmostra->setIdAmostra($reg['idAmostra']);
-                $objAmostraRN = new AmostraRN();
-                $objAmostra = $objAmostraRN->consultar($objAmostra);
-                print_r($objAmostra);
-                if($reg['idPerfilPaciente_fk'] == 1){
-                    $objAmostra->setCodigoAmostra('S'.$reg['idAmostra']);
-                }
-                if($reg['idPerfilPaciente_fk'] == 2){
-                    $objAmostra->setCodigoAmostra('V'.$reg['idAmostra']);
-                }
-                if($reg['idPerfilPaciente_fk'] == 3){
-                    $objAmostra->setCodigoAmostra('L'.$reg['idAmostra']);
-                }
-                if($reg['idPerfilPaciente_fk'] == 4){
-                    $objAmostra->setCodigoAmostra('E'.$reg['idAmostra']);
-                }
-                if($reg['idPerfilPaciente_fk'] == 5){
-                    $objAmostra->setCodigoAmostra('O'.$reg['idAmostra']);
-                }
-
-                $objAmostraBD = new AmostraBD();
-                $objAmostraBD->alterar($objAmostra, $objBanco);*/
-
-
-                if ($reg['a_r_g'] == 'a' || $reg['a_r_g'] == 'r') {
-                    /*$objTubo = new Tubo();
-                    $objTubo->setIdAmostra_fk($reg['idAmostra']);
-                    $objTubo->setTuboOriginal('s');
-                    $objTubo->setTipo(TuboRN::$TT_COLETA);
-                    $objTuboRN = new TuboRN();
-                    $objTubo = $objTuboRN->cadastrar($objTubo);*/
-
-
-                    $objInfosTubo = new InfosTubo();
-                    $objInfosTuboRN = new InfosTuboRN();
-                    $objInfosTubo->setIdTubo_fk($reg['idTubo']);
-                    $objInfosTubo->setVolume(0);
-                    $objInfosTubo->setReteste('n');
-                    $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
-                    $objInfosTubo->setIdUsuario_fk(2);
-                    if ($reg['a_r_g'] == 'a') {
-                        $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
-                        $objInfosTubo->setEtapa(InfosTuboRN::$TP_RECEPCAO);
-                        $objInfosTubo->setEtapaAnterior(null);
-                        $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
-                        $objInfosTubo = $objInfosTuboRN->cadastrar($objInfosTubo);
-                        //print_r($objInfosTubo);
-
-                        $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
-                        $objInfosTubo->setEtapa(InfosTuboRN::$TP_MONTAGEM_GRUPOS_AMOSTRAS);
-                        $objInfosTubo->setEtapaAnterior(InfosTuboRN::$TP_RECEPCAO);
-                        $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
-                        $objInfosTubo = $objInfosTuboRN->cadastrar($objInfosTubo);
-                        //$arr_infos[] = $objInfosTubo;
-
-                        //print_r($objInfosTubo);
-
-
-                    } else if ($reg['a_r_g'] == 'r') {
-                        $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO);
-                        $objInfosTubo->setEtapa(InfosTuboRN::$TP_RECEPCAO);
-                        $objInfosTubo->setEtapaAnterior(null);
-                        $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
-                        $objInfosTubo = $objInfosTuboRN->cadastrar($objInfosTubo);
-                        //$arr_infos[] = $objInfosTubo;
-
-                        $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO);
-                        $objInfosTubo->setEtapa(InfosTuboRN::$TP_LAUDO);
-                        $objInfosTubo->setEtapaAnterior(InfosTuboRN::$TP_RECEPCAO);
-                        $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
-                        $objInfosTubo = $objInfosTuboRN->cadastrar($objInfosTubo);
-                    }
-                    //$objTubo->setObjInfosTubo($arr_infos);
-
-                }
-
-
-            }
-
-            return null;
-        } catch (Throwable $ex) {
-            die($ex);
-            throw new Excecao("Erro listando a amostra no BD.", $ex);
-        }
-    }
-
-
-    public function arrumar_banco_nicks(Amostra $objAmostra, Banco $objBanco)
-    {
-        try {
-
-
-            $SELECT = "select * from tb_amostra  where idPerfilPaciente_fk = 3";
-
-            $arr = $objBanco->consultarSQL($SELECT);
-            //print_r($arr);
-
-            foreach ($arr as $reg) {
-                $valores  = explode("L", $reg['nickname']);
-                echo "\n";
-                if($valores[1] >= 425){
-                    print_r(($valores[1] + 2000));
-                    $objAmostra = new Amostra();
-                    $objAmostra->setIdAmostra($reg['idAmostra']);
-                    $objAmostra->setIdPaciente_fk($reg['idPaciente_fk']);
-                    $objAmostra->setIdCodGAL_fk($reg['idCodGAL_fk']);
-                    $objAmostra->setIdNivelPrioridade_fk($reg['idNivelPrioridade_fk']);
-                    $objAmostra->setIdPerfilPaciente_fk($reg['idPerfilPaciente_fk']);
-                    $objAmostra->setIdEstado_fk($reg['cod_estado_fk']);
-                    $objAmostra->setIdLugarOrigem_fk($reg['cod_municipio_fk']);
-                    $objAmostra->setObservacoes($reg['observacoes']);
-                    $objAmostra->setDataColeta($reg['dataColeta']);
-                    $objAmostra->set_a_r_g($reg['a_r_g']);
-                    $objAmostra->setHoraColeta($reg['horaColeta']);
-                    $objAmostra->setMotivoExame($reg['motivo']);
-                    $objAmostra->setCEP($reg['CEP']);
-                    $objAmostra->setCodigoAmostra($reg['codigoAmostra']);
-                    $objAmostra->setObsCEP($reg['obsCEPAmostra']);
-                    $objAmostra->setObsHoraColeta($reg['obsHoraColeta']);
-                    $objAmostra->setObsLugarOrigem($reg['obsLugarOrigem']);
-                    $objAmostra->setObsMotivo($reg['obsMotivo']);
-                    $objAmostra->setNickname("L" . ($valores[1] + 2000));
-                    print_r($objAmostra);
-                    $objAmostraRN = new AmostraRN();
-                    $objAmostraRN->alterar($objAmostra);
-                }
-
-            }
-            return null;
-        } catch (Throwable $ex) {
-            die($ex);
-            throw new Excecao("Erro listando a amostra no BD.", $ex);
-        }
-    }
-
-    public function arrumar_banco2(Amostra $objAmostra, Banco $objBanco)
-    {
-        try {
-
-            $SELECT = "SELECT tb_amostra.idAmostra, tb_amostra.idPerfilPaciente_fk,tb_perfilpaciente.caractere FROM 
-                    tb_amostra, tb_perfilpaciente 
-                    where tb_amostra.idPerfilPaciente_fk = tb_perfilpaciente.idPerfilPaciente  ";
-
-            $arr = $objBanco->consultarSQL($SELECT);
-
-            foreach ($arr as $reg) {
-                $objAmostra = new Amostra();
-                $objAmostraRN = new AmostraRN();
-                $objAmostra->setIdAmostra($reg['idAmostra']);
-                $objAmostra = $objAmostraRN->consultar($objAmostra);
-                $objAmostra->setCodigoAmostra($reg['caractere'].$reg['idAmostra']);
-                $objAmostraRN->alterar($objAmostra);
-
-            }
-
-            return null;
-        } catch (Throwable $ex) {
-            die($ex);
-            throw new Excecao("Erro listando a amostra no BD.", $ex);
-        }
-    }
-
-    public function arrumar_banco(Amostra $objAmostra, Banco $objBanco)
-    {
-        try {
-
-            $SELECT = "select DISTINCT tb_amostra.idAmostra,tb_amostra.a_r_g,tb_tubo.idTubo, tb_cadastroamostra.idUsuario_fk 
-                        from tb_amostra,tb_tubo ,tb_cadastroamostra 
-                        where idAmostra in (SELECT idAmostra_fk FROM tb_tubo WHERE idTubo NOT IN (SELECT idTubo_fk FROM tb_infostubo)) 
-                        and tb_amostra.idAmostra = tb_tubo.idAmostra_fk 
-                        and tb_cadastroamostra.idAmostra_fk = tb_amostra.idAmostra
-                        and tb_amostra.a_r_g != 'g' ";
-
-            $arr = $objBanco->consultarSQL($SELECT);
-            //print_r($arr);
-            //die();
-            foreach ($arr as $reg) {
-                $objAmostra = new Amostra();
-                $objAmostra->setIdAmostra($reg['idAmostra']);
-                $objAmostra->set_a_r_g($reg['a_r_g']);
-
-                $objInfosTubo = new InfosTubo();
-                $objInfosTuboRN = new InfosTuboRN();
-                $objInfosTubo->setIdTubo_fk($reg['idTubo']);
-                $objInfosTubo->setVolume(0);
-                $objInfosTubo->setReteste('n');
-                $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
-                $objInfosTubo->setIdUsuario_fk($reg['idUsuario_fk']);
-                if ($reg['a_r_g'] == 'a') {
-                    $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
-                    $objInfosTubo->setEtapa(InfosTuboRN::$TP_RECEPCAO);
-                    $objInfosTubo->setEtapaAnterior(null);
-                    $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
-                    $objInfosTubo = $objInfosTuboRN->cadastrar($objInfosTubo);
-
-                    $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_SEM_UTILIZACAO);
-                    $objInfosTubo->setEtapa(InfosTuboRN::$TP_MONTAGEM_GRUPOS_AMOSTRAS);
-                    $objInfosTubo->setEtapaAnterior(InfosTuboRN::$TP_RECEPCAO);
-                    $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
-                    $objInfosTubo = $objInfosTuboRN->cadastrar($objInfosTubo);
-
-
-                } else if ($reg['a_r_g'] == 'r') {
-                    $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO);
-                    $objInfosTubo->setEtapa(InfosTuboRN::$TP_RECEPCAO);
-                    $objInfosTubo->setEtapaAnterior(null);
-                    $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_FINALIZADO);
-                    $objInfosTubo = $objInfosTuboRN->cadastrar($objInfosTubo);
-
-                    $objInfosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO);
-                    $objInfosTubo->setEtapa(InfosTuboRN::$TP_LAUDO);
-                    $objInfosTubo->setEtapaAnterior(InfosTuboRN::$TP_RECEPCAO);
-                    $objInfosTubo->setSituacaoEtapa(InfosTuboRN::$TSP_AGUARDANDO);
-                    $objInfosTubo = $objInfosTuboRN->cadastrar($objInfosTubo);
-
-                }
-            }
-
-            return null;
-        } catch (Throwable $ex) {
-            die($ex);
-            throw new Excecao("Erro listando a amostra no BD.", $ex);
-        }
-    }
-
-
-    public function arrumar_banco3(Amostra $objAmostra, Banco $objBanco)
-    {
-        try {
-
-            $SELECT = "SELECT * FROM `tb_infostubo` WHERE situacaoTubo = 'D'"; //todos os tubos descartados
-
-
-            $arr = $objBanco->consultarSQL($SELECT);
-
-            foreach ($arr as $reg) {
-                $objInfosTubo = new InfosTubo();
-                $objInfosTubo->setIdInfosTubo($reg['idInfosTubo']);
-                $objInfosTubo->setIdUsuario_fk($reg['idUsuario_fk']);
-                $objInfosTubo->setIdPosicao_fk($reg['idPosicao_fk']);
-                $objInfosTubo->setIdTubo_fk($reg['idTubo_fk']);
-                $objInfosTubo->setIdLote_fk($reg['idLote_fk']);
-                $objInfosTubo->setEtapa($reg['etapa']);
-                $objInfosTubo->setEtapaAnterior($reg['etapaAnterior']);
-                $objInfosTubo->setDataHora($reg['dataHora']);
-                $objInfosTubo->setReteste($reg['reteste']);
-                $objInfosTubo->setVolume($reg['volume']);
-                $objInfosTubo->setObsProblema($reg['obsProblema']);
-                $objInfosTubo->setObservacoes($reg['observacoes']);
-                $objInfosTubo->setSituacaoEtapa($reg['situacaoEtapa']);
-                $objInfosTubo->setSituacaoTubo($reg['situacaoTubo']);
-
-                $INSERT = 'INSERT INTO tb_infostubo ('
-                    . 'idUsuario_fk,'
-                    . 'idPosicao_fk,'
-                    . 'idTubo_fk,'
-                    . 'idLote_fk,'
-                    . 'etapa,'
-                    . 'etapaAnterior,'
-                    . 'dataHora,'
-                    . 'reteste,'
-                    . 'volume,'
-                    . 'obsProblema,'
-                    . 'observacoes,'
-                    . 'situacaoEtapa,'
-                    . 'situacaoTubo'
-                    . ')'
-                    . 'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)';
-
-                $arrayBind = array();
-                $arrayBind[] = array('i',$objInfosTubo->getIdUsuario_fk());
-                $arrayBind[] = array('i',$objInfosTubo->getIdPosicao_fk());
-                $arrayBind[] = array('i',$objInfosTubo->getIdTubo_fk());
-                $arrayBind[] = array('i',$objInfosTubo->getIdLote_fk());
-                $arrayBind[] = array('s',InfosTuboRN::$TP_LAUDO);
-                $arrayBind[] = array('s',$objInfosTubo->getEtapa());
-                $arrayBind[] = array('s',$objInfosTubo->getDataHora());
-                $arrayBind[] = array('s',$objInfosTubo->getReteste());
-                $arrayBind[] = array('d',$objInfosTubo->getVolume());
-                $arrayBind[] = array('s',$objInfosTubo->getObsProblema());
-                $arrayBind[] = array('s',$objInfosTubo->getObservacoes());
-                $arrayBind[] = array('s',InfosTuboRN::$TSP_AGUARDANDO);
-                $arrayBind[] = array('s',$objInfosTubo->getSituacaoTubo());
-
-
-                $objBanco->executarSQL($INSERT,$arrayBind);
-                $objInfosTubo->setIdInfosTubo($objBanco->obterUltimoID());
-
-            }
-
-            return null;
-        } catch (Throwable $ex) {
-            die($ex);
-            throw new Excecao("Erro listando a amostra no BD.", $ex);
-        }
-    }
-
-
-
-
-
 
 }

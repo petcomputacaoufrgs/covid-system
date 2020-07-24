@@ -9,8 +9,8 @@ class LaudoBD
     public function cadastrar(Laudo $objLaudo, Banco $objBanco) {
         try{
 
-            $INSERT = 'INSERT INTO tb_laudo (idAmostra_fk, idUsuario_fk, observacoes, resultado, situacao,dataHoraGeracao, dataHoraLiberacao) 
-                        VALUES (?,?,?,?,?,?,?)';
+            $INSERT = 'INSERT INTO tb_laudo (idAmostra_fk, idUsuario_fk, observacoes, resultado, situacao,dataHoraGeracao, dataHoraLiberacao,descarteDevolver) 
+                        VALUES (?,?,?,?,?,?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objLaudo->getIdAmostraFk());
@@ -20,7 +20,7 @@ class LaudoBD
             $arrayBind[] = array('s',$objLaudo->getSituacao());
             $arrayBind[] = array('s',$objLaudo->getDataHoraGeracao());
             $arrayBind[] = array('s',$objLaudo->getDataHoraLiberacao());
-
+            $arrayBind[] = array('s',$objLaudo->getDescarteDevolver());
 
             $objBanco->executarSQL($INSERT,$arrayBind);
             $objLaudo->setIdLaudo($objBanco->obterUltimoID());
@@ -41,7 +41,8 @@ class LaudoBD
                 . ' resultado = ?,'
                 . ' situacao = ?,'
                 . ' dataHoraGeracao = ?,'
-                . ' dataHoraLiberacao = ?'
+                . ' dataHoraLiberacao = ?,'
+                . ' descarteDevolver = ?'
                 . '  where idLaudo = ?';
 
 
@@ -53,6 +54,7 @@ class LaudoBD
             $arrayBind[] = array('s',$objLaudo->getSituacao());
             $arrayBind[] = array('s',$objLaudo->getDataHoraGeracao());
             $arrayBind[] = array('s',$objLaudo->getDataHoraLiberacao());
+            $arrayBind[] = array('s',$objLaudo->getDescarteDevolver());
 
             $arrayBind[] = array('i',$objLaudo->getIdLaudo());
 
@@ -88,6 +90,19 @@ class LaudoBD
                 $WHERE .= $AND." idAmostra_fk = ?";
                 $AND = ' and ';
                 $arrayBind[] = array('i',$objLaudo->getIdAmostraFk());
+            }
+
+            if($objLaudo->getDescarteDevolver() != null){
+                $WHERE .= $AND." descarteDevolver = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s',$objLaudo->getDescarteDevolver());
+
+            }
+
+            if($objLaudo->getIdLaudo() != null){
+                $WHERE .= $AND." idLaudo = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i',$objLaudo->getIdLaudo());
 
             }
 
@@ -112,14 +127,34 @@ class LaudoBD
                 $objLaudo->setObservacoes($reg['observacoes']);
                 $objLaudo->setDataHoraGeracao($reg['dataHoraGeracao']);
                 $objLaudo->setDataHoraLiberacao($reg['dataHoraLiberacao']);
+                $objLaudo->setDescarteDevolver($reg['descarteDevolver']);
 
 
-                $select_amostra = "select * from tb_amostra where idAmostra = ?";
-                $arrayBind2 = array();
-                $arrayBind2[] = array('i',$reg['idAmostra_fk']);
-                $objAmostra = $objBanco->consultarSQL($select_amostra,$arrayBind2);
+                $objLaudoProtocolo = new LaudoProtocolo();
+                $objLaudoProtocoloRN = new LaudoProtocoloRN();
+                $objLaudoProtocolo->setIdLaudoFk($objLaudo->getIdLaudo());
+                $arr_protocolos = $objLaudoProtocoloRN->listar($objLaudoProtocolo);
+                $objLaudo->setArrProtocolos($arr_protocolos);
 
-                $objLaudo->setObjAmostra($objAmostra);
+
+                $objLaudoKitExtracao = new LaudoKitExtracao();
+                $objLaudoKitExtracaoRN = new LaudoKitExtracaoRN();
+                $objLaudoKitExtracao->setIdLaudoFk($objLaudo->getIdLaudo());
+                $arr_kits = $objLaudoKitExtracaoRN->listar($objLaudoKitExtracao);
+                $objLaudo->setArrKitsExtracao($arr_kits);
+
+
+                $objAmostra = new Amostra();
+                $objAmostraRN = new AmostraRN();
+                $objAmostra->setIdAmostra($objLaudo->getIdAmostraFk());
+                $objAmostra = $objAmostraRN->listar_completo($objAmostra);
+                $objLaudo->setObjAmostra($objAmostra[0]);
+
+                $objUsuario = new Usuario();
+                $objUsuarioRN = new UsuarioRN();
+                $objUsuario->setIdUsuario($objLaudo->getIdUsuarioFk());
+                $objUsuario = $objUsuarioRN->consultar($objUsuario);
+                $objLaudo->setObjUsuario($objUsuario);
 
                 $array_laudo[] = $objLaudo;
             }
@@ -150,6 +185,7 @@ class LaudoBD
             $laudo->setObservacoes($arr[0]['observacoes']);
             $laudo->setDataHoraGeracao($arr[0]['dataHoraGeracao']);
             $laudo->setDataHoraLiberacao($arr[0]['dataHoraLiberacao']);
+            $laudo->setDescarteDevolver($arr[0]['descarteDevolver']);
 
             return $laudo;
         } catch (Throwable $ex) {
@@ -174,65 +210,121 @@ class LaudoBD
     }
 
 
-    public function laudo_completo(Laudo $objLaudo, Banco $objBanco) {
+    public function paginacao(Laudo $objLaudo, Banco $objBanco) {
         try{
 
-            $SELECT = "SELECT tb_amostra.idAmostra,tb_amostra.nickname, tb_paciente.nome,tb_amostra.dataColeta, tb_perfilpaciente.perfil, 
-                    tb_laudo.situacao,tb_laudo.dataHoraGeracao, 
-                    tb_laudo.dataHoraLiberacao, tb_laudo.idUsuario_fk, tb_laudo.resultado 
-                    FROM tb_laudo, tb_amostra, tb_paciente, tb_perfilpaciente
-                    where tb_laudo.idLaudo = ?
-                    and tb_amostra.idPaciente_fk = tb_paciente.idPaciente
-                    and tb_laudo.idAmostra_fk = tb_amostra.idAmostra
-                    and tb_perfilpaciente.idPerfilPaciente = tb_amostra.idPerfilPaciente_fk";
+            $inicio = ($objLaudo->getNumPagina()-1)*50;
 
+            if($objLaudo->getNumPagina() == null){
+                $inicio = 0;
+            }
+
+            $SELECT = "SELECT SQL_CALC_FOUND_ROWS * FROM tb_laudo ";
+            $FROM = '';
+
+            $WHERE = '';
+            $AND = '';
             $arrayBind = array();
-            $arrayBind[] = array('i',$objLaudo->getIdLaudo());
+            if($objLaudo->getSituacao() != null){
+                $WHERE .= $AND." tb_laudo.situacao = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s',$objLaudo->getSituacao());
+            }
 
+            if($objLaudo->getResultado() != null){
+                $WHERE .= $AND." tb_laudo.resultado = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s',$objLaudo->getResultado());
+            }
+
+
+            if($objLaudo->getDescarteDevolver() != null){
+                $WHERE .= $AND." tb_laudo.descarteDevolver = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('s',$objLaudo->getDescarteDevolver());
+
+            }
+
+            if($objLaudo->getIdLaudo() != null){
+                $WHERE .= $AND." tb_laudo.idLaudo = ?";
+                $AND = ' and ';
+                $arrayBind[] = array('i',$objLaudo->getIdLaudo());
+
+            }
+
+            if($objLaudo->getObjAmostra() != null){
+                $FROM .= ' ,tb_amostra ';
+                $WHERE .= $AND . " tb_amostra.idAmostra = tb_laudo.idAmostra_fk ";
+                $AND = ' and ';
+                if($objLaudo->getObjAmostra()->getIdAmostraFk() != null){
+                    $WHERE .= $AND." tb_amostra.idAmostra_fk = ?";
+                    $AND = ' and ';
+                    $arrayBind[] = array('i',$objLaudo->getIdAmostraFk());
+                }
+                if($objLaudo->getObjAmostra()->getNickname() != null){
+                    $WHERE .= $AND." tb_amostra.nickname = ?";
+                    $AND = ' and ';
+                    $arrayBind[] = array('s',$objLaudo->getObjAmostra()->getNickname());
+                }
+            }
+
+
+            if($WHERE != ''){
+                $WHERE = ' where '.$WHERE;
+            }
+
+
+            $SELECT.= $FROM.$WHERE. ' order by tb_laudo.idLaudo desc';
+            $SELECT.= ' LIMIT ?,50 ';
+
+            $arrayBind[] = array('i',$inicio);
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
-            //print_r($arr);
+
+            $SELECT = "SELECT FOUND_ROWS() as total";
+            $total = $objBanco->consultarSQL($SELECT);
+            $objLaudo->setTotalRegistros($total[0]['total']);
+            $objLaudo->setNumPagina($inicio);
+
+            $array_laudo = array();
+            foreach ($arr as $reg){
+                $objLaudoNovo = new Laudo();
+                $objLaudoNovo->setIdLaudo($reg['idLaudo']);
+                $objLaudoNovo->setIdAmostraFk($reg['idAmostra_fk']);
+                $objLaudoNovo->setIdUsuarioFk($reg['idUsuario_fk']);
+                $objLaudoNovo->setSituacao($reg['situacao']);
+                $objLaudoNovo->setResultado($reg['resultado']);
+                $objLaudoNovo->setObservacoes($reg['observacoes']);
+                $objLaudoNovo->setDataHoraGeracao($reg['dataHoraGeracao']);
+                $objLaudoNovo->setDataHoraLiberacao($reg['dataHoraLiberacao']);
+                $objLaudoNovo->setDescarteDevolver($reg['descarteDevolver']);
 
 
-            $objLaudo->setIdAmostraFk($arr[0]['idAmostra_fk']);
-            $objLaudo->setIdUsuarioFk($arr[0]['idUsuario_fk']);
-            $objLaudo->setSituacao($arr[0]['situacao']);
-            $objLaudo->setResultado($arr[0]['resultado']);
-            $objLaudo->setObservacoes($arr[0]['observacoes']);
-            $objLaudo->setDataHoraGeracao($arr[0]['dataHoraGeracao']);
-            $objLaudo->setDataHoraLiberacao($arr[0]['dataHoraLiberacao']);
+                $objAmostra = new Amostra();
+                $objAmostraRN = new AmostraRN();
+                $objAmostra->setIdAmostra($objLaudoNovo->getIdAmostraFk());
+                $objAmostra = $objAmostraRN->listar_completo($objAmostra);
+                $objLaudoNovo->setObjAmostra($objAmostra[0]);
 
-            $objAmostra = new Amostra();
-            $objAmostraRN = new AmostraRN();
-            $objAmostra->setIdAmostra($objLaudo->getIdAmostraFk());
-            $arrAmostra = $objAmostraRN->listar_completo($objAmostra);
-            $objAmostra = $arrAmostra[0];
+                $objUsuario = new Usuario();
+                $objUsuarioRN = new UsuarioRN();
+                $objUsuario->setIdUsuario($objLaudoNovo->getIdUsuarioFk());
+                $objUsuario = $objUsuarioRN->consultar($objUsuario);
+                $objLaudoNovo->setObjUsuario($objUsuario);
 
+                $array_laudo[] = $objLaudoNovo;
 
-            /*
-            $objPaciente = new Paciente();
-            $objPaciente->setNome($arr[0]['nome']);
-            $objAmostra->setObjPerfil($arr[0]['perfil']);
-
-
-            $SELECT2 = "select tb_codgal.codigo from tb_codgal, tb_paciente,tb_amostra where
-                        tb_paciente.nome = ? 
-                        and tb_paciente.idPaciente = tb_codgal.idPaciente_fk
-                        and tb_amostra.idCodGAL_fk = tb_codgal.idCodGAL";
-
-            $arrayBind = array();
-            $arrayBind[] = array('s',$arr[0]['nome']);
-
-            $arr2 = $objBanco->consultarSQL($SELECT2,$arrayBind);
-
-            $objPaciente->setObjCodGAL($arr2[0]['codigo']);
-            $objAmostra->setObjPaciente($objPaciente);
-            */
-            $objLaudo->setObjAmostra($objAmostra);
-
-            return $objLaudo;
+            }
+            //echo "<pre>";
+            //print_r($array_laudo);
+            //echo "</pre>";
+            //die();
+            return $array_laudo;
         } catch (Throwable $ex) {
             throw new Excecao("Erro listando laudo no BD.",$ex);
         }
 
     }
+
+
+
 }

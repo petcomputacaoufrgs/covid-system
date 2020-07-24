@@ -32,7 +32,7 @@ class Amostra{
     private $objPerfil;
 
 
-
+    private $objRTqPCR;
     private $objTubo;
     private $idsAmostras;
     private $objLaudo;
@@ -40,6 +40,24 @@ class Amostra{
     private $objLote;
     private $objMunicipio;
     private $objEstado;
+
+    /**
+     * @return mixed
+     */
+    public function getObjRTqPCR()
+    {
+        return $this->objRTqPCR;
+    }
+
+    /**
+     * @param mixed $objRTqPCR
+     */
+    public function setObjRTqPCR($objRTqPCR)
+    {
+        $this->objRTqPCR = $objRTqPCR;
+    }
+
+
 
     /**
      * @return mixed

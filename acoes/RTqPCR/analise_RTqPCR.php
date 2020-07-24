@@ -89,7 +89,8 @@ try{
     $objPlaca = new Placa();
     $objPlacaRN = new PlacaRN();
 
-
+    $liberar_popUp = '';
+    $alert = '';
     $select_equipamentos = '';
 
     $objEquipamento->setSituacaoEquipamento(EquipamentoRN::$TE_LIBERADO);

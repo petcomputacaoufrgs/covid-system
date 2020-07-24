@@ -19,7 +19,7 @@ class InterfacePagina
     public static function getInstance()
     {
         if (self::$instance == null) {
-            self::$instance = new Interf();
+            self::$instance = new InterfacePagina();
         }
         return self::$instance;
     }
@@ -48,48 +48,6 @@ class InterfacePagina
 
         }
         $select_protocolos .= '</select>';
-    }
-
-    static function montar_select_multiplas_amostras(&$select_amostras, $perfisSelecionados,$objAmostra, $objAmostraRN,&$amostrasSelecionadas,&$arr_amostras_selecionadas,$disabled=null,$limite=null)
-    {
-        /* PROTOCOLOS */
-        if($amostrasSelecionadas == '') {
-            $arr_amostras = $objAmostraRN->listar_com_perfil($objAmostra,'P',$perfisSelecionados,$limite);
-        }else{
-            $arr_amostras = $objAmostraRN->listar_com_perfil($objAmostra,'A',$amostrasSelecionadas,$limite);
-        }
-
-        $select_amostras = '<select ' . $disabled . ' class="form-control selectpicker"  
-            multiple data-live-search="true"        name="sel_mult_amostras[]"  id="selectpicker"  >'
-            . '<option value="0" ></option>';
-        echo "<pre>";
-        //print_r($arr_amostras);
-        echo "</pre>";
-        foreach ($arr_amostras as $amostra) {
-            $selected = ' ';
-            if ($perfisSelecionados != '') {
-                $rec = explode(";", $perfisSelecionados);
-                foreach ($rec as $r) {
-                    if ($amostra->getIdPerfilPaciente_fk() == $r) {
-                        $selected = ' selected ';
-                    }
-                }
-                $select_amostras .= '<option ' . $selected . '  value="' . $amostra->getIdAmostra() . '">' . $amostra->getNickname()  . '</option>';
-            }else if ($amostrasSelecionadas != '') {
-                $rec = explode(";", $amostrasSelecionadas);
-                foreach ($rec as $r) {
-                    if ($amostra->getIdAmostra() == $r) {
-                        $selected = ' selected ';
-                        $arr_amostras_selecionadas[] = $amostra;
-                    }
-
-                }
-                $select_amostras .= '<option ' . $selected . '  value="' . $amostra->getIdAmostra() . '">' . $amostra->getNickname()  . '</option>';
-            } else {
-                $select_amostras .= '<option  value="' . $amostra->getIdAmostra() . '">' . $amostra->getNickname() .'Perfil: '.$amostra->getObjPerfil()->getPerfil(). '</option>';
-            }
-        }
-        $select_amostras .= '</select>';
     }
 
     static function montar_select_placas(&$select_placas, $objPlaca, $objPlacaRN, $disabled, $onchange)
@@ -218,109 +176,31 @@ static function montar_select_niveis_prioridade(&$select_nivelPrioridade, $objNi
         $select_nivelPrioridade .= '</select>';
     }
 
-static function montar_select_amostras(&$select_amostras, $objAmostra, $objAmostraRN, &$objPaciente, $disabled, $onchange)
-    {
-        /* AMOSTRAS */
-        $selected = '';
-        //$objAmostraAux = new Amostra(); 
-        //$objAmostraAux->setIdAmostra($objAmostra->getIdAmostra());
-        $arr_amostras = $objAmostraRN->listar($objAmostra);
-        //print_r($arr_amostras);
 
-        $select_amostras = '<select class="form-control selectpicker"' . $onchange
-            . 'id="select-country idSel_amostras"'
-            . ' data-live-search="true" name="sel_amostras"' . $disabled . '>'
-            . '<option data-tokens="" ></option>';
-
-        foreach ($arr_amostras as $amostra) {
-            $selected = '';
-            if ($amostra->getIdAmostra() == $objAmostra->getIdAmostra()) {
-                $selected = 'selected';
-            }
-
-            $select_amostras .= '<option ' . $selected .
-                '  value="' . Pagina::formatar_html($amostra->getIdAmostra())
-                . '" data-tokens="' . Pagina::formatar_html($amostra->getCodigoAmostra()) . '">'
-                . Pagina::formatar_html($amostra->getCodigoAmostra()) . '</option>';
-        }
-        $select_amostras .= '</select>';
-    }
-
-static function montar_select_codsGAL(&$select_codsGAL, $objCodigoGAL, $objCodigoGAL_RN, &$objPaciente, $disabled, $onchange)
-    {
-        /* CÓDIGOS GAL */
-        $selected = '';
-
-        $arr_cods = $objCodigoGAL_RN->listar($objCodigoGAL);
-
-        $select_codsGAL = '<select class="form-control selectpicker"' . $onchange
-            . 'id="select-country idSel_codsGAL"'
-            . ' data-live-search="true" name="sel_codGAL"' . $disabled . '>'
-            . '<option data-tokens="" ></option>';
-
-        foreach ($arr_cods as $cod) {
-            $selected = '';
-            if ($cod->getIdPaciente_fk() == $objPaciente->getIdPaciente()) {
-                $selected = 'selected';
-            }
-
-            $select_codsGAL .= '<option ' . $selected .
-                '  value="' . Pagina::formatar_html($cod->getIdCodigoGAL())
-                . '" data-tokens="' . Pagina::formatar_html($cod->getCodigo()) . '">'
-                . Pagina::formatar_html($cod->getCodigo()) . '</option>';
-        }
-        $select_codsGAL .= '</select>';
-    }
-
-
-static function montar_select_aceitaRecusadaAguarda(&$select_a_r_g, &$objAmostra, $disabled, $onchange)
-    {
+    static function montar_select_aceitaRecusadaAguarda(&$select_a_r_g, &$objAmostra, $disabled, $onchange){
         $selectedr = '';
         $selecteda = '';
         $selectedg = '';
         if ($objAmostra != null) {
-            if ($objAmostra->get_a_r_g() == 'r') {
+            if ($objAmostra->get_a_r_g() == AmostraRN::$STA_RECUSADA) {
                 $selectedr = ' selected ';
             }
-            if ($objAmostra->get_a_r_g() == 'a') {
+            if ($objAmostra->get_a_r_g() == AmostraRN::$STA_ACEITA) {
                 $selecteda = ' selected ';
             }
-            if ($objAmostra->get_a_r_g() == 'g') {
+            if ($objAmostra->get_a_r_g() == AmostraRN::$STA_AGUARDANDO) {
                 $selectedg = ' selected ';
             }
         }
         $select_a_r_g = ' <select id="idSelAceitaRecusada" ' . $disabled . $onchange .
             'class="form-control" name="sel_a_r_g" onblur="">
                         <option value="">Selecione</option>
-                        <option   ' . Pagina::formatar_html($selecteda) . ' value="a">Aceita</option>
-                        <option' . Pagina::formatar_html($selectedr) . ' value="r">Recusada</option>
-                        <option' . Pagina::formatar_html($selectedg) . ' value="g">Aguardando chegada</option>
+                        <option   ' . Pagina::formatar_html($selecteda) . ' value="'.AmostraRN::$STA_ACEITA.'">Aceita</option>
+                        <option' . Pagina::formatar_html($selectedr) . ' value="'.AmostraRN::$STA_RECUSADA.'">Recusada</option>
+                        <option' . Pagina::formatar_html($selectedg) . ' value="'.AmostraRN::$STA_AGUARDANDO.'">Aguardando chegada</option>
                     </select>';
     }
 
-static function montar_select_tiposAmostra(&$select_tiposAmostra, $objTipoAmostra, $objTipoAmostraRN, &$objAmostra, $disabled, $onchange)
-    {
-        /* TIPOS AMOSTRA */
-        $selected = '';
-        $arr_tiposAmostra = $objTipoAmostraRN->listar($objTipoAmostra);
-
-        $select_tiposAmostra = '<select class="form-control selectpicker" ' . $disabled . $onchange
-            . 'id="select-country idSel_tiposAmostra" data-live-search="true" name="sel_tipoAmostra">'
-            . '<option data-tokens="" ></option>';
-
-        foreach ($arr_tiposAmostra as $tipoAmostra) {
-            $selected = '';
-            if ($tipoAmostra->getIdTipoAmostra() == $objAmostra->getIdTipoAmostra_fk()) {
-                $selected = 'selected';
-            }
-
-            $select_tiposAmostra .= '<option ' . $selected .
-                '  value="' . Pagina::formatar_html($tipoAmostra->getIdTipoAmostra()) .
-                '" data-tokens="' . Pagina::formatar_html($tipoAmostra->getTipo()) . '">'
-                . Pagina::formatar_html($tipoAmostra->getTipo()) . '</option>';
-        }
-        $select_tiposAmostra .= '</select>';
-    }
 
     static  function montar_select_estado(&$select_estados, $objEstadoOrigem, $objEstadoOrigemRN, &$objAmostra, $disabled, $onchange)
     {
@@ -464,29 +344,6 @@ static function montar_select_sexo(&$select_sexos, $objSexoPaciente, $objSexoPac
         $select_etnias .= '</select>';
     }
 
-static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPaciente, $objSexoPacienteRN, &$objPaciente)
-    {
-        $selected = '';
-        $arr_sexos = $objSexoPacienteRN->listar($objSexoPaciente);
-
-        $select_sexos = '<select  onchange="" '
-            . 'class="form-control selectpicker" '
-            . 'id="select-country idSexo" data-live-search="true" '
-            . 'name="sel_sexo">'
-            . '<option data-tokens=""></option>';
-
-        foreach ($arr_sexos as $sexo) {
-            $selected = '';
-            if ($sexo->getIdSexo() == $objPaciente->getIdSexo_fk()) {
-                $selected = 'selected';
-            }
-            $select_sexos .= '<option ' . $selected .
-                '  value="' . Pagina::formatar_html($sexo->getIdSexo())
-                . '" data-tokens="' . Pagina::formatar_html($sexo->getSexo()) . '">'
-                . Pagina::formatar_html($sexo->getSexo()) . '</option>';
-        }
-        $select_sexos .= '</select>';
-    }
 
     /*
      * SELECTS DAS LISTAS
@@ -589,42 +446,6 @@ static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPacien
             }
         }
         $select_perfis .= '</select>';
-    }
-
-    static function montar_capelas_ocupadas($arr_capelas_ocupadas, $objPreparoLote, $objPreparoLoteRN, $objLote, $objLoteRN, &$select_capelas_ocupadas, $selecionado)
-    {
-        $select_capelas_ocupadas = '<select  onchange="this.form.submit()" class="form-control selectpicker" '
-            . 'id="select-country idCapelas" data-live-search="true"  '
-            . 'name="sel_capelasOcupadas">'
-            . '<option data-tokens="">Selecione uma capela </option>';
-
-
-
-        foreach ($arr_capelas_ocupadas as $capela_ocupada) {
-            $objPreparoLote->setIdCapelaFk($capela_ocupada->getIdCapela());
-            $preparos_lote = $objPreparoLoteRN->listar($objPreparoLote);
-            //print_r($preparos_lote);
-            foreach ($preparos_lote as $pl) {
-                if ($pl->getIdCapelaFk() == $capela_ocupada->getIdCapela()) {
-                    $objLote->setIdLote($pl->getIdLoteFk());
-                    $objLote = $objLoteRN->consultar($objLote);
-
-                    $selected = '';
-                    if ($capela_ocupada->getIdCapela() == $selecionado) {
-                        $selected = ' selected ';
-                    }
-
-                    //print_r($objLote);
-                    $select_capelas_ocupadas .= '<option ' . $selected .
-                        '  value="' . Pagina::formatar_html($capela_ocupada->getIdCapela())
-                        . '" data-tokens="' . Pagina::formatar_html($capela_ocupada->getNumero()) . '">'
-                        . Pagina::formatar_html('Capela '.$capela_ocupada->getNumero()) . ' - Grupo de amostras com ' . $objLote->getQntAmostrasAdquiridas() . ' amostras </option>';
-                }
-            }
-
-        }
-        $select_capelas_ocupadas .= '</select>';
-
     }
 
     static function montar_grupos_amostras($objPreparoLote, $objPreparoLoteRN, &$select_grupos, $readonly, $tipo)
@@ -798,35 +619,6 @@ static function montar_select_cadastroPaciente(&$select_cadastro, $objSexoPacien
 
     }
 
-    static function montar_select_localArmazenamento_bancoAmostra(&$select_locais,$objLocalArmazenamento,$objLocalArmazenamentoRN,$objTipoLocalArmazenamento,$objTipoLocalArmazenamentoRN,$disabled){
-        $select_locais = '<select  class="form-control selectpicker" '
-            . 'id="idSeguCapela" data-live-search="true"  '.$disabled
-            . 'name="sel_localArm">'
-            . '<option data-tokens="" value="-1">Selecione um local </option>';
-
-        $objTipoLocalArmazenamento->setCaractereTipo(TipoLocalArmazenamentoRN::$TL_BANCO_AMOSTRAS);
-        $arr_tipos = $objTipoLocalArmazenamentoRN->listar($objTipoLocalArmazenamento);
-
-
-        $objLocalArmazenamentoRN->listar($objLocalArmazenamento);
-
-        foreach (CapelaRN::listarValoresTipoNivelSeguranca() as $segurancaCapela){
-
-            $selected = ' ';
-            if($objLocalArmazenamento->get() ==$segurancaCapela->getStrTipo() ){
-                $selected = ' selected ';
-            }
-
-            $select_locais .=  '<option ' . $selected .
-                '  value="' . Pagina::formatar_html($segurancaCapela->getStrTipo())
-                . '" data-tokens="' .Pagina::formatar_html($segurancaCapela->getStrDescricao()). '">'
-                . Pagina::formatar_html($segurancaCapela->getStrDescricao()) .'</option>';
-
-        }
-
-        $select_locais .= '</select>';
-
-    }
 
     static function montar_select_tipoLocalArmazenamentoTXT(&$select_tipoLocal,$objTipoLocalArmazenamentoRN,$objTipoLocalArmazenamento, $disabled, $onchange)
     {

@@ -80,9 +80,14 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
 
         <div class="conjunto_itens">
             <div class="row" style="text-align: center;">
-                <h5 style="padding-left10px;color: red;"> Banco de dados atualizado em 11/06/2020 - 14:02</h5>
+               <!-- <h5 style="padding-left10px;color: red;"> Banco de dados atualizado em 11/06/2020 - 14:02</h5> -->
+                <div class="col-md-12">
+                    <a  class="btn btn-primary" STYLE="margin-top: 17px;" href="<?=Sessao::getInstance()->assinar_link('controlador.php?action=exibir_graficos')?>">EXIBIR GRÁFICOS</a>
+                    </div>
             </div>
         </div>
+
+
 
          <div class="conjunto_itens">
           <div class="row">
@@ -116,14 +121,14 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
               ?>
 
               <?php
-              /*
+
               // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-              if(Sessao::getInstance()->verificar_permissao('gerar_estatisticas')){
+              /*if(Sessao::getInstance()->verificar_permissao('gerar_estatisticas')){
                   echo '<div class="col-md-3">
-                          <a target="_blank" class="btn btn-primary"  STYLE="margin-top: 17px;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=gerar_estatisticas').'">ESTATÍSTICAS DO CADASTRO </a>'
+                          <a target="_blank" class="btn btn-primary"  STYLE="margin-top: 17px;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=gerar_estatisticas').'">ESTATÍSTICAS </a>'
                       . '</div>';
-              }
-              */
+              }*/
+
               ?>
 
               <?php
@@ -140,98 +145,98 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
           </div>
          </div>
 
-        <div class="conjunto_itens" STYLE="margin-top: 10px;">
-            <div class="row">
-                <?php
-                    if(Sessao::getInstance()->verificar_permissao('montar_preparo_extracao') ||
-                        Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao') ||
-                        Sessao::getInstance()->verificar_permissao('listar_preparo_lote')) {
-                        echo '<div class="col-md-2">
+    <div class="conjunto_itens" STYLE="margin-top: 10px;">
+        <div class="row">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('montar_preparo_extracao') ||
+                Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao') ||
+                Sessao::getInstance()->verificar_permissao('listar_preparo_lote')) {
+                echo '<div class="col-md-2">
                             <h5>Etapa MONTAGEM e PREPARO</h5>
                             </div>';
-                    }
-                 ?>
+            }
+            ?>
 
-                  <?php
-                  // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-                  if(Sessao::getInstance()->verificar_permissao('montar_preparo_extracao')){
-                      echo '
+            <?php
+            // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+            if(Sessao::getInstance()->verificar_permissao('montar_preparo_extracao')){
+                echo '
                             <div class="col-md-4">
                           <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=montar_preparo_extracao').'">MONTAGEM DO GRUPO DE AMOSTRAS PARA PREPARAÇÃO </a>'
-                          . '</div>';
-                  }
-                  ?>
+                    . '</div>';
+            }
+            ?>
 
 
-                  <?php
-                  if(Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao')){
-                      echo '<div class="col-md-2" style="margin-top: 0px;">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('realizar_preparo_inativacao')){
+                echo '<div class="col-md-2" style="margin-top: 0px;">
                   <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=realizar_preparo_inativacao').'">REALIZAR PREPARO/INATIVAÇÃO </a>'
-                          . '</div>';
-                  }
-                  ?>
+                    . '</div>';
+            }
+            ?>
 
-                    <?php
-                    if(Sessao::getInstance()->verificar_permissao('listar_preparo_lote')){
-                        echo '<div class="col-md-4">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_preparo_lote')){
+                echo '<div class="col-md-4">
                               <a class="btn btn-primary"  style="background-color: #67BFDB;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_preparo_lote').'">LISTAR LOTES DE MONTAGEM DE GRUPOS E DE PREPARAÇÃO </a>'
-                            . '</div>';
-                    }
-                    ?>
+                    . '</div>';
+            }
+            ?>
 
 
 
-            </div>
         </div>
+    </div>
 
 
 
-        <div class="conjunto_itens" STYLE="margin-top: 10px;">
-            <div class="row">
-                <?php
-                if(Sessao::getInstance()->verificar_permissao('realizar_extracao') ||
-                    Sessao::getInstance()->verificar_permissao('listar_preparo_inativacao')) {
+    <div class="conjunto_itens" STYLE="margin-top: 10px;">
+        <div class="row">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('realizar_extracao') ||
+                Sessao::getInstance()->verificar_permissao('listar_preparo_inativacao')) {
 
-                    echo '<div class="col-md-2">
+                echo '<div class="col-md-2">
                             <h5>Etapa EXTRAÇÃO</h5>
                             </div>';
-                }
-                ?>
+            }
+            ?>
 
 
-                <?php
-                    if(Sessao::getInstance()->verificar_permissao('realizar_extracao')){
-                        echo '<div class="col-md-3">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('realizar_extracao')){
+                echo '<div class="col-md-3">
                               <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=realizar_extracao').'">EXTRAÇÃO </a>'
-                            . '</div>';
-                    }
-                ?>
+                    . '</div>';
+            }
+            ?>
 
-                <?php
-                if(Sessao::getInstance()->verificar_permissao('listar_preparo_inativacao')){
-                    echo '<div class="col-md-3">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_preparo_inativacao')){
+                echo '<div class="col-md-3">
                   <a class="btn btn-primary" style="background-color: #67BFDB;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_preparo_inativacao').'">LISTAR LOTES DE EXTRAÇÃO </a>'
-                        . '</div>';
-                }
-                ?>
+                    . '</div>';
+            }
+            ?>
 
 
 
-            </div>
         </div>
+    </div>
 
 
-        <div class="conjunto_itens" style="margin-top: 10px;">
-            <div class="row">
+    <div class="conjunto_itens" style="margin-top: 10px;">
+        <div class="row">
 
-                <?php
-                if(Sessao::getInstance()->verificar_permissao('solicitar_montagem_placa_RTqPCR') ||
-                    Sessao::getInstance()->verificar_permissao('listar_preparo_inativacao')) {
-                    echo '<div class="col-md-2">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('solicitar_montagem_placa_RTqPCR') ||
+                Sessao::getInstance()->verificar_permissao('listar_preparo_inativacao')) {
+                echo '<div class="col-md-2">
                             <h5>Etapa SOLICITAÇÃO MONTAGEM PLACA RTqPCR</h5>
                             </div>';
-                }
-                ?>
+            }
+            ?>
 
             <?php
             if(Sessao::getInstance()->verificar_permissao('solicitar_montagem_placa_RTqPCR')){
@@ -249,154 +254,164 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
             }
             ?>
 
-            </div>
         </div>
+    </div>
 
-        <div class="conjunto_itens" style="margin-top: 10px;">
-            <div class="row">
+    <div class="conjunto_itens" style="margin-top: 10px;">
+        <div class="row">
 
-                <?php
-                if(Sessao::getInstance()->verificar_permissao('mix_placa_RTqPCR') ||
-                    Sessao::getInstance()->verificar_permissao('listar_mix_placa_RTqPCR')) {
-                    echo '<div class="col-md-2">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('mix_placa_RTqPCR') ||
+                Sessao::getInstance()->verificar_permissao('listar_mix_placa_RTqPCR')) {
+                echo '<div class="col-md-2">
                             <h5>Etapa MIX DA PLACA RTqPCR</h5>
                             </div>';
-                }
-                ?>
+            }
+            ?>
 
-                <?php
-                if(Sessao::getInstance()->verificar_permissao('mix_placa_RTqPCR')){
-                    echo '<div class="col-md-4">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('mix_placa_RTqPCR')){
+                echo '<div class="col-md-4">
                                       <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=mix_placa_RTqPCR').'">MIX PLACA RTqPCR</a>'
-                        . '</div>';
-                }
-                ?>
+                    . '</div>';
+            }
+            ?>
 
-                <?php
-                if(Sessao::getInstance()->verificar_permissao('listar_mix_placa_RTqPCR')){
-                    echo '<div class="col-md-4">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_mix_placa_RTqPCR')){
+                echo '<div class="col-md-4">
                                       <a class="btn btn-primary "  style="background-color: #67BFDB;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_mix_placa_RTqPCR').'">LISTAR MIX PLACA RTqPCR</a>'
-                        . '</div>';
-                }
-                ?>
+                    . '</div>';
+            }
+            ?>
 
 
-            </div>
         </div>
+    </div>
 
-        <div class="conjunto_itens" style="margin-top: 10px;">
-            <div class="row">
+    <div class="conjunto_itens" style="margin-top: 10px;">
+        <div class="row">
 
-                <?php
-                if(Sessao::getInstance()->verificar_permissao('montar_placa_RTqPCR')
-                    || Sessao::getInstance()->verificar_permissao('listar_montagem_placa_RTqPCR')) {
-                    echo '<div class="col-md-2">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('montar_placa_RTqPCR')
+                || Sessao::getInstance()->verificar_permissao('listar_montagem_placa_RTqPCR')) {
+                echo '<div class="col-md-2">
                             <h5>Etapa MONTAGEM DA PLACA RTqPCR</h5>
                             </div>';
-                }
-                ?>
+            }
+            ?>
 
-                <?php
-                if(Sessao::getInstance()->verificar_permissao('montar_placa_RTqPCR')){
-                    echo '<div class="col-md-4">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('montar_placa_RTqPCR')){
+                echo '<div class="col-md-4">
                                       <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=montar_placa_RTqPCR').'">MONTAGEM PLACA RTqPCR</a>'
-                        . '</div>';
-                }
-                ?>
+                    . '</div>';
+            }
+            ?>
 
-                <?php
-                if(Sessao::getInstance()->verificar_permissao('listar_montagem_placa_RTqPCR')){
-                    echo '<div class="col-md-4">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_montagem_placa_RTqPCR')){
+                echo '<div class="col-md-4">
                                       <a class="btn btn-primary "  style="background-color: #67BFDB;"   href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_montagem_placa_RTqPCR').'">LISTAR MONTAGEM DA PLACA RTqPCR</a>'
-                        . '</div>';
-                }
-                ?>
+                    . '</div>';
+            }
+            ?>
 
 
-            </div>
         </div>
+    </div>
 
 
-        <div class="conjunto_itens" STYLE="margin-top: 10px;">
-            <div class="row">
-                <?php
+    <div class="conjunto_itens" STYLE="margin-top: 10px;">
+        <div class="row">
+            <?php
 
 
-                if(Sessao::getInstance()->verificar_permissao('listar_equipamento')  ||
-                    Sessao::getInstance()->verificar_permissao('analisar_RTqPCR') ||
-                    Sessao::getInstance()->verificar_permissao('listar_analise_RTqPCR')) {
-                    echo '<div class="col-md-2">
+            if(Sessao::getInstance()->verificar_permissao('listar_equipamento')  ||
+                Sessao::getInstance()->verificar_permissao('analisar_RTqPCR') ||
+                Sessao::getInstance()->verificar_permissao('listar_analise_RTqPCR')) {
+                echo '<div class="col-md-2">
                         <h5>Etapa RTqPCR</h5>
                         </div>';
-                }
+            }
 
-                if(Sessao::getInstance()->verificar_permissao('listar_equipamento')){
-                    echo '<div class="col-md-4">
+            if(Sessao::getInstance()->verificar_permissao('listar_equipamento')){
+                echo '<div class="col-md-4">
                              <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_equipamento').'">EQUIPAMENTOS DE RTQPCR</a>'
-                        . '</div>';
-                }
+                    . '</div>';
+            }
 
-                if(Sessao::getInstance()->verificar_permissao('analisar_RTqPCR')){
-                    echo '<div class="col-md-3">
+            if(Sessao::getInstance()->verificar_permissao('analisar_RTqPCR')){
+                echo '<div class="col-md-3">
                              <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=analisar_RTqPCR').'">ANÁLISE RTQPCR</a>'
-                        . '</div>';
-                }
+                    . '</div>';
+            }
 
-                if(Sessao::getInstance()->verificar_permissao('listar_analise_RTqPCR')){
-                    echo '<div class="col-md-3">
+            if(Sessao::getInstance()->verificar_permissao('listar_analise_RTqPCR')){
+                echo '<div class="col-md-3">
                              <a class="btn btn-primary" style="background-color: #67BFDB;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_analise_RTqPCR').'">LISTAR ANÁLISES RTQPCR</a>'
-                        . '</div>';
-                }
+                    . '</div>';
+            }
 
 
 
 
 
-                /*if(Sessao::getInstance()->verificar_permissao('finalizar_RTqPCR')){
-                    echo '<div class="col-md-3">
-                             <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=finalizar_RTqPCR').'">FINALIZAR RTQPCR</a>'
-                        . '</div>';
-                }*/
+            /*if(Sessao::getInstance()->verificar_permissao('finalizar_RTqPCR')){
+                echo '<div class="col-md-3">
+                         <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=finalizar_RTqPCR').'">FINALIZAR RTQPCR</a>'
+                    . '</div>';
+            }*/
 
-                ?>
-            </div>
+            ?>
         </div>
+    </div>
 
 
 
-        <div class="conjunto_itens" STYLE="margin-top: 10px;">
-            <div class="row">
+    <div class="conjunto_itens" STYLE="margin-top: 10px;">
+        <div class="row">
 
-                <?php
-                    if(Sessao::getInstance()->verificar_permissao('listar_laudo') || Sessao::getInstance()->verificar_permissao('cadastrar_diagnostico')  ) {
-                        echo '<div class="col-md-2">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_laudo') || Sessao::getInstance()->verificar_permissao('cadastrar_diagnostico')  ) {
+                echo '<div class="col-md-2">
                                 <h5> Etapa DIAGNÓSTICO / LAUDO </h5>
                               </div>';
-                    }
-                ?>
+            }
+            ?>
 
-                <?php
+            <?php
 
-                if (Sessao::getInstance()->verificar_permissao('listar_laudo')) {
-                    echo '<div class="col-md-3">
+            if (Sessao::getInstance()->verificar_permissao('cadastro_laudo')) {
+                echo '<div class="col-md-3">
+                              <a class="btn btn-primary" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastro_laudo') . '">CADASTRAR LAUDO </a>'
+                    . '</div>';
+            }
+
+            ?>
+
+            <?php
+
+            if (Sessao::getInstance()->verificar_permissao('listar_laudo')) {
+                echo '<div class="col-md-3">
                               <a class="btn btn-primary" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=listar_laudo') . '">LISTAR LAUDOS </a>'
-                        . '</div>';
-                }
+                    . '</div>';
+            }
 
-                ?>
+            ?>
 
-                <?php
+            <?php
 
-                if (Sessao::getInstance()->verificar_permissao('cadastrar_diagnostico')) {
-                    echo '<div class="col-md-3">
+            if (Sessao::getInstance()->verificar_permissao('cadastrar_diagnostico')) {
+                echo '<div class="col-md-3">
                                   <a class="btn btn-primary" href="' . Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_diagnostico') . '">CADASTRAR DIAGNÓSTICO </a>'
-                        . '</div>';
-                }
+                    . '</div>';
+            }
 
-                ?>
+            ?>
 
-            </div>
         </div>
+    </div>
 
     <div class="conjunto_itens" STYLE="margin-top: 10px;">
         <div class="row">
@@ -442,345 +457,357 @@ Pagina::getInstance()->adicionar_css("precadastros"); ?>
         </div>
     </div>
 
+    <div class="conjunto_itens" style="margin-top: 10px;">
+        <div class="row">
+                <?php
+                if(Sessao::getInstance()->verificar_permissao('editar_usuario')){
+                    echo '<div class="col-md-12">
+                             <a class="btn btn-primary " style="background-color: #67BFDB;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_usuario&idUsuario='.Sessao::getInstance()->getIdUsuario()).'">EDITAR USUÁRIO</a>'
+                        . '</div>';
+                }
+                ?>
+        </div>
+    </div>
 
-        <div class="conjunto_itens" style="margin-top: 10px;">
-            <div class="row">
+    <div class="conjunto_itens" style="margin-top: 10px;">
+        <div class="row">
 
 
-        <?php
-        // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-        if(Sessao::getInstance()->verificar_permissao('rastrear_amostras')){
-            echo '<div class="col-md-4" style="margin-top: 10px;">
+
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('rastrear_amostras')){
+                echo '<div class="col-md-4" style="margin-top: 10px;">
                         <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=rastrear_amostras').'">RASTREAR AMOSTRAS </a>'
-                . '</div>';
-        }
-        ?>
+                    . '</div>';
+            }
+            ?>
+
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_cadastroAmostra')){
+                echo '<div class="col-md-4" style="margin-top: 10px;">
+                        <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_cadastroAmostra').'">LISTAR CADASTRO AMOSTRAS </a>'
+                    . '</div>';
+            }
+            ?>
 
 
-            </div>
         </div>
+    </div>
 
 
-        <div class="conjunto_itens" style="margin-top: 10px;">
-            <div class="row">
+    <div class="conjunto_itens" style="margin-top: 10px;">
+        <div class="row">
 
 
-                <?php
-                if(Sessao::getInstance()->verificar_permissao('cadastrar_calculo')){
-                    echo '<div class="col-md-4">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('cadastrar_calculo')){
+                echo '<div class="col-md-4">
                               <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_calculo').'">CADASTRAR CÁLCULO </a>'
-                        . '</div>';
-                }
+                    . '</div>';
+            }
 
 
-                ?>
+            ?>
 
-                <?php
-                if(Sessao::getInstance()->verificar_permissao('cadastrar_operador')){
-                    echo '<div class="col-md-4">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('cadastrar_operador')){
+                echo '<div class="col-md-4">
                                   <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_operador').'">CADASTRAR OPERADOR</a>'
-                        . '</div>';
-                }
-                ?>
+                    . '</div>';
+            }
+            ?>
 
 
 
 
-            </div>
         </div>
+    </div>
 
 
-        <div class="conjunto_itens" style="margin-top: 10px;">
-            <div class="row">
+    <div class="conjunto_itens" style="margin-top: 10px;">
+        <div class="row">
 
 
-                <?php
-                if(Sessao::getInstance()->verificar_permissao('listar_kitExtracao')){
-                    echo '<div class="col-md-4">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_kitExtracao')){
+                echo '<div class="col-md-4">
                               <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_kitExtracao').'">LISTAR KITS DE EXTRAÇÃO </a>'
-                        . '</div>';
-                }
+                    . '</div>';
+            }
 
 
-                ?>
+            ?>
 
-                <?php
-                if(Sessao::getInstance()->verificar_permissao('listar_protocolo')){
-                    echo '<div class="col-md-4">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_protocolo')){
+                echo '<div class="col-md-4">
                                   <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_protocolo').'">LISTAR PROTOCOLOS</a>'
-                        . '</div>';
-                }
-                ?>
+                    . '</div>';
+            }
+            ?>
 
 
-                <?php
-                if(Sessao::getInstance()->verificar_permissao('listar_placa')){
-                    echo '<div class="col-md-4">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_placa')){
+                echo '<div class="col-md-4">
                                   <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_placa').'">LISTAR PLACAS</a>'
-                        . '</div>';
-                }
-                ?>
+                    . '</div>';
+            }
+            ?>
 
 
-            </div>
         </div>
+    </div>
 
 
 
 
-        <div class="conjunto_itens" style="margin-top: 10px;">
-            <div class="row">
-                <?php
+    <div class="conjunto_itens" style="margin-top: 10px;">
+        <div class="row">
+            <?php
 
-                if(Sessao::getInstance()->verificar_permissao('listar_divisao_protocolo')){
-                    echo '<div class="col-md-4">
+            if(Sessao::getInstance()->verificar_permissao('listar_divisao_protocolo')){
+                echo '<div class="col-md-4">
                                   <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_divisao_protocolo').'">LISTAR DIVISÃO PROTOCOLO</a>'
-                        . '</div>';
-                }
+                    . '</div>';
+            }
 
-                ?>
+            ?>
 
-                <?php
-                if(Sessao::getInstance()->verificar_permissao('listar_localArmazenamentoTxt')){
-                    echo '<div class="col-md-4">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_localArmazenamentoTxt')){
+                echo '<div class="col-md-4">
                               <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_localArmazenamentoTxt').'">LISTAR LOCAIS DE ARMAZENAMENTO </a>'
-                        . '</div>';
-                }
-                ?>
+                    . '</div>';
+            }
+            ?>
 
-                <?php
+            <?php
 
-                if(Sessao::getInstance()->verificar_permissao('cadastrar_poco')){
-                    echo '<div class="col-md-4">
+            if(Sessao::getInstance()->verificar_permissao('cadastrar_poco')){
+                echo '<div class="col-md-4">
                                   <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_poco').'">CADASTRAR POÇO</a>'
-                        . '</div>';
-                }
-                ?>
+                    . '</div>';
+            }
+            ?>
 
 
 
-            </div>
         </div>
+    </div>
 
 
 
-        <div class="conjunto_itens">
-            <div class="row">
+    <div class="conjunto_itens">
+        <div class="row">
 
 
-                <?php
-                // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-                if(Sessao::getInstance()->verificar_permissao('cadastrar_localArmazenamento')){
-                    /*echo '<div class="col-md-2">
-                                  <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_localArmazenamento').'">CADASTRAR LOCAL DE ARMAZENAMENTO </a>'
-                        . '</div>';*/
-                }
-                ?>
+            <?php
+            // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+            if(Sessao::getInstance()->verificar_permissao('cadastrar_localArmazenamento')){
+                /*echo '<div class="col-md-2">
+                              <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_localArmazenamento').'">CADASTRAR LOCAL DE ARMAZENAMENTO </a>'
+                    . '</div>';*/
+            }
+            ?>
 
-                <?php
+            <?php
 
-                if(Sessao::getInstance()->verificar_permissao('cadastrar_tipoLocalArmazenamento')){
-                    echo '<div class="col-md-2">
+            if(Sessao::getInstance()->verificar_permissao('cadastrar_tipoLocalArmazenamento')){
+                echo '<div class="col-md-2">
                                   <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=cadastrar_tipoLocalArmazenamento').'">CADASTRAR TIPO LOCAL DE ARMAZENAMENTO </a>'
-                        . '</div>';
-                }
-                ?>
+                    . '</div>';
+            }
+            ?>
 
-                <?php
-                // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-                if(Sessao::getInstance()->verificar_permissao('mostrar_localArmazenamento')){
-                    /*echo '<div class="col-md-2">
-                                  <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=mostrar_localArmazenamento').'">MOSTRAR LOCAL DE ARMAZENAMENTO </a>'
-                        . '</div>';*/
-                }
-                ?>
+            <?php
+            // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+            if(Sessao::getInstance()->verificar_permissao('mostrar_localArmazenamento')){
+                /*echo '<div class="col-md-2">
+                              <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=mostrar_localArmazenamento').'">MOSTRAR LOCAL DE ARMAZENAMENTO </a>'
+                    . '</div>';*/
+            }
+            ?>
 
-                <?php
-                // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-                if(Sessao::getInstance()->verificar_permissao('editar_caixa')){
-                    /*echo '<div class="col-md-2">
-                                  <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_caixa').'">EDITAR CAIXA </a>'
-                        . '</div>';*/
-                }
-                ?>
+            <?php
+            // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+            if(Sessao::getInstance()->verificar_permissao('editar_caixa')){
+                /*echo '<div class="col-md-2">
+                              <a  class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=editar_caixa').'">EDITAR CAIXA </a>'
+                    . '</div>';*/
+            }
+            ?>
 
-            </div>
         </div>
+    </div>
 
 
-        <div class="conjunto_itens">
-          <div class="row">
-              
-              <?php /*
+    <div class="conjunto_itens">
+        <div class="row">
+
+            <?php /*
                     // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-                    if(Sessao::getInstance()->verificar_permissao('listar_amostra')){ 
+                    if(Sessao::getInstance()->verificar_permissao('listar_amostra')){
                           echo '<div class="col-md-2">
                                   <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_amostra').'">LISTAR AMOSTRA</a>'
                                   . '</div>';
                     } */
-              ?>
-              
-              <?php 
-                    if(Sessao::getInstance()->verificar_permissao('listar_capela')){ 
-                          echo '<div class="col-md-2">
+            ?>
+
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_capela')){
+                echo '<div class="col-md-2">
                                   <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_capela').'">CAPELA</a>'
-                                  . '</div>';
-                    } 
-              ?>
-              
-               <?php 
-                    if(Sessao::getInstance()->verificar_permissao('listar_detentor')){
-                        /* echo '<div class="col-md-2">
-                                <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_detentor').'">DETENTOR</a>'
-                                . '</div>';*/
-                    } 
-              ?>
-              
-              <?php 
-                    if(Sessao::getInstance()->verificar_permissao('listar_doenca')){ 
-                          /*echo '<div class="col-md-2">
-                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_doenca').'">DOENÇA</a>'
-                                  . '</div>';*/
-                    } 
-              ?>
-              
+                    . '</div>';
+            }
+            ?>
 
-             
-              <?php 
-                    if(Sessao::getInstance()->verificar_permissao('listar_marca')){
-                        /*  echo '<div class="col-md-2">
-                                 <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_marca').'">MARCA</a>'
-                                 . '</div>';*/
-                    } 
-              ?>
-               
-          </div>
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_detentor')){
+                /* echo '<div class="col-md-2">
+                        <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_detentor').'">DETENTOR</a>'
+                        . '</div>';*/
+            }
+            ?>
+
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_doenca')){
+                /*echo '<div class="col-md-2">
+                        <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_doenca').'">DOENÇA</a>'
+                        . '</div>';*/
+            }
+            ?>
+
+
+
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_marca')){
+                /*  echo '<div class="col-md-2">
+                         <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_marca').'">MARCA</a>'
+                         . '</div>';*/
+            }
+            ?>
+
         </div>
-        
-        <div class="conjunto_itens">
-          <div class="row">
-              
-                <?php 
-                    if(Sessao::getInstance()->verificar_permissao('listar_modelo')){ 
-                        /*   echo '<div class="col-md-2">
-                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_modelo').'">MODELO</a>'
-                                  . '</div>';*/
-                    } 
-              ?>
-             
-              
-               <?php 
-                    // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
-                    if(Sessao::getInstance()->verificar_permissao('listar_nivelPrioridade')){ 
-                         /*  echo '<div class="col-md-2">
-                                  <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_nivelPrioridade').'">NÍVEL PRIORIDADE</a>'
-                                  . '</div>';*/
-                    } 
-              ?>
+    </div>
 
-              <?php
-              /*
-                    if(Sessao::getInstance()->verificar_permissao('listar_paciente')){ 
-                          echo '<div class="col-md-2">
-                                  <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_paciente').'">PACIENTE</a>'
-                                  . '</div>';
-                    }
-              */
-              ?>
+    <div class="conjunto_itens">
+        <div class="row">
 
-              
-             
-              
-              <?php 
-                    if(Sessao::getInstance()->verificar_permissao('listar_perfilPaciente')){ 
-                          echo '<div class="col-md-2">
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_modelo')){
+                /*   echo '<div class="col-md-2">
+                          <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_modelo').'">MODELO</a>'
+                          . '</div>';*/
+            }
+            ?>
+
+
+            <?php
+            // echo '<div class="col-md-1><h4>AMOSTRA</h4></div>';
+            if(Sessao::getInstance()->verificar_permissao('listar_nivelPrioridade')){
+                /*  echo '<div class="col-md-2">
+                         <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_nivelPrioridade').'">NÍVEL PRIORIDADE</a>'
+                         . '</div>';*/
+            }
+            ?>
+
+            <?php
+            /*
+                  if(Sessao::getInstance()->verificar_permissao('listar_paciente')){
+                        echo '<div class="col-md-2">
+                                <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_paciente').'">PACIENTE</a>'
+                                . '</div>';
+                  }
+            */
+            ?>
+
+
+
+
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_perfilPaciente')){
+                echo '<div class="col-md-2">
                                   <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_perfilPaciente').'">PERFIL PACIENTE</a>'
-                                  . '</div>';
-                    } 
-              ?>
-              
-             
-             
-              
-              
-              
-              <?php 
-                    if(Sessao::getInstance()->verificar_permissao('listar_rel_perfilUsuario_recurso')){ 
-                          echo '<div class="col-md-2">
+                    . '</div>';
+            }
+            ?>
+
+
+
+
+
+
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_rel_perfilUsuario_recurso')){
+                echo '<div class="col-md-2">
                                   <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_rel_perfilUsuario_recurso').'">PERFIL USUÁRIO + RECURSO</a>'
-                                  . '</div>';
-                    } 
-              ?>
-              
-               <?php 
-                    if(Sessao::getInstance()->verificar_permissao('listar_usuario_perfilUsuario')){ 
-                          echo '<div class="col-md-2">
+                    . '</div>';
+            }
+            ?>
+
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_usuario_perfilUsuario')){
+                echo '<div class="col-md-2">
                                   <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_usuario_perfilUsuario').'">USUÁRIO + PERFIL</a>'
-                                  . '</div>';
-                    } 
-              ?>
-          </div>
+                    . '</div>';
+            }
+            ?>
         </div>
-        
-        
-        <div class="conjunto_itens" >
-          <div class="row">
-              
-             
-              
-              <?php 
-                    if(Sessao::getInstance()->verificar_permissao('listar_recurso')){ 
-                          echo '<div class="col-md-2">
+    </div>
+
+
+    <div class="conjunto_itens" >
+        <div class="row">
+
+
+
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_recurso')){
+                echo '<div class="col-md-2">
                                   <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_recurso').'">RECURSO</a>'
-                                  . '</div>';
-                    } 
-              ?>
-              
-               
-               <?php 
-                    if(Sessao::getInstance()->verificar_permissao('listar_sexoPaciente')){ 
-                          echo '<div class="col-md-2">
+                    . '</div>';
+            }
+            ?>
+
+
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_sexoPaciente')){
+                echo '<div class="col-md-2">
                                   <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_sexoPaciente').'">SEXO PACIENTE</a>'
-                                  . '</div>';
-                    } 
-              ?>
-              
-               
-              <?php 
-                    if(Sessao::getInstance()->verificar_permissao('listar_usuario')){ 
-                          echo '<div class="col-md-2">
+                    . '</div>';
+            }
+            ?>
+
+
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_usuario')){
+                echo '<div class="col-md-2">
                                   <a class="btn btn-primary " style="background-color: #67BFDB;" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_usuario').'">LISTAR USUÁRIO</a>'
-                                  . '</div>';
-                    } 
-              ?>
-             <?php 
-                    if(Sessao::getInstance()->verificar_permissao('listar_perfilUsuario')){ 
-                          echo '<div class="col-md-2">
+                    . '</div>';
+            }
+            ?>
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_perfilUsuario')){
+                echo '<div class="col-md-2">
                                   <a class="btn btn-primary" href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_perfilUsuario').'">PERFIL USUÁRIO</a>'
-                                  . '</div>';
-                    } 
-              ?>
-              
-              
-              <?php 
-                    if(Sessao::getInstance()->verificar_permissao('listar_etnia')){ 
-                          echo '<div class="col-md-2">
+                    . '</div>';
+            }
+            ?>
+
+
+            <?php
+            if(Sessao::getInstance()->verificar_permissao('listar_etnia')){
+                echo '<div class="col-md-2">
                                   <a class="btn btn-primary " href="'.Sessao::getInstance()->assinar_link('controlador.php?action=listar_etnia').'">ETNIA</a>'
-                                  . '</div>';
-                    } 
-              ?>
-             
-          </div>
+                    . '</div>';
+            }
+            ?>
+
         </div>
+    </div>
 
-
-
-
-
-
-
-
-    </body>
+        </body>
         
 <?php
     Pagina::getInstance()->fechar_corpo();

@@ -9,7 +9,7 @@ class UsuarioBD{
 
     public function cadastrar(Usuario $objUsuario, Banco $objBanco) {
         try{
-            $INSERT = 'INSERT INTO tb_usuario (matricula,senha,CPF) VALUES (?,?)';
+            $INSERT = 'INSERT INTO tb_usuario (matricula,senha,CPF) VALUES (?,?,?)';
 
             $arrayBind = array();
             $arrayBind[] = array('s',$objUsuario->getMatricula());
@@ -38,7 +38,8 @@ class UsuarioBD{
             $arrayBind = array();
             $arrayBind[] = array('s',$objUsuario->getMatricula());
             $arrayBind[] = array('s',$objUsuario->getSenha());
-            $arrayBind[] = array('i',$objUsuario->getIdUsuario());
+            $arrayBind[] = array('s',$objUsuario->getCPF());
+            $arrayBind[] = array('i',intval($objUsuario->getIdUsuario()));
             
 
             $objBanco->executarSQL($UPDATE,$arrayBind);
@@ -69,7 +70,7 @@ class UsuarioBD{
                  $WHERE .= $AND." idUsuario = ?";
                  $AND = ' and ';
 
-                 $arrayBind[] = array('i',$objUsuario->getIdUsuario());
+                 $arrayBind[] = array('i',intval($objUsuario->getIdUsuario()));
              }
 
              if($objUsuario->getCPF() != null){
@@ -87,7 +88,7 @@ class UsuarioBD{
              $LIMIT = '';
              if($numLimite != null){
                  $LIMIT = ' LIMIT ?';
-                 $arrayBind[] = array('i',$numLimite);
+                 $arrayBind[] = array('i',intval($numLimite));
              }
 
              $arr = $objBanco->consultarSQL($SELECT.$WHERE.$LIMIT,$arrayBind);
@@ -115,22 +116,23 @@ class UsuarioBD{
 
         try{
             //print_r($objUsuario);
-            $SELECT = 'SELECT idUsuario,matricula,senha FROM tb_usuario WHERE idUsuario = ?';
+            $SELECT = 'SELECT * FROM tb_usuario WHERE idUsuario = ?';
 
             $arrayBind = array();
             $arrayBind[] = array('i',$objUsuario->getIdUsuario());
 
             $arr = $objBanco->consultarSQL($SELECT,$arrayBind);
-            
-            //print_r($arr);
+
             $usuario = new Usuario();
-            $usuario->setIdUsuario($arr[0]['idUsuario']);
-            $usuario->setMatricula($arr[0]['matricula']);
-            $usuario->setSenha($arr[0]['senha']);
+            if(count($arr) > 0) {
+                $usuario->setIdUsuario($arr[0]['idUsuario']);
+                $usuario->setMatricula($arr[0]['matricula']);
+                $usuario->setCPF($arr[0]['CPF']);
+                $usuario->setSenha($arr[0]['senha']);
+            }
 
             return $usuario;
         } catch (Throwable $ex) {
-       
             throw new Excecao("Erro consultando usuário no BD.",$ex);
         }
 

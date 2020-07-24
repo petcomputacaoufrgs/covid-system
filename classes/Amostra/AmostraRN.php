@@ -6,8 +6,50 @@
 require_once __DIR__ . '/../Excecao/Excecao.php';
 require_once __DIR__ . '/AmostraBD.php';
 
+require_once __DIR__ . '/../Situacao/Situacao.php';
+
 class AmostraRN{
-   
+
+    public static $STA_AGUARDANDO = 'g';
+    public static $STA_ACEITA = 'a';
+    public static $STA_RECUSADA = 'r';
+
+    public static function listarValoresStaAmostra()
+    {
+        try {
+
+            $arrObj= array();
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$STA_RECUSADA);
+            $objSituacao->setStrDescricao('RECUSADA');
+            $arrObj[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$STA_ACEITA);
+            $objSituacao->setStrDescricao('ACEITA');
+            $arrObj[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$STA_AGUARDANDO);
+            $objSituacao->setStrDescricao('AGUARDANDO');
+            $arrObj[] = $objSituacao;
+
+            return $arrObj;
+
+        } catch (Throwable $e) {
+            throw new Excecao('Erro listando valores as situações da amostra (AmostraRN)', $e);
+        }
+    }
+
+    public static function mostrarDescricaoStaAmostra($strTipo){
+        foreach (self::listarValoresStaAmostra() as $tipo){
+            if($tipo->getStrTipo() == $strTipo){
+                return $tipo->getStrDescricao();
+            }
+        }
+        return null;
+    }
     
       
     private function validarObservacoes(Amostra $objAmostra, Excecao $objExcecao) {
@@ -16,7 +58,7 @@ class AmostraRN{
 
 
             if (strlen($strObservacoes) > 300) {
-                $objExcecao->adicionar_validacao('A observação possui mais de 300 caracteres.', 'idObsAmostra', 'alert-danger');
+                $objExcecao->adicionar_validacao('A observação possui mais de 300 caracteres(AmostraRN).', 'idObsAmostra', 'alert-danger');
             }
 
             $objAmostra->setObservacoes($strObservacoes);
@@ -50,7 +92,6 @@ class AmostraRN{
     
     private function validar_a_r_g(Amostra $objAmostra, Excecao $objExcecao) {
         $strARG = trim($objAmostra->get_a_r_g());
-       
         
         if ($strARG == '') {
             $objExcecao->adicionar_validacao('Informe se a amostra é aceita, recusada ou está a caminho','idARG','alert-danger');
@@ -245,9 +286,23 @@ class AmostraRN{
 
     }
 
-
-
-
+    private function validarJaExisteNickname(Amostra $objAmostra, Excecao $objExcecao) {
+        $objAmostraRN = new AmostraRN();
+        $objAmostraAux = new Amostra();
+        $objAmostraAux->setNickname($objAmostra->getNickname());
+        $arr = $objAmostraRN->listar($objAmostraAux);
+        if(count($arr) > 0 && $objAmostra->getIdAmostra() == null){
+            $objExcecao->adicionar_validacao('Já existe amostra com esse código',null,'alert-danger');
+        }else if(count($arr) > 0 && $objAmostra->getIdAmostra() != null){
+            foreach ($arr as $amostra){
+                if($amostra->getIdAmostra() != $objAmostra->getIdAmostra()){
+                    if($amostra->getNickname() == $objAmostra->getNickname()){
+                        return $objExcecao->adicionar_validacao('Já existe amostra com esse código',null,'alert-danger');
+                    }
+                }
+            }
+        }
+    }
 
 
     public function cadastrar(Amostra $amostra) {
@@ -257,11 +312,8 @@ class AmostraRN{
             $objBanco->abrirConexao();
             $objBanco->abrirTransacao();
 
-            //print_r($amostra->getObjPaciente());
-            //existe o obj paciente
             if($amostra->getObjPaciente() != null){
                 if($amostra->getObjPaciente()->getIdPaciente() == null) {
-
                     $objPacienteRN = new PacienteRN();
                     $objPaciente = $objPacienteRN->cadastrar($amostra->getObjPaciente());
                     $amostra->setIdPaciente_fk($objPaciente->getIdPaciente());
@@ -271,7 +323,6 @@ class AmostraRN{
                         }
                     }
                 }else{ // nesse objeto paciente já havia sido cadastrado
-
                     $objPacienteRN = new PacienteRN();
                     $objPaciente  = $objPacienteRN->alterar($amostra->getObjPaciente());
                     $amostra->setObjPaciente($objPaciente);
@@ -282,10 +333,7 @@ class AmostraRN{
                         }
                     }
                 }
-                              
             }
-
-            //$this->validarPerfilCodGAL($amostra,$objExcecao);
             $this->validarObservacoes($amostra,$objExcecao);
             $this->validar_a_r_g($amostra,$objExcecao);
             $this->validarDataColeta($amostra,$objExcecao);
@@ -298,17 +346,29 @@ class AmostraRN{
             $this->validarPerfilCartaoSUS($amostra, $objExcecao);
             $this->validarPerfilAmostra($amostra, $objExcecao);
             $this->validarCamposDesconhecidos($amostra, $objExcecao);
-            $this->validarNickname($amostra,$objExcecao);
-
+            if($amostra->getNickname() != null) {
+                $this->validarJaExisteNickname($amostra,$objExcecao);
+            }
+            $objExcecao->lancar_validacoes();
             $objPerfilPaciente = new PerfilPaciente();
             $objPerfilPacienteRN = new PerfilPacienteRN();
             $objPerfilPaciente->setIdPerfilPaciente($amostra->getIdPerfilPaciente_fk());
             $arr_perfil = $objPerfilPacienteRN->listar($objPerfilPaciente);
             $objAmostraBD = new AmostraBD();
-            //$idNickname = $objAmostraBD->alterar_nickname($amostra,$objBanco);
-            //$amostra->setNickname($arr_perfil[0]->getCaractere() . ($idNickname+1));
 
-            $objExcecao->lancar_validacoes();
+            if (is_null($amostra->getNickname()) || strlen(trim($amostra->getNickname())) == 0) {
+                if($amostra->get_a_r_g() == AmostraRN::$STA_ACEITA  || $amostra->get_a_r_g() == AmostraRN::$STA_RECUSADA ){
+                    $idNickname = $objAmostraBD->alterar_nickname($amostra, $objBanco);
+                    $amostra->setNickname($arr_perfil[0]->getCaractere() . ($idNickname + 1));
+                }
+            }
+
+           /* if($amostra->get_a_r_g() != 'g' || (!is_null($amostra->getNickname()) || strlen($amostra->getNickname()) >0 )) {
+                if ($amostra->getNickname() == null || strlen(trim($amostra->getNickname())) == 0) {
+                    $idNickname = $objAmostraBD->alterar_nickname($amostra, $objBanco);
+                    $amostra->setNickname($arr_perfil[0]->getCaractere() . ($idNickname + 1));
+              //  }
+            }*/
 
             $objAmostraBD->cadastrar($amostra,$objBanco); //cadastra sem o código pq precisa do ID
             $amostra->setCodigoAmostra($arr_perfil[0]->getCaractere() . $amostra->getIdAmostra());
@@ -316,10 +376,9 @@ class AmostraRN{
             $objAmostraAuxRN->alterar($amostra);
 
             if($amostra->getObjTubo() != null){
-
                 $objTuboRN = new TuboRN();
                 if($amostra->getObjTubo()->getIdTubo() == null) { //tubo ainda não cadastrado
-                    if ($amostra->get_a_r_g() != 'g') {
+                    if ($amostra->get_a_r_g() != AmostraRN::$STA_AGUARDANDO) {
                         $objTubo = $amostra->getObjTubo();
                         $objTubo->setIdAmostra_fk($amostra->getIdAmostra());
                         $amostra->setObjTubo($objTuboRN->cadastrar($objTubo));
@@ -328,7 +387,6 @@ class AmostraRN{
                 }else {
                     $amostra->setObjTubo($objTuboRN->alterar($amostra->getObjTubo()));
                 }
-               
             }
 
             $objLaudo = new Laudo();
@@ -344,17 +402,12 @@ class AmostraRN{
                 }
             }
 
-
-            //print_r($objTubo);
-            //print_r($amostra);
-            //die("rn 40");
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
             return $amostra;
-                   
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro cadastrando amostra.', $e);
+            throw new Excecao('Erro cadastrando amostra (AmostraRN).', $e);
         }
     }
 
@@ -399,7 +452,10 @@ class AmostraRN{
             $this->validarMotivo($amostra, $objExcecao);
             $this->validarCEP($amostra, $objExcecao);
 
-            $this->validarNickname($amostra);
+            if(!is_null($amostra->getNickname()) && strlen($amostra->getNickname()) >0 ) {
+                $this->validarNickname($amostra);
+                $this->validarJaExisteNickname($amostra, $objExcecao);
+            }
 
 
             $objExcecao->lancar_validacoes();
@@ -439,7 +495,7 @@ class AmostraRN{
              return $amostra;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro alterando amostra.', $e);
+            throw new Excecao('Erro alterando amostra (AmostraRN).',$e);
         }
     }
 
@@ -459,7 +515,7 @@ class AmostraRN{
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro consultando amostra.', $e);
+            throw new Excecao('Erro consultando amostra (AmostraRN).', $e);
         }
     }
 
@@ -491,14 +547,14 @@ class AmostraRN{
             }
 
             $objAmostraBD = new AmostraBD();
-            $arr =  $objAmostraBD->remover($amostra,$objBanco);
+            $objAmostraBD->remover($amostra,$objBanco);
 
             $objBanco->confirmarTransacao();
             $objBanco->fecharConexao();
-            return $arr;
+
         } catch (Exception $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro removendo amostra.',  $e);
+            throw new Excecao('Erro removendo amostra (AmostraRN).', $e);
         }
     }
 
@@ -518,7 +574,7 @@ class AmostraRN{
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', $e);
+            throw new Excecao('Erro listando amostra (AmostraRN).', $e);
         }
     }
 
@@ -538,27 +594,7 @@ class AmostraRN{
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', $e);
-        }
-    }
-
-    public function listar_com_perfil(Amostra $amostra,$caractere=null,$perfilouamostra=null ,$limite = null) {
-        $objBanco = new Banco();
-        try {
-            $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
-            $objExcecao->lancar_validacoes();
-
-            $objAmostraBD = new AmostraBD();
-            $arr =  $objAmostraBD->listar_com_perfil($amostra,$caractere,$perfilouamostra,$limite,$objBanco);
-
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
-            return $arr;
-        } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', $e);
+            throw new Excecao('Erro listando amostra (AmostraRN).',$e);
         }
     }
 
@@ -578,7 +614,7 @@ class AmostraRN{
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', $e);
+            throw new Excecao('Erro listando amostra (AmostraRN).', $e);
         }
     }
 
@@ -640,7 +676,6 @@ class AmostraRN{
 
             $amostras =  $objAmostraBD->validar_amostras($array_amostras,$array_perfis,$objBanco);
 
-
             /*
                 echo "<pre>";
                 print_r($amostras);
@@ -672,7 +707,7 @@ class AmostraRN{
             return $amostras;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', $e);
+            throw new Excecao('Erro validar_amostras amostra (AmostraRN).',$e);
         }
     }
 
@@ -756,10 +791,9 @@ class AmostraRN{
             return $amostras;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', $e);
+            throw new Excecao('Erro validar_amostras_extracao (AmostraRN).', $e);
         }
     }
-
 
     public function validar_amostras_solicitacao($array_amostras, $array_perfis) {
         $objBanco = new Banco();
@@ -853,11 +887,9 @@ class AmostraRN{
             return $amostras;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', $e);
+            throw new Excecao('Erro listando amostra(AmostraRN).',$e);
         }
     }
-
-
 
     public function validarCadastro(Amostra $amostra) {
         try {
@@ -900,7 +932,7 @@ class AmostraRN{
             }
             return $arr_resultado;
         } catch (Throwable $e) {
-            throw new Excecao('Erro listando amostra.', $e);
+            throw new Excecao('Erro listando as amostras (AmostraRN).', $e);
         }
     }
 
@@ -914,8 +946,6 @@ class AmostraRN{
             if($objAmostra->getNickname() != null) {
                 $strNickname = trim($objAmostra->getNickname());
 
-
-
                 if($objAmostra->getIdPerfilPaciente_fk() != null) {
                     $objPerfilPaciente = new PerfilPaciente();
                     $objPerfilPacienteRN = new PerfilPacienteRN();
@@ -927,7 +957,6 @@ class AmostraRN{
                         $objExcecao->adicionar_validacao('O primeiro catactere do código da amostra não condiz com o perfil informado', 'idObsLugarOrigem', 'alert-danger');
                     }
                 }
-
                 if (strlen($strNickname) == 0) {
                     $objExcecao->adicionar_validacao('O código da amostra precisa ser informado', 'idObsLugarOrigem', 'alert-danger');
                 } else {
@@ -962,11 +991,10 @@ class AmostraRN{
             return $objAmostra;
         }catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', $e);
+            throw new Excecao('Erro listando amostra (AmostraRN).',$e);
         }
 
     }
-
 
     public function filtro_menor_data(Amostra $amostra,$select) {
         $objBanco = new Banco();
@@ -984,70 +1012,7 @@ class AmostraRN{
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', $e);
-        }
-    }
-
-    public function filtrar_por_quantidade(Amostra $amostra) {
-        $objBanco = new Banco();
-        try {
-            $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
-            $objExcecao->lancar_validacoes();
-
-            $objAmostraBD = new AmostraBD();
-            $arr =  $objAmostraBD->filtrar_por_quantidade($amostra,$objBanco);
-
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
-            return $arr;
-        } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', $e);
-        }
-    }
-
-
-    public function listar_ids(Amostra $amostra) {
-        $objBanco = new Banco();
-        try {
-            $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
-            $objExcecao->lancar_validacoes();
-
-            $objAmostraBD = new AmostraBD();
-            $arr =  $objAmostraBD->listar_ids($amostra,$objBanco);
-
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
-            return $arr;
-        } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', $e);
-        }
-    }
-
-
-    public function arrumar_banco(Amostra $amostra) {
-        $objBanco = new Banco();
-        try {
-            $objExcecao = new Excecao();
-            $objBanco->abrirConexao();
-            $objBanco->abrirTransacao();
-            $objExcecao->lancar_validacoes();
-
-            $objAmostraBD = new AmostraBD();
-
-            $arr =  $objAmostraBD->arrumar_banco1($amostra,$objBanco);
-
-            $objBanco->confirmarTransacao();
-            $objBanco->fecharConexao();
-            return $arr;
-        } catch (Throwable $e) {
-            $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', $e);
+            throw new Excecao('Erro listando amostra (AmostraRN).', $e);
         }
     }
 
@@ -1067,7 +1032,7 @@ class AmostraRN{
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', $e);
+            throw new Excecao('Erro listando amostra (AmostraRN).',$e);
         }
     }
 
@@ -1087,12 +1052,11 @@ class AmostraRN{
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando amostra.', $e);
+            throw new Excecao('Erro listando amostra (AmostraRN).', $e);
         }
     }
 
     /**** EXTRAS ****/
-
     public function paginacao(Amostra $amostra) {
         $objBanco = new Banco();
         try {
@@ -1109,7 +1073,7 @@ class AmostraRN{
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro na paginação da amostra.', $e);
+            throw new Excecao('Erro na paginação da amostra (AmostraRN).',$e);
         }
     }
 
@@ -1129,7 +1093,47 @@ class AmostraRN{
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando completo a amostra.', $e);
+            throw new Excecao('Erro listando completo a amostra (AmostraRN).', $e);
+        }
+    }
+
+    public function listar_completo_unica_consulta($amostra, $numLimite =null) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+            $arr =  $objAmostraBD->listar_completo_unica_consulta($amostra,$numLimite,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando completo a amostra (AmostraRN).', $e);
+        }
+    }
+
+    public function listar_rtqpcrs_amostra(Amostra $amostra, $situacaoRTQPCR = null) {
+        $objBanco = new Banco();
+        try {
+            $objExcecao = new Excecao();
+            $objBanco->abrirConexao();
+            $objBanco->abrirTransacao();
+            $objExcecao->lancar_validacoes();
+
+            $objAmostraBD = new AmostraBD();
+            $arr =  $objAmostraBD->listar_rtqpcrs_amostra($amostra,$situacaoRTQPCR,$objBanco);
+
+            $objBanco->confirmarTransacao();
+            $objBanco->fecharConexao();
+            return $arr;
+        } catch (Throwable $e) {
+            $objBanco->cancelarTransacao();
+            throw new Excecao('Erro listando amostra (AmostraRN).', $e);
         }
     }
 
@@ -1148,11 +1152,9 @@ class AmostraRN{
             return $arr;
         }catch (Throwable $e){
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro verificando se a amostra tem mais volume.', $e);
+            throw new Excecao('Erro verificando se a amostra tem mais volume (AmostraRN).',$e);
         }
     }
-  
-  
 
 }
 

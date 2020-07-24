@@ -59,13 +59,13 @@ class PDF_Estatisticas {
                 $objAmostra = $objAmostraRN->consultar($objAmostra);
 
                 $result = '';
-                if ($objAmostra->get_a_r_g() == 'r') {
+                if ($objAmostra->get_a_r_g() == AmostraRN::$STA_RECUSADA) {
                     $result = 'Recusada';
                     $style = ' style="background-color:rgba(255, 0, 0, 0.2);" ';
-                } else if ($objAmostra->get_a_r_g() == 'a') {
+                } else if ($objAmostra->get_a_r_g() == AmostraRN::$STA_ACEITA) {
                     $result = 'Aceita';
                     $style = ' style="background-color:rgba(0, 255, 0, 0.2);" ';
-                } else if ($objAmostra->get_a_r_g() == 'g') {
+                } else if ($objAmostra->get_a_r_g() == AmostraRN::$STA_AGUARDANDO) {
                     $result = 'Aguardando chegada';
                     $style = ' style="background-color:rgba(255, 255, 0, 0.2);" ';
                 }

@@ -204,7 +204,7 @@ try {
                     $objAmostra->setCodigoAmostra($arr_perfil[0]->getCaractere() . $objAmostra->getIdAmostra());
                     $objAmostraRN->alterar($objAmostra);
                     
-                    if($objAmostra->get_a_r_g() == 'a' || $objAmostra->get_a_r_g() == 'r'){
+                    if($objAmostra->get_a_r_g() == AmostraRN::$STA_ACEITA || $objAmostra->get_a_r_g() ==  AmostraRN::$STA_RECUSADA){
                         /*
                          * Recém está criando a amostra então o tubo não veio de nenhum outro
                          */
@@ -216,9 +216,9 @@ try {
                         
                         $objInfosTubo->setIdTubo_fk($objTubo->getIdTubo());
                         $objInfosTubo->setEtapa("recepção - finalizada");
-                        if($objAmostra->get_a_r_g() == 'a'){
+                        if($objAmostra->get_a_r_g() == AmostraRN::$STA_ACEITA){
                             $objInfosTubo->setStatusTubo(" Aguardando preparação ");
-                        }else if ($objAmostra->get_a_r_g() == 'r'){
+                        }else if ($objAmostra->get_a_r_g() == AmostraRN::$STA_RECUSADA){
                             $objInfosTubo->setStatusTubo(" Descartado ");
                         }
                         $objInfosTubo->setDataHora(date("Y-m-d H:i:s"));
@@ -355,7 +355,7 @@ try {
                      * consegue o perfil do paciente, para pegar o caractere específico
                      */
                     
-                    if($objAmostra->get_a_r_g() == 'a' || $objAmostra->get_a_r_g() == 'r'){
+                    if($objAmostra->get_a_r_g() ==  AmostraRN::$STA_ACEITA || $objAmostra->get_a_r_g() ==  AmostraRN::$STA_RECUSADA){
                         /*
                          * Recém está criando a amostra então o tubo não veio de nenhum outro
                          */
@@ -379,9 +379,9 @@ try {
                             $objInfosTubo->setIdTubo_fk($indiceTubo);
                         }
                         $objInfosTubo->setEtapa("recepção - finalizada");
-                        if($objAmostra->get_a_r_g() == 'a'){
+                        if($objAmostra->get_a_r_g() ==  AmostraRN::$STA_ACEITA){
                             $objInfosTubo->setStatusTubo(" Aguardando preparação ");
-                        }else if ($objAmostra->get_a_r_g() == 'r'){
+                        }else if ($objAmostra->get_a_r_g() ==  AmostraRN::$STA_RECUSADA){
                             $objInfosTubo->setStatusTubo(" Descartado ");
                         }
                         

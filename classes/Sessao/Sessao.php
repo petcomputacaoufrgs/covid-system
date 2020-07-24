@@ -111,7 +111,7 @@ class Sessao {
             if (!Configuracao::getInstance()->getValor("producao")) {
                 echo "<pre>" . $ex . "</pre>";
             }
-            //echo "<pre>" . $ex . "</pre>";
+            echo "<pre>" . $ex . "</pre>";
             die("erro na sessão");
         }
     }
@@ -135,6 +135,7 @@ class Sessao {
             if (($strChave != 'action' && substr($strChave, 0, 2) != 'id' && $strChave != 'hash') || ($strChave == 'action' && !preg_match('/^[a-zA-Z0-9_]+/', $strValor)) || (substr($strChave, 0, 2) == 'id' && !is_numeric($strValor)) || ($strChave == 'hash' && (strlen($strValor) != 64 || !ctype_alnum($strValor)))
             ) {
                 //die('url inválida:' . $strChave . "=" . $strValor);
+                die("caso 1");
                 header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=acesso_negado'));
                 //header('Location: controlador.php?action=login');
                 die();
@@ -142,6 +143,7 @@ class Sessao {
         }
 
         if (!$this->verificar_link()) {
+            //die("verificar link");
             $this->logoff();
             header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=nao_encontrado'));
             die();
@@ -151,6 +153,7 @@ class Sessao {
         }
 
         if (!$this->verificar_permissao($_GET['action'])) {
+            //die("caso 2");
             header('Location: ' . Sessao::getInstance()->assinar_link('controlador.php?action=acesso_negado'));
             die();
             //throw new Exception("Acesso negado");

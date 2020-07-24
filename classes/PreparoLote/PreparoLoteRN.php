@@ -42,21 +42,29 @@ class PreparoLoteRN
                     $objExcecao->adicionar_validacao('As observações do kit de extração deve possuir no máximo 300 caracteres', null, 'alert-danger');
             }
 
-            return $preparoLote->setObsKitExtracao($strObsKitExtracao);
+            $preparoLote->setObsKitExtracao($strObsKitExtracao);
         }
 
     }
 
     private function validarNomeResponsavel(PreparoLote $preparoLote,Excecao $objExcecao){
 
-        if($preparoLote->getNomeResponsavel() != null) {
+        if(!is_null($preparoLote->getNomeResponsavel() )){
+            /*$objLote = new Lote();
+            $objLoteRN = new LoteRN();
+            $objLote->setIdLote($preparoLote->getIdLoteFk());
+            $objLote = $objLoteRN->consultar($objLote);
+            if($objLote->getSituacaoLote() != LoteRN::$TE_NA_MONTAGEM) {
+                 $objExcecao->adicionar_validacao('O nome do responsável deve ser informado', null, 'alert-danger');
+            }
+        }else{*/
             $strNomeResponsavel = trim($preparoLote->getNomeResponsavel());
 
             if (strlen($strNomeResponsavel) > 100) {
                 $objExcecao->adicionar_validacao('O nome do responsável deve possuir no máximo 100 caracteres', null, 'alert-danger');
             }
 
-            return $preparoLote->setNomeResponsavel($strNomeResponsavel);
+            $preparoLote->setNomeResponsavel($strNomeResponsavel);
         }
 
     }
@@ -69,7 +77,7 @@ class PreparoLoteRN
                 $objExcecao->adicionar_validacao('O lote de fabricação do kit de extração deve possuir no máximo 130 caracteres', null, 'alert-danger');
             }
 
-            return $preparoLote->setLoteFabricacaokitExtracao($strLoteFabricacaoKitExtracao);
+           $preparoLote->setLoteFabricacaokitExtracao($strLoteFabricacaoKitExtracao);
         }
 
     }
@@ -85,7 +93,7 @@ class PreparoLoteRN
             if (count($arr_usuarios) == 0) {
                 $objExcecao->adicionar_validacao('O usuário não existe', null, 'alert-danger');
             } else {
-                return $preparoLote->setIdResponsavel($arr_usuarios[0]->getIdUsuario());
+                $preparoLote->setIdResponsavel($arr_usuarios[0]->getIdUsuario());
             }
 
         }
@@ -93,7 +101,7 @@ class PreparoLoteRN
     }
 
     private function validarIdPreparoLote(PreparoLote $preparoLote,Excecao $objExcecao){
-        $preparoLote->setIdPreparoLote(intval($preparoLote->getIdPreparoLote()));
+        //$preparoLote->setIdPreparoLote(intval($preparoLote->getIdPreparoLote()));
         if($preparoLote->getIdPreparoLote() == null || $preparoLote->getIdPreparoLote() <= 0) {
             $objExcecao->adicionar_validacao('O identificador do preparo do lote não foi informado', null, 'alert-danger');
         }
@@ -105,7 +113,7 @@ class PreparoLoteRN
         if($preparoLote->getIdCapelaFk() != null) {
             $preparoLote->setIdCapelaFk(intval($preparoLote->getIdCapelaFk()));
             if ( $preparoLote->getIdCapelaFk() <= 0) {
-                $objExcecao->adicionar_validacao('O identificador do preparo do lote não foi informado', null, 'alert-danger');
+                $objExcecao->adicionar_validacao('O identificador da capela não foi informado', null, 'alert-danger');
             }
         }
 
@@ -113,16 +121,17 @@ class PreparoLoteRN
 
     private function validarIdExtracao(PreparoLote $preparoLote,Excecao $objExcecao){
 
-
-        $objLote = new Lote();
-        $objLoteRN = new LoteRN();
-        $objLote->setIdLote($preparoLote->getIdLoteFk());
-        $objLote = $objLoteRN->consultar($objLote);
-        if($objLote->getTipo() == LoteRN::$TL_EXTRACAO && $preparoLote->getIdKitExtracaoFk() == null) {
-            $preparoLote->setIdKitExtracaoFk(intval($preparoLote->getIdKitExtracaoFk()));
-            if ($objLote->getTipo() == LoteRN::$TL_EXTRACAO) {
-                if ($preparoLote->getIdKitExtracaoFk() == null || $preparoLote->getIdKitExtracaoFk() <= 0) {
-                    $objExcecao->adicionar_validacao('O identificador do kit de extração não foi informado', null, 'alert-danger');
+        if(!is_null($preparoLote->getIdLoteFk())) {
+            $objLote = new Lote();
+            $objLoteRN = new LoteRN();
+            $objLote->setIdLote($preparoLote->getIdLoteFk());
+            $objLote = $objLoteRN->consultar($objLote);
+            if ($objLote->getTipo() == LoteRN::$TL_EXTRACAO && $preparoLote->getIdKitExtracaoFk() == null) {
+                $preparoLote->setIdKitExtracaoFk(intval($preparoLote->getIdKitExtracaoFk()));
+                if ($objLote->getTipo() == LoteRN::$TL_EXTRACAO) {
+                    if ($preparoLote->getIdKitExtracaoFk() == null || $preparoLote->getIdKitExtracaoFk() <= 0) {
+                        $objExcecao->adicionar_validacao('O identificador do kit de extração não foi informado', null, 'alert-danger');
+                    }
                 }
             }
         }
@@ -208,7 +217,7 @@ class PreparoLoteRN
             return $preparoLote;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro cadastrando o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro cadastrando o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
 
@@ -249,7 +258,7 @@ class PreparoLoteRN
         } catch (Throwable $e) {
             //die($e);
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro alterando o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro alterando o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
 
@@ -333,7 +342,7 @@ class PreparoLoteRN
             return $preparoLote;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro alterando o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro alterando o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
 
@@ -356,7 +365,7 @@ class PreparoLoteRN
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro consultando o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro consultando o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
 
@@ -378,7 +387,7 @@ class PreparoLoteRN
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro consultando o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro consultando o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
 
@@ -519,7 +528,7 @@ class PreparoLoteRN
 
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro removendo o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro removendo o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
 
@@ -541,7 +550,7 @@ class PreparoLoteRN
 
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro removendo o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro removendo o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
 
@@ -563,7 +572,7 @@ class PreparoLoteRN
 
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro removendo o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro removendo o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
 
@@ -585,7 +594,7 @@ class PreparoLoteRN
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro na consulta do lote.',$e);
+            throw new Excecao('Erro na consulta do lote (PreparoLoteRN).',$e);
         }
     }
 
@@ -607,7 +616,7 @@ class PreparoLoteRN
 
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro na consulta do lote.',$e);
+            throw new Excecao('Erro na consulta do lote (PreparoLoteRN).',$e);
         }
     }
 
@@ -631,7 +640,7 @@ class PreparoLoteRN
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro listando o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
 
@@ -654,7 +663,7 @@ class PreparoLoteRN
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro listando o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
 
@@ -677,7 +686,7 @@ class PreparoLoteRN
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro consultando o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro consultando o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
 
@@ -699,7 +708,7 @@ class PreparoLoteRN
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro consultando o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro consultando o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
 
@@ -723,7 +732,7 @@ class PreparoLoteRN
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro consultando o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro consultando o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
 
@@ -746,7 +755,7 @@ class PreparoLoteRN
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro consultando o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro consultando o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
     public function preparoLote_completo(PreparoLote $preparoLote)
@@ -765,7 +774,7 @@ class PreparoLoteRN
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro consultando o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro consultando o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
     public function preparoLote_remover(PreparoLote $objPreparoLote)
@@ -822,7 +831,7 @@ class PreparoLoteRN
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro consultando o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro consultando o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
 
@@ -846,7 +855,7 @@ class PreparoLoteRN
             return $arr;
         } catch (Throwable $e) {
             $objBanco->cancelarTransacao();
-            throw new Excecao('Erro listando o perfil do preparo do lote.', $e);
+            throw new Excecao('Erro listando o perfil do preparo do lote (PreparoLoteRN).', $e);
         }
     }
 }

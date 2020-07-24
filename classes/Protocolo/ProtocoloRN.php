@@ -15,6 +15,8 @@ class ProtocoloRN
     public static $TP_NEWGENE = 'N';
     public static $TP_AGPATH = 'A';
     public static $TP_AGPATH_CHARITE = 'E';
+    public static $TP_VIRUS_RESPIRATORIO = 'V';
+    public static $TP_SARS_CoV = 'S';
 
 
     public static function listarTiposProtocolos(){
@@ -41,6 +43,16 @@ class ProtocoloRN
             $objSituacao = new Situacao();
             $objSituacao->setStrTipo(self::$TP_AGPATH_CHARITE);
             $objSituacao->setStrDescricao('Protocolo Agpath/Charité');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TP_VIRUS_RESPIRATORIO);
+            $objSituacao->setStrDescricao('Protocolo CDC - Vírus Respiratórios (CDC/Atlanta/EUA)');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TP_SARS_CoV);
+            $objSituacao->setStrDescricao('Protocolo Charité SARS-CoV-2 (Bio Manguinhos)');
             $arrObjTEtapa[] = $objSituacao;
 
             return $arrObjTEtapa;

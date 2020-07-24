@@ -21,6 +21,8 @@ class InfosTuboRN{
     public static $TP_RTqPCR = 'Q';
     public static $TP_DIAGNOSTICO = 'D';
     public static $TP_LAUDO = 'L';
+    public static $TP_RETESTE = 'T';
+    public static $TP_ANALISE_QUALIDADE = 'A';
 
     //tipo situacao etapa
     public static $TSP_INICIALIZADO = 'I';
@@ -121,6 +123,15 @@ class InfosTuboRN{
             $objSituacao->setStrDescricao('Diagnóstico');
             $arrObjTEtapa[] = $objSituacao;
 
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TP_RETESTE);
+            $objSituacao->setStrDescricao('Reteste');
+            $arrObjTEtapa[] = $objSituacao;
+
+            $objSituacao = new Situacao();
+            $objSituacao->setStrTipo(self::$TP_ANALISE_QUALIDADE);
+            $objSituacao->setStrDescricao('Análise de Qualidade');
+            $arrObjTEtapa[] = $objSituacao;
 
             return $arrObjTEtapa;
 
@@ -374,21 +385,19 @@ class InfosTuboRN{
     private function validarVolume(InfosTubo $infosTubo, Excecao $objExcecao)
     {
 
-
-
         if($infosTubo->getVolume() != null){
-        $strVolume = trim($infosTubo->getVolume());
+            $strVolume = trim($infosTubo->getVolume());
 
             if($infosTubo->getVolume() == 0.0){
                 $infosTubo->setSituacaoTubo(InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA);
             }
-
-                /*if($infosTubo->getObjTubo()->getTipo() == TuboRN::$TT_ALIQUOTA && $infosTubo->getReteste() == 'S'){
+            $infosTubo->setVolume(doubleval($strVolume));
+            /*if($infosTubo->getObjTubo()->getTipo() == TuboRN::$TT_ALIQUOTA && $infosTubo->getReteste() == 'S'){
                     if($infosTubo->getVolume() != InfosTuboRN::$VOLUME_INDO_EXTRACAO ){
 
                     }
                 }*/
-
+            /*
         if ($infosTubo->getObjTubo() != null) {
             if ($infosTubo->getEtapa() != InfosTuboRN::$TP_RECEPCAO) {
                 //print_r($infosTubo->getObjTubo());
@@ -412,31 +421,28 @@ class InfosTuboRN{
                 }
 
 
-                /*if ($infosTubo->getObjTubo()->getTipo() == TuboRN::$TT_ALIQUOTA) {
-                    if ($infosTubo->getVolume() != InfosTuboRN::$VOLUME_ALIQUOTA && $infosTubo->getObsProblema() == null ) {
-                        $objExcecao->adicionar_validacao('Informe porque o volume foi diferente de ' . InfosTuboRN::$VOLUME_ALIQUOTA . ' na amostra <strong>' . $infosTubo->getCodAmostra() . '</strong> ', 'idVolume', 'alert-danger');
-                    }
-                }*/
 
                 if ($infosTubo->getSituacaoTubo() == InfosTuboRN::$TST_DESCARTADO_NO_MEIO_ETAPA) {
                     return $infosTubo->setVolume(0.0);
                 }
 
+            */
+        }
 
+        if($infosTubo->getVolume() == 0.0 || is_null($infosTubo->getVolume()) || strlen($infosTubo->getVolume()) == 0) {
+            $objTubo = new Tubo();
+            $objTuboRN = new TuboRN();
+            $objTubo->setIdTubo($infosTubo->getIdTubo_fk());
+            $amostra = $objTuboRN->listar_completo($objTubo);
+            $objTubo = $amostra[0]->getObjTubo();
+            if ($infosTubo->getEtapa() == InfosTuboRN::$TP_EXTRACAO || $infosTubo->getEtapa() == InfosTuboRN::$TP_PREPARACAO_INATIVACAO) {
+                if ($objTubo->getTipo() == TuboRN::$TT_RNA || $objTubo->getTipo() == TuboRN::$TT_ALIQUOTA || $objTubo->getTipo() == TuboRN::$TT_INDO_EXTRACAO ) {
+                    $objExcecao->adicionar_validacao('O volume do tubo é 0.0 - da amostra '.$amostra[0]->getNickname().' tipo '.TuboRN::mostrarDescricaoTipoTubo($objTubo->getTipo()), 'idVolume', 'alert-danger');
+                }
             }
         }
 
 
-
-
-    }
-
-
-        /*if($strVolume == ''){
-            $objExcecao->adicionar_validacao('Informe um volume.','idVolume');
-        }*/
-                           
-        return $infosTubo->setVolume(doubleval($strVolume));
     }
 
     private function  validarSituacaoEtapa(InfosTubo $infosTubo, Excecao $objExcecao){

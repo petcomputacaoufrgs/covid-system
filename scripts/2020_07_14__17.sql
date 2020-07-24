@@ -1,0 +1,1 @@
+alter table tb_laudo add descarteDevolver char(1) null;

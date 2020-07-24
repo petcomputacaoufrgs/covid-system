@@ -72,7 +72,24 @@
       <path value="$PROJECT_DIR$/vendor/fpdf/tutorial" />
       <path value="$PROJECT_DIR$/vendor/fpdf/font" />
       <path value="$PROJECT_DIR$/vendor/setasign/fpdi" />
-      <path value="$PROJECT_DIR$/vendor/mpdf/mpdf" />
+      <path value="$PROJECT_DIR$/vendor/mpdf/.github" />
+      <path value="$PROJECT_DIR$/vendor/mpdf/tmp" />
+      <path value="$PROJECT_DIR$/vendor/mpdf/data" />
+      <path value="$PROJECT_DIR$/vendor/mpdf/ttfonts" />
+      <path value="$PROJECT_DIR$/vendor/mpdf/src" />
+      <path value="$PROJECT_DIR$/vendor/mpdf60/utils" />
+      <path value="$PROJECT_DIR$/vendor/mpdf60/ttfonts" />
+      <path value="$PROJECT_DIR$/vendor/mpdf60/ttfontdata" />
+      <path value="$PROJECT_DIR$/vendor/mpdf60/tmp" />
+      <path value="$PROJECT_DIR$/vendor/mpdf60/qrcode" />
+      <path value="$PROJECT_DIR$/vendor/mpdf60/patterns" />
+      <path value="$PROJECT_DIR$/vendor/mpdf60/mpdfi" />
+      <path value="$PROJECT_DIR$/vendor/mpdf60/includes" />
+      <path value="$PROJECT_DIR$/vendor/mpdf60/iccprofiles" />
+      <path value="$PROJECT_DIR$/vendor/mpdf60/graph_cache" />
+      <path value="$PROJECT_DIR$/vendor/mpdf60/font" />
+      <path value="$PROJECT_DIR$/vendor/mpdf60/collations" />
+      <path value="$PROJECT_DIR$/vendor/mpdf60/classes" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7" />
